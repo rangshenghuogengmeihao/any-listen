@@ -31,8 +31,8 @@ jobs:
           git config user.name "lyswhut"
           git config user.email "lyswhut@qq.com"
           git add .
-          tag_formated=$(echo ${{ github.ref_name }} | sed 's/webserver-v\?//')
-          git commit -m "release $tag_formated"
+          tag_formated=$(echo ${{ github.ref_name }} | sed 's/desktop-v\?//')
+          git commit -m "Release v$tag_formated"
           git remote set-url origin https://x-access-token:${{ secrets.GH_DESKTOP_PAT }}@github.com/any-listen/${{ env.DESKTOP_REPO }}.git
           git push origin main
 
@@ -58,6 +58,6 @@ jobs:
           git config user.email "lyswhut@qq.com"
           git add .
           tag_formated=$(echo ${{ github.ref_name }} | sed 's/webserver-v\?//')
-          git commit -m "release $tag_formated"
+          git commit -m "Release v$tag_formated"
           git remote set-url origin https://x-access-token:${{ secrets.GH_WEB_SERVER_PAT }}@github.com/any-listen/${{ env.WEBSERVER_REPO }}.git
           git push origin main

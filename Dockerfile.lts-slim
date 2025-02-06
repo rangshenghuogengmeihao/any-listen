@@ -1,26 +1,14 @@
-FROM alpine AS base
-
-# https://github.com/nodejs/docker-node/issues/1946
-
-# RUN apk add --update --no-cache nodejs npm
-# RUN node -e "console.log(123)"
-# RUN npm i corepack -g
-
-# https://github.com/nodejs/docker-node/blob/8d8fc479a7d5e98b71c944f362a76303c2ee18e5/22/alpine3.21/Dockerfile
-
+FROM node:lts-slim AS base
 
 FROM base AS builder
 
 WORKDIR /source-code
 
-RUN apk add --update --no-cache \
-    g++ \
-    make \
-    py3-pip\
-    git \
-    nodejs \
-    icu-data-full \
-    npm
+RUN apt-get update && \
+    apt-get install -y \
+    python3 \
+    build-essential \
+    git
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -28,15 +16,16 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN npm install corepack -g && corepack enable pnpm && pnpm fetch
 
 COPY . ./
-RUN pnpm i --offline --frozen-lockfile &&\
-    pnpm build:web
+RUN pnpm i --offline --frozen-lockfile \
+    && pnpm build:web
 
 FROM base AS final
 WORKDIR /server
 
-# https://github.com/sindresorhus/file-type/issues/664
-# add icu-data-full fix `new TextDecoder('latin1')` error
-RUN apk add --update --no-cache nodejs icu-data-full tzdata
+RUN npm r npm -g
+RUN apt-get update && \
+    apt-get install -y tzdata && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder ./source-code/build ./
 

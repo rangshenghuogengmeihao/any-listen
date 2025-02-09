@@ -22,7 +22,7 @@ import { extensionState } from '../state'
 import { EXTENSION } from '@any-listen/common/constants'
 import { simpleDownload } from '@any-listen/nodejs/download'
 import { verifySignature } from '@any-listen/nodejs/sign'
-import { throttle } from '@any-listen/common/utils'
+import { generateId, throttle } from '@any-listen/common/utils'
 import { getConfig, saveConfig, unloadConfig } from './configStore'
 import { sendConfigUpdatedEvent } from '../vm/hostContext/preloadFuncs'
 
@@ -206,7 +206,7 @@ export const removeExtensions = async (extensions: AnyListen.Extension.Extension
   while (extensions.length) {
     const ext = extensions.shift()!
     await unloadConfig(ext)
-    await Promise.all([removePath(ext.directory).catch((_) => _), removePath(ext.dataDirectory).catch((_) => _)])
+    await Promise.all([removePath(ext.directory).catch(() => {}), removePath(ext.dataDirectory).catch(() => {})])
   }
 }
 
@@ -219,10 +219,10 @@ export const loadExtension = async (extension: AnyListen.Extension.Extension) =>
     const vmState = await createVmConetxt(extension, extensionState.preloadScript)
     await setupVmContext(vmState)
     runTotalTime = await runExtension(vmState.vmContext, vmState.extension)
-  } catch (err: any) {
+  } catch (err) {
     console.log('load extension error: ', err)
-    extension.errorMessage = err.message
-    extensionEvent.loadError(extension.id, err.message)
+    extension.errorMessage = (err as Error).message
+    extensionEvent.loadError(extension.id, (err as Error).message)
     return
   }
   extension.loadTimestamp = runTotalTime
@@ -261,8 +261,8 @@ export const downloadExtension = async (url: string, manifest?: AnyListen.Extens
     throw new Error(`Unable to read the path: ${url}`)
   }
 
-  const bundlePath = joinPath(extensionState.tempDir, `${toSha256(manifest?.id ?? Math.random().toString())}${FILE_EXT_NAME}`)
-  await simpleDownload(url, bundlePath).catch(async (err) => {
+  const bundlePath = joinPath(extensionState.tempDir, `${toSha256(manifest?.id ?? generateId())}${FILE_EXT_NAME}`)
+  await simpleDownload(url, bundlePath).catch(async (err: Error) => {
     await removePath(bundlePath)
     throw err
   })
@@ -306,7 +306,7 @@ const verifyExtension = async (unpackDir: string) => {
       file: extBundleFilePath,
       strip: 1,
       C: extDir,
-    }).catch(async (err) => {
+    }).catch(async (err: Error) => {
       await removePath(extDir)
       throw err
     })
@@ -336,7 +336,7 @@ export const unpackExtension = async (bundlePath: string) => {
     file: bundlePath,
     strip: 1,
     C: targetDir,
-  }).catch(async (err) => {
+  }).catch(async (err: Error) => {
     await removePath(targetDir)
     throw err
   })
@@ -346,7 +346,7 @@ export const unpackExtension = async (bundlePath: string) => {
 
 export const backupExtension = async (extensionDir: string) => {
   const newPath = joinPath(extensionState.tempDir, `${basename(extensionDir)}.bak`)
-  await removePath(newPath).catch((_) => _)
+  await removePath(newPath).catch(() => {})
   if (!(await renamePath(extensionDir, newPath))) {
     throw new Error(`Could not rename extension: ${extensionDir}`)
   }
@@ -355,7 +355,7 @@ export const backupExtension = async (extensionDir: string) => {
 
 export const restoreExtension = async (extensionDir: string) => {
   const newPath = joinPath(extensionState.extensionDir, basename(extensionDir.replace(/\.bak$/, '')))
-  await removePath(newPath).catch((_) => _)
+  await removePath(newPath).catch(() => {})
   if (!(await renamePath(extensionDir, newPath))) {
     throw new Error(`Could not rename extension: ${extensionDir}`)
   }
@@ -447,6 +447,7 @@ export const updateExtensionSettings = async (id: string, config: Record<string,
   const targetSetting = extensionState.extensionSettings?.find((s) => s.id == targetExt.id)
   if (targetSetting) {
     for (const [key, value] of Object.entries(config)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       targetSetting.settingItems.find((item) => item.field == key)!.value = value
     }
   }

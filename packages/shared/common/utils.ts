@@ -268,5 +268,12 @@ export const compareVersions = (a: string, b: string) => {
 
 // https://stackoverflow.com/a/44078785
 export const generateId = () => {
-  return performance.now().toString(36) + Math.random().toString(36).slice(2)
+  return Date.now().toString(36) + Math.random().toString(36).slice(2)
+}
+
+export const generateIdByPerf = () => {
+  return performance.now().toString(36).replace('.', '') + Math.random().toString(36).slice(2)
+}
+export const generateIdSimple = () => {
+  return Math.random().toString(36).slice(2)
 }

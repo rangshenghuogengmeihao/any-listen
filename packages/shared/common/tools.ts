@@ -1,3 +1,5 @@
+import { generateIdByPerf } from './utils'
+
 export const getMusicInfo = (musicInfo: AnyListen.Download.ListItem | AnyListen.Music.MusicInfo) => {
   return 'progress' in musicInfo ? musicInfo.metadata.musicInfo : musicInfo
 }
@@ -9,7 +11,7 @@ export const createPlayMusicInfo = (
   playLater: boolean,
   played = false
 ): AnyListen.Player.PlayMusicInfo => ({
-  itemId: `${String(Math.random()).substring(8)}_${musicInfo.id}`,
+  itemId: `${generateIdByPerf()}_${musicInfo.id}`,
   listId,
   isOnline,
   musicInfo,

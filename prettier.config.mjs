@@ -19,4 +19,6 @@ export default {
   proseWrap: 'preserve',
   htmlWhitespaceSensitivity: 'css',
   endOfLine: 'lf',
+  // overrides: [{ files: '.prettierrc', options: { parser: 'json' } }],
+  plugins: ['prettier-plugin-organize-imports', 'prettier-plugin-packagejson'],
 }

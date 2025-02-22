@@ -27,13 +27,6 @@ declare global {
       //   raw: number[]
       //   body: string
       // }
-      interface LogInfo {
-        type: 'debug' | 'info' | 'warn' | 'error'
-        id: string
-        timestamp: number
-        name: string
-        message: string
-      }
       // type StorageActionTypes = AnyListen.IPCAction<'get', string[]>
       // | AnyListen.IPCAction<'set', Array<[string, string]>>
       // | AnyListen.IPCAction<'remove', string[]>
@@ -53,10 +46,10 @@ declare global {
       type RSA_PADDING = 'RSA_PKCS1_OAEP_PADDING' | 'RSA_NO_PADDING'
 
       interface Env {
-        clientType: AnyListen.ClientType
+        clientType: ClientType
         platform: 'mac' | 'linux' | 'windows' | 'android' | 'ios'
         arch: 'arm' | 'arm64' | 'x86' | 'x64'
-        locale: AnyListen.Locale
+        locale: Locale
         version: string
         i18nMessages: Record<string, string>
       }

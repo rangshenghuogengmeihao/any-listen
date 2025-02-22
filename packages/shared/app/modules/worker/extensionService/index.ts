@@ -15,9 +15,9 @@ import {
   updateExtensionI18nMessages,
 } from './manage'
 import { getOnlineExtensionList } from './onlineExtension'
-import { buildExtensionSettings, updateExtensionSettings, updateResourceListDeounce } from './shared'
+import { buildExtensionSettings, getExtensionLastLogs, updateExtensionSettings, updateResourceListDeounce } from './shared'
 import { extensionState } from './state'
-import { resourceAction, updateLocale, updateI18nMessage } from './vm'
+import { resourceAction, updateI18nMessage, updateLocale } from './vm'
 
 registerErrorHandler()
 
@@ -89,6 +89,9 @@ const extension = {
   },
   getResourceList() {
     return extensionState.resourceList
+  },
+  async getExtensionLastLogs(extId?: string) {
+    return getExtensionLastLogs(extId)
   },
   async getAllExtensionSettings() {
     return buildExtensionSettings()

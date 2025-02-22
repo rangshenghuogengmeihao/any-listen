@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import fs from 'node:fs'
-import path from 'node:path'
-import { extensionEvent } from '../event'
+import { EXTENSION } from '@any-listen/common/constants'
+import { generateId, throttle } from '@any-listen/common/utils'
 import {
   basename,
   checkFile,
@@ -17,14 +16,16 @@ import {
   renamePath,
   toSha256,
 } from '@any-listen/nodejs'
-import { createVmConetxt, destroyContext, runExtension, setupVmContext } from '../vm'
-import { extensionState } from '../state'
-import { EXTENSION } from '@any-listen/common/constants'
 import { simpleDownload } from '@any-listen/nodejs/download'
+import { readLastLines } from '@any-listen/nodejs/logs'
 import { verifySignature } from '@any-listen/nodejs/sign'
-import { generateId, throttle } from '@any-listen/common/utils'
-import { getConfig, saveConfig, unloadConfig } from './configStore'
+import fs from 'node:fs'
+import path from 'node:path'
+import { extensionEvent } from '../event'
+import { extensionState } from '../state'
+import { createVmConetxt, destroyContext, runExtension, setupVmContext } from '../vm'
 import { sendConfigUpdatedEvent } from '../vm/hostContext/preloadFuncs'
+import { getConfig, saveConfig, unloadConfig } from './configStore'
 
 const FILE_EXT_NAME = `.${EXTENSION.pkgExtName}`
 const FILE_EXT_NAME_EXP = new RegExp(`\\.${EXTENSION.pkgExtName}$`, 'i')
@@ -453,4 +454,32 @@ export const updateExtensionSettings = async (id: string, config: Record<string,
   }
   extensionEvent.extenstionSettingUpdated(id, Object.keys(config), config)
   sendConfigUpdatedEvent(id, Object.keys(config), config)
+}
+
+export const getExtensionLastLogs = async (extId?: string): Promise<AnyListen.IPCExtension.LastLog[]> => {
+  if (extId == null) {
+    // TODO limit
+    return (
+      await Promise.all(
+        extensionState.extensions
+          .filter((ext) => ext.enabled)
+          .map(async (ext) => {
+            return {
+              logs: await readLastLines(joinPath(ext.dataDirectory, EXTENSION.logFileName), 100),
+              id: ext.id,
+              name: ext.name,
+            }
+          })
+      )
+    ).filter((log) => log.logs)
+  }
+  const ext = extensionState.extensions.find((ext) => ext.id == extId)
+  if (!ext) throw new Error('extension not found')
+  return [
+    {
+      logs: await readLastLines(joinPath(ext.dataDirectory, EXTENSION.logFileName), 100),
+      id: ext.id,
+      name: ext.name,
+    },
+  ]
 }

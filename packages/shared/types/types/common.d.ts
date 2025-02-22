@@ -91,5 +91,13 @@ declare global {
       // isForce: boolean
       // url: string
     }
+
+    interface LogInfo {
+      type: 'debug' | 'info' | 'warn' | 'error'
+      id: string
+      timestamp: number
+      name: string
+      message: string
+    }
   }
 }

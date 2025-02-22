@@ -3,7 +3,8 @@
   import { query } from '@/plugins/routes'
   import { viewTypes } from './shared'
   import AppSetting from './AppSetting/AppSetting.svelte'
-  // import ExtensionSetting from './ExtensionSetting/ExtensionSetting.svelte'
+  import ExtensionSetting from './ExtensionSetting/ExtensionSetting.svelte'
+  import Logs from './Logs/Logs.svelte'
 
   const activeView = $derived<(typeof viewTypes)[number]>(viewTypes.find((t) => t == $query.type) ?? 'app')
 </script>
@@ -12,8 +13,10 @@
   <Header activeview={activeView} />
   {#if activeView == 'app'}
     <AppSetting />
-    <!-- {:else if activeView == 'extension'}
-    <ExtensionSetting /> -->
+  {:else if activeView == 'extension'}
+    <ExtensionSetting />
+  {:else if activeView == 'logs'}
+    <Logs />
   {/if}
 </div>
 

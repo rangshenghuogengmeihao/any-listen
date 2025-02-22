@@ -2,9 +2,9 @@ import { getThemeList } from '@/modules/theme/store/action'
 import { langList, type Message } from '@/plugins/i18n'
 import { windowSizeList } from '@any-listen/common/constants'
 import type { Component } from 'svelte'
+import About from './About.svelte'
 import LoginDevices from './LoginDevices.svelte'
 import Update from './Update.svelte'
-import About from './About.svelte'
 
 interface SettingBase {
   field: keyof AnyListen.AppSetting

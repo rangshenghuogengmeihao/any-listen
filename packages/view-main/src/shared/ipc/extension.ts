@@ -70,3 +70,7 @@ export const resourceAction: AnyListen.IPC.ServerIPC['resourceAction'] = async (
     action
   )
 }
+
+export const getExtensionLastLogs: AnyListen.IPC.ServerIPC['getExtensionLastLogs'] = async (extId) => {
+  return ipc.getExtensionLastLogs(extId)
+}

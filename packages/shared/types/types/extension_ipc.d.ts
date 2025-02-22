@@ -34,7 +34,7 @@ declare namespace AnyListen {
       | IPCAction<'listRemove', string>
       | IPCAction<'listUpdate', Extension.Extension>
       | IPCAction<'listSet', Extension.Extension[]>
-      | IPCAction<'logOutput', ExtensionVM.LogInfo>
+      | IPCAction<'logOutput', LogInfo>
       | IPCAction<'resourceUpdated', Extension.ResourceList>
       | IPCAction<'extenstionSettingUpdated', EventExtensionSettingUpdated>
 
@@ -113,6 +113,11 @@ declare namespace AnyListen {
       total: number
       list: Extension.OnlineExtension[]
     }
+    interface LastLog {
+      id: string
+      name: string
+      logs: string
+    }
     type ServerActions = WarpPromiseRecord<{
       getExtensionErrorMessage: () => string | null
       getExtensionList: () => Extension.Extension[]
@@ -127,6 +132,7 @@ declare namespace AnyListen {
       uninstallExtension: (id: string) => void
       restartExtensionHost: () => void
       getResourceList: () => Extension.ResourceList
+      getExtensionLastLogs: (id?: string) => LastLog[]
       getAllExtensionSettings: () => Promise<Extension.ExtensionSetting[]>
       updateExtensionSettings: (extId: string, config: Record<string, any>) => Promise<void>
       resourceAction: ResourceAction

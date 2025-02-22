@@ -1,4 +1,4 @@
-import { generateIdByPerf } from './utils'
+import { dateFormat, generateIdByPerf } from './utils'
 
 export const getMusicInfo = (musicInfo: AnyListen.Download.ListItem | AnyListen.Music.MusicInfo) => {
   return 'progress' in musicInfo ? musicInfo.metadata.musicInfo : musicInfo
@@ -41,4 +41,8 @@ export const buildSourceLabel = (musicinfo: AnyListen.Music.MusicInfo) => {
     }
   }
   return musicinfo.meta.source
+}
+
+export const logFormat = (log: AnyListen.LogInfo) => {
+  return `${dateFormat(log.timestamp)} [${log.type}] ${log.message}`
 }

@@ -140,6 +140,7 @@ export const EXTENSION = {
   dataDirName: 'datas',
   configFileName: 'extensions.json',
   mainifestName: 'manifest.json',
+  logFileName: 'output.log',
   signFileName: 'sig',
   extBundleFileName: 'ext.tgz',
   publicKeyHeader: '-----BEGIN PUBLIC KEY-----\n',

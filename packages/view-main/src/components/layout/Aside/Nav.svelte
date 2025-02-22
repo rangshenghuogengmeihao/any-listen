@@ -65,6 +65,13 @@
         iconSize: '0 0 493.23 436.47',
         enable: true,
       },
+      {
+        to: '/extenstion',
+        name: $t('extenstion'),
+        icon: '#icon-extenstion',
+        iconSize: '0 0 493.23 436.47',
+        enable: true,
+      },
     ].filter((m) => m.enable)
   )
 

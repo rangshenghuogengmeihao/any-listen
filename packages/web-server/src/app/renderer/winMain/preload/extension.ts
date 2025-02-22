@@ -1,5 +1,5 @@
-import { ipcPreloadEvent } from '@any-listen/app/modules/ipcPreloadEvent'
 import type { IPCSocket } from '@/preload/ws'
+import { ipcPreloadEvent } from '@any-listen/app/modules/ipcPreloadEvent'
 import type { ExposeFunctions } from '.'
 
 // 暴露给后端的方法
@@ -52,6 +52,9 @@ export const createClientExtension = (ipcSocket: IPCSocket) => {
     },
     async getResourceList() {
       return ipcSocket.remoteQueueExtension.getResourceList()
+    },
+    async getExtensionLastLogs(extId) {
+      return ipcSocket.remoteQueueExtension.getExtensionLastLogs(extId)
     },
     async getAllExtensionSettings() {
       return ipcSocket.remoteQueueExtension.getAllExtensionSettings()

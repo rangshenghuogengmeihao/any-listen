@@ -4,6 +4,7 @@
   import { i18n } from '@/plugins/i18n'
   import { extT } from '@/modules/extension/i18n'
   import ActionBtn from './ActionBtn.svelte'
+  import { tooltip } from '@/components/apis/tooltips'
 
   let { ext }: { ext: AnyListen.Extension.Extension } = $props()
   let version = $derived(/^\d/.test(ext.version) ? `v${ext.version}` : ext.version)
@@ -27,7 +28,7 @@
       {#if grants.length}
         <div class="grant">
           {#each grants as grant (grant.id)}
-            <span aria-label={grant.label}><SvgIcon name={grant.icon} /></span>
+            <span aria-label={grant.label} data-ignore-tip use:tooltip><SvgIcon name={grant.icon} /></span>
           {/each}
         </div>
       {/if}
@@ -57,7 +58,7 @@
     flex-flow: column nowrap;
     padding: 10px;
     border-radius: @radius-border;
-    gap: 3px;
+    gap: 6px;
     background-color: var(--color-primary-light-200-alpha-900);
     transition: opacity @transition-normal;
 
@@ -78,7 +79,7 @@
     gap: 10px;
 
     .left {
-      height: 86%;
+      height: 100%;
       aspect-ratio: 1;
       flex: none;
     }
@@ -88,6 +89,7 @@
       min-width: 0;
       display: flex;
       flex-flow: column nowrap;
+      gap: 2px;
       // justify-content: space-between;
       // .title {
       //   display: flex;

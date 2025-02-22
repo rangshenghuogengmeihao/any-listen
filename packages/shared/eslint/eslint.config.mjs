@@ -1,6 +1,6 @@
-import globals from 'globals'
 import pluginJs from '@eslint/js'
 import love from 'eslint-config-love'
+import globals from 'globals'
 // import { typescriptRule } from './eslintrc.base.mjs'
 // import tseslint from "typescript-eslint";
 import typescriptParser from '@typescript-eslint/parser'
@@ -66,6 +66,7 @@ export const typescriptRule = {
   '@typescript-eslint/await-thenable': 'off',
   '@typescript-eslint/no-empty-function': 'off',
   '@typescript-eslint/no-misused-promises': 'off',
+  '@typescript-eslint/no-explicit-any': 'warn',
 
   '@typescript-eslint/no-confusing-void-expression': [
     'error',

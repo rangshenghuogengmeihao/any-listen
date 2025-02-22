@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { logFormat } from '@any-listen/common/tools'
+import { dateFormat } from '@any-listen/common/utils'
 import { toMD5, toSha256 } from '@any-listen/nodejs'
 import crypto from 'node:crypto'
-import { triggerTimeout } from './preloadFuncs'
 import { extensionEvent } from '../../event'
-import { dateFormat } from '@any-listen/common/utils'
+import { triggerTimeout } from './preloadFuncs'
 
 enum TIMEOUT_TYPE {
   timeout = 0,
@@ -127,16 +128,21 @@ export const utils_rsa_encrypt = (mode: AnyListen.ExtensionVM.RSA_PADDING, data:
 
 export const handlePreloadCall = <T extends keyof AnyListen.ExtensionVM.HostCallActions>(
   action: T,
-  data: AnyListen.ExtensionVM.HostCallActions[T]
+  data: AnyListen.ExtensionVM.HostCallActions[T],
+  logcat: (message: string) => void
 ) => {
   switch (action) {
     case 'logcat': {
       const info = data as AnyListen.ExtensionVM.HostCallActions['logcat']
+      if (info.message.length > 1000) {
+        info.message = `${info.message.substring(0, 1000)}...`
+      }
       if (import.meta.env.DEV) {
         console.log(`[ExtensionHost ${dateFormat(info.timestamp)} ${info.type.toUpperCase()} - ${info.id}] ${info.message}`)
       }
       // console.log(`[ExtensionHost ${dateFormat(info.timestamp)} ${info.type.toUpperCase()} - ${info.id}] ${info.message}`)
       // console.log('logcat', info)
+      logcat(logFormat(info))
       extensionEvent.logOutput(info)
       break
     }

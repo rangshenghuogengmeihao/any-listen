@@ -51,6 +51,7 @@ export const resourceAction: AnyListen.IPCExtension.ResourceAction = async (acti
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const sendConfigUpdatedEvent = (extId: string, keys: string[], config: Record<string, any>) => {
   const targetContext = contextState.vmContexts.get(extId)
   if (!targetContext) throw new Error(`context not found: ${extId}`)

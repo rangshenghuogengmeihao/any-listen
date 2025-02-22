@@ -66,7 +66,9 @@
       if (event.inputing) return
       event.event?.preventDefault()
       if (event.event?.repeat) return
-      void gotoDir(getParentDir(currentDir))
+      void readRootDir().then(async (files) => {
+        return gotoDir(getParentDir(currentDir, files))
+      })
     })
     const unsub2 = keyboardEvent.on('f5_down', (event) => {
       event.event?.preventDefault()
@@ -105,7 +107,7 @@
     closeModal()
   }
 
-  const gotoDir = async (path?: string) => {
+  const gotoDir = async (path?: string, refresh?: boolean) => {
     errorMessage = ''
     if (path) {
       path = formatPath(path)
@@ -131,7 +133,7 @@
           return []
         })
     } else {
-      const rootPath = await readRootDir()
+      const rootPath = await readRootDir(refresh)
         .then((files) => {
           return files.map((file) => {
             return {
@@ -179,7 +181,9 @@
     <Btn
       icon
       onclick={() => {
-        void gotoDir(getParentDir(currentDir))
+        void readRootDir().then(async (files) => {
+          return gotoDir(getParentDir(currentDir, files))
+        })
       }}
     >
       <SvgIcon name="back" />
@@ -195,7 +199,7 @@
     <Btn
       icon
       onclick={() => {
-        void gotoDir(currentDir)
+        void gotoDir(currentDir, true)
       }}
     >
       <SvgIcon name="reset" />

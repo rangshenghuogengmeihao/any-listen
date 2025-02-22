@@ -1,6 +1,9 @@
-import vm from 'node:vm'
-import { createMsg2call } from 'message2call'
+import { EXTENSION, EXTENSION_VM_IPC_FUNC_NAMES } from '@any-listen/common/constants'
 import { randomUUID } from '@any-listen/nodejs'
+import { createSimpleLogcat } from '@any-listen/nodejs/logs'
+import { createMsg2call } from 'message2call'
+import vm from 'node:vm'
+import { createExposeObject } from './apis/exposeFuncs'
 import {
   clearExtensionTimeout,
   clear_interval,
@@ -15,14 +18,12 @@ import {
   utils_str2md5,
 } from './hostFuncs'
 import { contextState } from './state'
-import { EXTENSION_VM_IPC_FUNC_NAMES } from '@any-listen/common/constants'
-import { createExposeObject } from './apis/exposeFuncs'
 
 type HostCallFuncs = {
   [K in (typeof EXTENSION_VM_IPC_FUNC_NAMES)[number]]: NonNullable<AnyListen.ExtensionVM.VMContext[K]>
 }
 
-export const createContext = (extension: AnyListen.Extension.Extension) => {
+export const createContext = async (extension: AnyListen.Extension.Extension) => {
   const key = randomUUID()
   const id = extension.id
 
@@ -30,9 +31,10 @@ export const createContext = (extension: AnyListen.Extension.Extension) => {
     funcsObj: createExposeObject(extension),
     isSendErrorStack: true,
     timeout: 0,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sendMessage(data: any) {
       // console.log('sendMessage', data)
-      vmContext.__ext_preload__!(key, 'message', data)
+      vmContext.__ext_preload__!(key, 'message', data as string)
     },
   })
 
@@ -60,6 +62,7 @@ export const createContext = (extension: AnyListen.Extension.Extension) => {
       return rawFn(...args)
     }
   }
+  const logcat = await createSimpleLogcat(extension.dataDirectory, EXTENSION.logFileName)
   const vmContext = vm.createContext(
     {
       ...context,
@@ -70,7 +73,9 @@ export const createContext = (extension: AnyListen.Extension.Extension) => {
           msg2call.message(data)
           return
         }
-        if (data) handlePreloadCall(action, JSON.parse(data))
+        if (data) {
+          handlePreloadCall(action, JSON.parse(data) as AnyListen.ExtensionVM.HostCallActions[typeof action], logcat)
+        }
         // else handlePreloadCall(action, undefined)
       },
     } satisfies AnyListen.ExtensionVM.VMContext,
@@ -87,6 +92,7 @@ export const createContext = (extension: AnyListen.Extension.Extension) => {
     vmContext,
     preloadFuncs: msg2call.remote,
     unsubscribeEvents: [],
+    logcat,
   }
   contextState.vmContexts.set(id, vmContextInfo)
   return vmContextInfo

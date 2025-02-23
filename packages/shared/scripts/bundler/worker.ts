@@ -1,7 +1,7 @@
 import { type MessagePort, parentPort } from 'node:worker_threads'
 import { type TaksName, type Target, build } from './utils'
 
-// import { buildConfig as buildElectronConfig } from '@any-listen/electron'
+import { buildConfig as buildElectronConfig } from '@any-listen/electron'
 import { buildConfig as buildExtensionPreloadConfig } from '@any-listen/extension-preload/vite.config'
 import { buildConfig as buildWebConfig, buildPreloadConfig as buildWebPreloadConfig } from '@any-listen/web-server'
 import { dynamicImport } from './import-esm.cjs'
@@ -35,8 +35,7 @@ parentPort.on('message', async ({ port, taskName, target }: { port?: MessagePort
     return
   }
   const configs = {
-    // electron: buildElectronConfig(target),
-    electron: buildWebPreloadConfig(target),
+    electron: buildElectronConfig(target),
     'web-server': buildWebConfig(target),
     'web-preload': buildWebPreloadConfig(target),
     'view-main': await getViewMainConfig(target as ViewMainTarget),

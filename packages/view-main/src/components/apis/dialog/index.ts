@@ -1,10 +1,14 @@
 import { mount, tick, unmount } from 'svelte'
 
-import App from './App.svelte'
-import { i18n } from '@/plugins/i18n'
 import { onDesconnected } from '@/modules/app/shared'
+import { i18n } from '@/plugins/i18n'
+import App from './App.svelte'
 
-export const showConfirmModal = async (message: string, buttons: readonly AnyListen.IPCCommon.MessageButton[], select = true) => {
+export const showConfirmModal = async (
+  message: string,
+  buttons: readonly AnyListen.IPCCommon.MessageButton[],
+  select = false
+) => {
   const app = mount(App, {
     target: document.getElementById('root')!,
     props: {

@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 // import { checkMusicFileAvailable } from '@renderer/utils/music'
 
-import { getRandom } from '@any-listen/common/utils'
-import { playerState } from './state'
-import { i18n } from '@/plugins/i18n'
-import { settingState } from '@/modules/setting/store/state'
-import { isEmpty, releasePlayer, setPause, setPlay, setResource, setStop } from '@/plugins/player'
-import { playerEvent } from './event'
-import * as commit from './commit'
-import { addListMusics, removeListMusics } from '@/modules/musicLibrary/store/actions'
-import { LIST_IDS } from '@any-listen/common/constants'
-import { parseInterval } from '@/shared'
-import { removePlayListMusic, setPlayListMusic, setPlayListMusicPlayed, setPlayListMusicUnplayedAll } from './listRemoteAction'
-import { createPlayMusicInfoList } from '@any-listen/common/tools'
-import { addPlayHistoryList, getMusicLyric, getMusicPic, getMusicUrl, setPlayHistoryList } from './playerRemoteAction'
 import { addInfo } from '@/modules/dislikeList/actions'
+import { addListMusics, removeListMusics } from '@/modules/musicLibrary/store/actions'
+import { settingState } from '@/modules/setting/store/state'
+import { i18n } from '@/plugins/i18n'
+import { isEmpty, releasePlayer, setPause, setPlay, setResource, setStop } from '@/plugins/player'
+import { parseInterval } from '@/shared'
+import { LIST_IDS } from '@any-listen/common/constants'
+import { createPlayMusicInfoList } from '@any-listen/common/tools'
+import { getRandom } from '@any-listen/common/utils'
+import * as commit from './commit'
+import { playerEvent } from './event'
+import { removePlayListMusic, setPlayListMusic, setPlayListMusicPlayed, setPlayListMusicUnplayedAll } from './listRemoteAction'
+import { addPlayHistoryList, getMusicLyric, getMusicPic, getMusicUrl, setPlayHistoryList } from './playerRemoteAction'
+import { playerState } from './state'
 
 let gettingUrlId = ''
 const createDelayNextTimeout = (delay: number) => {
@@ -697,6 +697,11 @@ export const setVolume = (value: number) => {
 export const setVolumeMute = (value: boolean) => {
   playerEvent.setVolumeIsMute(value)
 }
+
+export const setCollectStatus = (status: boolean) => {
+  commit.setMusicInfo({ collect: status })
+}
+
 export const release = async () => {
   stop()
   await releasePlayer()

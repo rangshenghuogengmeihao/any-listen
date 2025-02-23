@@ -4,14 +4,7 @@ import type { DBSeriveTypes } from '../worker/utils'
 let dbService: DBSeriveTypes
 
 export class Event extends _Event {
-  subscribe<K extends keyof EventMethods>(eventName: K, listener: EventMethods[K]) {
-    this.on(eventName, listener)
-    return () => {
-      this.off(eventName, listener)
-    }
-  }
-
-  emitEvent<K extends keyof EventMethods>(eventName: K, ...args: any[]) {
+  emitEvent<K extends keyof EventMethods>(eventName: K, ...args: unknown[]) {
     this.emit(eventName, ...args)
   }
 

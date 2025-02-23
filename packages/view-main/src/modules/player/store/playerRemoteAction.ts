@@ -1,10 +1,10 @@
+import { getMusicPic as getMusicPicFromRemote, getMusicUrl as getMusicUrlFromRemote } from '@/shared/ipc/music'
 import { onPlayHistoryListAction, onPlayerAction, sendPlayHistoryListAction, sendPlayerEvent } from '@/shared/ipc/player'
-import { getMusicUrl as getMusicUrlFromRemote, getMusicPic as getMusicPicFromRemote } from '@/shared/ipc/music'
 import * as commit from './commit'
 
 import { playerEvent } from './event'
+import { pause, play, playId, seekTo, setCollectStatus, skipNext, skipPrev, togglePlay } from './playerActions'
 import { playerState } from './state'
-import { pause, play, playId, seekTo, skipNext, skipPrev, togglePlay } from './playerActions'
 
 export { getPlayInfo } from '@/shared/ipc/player'
 
@@ -239,6 +239,9 @@ export const registerRemotePlayerAction = () => {
         break
       case 'prev':
         void skipPrev()
+        break
+      case 'collectStatus':
+        setCollectStatus(action.data)
         break
       // default:
       //   console.warn('unknown action:', action)

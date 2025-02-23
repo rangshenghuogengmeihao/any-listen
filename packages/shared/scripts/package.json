@@ -57,6 +57,7 @@
   },
   "devDependencies": {
     "@any-listen/common": "workspace:@shared/common@*",
+    "@any-listen/electron": "workspace:electron@*",
     "@any-listen/eslint": "workspace:@shared/eslint@*",
     "@any-listen/types": "workspace:@shared/types@*",
     "@any-listen/extension-preload": "workspace:@shared/extension-preload@*",
@@ -69,6 +70,6 @@
     "spinnies": "github:lyswhut/spinnies.git#233305c58694aa3b053e3ab9af9049993f918b9d",
     "tree-kill": "^1.2.2",
     "ts-node": "^10.9.2",
-    "vite": "^6.1.0"
+    "vite": "^6.1.1"
   }
 }

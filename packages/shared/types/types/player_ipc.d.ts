@@ -9,6 +9,7 @@ declare namespace AnyListen {
       | IPCAction<'toggle'>
       | IPCAction<'skip', string>
       | IPCAction<'seek', number>
+      | IPCAction<'collectStatus', boolean>
 
     interface PlayerActionSet {
       listId: string | null
@@ -68,7 +69,6 @@ declare namespace AnyListen {
       | IPCAction<'playbackRate', number>
       | IPCAction<'status', Status>
       | IPCAction<'statusText', string>
-      | IPCAction<'collectStatus', boolean>
       | IPCAction<'picUpdated', string | null>
       | IPCAction<'lyricUpdated', Music.LyricInfo>
       | IPCAction<'lyricOffsetUpdated', number>
@@ -84,6 +84,7 @@ declare namespace AnyListen {
       list: Player.PlayMusicInfo[]
       listId: string | null
       historyList: PlayHistoryListItem[]
+      isCollect: boolean
     }
 
     type ServerActions = WarpPromiseRecord<{

@@ -20,7 +20,7 @@
 <div class="log-header">
   <div class="log-header-title">Logs</div>
   <div class="log-header-action">
-    {#if avtiveLog}
+    {#if logs.length}
       <Selection
         value={avtiveLog.id}
         list={logsFormat}

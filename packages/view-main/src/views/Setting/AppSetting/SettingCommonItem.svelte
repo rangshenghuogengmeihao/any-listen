@@ -40,7 +40,7 @@
       name={$t(item.name)}
       desc={item.description}
       textarea={item.textarea}
-      value={setting!.val as string}
+      value={setting.val as string}
       onchange={(val) => {
         void updateSetting({ [item.field]: val.trim() })
       }}
@@ -50,7 +50,7 @@
       id={`extenstion_${item.field}_${item.type}`}
       name={$t(item.name)}
       desc={item.description}
-      checked={setting!.val as boolean}
+      checked={setting.val as boolean}
       onchange={(val) => {
         void updateSetting({ [item.field]: val })
       }}
@@ -62,7 +62,7 @@
           id={`extenstion_${item.field}_${item.type}_${radioItem.value}`}
           name={$t(radioItem.name)}
           value={radioItem.value}
-          checked={(setting!.val as string) == radioItem.value}
+          checked={(setting.val as string) == radioItem.value}
           onselect={(val) => {
             void updateSetting({ [item.field]: val })
           }}
@@ -73,7 +73,7 @@
     <SelectionItem
       name={$t(item.name)}
       desc={item.description}
-      value={setting!.val as string | number}
+      value={setting.val as string | number}
       list={item.enum.map((n) => ({ label: n.name, value: n.value }))}
       onchange={(val) => {
         void updateSetting({ [item.field]: val })

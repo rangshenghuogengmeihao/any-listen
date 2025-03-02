@@ -49,6 +49,7 @@ export const baseRule = {
   'arrow-body-style': 'off',
   'max-nested-callbacks': 'off',
   complexity: 'off',
+  'max-lines': 'off',
 }
 export const typescriptRule = {
   ...baseRule,

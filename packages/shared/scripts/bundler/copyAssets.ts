@@ -17,6 +17,7 @@ const assetsAll = {
         path.join(rootPath, 'packages/shared/theme/theme_images'),
         path.join(rootPath, 'packages/electron/dist/view-main/theme_images'),
       ],
+      [path.join(rootPath, 'packages/electron/src/static'), path.join(rootPath, 'packages/electron/dist/static')],
     ],
   },
   web: {

@@ -46,6 +46,10 @@ declare namespace AnyListen {
       page: number
       limit: number
     }
+    interface LyricSearchParams extends CommonParams {
+      interval: number
+      keyword: string
+    }
     interface SearchParams extends CommonListParams {
       keyword: string
     }
@@ -66,23 +70,26 @@ declare namespace AnyListen {
     interface MusicCommonParams extends CommonParams {
       musicInfo: Music.MusicInfoOnline
     }
+    interface MusicUrlInfo {
+      url: string
+      quality: Music.Quality
+    }
 
     interface ResourceAction {
-      (action: IPCActionData<'tipSearch', CommonParams>): Promise<string[]>
-      (action: IPCActionData<'hotSearch', CommonParams>): Promise<string[]>
+      // (action: IPCActionData<'tipSearch' | 'hotSearch', CommonParams>): Promise<string[]>
       (action: IPCActionData<'musicSearch', SearchParams>): Promise<ListCommonResult<Music.MusicInfoOnline>>
       (action: IPCActionData<'musicPic', MusicCommonParams>): Promise<string>
-      (action: IPCActionData<'musicUrl', MusicCommonParams>): Promise<string>
-      (action: IPCActionData<'lyricSearch', MusicCommonParams>): Promise<Music.LyricInfo[]>
+      (action: IPCActionData<'musicUrl', MusicCommonParams>): Promise<MusicUrlInfo>
       (action: IPCActionData<'lyric', MusicCommonParams>): Promise<Music.LyricInfo>
-      (action: IPCActionData<'songlistSearch', SearchParams>): Promise<ListCommonResult<Resource.SongListItem>>
-      (action: IPCActionData<'songlistSorts', CommonParams>): Promise<Resource.TagItem[]>
-      (action: IPCActionData<'songlistTags', CommonParams>): Promise<Resource.TagGroupItem[]>
-      (action: IPCActionData<'songlist', SonglistListParams>): Promise<ListCommonResult<Resource.SongListItem>>
-      (action: IPCActionData<'songlistDetail', ListDetailParams>): Promise<ListCommonResult<Music.MusicInfoOnline>>
-      (action: IPCActionData<'leaderboard', CommonParams>): Promise<Resource.TagGroupItem[]>
+      (action: IPCActionData<'lyricSearch', LyricSearchParams>): Promise<Music.LyricInfo[]>
+      // (action: IPCActionData<'songlistSearch', SearchParams>): Promise<ListCommonResult<Resource.SongListItem>>
+      // (action: IPCActionData<'songlistSorts', CommonParams>): Promise<Resource.TagItem[]>
+      // (action: IPCActionData<'songlistTags', CommonParams>): Promise<Resource.TagGroupItem[]>
+      // (action: IPCActionData<'songlist', SonglistListParams>): Promise<ListCommonResult<Resource.SongListItem>>
+      // (action: IPCActionData<'songlistDetail', ListDetailParams>): Promise<ListCommonResult<Music.MusicInfoOnline>>
+      // (action: IPCActionData<'leaderboard', CommonParams>): Promise<Resource.TagGroupItem[]>
       // (action: IPCActionData<'leaderboardDate', SonglistListParams>): Promise<ListCommonResult<AnyListen.Music.MusicInfoOnline>>
-      (action: IPCActionData<'leaderboardDetail', SonglistListParams>): Promise<ListCommonResult<Music.MusicInfoOnline>>
+      // (action: IPCActionData<'leaderboardDetail', SonglistListParams>): Promise<ListCommonResult<Music.MusicInfoOnline>>
     }
     // type ResourceAction = IPCActionFunc<'tipSearch', string, string[]>
     // | IPCActionFunc<'hotSearch', string, string[]>

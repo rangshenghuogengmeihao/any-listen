@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/unified-signatures */
 import type { ExtensionAPIEventType } from '@/event'
 
 interface IPCActionBase<A> {
@@ -14,6 +13,10 @@ interface CommonParams {
 interface CommonListParams extends CommonParams {
   page: number
   limit: number
+}
+interface LyricSearchParams extends CommonParams {
+  interval: number
+  keyword: string
 }
 interface SearchParams extends CommonListParams {
   keyword: string
@@ -103,6 +106,7 @@ declare global {
     type Platform = 'mac' | 'linux' | 'windows' | 'android' | 'ios'
     type Architecture = 'arm' | 'arm64' | 'x86' | 'x64'
     type ClientType = 'desktop' | 'web' | 'mobile'
+    type Quality = '128k' | '320k' | 'flac' | 'flac24bit' | '192k' | 'wav' | 'dobly' | 'master'
 
     type ParamsData = Record<string, string | number | null | undefined | boolean>
     interface RequestOptions {
@@ -301,23 +305,27 @@ declare global {
       playerAction: (action: AnyListen.IPCPlayer.ActionPlayer) => Promise<void>
       playHistoryListAction: (action: AnyListen.IPCPlayer.PlayHistoryListAction) => Promise<void>
     }
+    interface MusicUrlInfo {
+      url: string
+      quality: Quality
+    }
 
     interface ResourceAction {
-      (action: IPCActionData<'tipSearch', CommonParams>): Promise<string[]>
-      (action: IPCActionData<'hotSearch', CommonParams>): Promise<string[]>
+      // (action: IPCActionData<'tipSearch', CommonParams>): Promise<string[]>
+      // (action: IPCActionData<'hotSearch', CommonParams>): Promise<string[]>
       (action: IPCActionData<'musicSearch', SearchParams>): Promise<ListCommonResult<AnyListen.Music.MusicInfoOnline>>
       (action: IPCActionData<'musicPic', MusicCommonParams>): Promise<string>
-      (action: IPCActionData<'musicUrl', MusicCommonParams>): Promise<string>
-      (action: IPCActionData<'lyricSearch', MusicCommonParams>): Promise<AnyListen.Music.LyricInfo[]>
+      (action: IPCActionData<'musicUrl', MusicCommonParams>): Promise<MusicUrlInfo>
       (action: IPCActionData<'lyric', MusicCommonParams>): Promise<AnyListen.Music.LyricInfo>
-      (action: IPCActionData<'songlistSearch', SearchParams>): Promise<ListCommonResult<SongListItem>>
-      (action: IPCActionData<'songlistSorts', CommonParams>): Promise<TagItem[]>
-      (action: IPCActionData<'songlistTags', CommonParams>): Promise<TagGroupItem[]>
-      (action: IPCActionData<'songlist', SonglistListParams>): Promise<ListCommonResult<SongListItem>>
-      (action: IPCActionData<'songlistDetail', ListDetailParams>): Promise<ListCommonResult<AnyListen.Music.MusicInfoOnline>>
-      (action: IPCActionData<'leaderboard', CommonParams>): Promise<TagGroupItem[]>
+      (action: IPCActionData<'lyricSearch', LyricSearchParams>): Promise<AnyListen.Music.LyricInfo[]>
+      // (action: IPCActionData<'songlistSearch', SearchParams>): Promise<ListCommonResult<SongListItem>>
+      // (action: IPCActionData<'songlistSorts', CommonParams>): Promise<TagItem[]>
+      // (action: IPCActionData<'songlistTags', CommonParams>): Promise<TagGroupItem[]>
+      // (action: IPCActionData<'songlist', SonglistListParams>): Promise<ListCommonResult<SongListItem>>
+      // (action: IPCActionData<'songlistDetail', ListDetailParams>): Promise<ListCommonResult<AnyListen.Music.MusicInfoOnline>>
+      // (action: IPCActionData<'leaderboard', CommonParams>): Promise<TagGroupItem[]>
       // (action: IPCActionData<'leaderboardDate', SonglistListParams>): Promise<ListCommonResult<AnyListen.Music.MusicInfoOnline>>
-      (action: IPCActionData<'leaderboardDetail', SonglistListParams>): Promise<ListCommonResult<AnyListen.Music.MusicInfoOnline>>
+      // (action: IPCActionData<'leaderboardDetail', SonglistListParams>): Promise<ListCommonResult<AnyListen.Music.MusicInfoOnline>>
     }
     interface Logcat {
       debug: (...args: unknown[]) => void

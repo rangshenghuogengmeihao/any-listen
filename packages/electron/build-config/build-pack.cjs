@@ -33,7 +33,7 @@ const options = {
     'node_modules/better-sqlite3/package.json',
     'node_modules/better-sqlite3/build/Release/better_sqlite3.node',
     'node_modules/node-gyp-build',
-    'node_modules/electron-log',
+    // 'node_modules/electron-log',
     'node_modules/undici',
     'node_modules/bufferutil',
     'node_modules/utf-8-validate',

@@ -92,7 +92,7 @@ const getMusicPlayUrl = async (
 
   return getMusicUrl({ musicInfo, isRefresh })
     .then(({ url }) => {
-      if (!playerState.playing || diffCurrentMusicInfo(musicInfo)) return null
+      if (diffCurrentMusicInfo(musicInfo)) return null
       // console.log(url)
       return url
     })
@@ -112,7 +112,7 @@ const getMusicPlayUrl = async (
 
 export const setMusicUrl = (musicInfo: AnyListen.Music.MusicInfo, isRefresh?: boolean) => {
   // if (settingState.setting['player.autoSkipOnError']) addLoadTimeout()
-  if (!diffCurrentMusicInfo(musicInfo)) return
+  if (!playerState.playing || !diffCurrentMusicInfo(musicInfo)) return
   if (cancelDelayRetry) cancelDelayRetry()
   gettingUrlId = musicInfo.id
   void getMusicPlayUrl(musicInfo, isRefresh)
@@ -250,7 +250,7 @@ const handlePlay = () => {
   if (!playMusicInfo) return
 
   setStop()
-  playerEvent.pause()
+  // playerEvent.pause()
 
   clearDelayNextTimeout()
   clearLoadTimeout()

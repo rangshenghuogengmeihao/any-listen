@@ -99,6 +99,9 @@ const extension = {
   async updateExtensionSettings(extId: string, config: Record<string, unknown>) {
     await updateExtensionSettings(extId, config)
   },
+  // async resourceAction(extId: string, config: Record<string, unknown>) {
+  //   await updateExtensionSettings(extId, config)
+  // },
   resourceAction: async function (action: Parameters<AnyListen.IPCExtension.ResourceAction>[0]) {
     return resourceAction(action)
   } as AnyListen.IPCExtension.ResourceAction,

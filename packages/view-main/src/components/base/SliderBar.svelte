@@ -86,7 +86,7 @@
       if (disabled) return
       event.preventDefault()
       const touch = event.changedTouches[0]
-      var offsetX = touch.clientX - (event.currentTarget as HTMLDivElement).getBoundingClientRect().left
+      let offsetX = touch.clientX - (event.currentTarget as HTMLDivElement).getBoundingClientRect().left
       handleDown(touch.clientX, offsetX)
     }
   }

@@ -65,11 +65,11 @@
     "@any-listen/view-main": "workspace:view-main@*",
     "@types/spinnies": "^0.5.3",
     "changelog-parser": "^3.0.1",
-    "del": "^6.1.1",
+    "del": "^8.0.0",
     "picocolors": "^1.1.1",
     "spinnies": "github:lyswhut/spinnies.git#233305c58694aa3b053e3ab9af9049993f918b9d",
     "tree-kill": "^1.2.2",
     "ts-node": "^10.9.2",
-    "vite": "^6.1.1"
+    "vite": "^6.2.0"
   }
 }

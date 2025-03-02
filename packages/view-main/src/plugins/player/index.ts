@@ -385,7 +385,8 @@ export const setPitchShifter = (val: number) => {
 export const hasInitedAdvancedAudioFeatures = (): boolean => audioContext != null
 
 export const setResource = (src: string) => {
-  if (audio) audio.src = src
+  if (!audio) return
+  audio.src = src
 }
 
 export const setPlay = () => {

@@ -284,10 +284,10 @@ const handlePlayList = async (
     setPlayMusicInfo(targetPlayMusicInfo!, index)
   }
   commit.setPlaying(true)
+  handlePlay()
   if (settingState.setting['player.isAutoCleanPlayedList'] || prevListId != listId || isClianHistory) {
     await Promise.all([setPlayListMusicUnplayedAll(), setPlayHistoryList([])])
   }
-  handlePlay()
 }
 /**
  * 播放列表内歌曲

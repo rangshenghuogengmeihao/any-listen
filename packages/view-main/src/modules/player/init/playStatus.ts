@@ -22,6 +22,7 @@ export const initPlayStatus = () => {
       unregistered.add(
         playerEvent.on('pause', () => {
           setPlayerPlaying(false)
+          if (playerState.playing) return
           setStatusText(i18n.t('player__paused'))
         })
       )

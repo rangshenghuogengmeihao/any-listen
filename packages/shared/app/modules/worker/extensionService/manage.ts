@@ -196,6 +196,7 @@ export const installExtension = async (tempExtension: AnyListen.Extension.Extens
   extensionEvent.listAdd(extension)
 
   await saveExtensionsSetting(extensionState.extensions)
+  if (extension.enabled) await loadExtension(extension)
 
   return extension
 }

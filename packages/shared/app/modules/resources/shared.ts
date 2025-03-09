@@ -5,10 +5,10 @@ let extensionSerive: ExtensionSeriveTypes
 
 export const initService = async (_extensionSerive: ExtensionSeriveTypes) => {
   extensionSerive = _extensionSerive
-  state.resources = await extensionSerive.getResourceList()
+  resourceState.resources = await extensionSerive.getResourceList()
   extensionEvent.on('extensionEvent', (event) => {
     if (event.action != 'resourceUpdated') return
-    state.resources = event.data
+    resourceState.resources = event.data
   })
 }
 
@@ -18,7 +18,7 @@ export const services = {
   },
 }
 
-export const state: {
+export const resourceState: {
   resources: Partial<
     Record<
       AnyListen.Extension.ResourceAction,

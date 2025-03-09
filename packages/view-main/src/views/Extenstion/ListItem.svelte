@@ -53,7 +53,7 @@
     flex: 1;
     min-width: 300px;
     max-width: 440px;
-    height: 110px;
+    height: 100px;
     display: flex;
     flex-flow: column nowrap;
     padding: 10px;
@@ -99,6 +99,7 @@
       //   justify-content: space-between;
       h3 {
         .auto-hidden;
+        font-size: 14px;
       }
       //   p {
       //     flex: none;
@@ -107,7 +108,7 @@
       .label {
         color: var(--color-font-label);
         .mixin-ellipsis-2;
-        font-size: 13px;
+        font-size: 12px;
       }
     }
   }
@@ -132,20 +133,20 @@
       }
       .author {
         color: var(--color-font-label);
-        font-size: 13px;
+        font-size: 12px;
         .auto-hidden;
       }
       .label {
         flex: none;
         max-width: 120px;
         color: var(--color-font-label);
-        font-size: 13px;
+        font-size: 12px;
         .auto-hidden;
       }
       .load-time {
         flex: none;
         color: var(--color-font-label);
-        font-size: 13px;
+        font-size: 12px;
       }
     }
     .right {

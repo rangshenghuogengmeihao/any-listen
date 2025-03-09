@@ -29,22 +29,20 @@ export const queryMetadataPlayCount = () => {
  */
 export const updateMetadataPlayCount = (count?: number) => {
   const db = getDB()
-  if (count == null) {
-    count =
-      parseInt(
-        (
-          (db
-            .prepare(
-              `
+  count ??=
+    parseInt(
+      (
+        (db
+          .prepare(
+            `
       SELECT "field_value"
       FROM "main"."metadata"
       WHERE "field_name"='play_count'
     `
-            )
-            .get() as { field_value: string } | null) ?? { field_value: '0' }
-        ).field_value
-      ) + 1
-  }
+          )
+          .get() as { field_value: string } | null) ?? { field_value: '0' }
+      ).field_value
+    ) + 1
   db.prepare<[string]>(
     `
     UPDATE "main"."metadata"
@@ -83,9 +81,14 @@ export const updateMetadataPlayTime = (time: number, isAdd = true) => {
   ).run(String(time))
 }
 
-let playListId: null | string
-const initPlayListId = () => {
-  if (playListId !== undefined) return
+interface PlayListInfo {
+  listId: null | string
+  isOnline: boolean
+}
+let playListInfo: PlayListInfo
+const initPlayListInfo = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (playListInfo !== undefined) return
   const db = getDB()
   const result = db
     .prepare(
@@ -95,30 +98,42 @@ const initPlayListId = () => {
     WHERE "field_name"='play_list_id'
   `
     )
-    .get() as { field_value: string }
-  playListId = result?.field_value ?? null
+    .get() as { field_value: string } | null
+  const data = result?.field_value
+  if (data) {
+    try {
+      const result = JSON.parse(data) as PlayListInfo
+      playListInfo = result
+      return
+    } catch {}
+  }
+  playListInfo = {
+    listId: null,
+    isOnline: false,
+  }
 }
 /**
  * 获取播放列表id
  */
-export const queryMetadataPlayListId = () => {
-  initPlayListId()
-  return playListId
+export const queryMetadataPlayListInfo = () => {
+  initPlayListInfo()
+  return playListInfo
 }
 /**
  * 保存播放列表id
  * @param id
  */
-export const saveMetadataPlayListId = (id: string | null) => {
-  if (playListId == id) return
-  playListId = id
+export const saveMetadataPlayListInfo = (id: string | null, isOnline: boolean) => {
+  if (playListInfo.listId == id) return
+  playListInfo.listId = id
+  playListInfo.isOnline = isOnline
   const db = getDB()
   db.prepare<[string | null]>(
     `
     INSERT INTO "main"."metadata" ("field_name", "field_value")
     VALUES ('play_list_id', ?)
   `
-  ).run(id)
+  ).run(JSON.stringify(playListInfo))
 }
 
 let playHistoryList: AnyListen.IPCPlayer.PlayHistoryListItem[]

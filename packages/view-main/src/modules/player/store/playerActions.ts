@@ -88,7 +88,7 @@ const getMusicPlayUrl = async (
   commit.setStatusText(i18n.t('player__geting_url'))
   if (settingState.setting['player.autoSkipOnError']) addLoadTimeout()
 
-  // const type = getPlayType(settingState.setting['player.highQuality'], musicInfo)
+  // const type = getPlayType(settingState.setting['player.playQuality'], musicInfo)
 
   return getMusicUrl({ musicInfo, isRefresh })
     .then(({ url }) => {
@@ -205,12 +205,12 @@ export const setPlayMusicInfo = (info: AnyListen.Player.PlayMusicInfo | null, in
       .then((lyricInfo) => {
         if (info.musicInfo.id != playerState.playMusicInfo?.musicInfo.id) return
         commit.setMusicInfo({
-          lrc: lyricInfo.lyric,
-          tlrc: lyricInfo.tlyric,
-          awlrc: lyricInfo.awlyric,
-          rlrc: lyricInfo.rlyric,
+          lrc: lyricInfo.info.lyric,
+          tlrc: lyricInfo.info.tlyric,
+          awlrc: lyricInfo.info.awlyric,
+          rlrc: lyricInfo.info.rlyric,
         })
-        playerEvent.lyricUpdated(lyricInfo)
+        playerEvent.lyricUpdated(lyricInfo.info)
       })
       .catch((err) => {
         console.log(err)
@@ -275,10 +275,15 @@ const handlePlayList = async (
       setPlayMusicInfo(targetPlayMusicInfo!, index)
     }
   } else {
-    commit.setPlayListId(listId)
+    commit.setPlayListId(listId, isOnline)
   }
   if (targetPlayMusicInfo == null) {
-    const newList = createPlayMusicInfoList(targetList, listId, isOnline, false)
+    const newList = createPlayMusicInfoList({
+      musicInfos: targetList,
+      listId,
+      isOnline,
+      playLater: false,
+    })
     await setPlayListMusic({ list: newList, listId })
     targetPlayMusicInfo = newList.find((m) => m.musicInfo.id == targetMusicInfo.id)
     setPlayMusicInfo(targetPlayMusicInfo!, index)

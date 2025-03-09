@@ -47,11 +47,22 @@ declare namespace AnyListen {
       limit: number
     }
     interface LyricSearchParams extends CommonParams {
-      interval: number
-      keyword: string
+      name: string
+      interval?: number
+      artist?: string
+    }
+    interface LyricSearchParams extends CommonParams {
+      name: string
+      artist?: string
+      interval?: number
+    }
+    interface PicSearchParams extends CommonParams {
+      name: string
+      artist?: string
     }
     interface SearchParams extends CommonListParams {
-      keyword: string
+      name: string
+      artist?: string
     }
     interface ListDetailParams extends CommonListParams {
       id: string
@@ -68,7 +79,11 @@ declare namespace AnyListen {
       // source: string
     }
     interface MusicCommonParams extends CommonParams {
-      musicInfo: Music.MusicInfoOnline
+      musicInfo: Music.MusicInfo
+    }
+    interface MusicUrlParams extends MusicCommonParams {
+      quality?: Music.Quality
+      type?: Music.FileType
     }
     interface MusicUrlInfo {
       url: string
@@ -76,20 +91,22 @@ declare namespace AnyListen {
     }
 
     interface ResourceAction {
-      // (action: IPCActionData<'tipSearch' | 'hotSearch', CommonParams>): Promise<string[]>
-      (action: IPCActionData<'musicSearch', SearchParams>): Promise<ListCommonResult<Music.MusicInfoOnline>>
-      (action: IPCActionData<'musicPic', MusicCommonParams>): Promise<string>
-      (action: IPCActionData<'musicUrl', MusicCommonParams>): Promise<MusicUrlInfo>
-      (action: IPCActionData<'lyric', MusicCommonParams>): Promise<Music.LyricInfo>
-      (action: IPCActionData<'lyricSearch', LyricSearchParams>): Promise<Music.LyricInfo[]>
-      // (action: IPCActionData<'songlistSearch', SearchParams>): Promise<ListCommonResult<Resource.SongListItem>>
-      // (action: IPCActionData<'songlistSorts', CommonParams>): Promise<Resource.TagItem[]>
-      // (action: IPCActionData<'songlistTags', CommonParams>): Promise<Resource.TagGroupItem[]>
-      // (action: IPCActionData<'songlist', SonglistListParams>): Promise<ListCommonResult<Resource.SongListItem>>
-      // (action: IPCActionData<'songlistDetail', ListDetailParams>): Promise<ListCommonResult<Music.MusicInfoOnline>>
-      // (action: IPCActionData<'leaderboard', CommonParams>): Promise<Resource.TagGroupItem[]>
-      // (action: IPCActionData<'leaderboardDate', SonglistListParams>): Promise<ListCommonResult<AnyListen.Music.MusicInfoOnline>>
-      // (action: IPCActionData<'leaderboardDetail', SonglistListParams>): Promise<ListCommonResult<Music.MusicInfoOnline>>
+      // tipSearch: (params: CommonParams) => Promise<string[]>
+      // hotSearch: (params: CommonParams) => Promise<string[]>
+      musicSearch: (params: SearchParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
+      musicPic: (params: MusicCommonParams) => Promise<string>
+      musicUrl: (params: MusicUrlParams) => Promise<MusicUrlInfo>
+      lyric: (params: MusicCommonParams) => Promise<Music.LyricInfo>
+      musicPicSearch: (params: PicSearchParams) => Promise<string[]>
+      lyricSearch: (params: LyricSearchParams) => Promise<Music.LyricInfo[]>
+      // songlistSearch: (params: SearchParams) => Promise<ListCommonResult<Resource.SongListItem>>
+      // songlistSorts: (params: CommonParams) => Promise<Resource.TagItem[]>
+      // songlistTags: (params: CommonParams) => Promise<Resource.TagGroupItem[]>
+      // songlist: (params: SonglistListParams) => Promise<ListCommonResult<Resource.SongListItem>>
+      // songlistDetail: (params: ListDetailParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
+      // leaderboard: (params: CommonParams) => Promise<Resource.TagGroupItem[]>
+      // leaderboardDate: (params: SonglistListParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
+      // leaderboardDetail: (params: SonglistListParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
     }
     // type ResourceAction = IPCActionFunc<'tipSearch', string, string[]>
     // | IPCActionFunc<'hotSearch', string, string[]>
@@ -142,7 +159,10 @@ declare namespace AnyListen {
       getExtensionLastLogs: (id?: string) => LastLog[]
       getAllExtensionSettings: () => Promise<Extension.ExtensionSetting[]>
       updateExtensionSettings: (extId: string, config: Record<string, any>) => Promise<void>
-      resourceAction: ResourceAction
+      resourceAction: <T extends keyof ResourceAction>(
+        action: T,
+        params: Parameters<ResourceAction[T]>[0]
+      ) => Promise<Awaited<ReturnType<ResourceAction[T]>>>
     }>
     type ServerIPCActions<Socket = undefined> = IPC.WarpIPCHandlerActions<Socket, ServerActions>
 
@@ -242,7 +262,10 @@ declare namespace AnyListen {
       playHistoryListAction: (action: IPCPlayer.PlayHistoryListAction) => void
       configurationChanged: (keys: string[], config: Record<string, any>) => void
       // clientConnectAction: (id: string, isConnected: boolean) => void
-      resourceAction: ResourceAction
+      resourceAction: <T extends keyof ResourceAction>(
+        action: T,
+        params: Parameters<ResourceAction[T]>[0]
+      ) => Promise<Awaited<ReturnType<ResourceAction[T]>>>
     }
   }
 }

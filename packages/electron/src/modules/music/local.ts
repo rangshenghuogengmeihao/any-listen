@@ -19,8 +19,9 @@ export const getMusicUrl = async ({
     if (path) {
       return {
         url: encodePath(path),
-        toggleSource: false,
-        quality: musicInfo.meta.bitrateLabel ?? '128k',
+        // toggleSource: false,
+        // quality: (musicInfo.meta.bitrateLabel as AnyListen.Music.Quality | null) ?? '128k',
+        quality: '128k',
         isFromCache: false,
       }
     }
@@ -44,7 +45,7 @@ export const getMusicPicUrl = async ({
         return {
           url: pic,
           isFromCache: true,
-          toggleSource: false,
+          // toggleSource: false,
         }
       }
       if (Buffer.byteLength(pic.data) > 500_000) {
@@ -55,7 +56,7 @@ export const getMusicPicUrl = async ({
           return {
             url: tempFile,
             isFromCache: false,
-            toggleSource: false,
+            // toggleSource: false,
           }
         } catch (err) {
           console.log(err)
@@ -64,7 +65,7 @@ export const getMusicPicUrl = async ({
       return {
         url: `data:image/${pic.format};base64,${Buffer.from(pic.data).toString('base64')}`,
         isFromCache: false,
-        toggleSource: false,
+        // toggleSource: false,
       }
     }
 
@@ -72,7 +73,7 @@ export const getMusicPicUrl = async ({
       return {
         url: musicInfo.meta.picUrl,
         isFromCache: true,
-        toggleSource: false,
+        // toggleSource: false,
       }
     }
   }
@@ -85,7 +86,7 @@ export const getLyricInfo = async ({
 }: {
   musicInfo: AnyListen.Music.MusicInfoLocal
   isRefresh?: boolean
-}): Promise<AnyListen.Music.LyricInfo | null> => {
+}): Promise<AnyListen.IPCMusic.MusicLyricInfo | null> => {
   if (!isRefresh) {
     const [lyricInfo, fileLyricInfo] = await Promise.all([
       getCachedLyricInfo(musicInfo),
@@ -93,11 +94,24 @@ export const getLyricInfo = async ({
     ])
     if (lyricInfo?.lyric && lyricInfo.rawlrcInfo) {
       // 存在已编辑歌词
-      return buildLyricInfo({ ...lyricInfo, rawlrcInfo: fileLyricInfo ?? lyricInfo.rawlrcInfo })
+      return {
+        info: await buildLyricInfo({ ...lyricInfo, rawlrcInfo: fileLyricInfo ?? lyricInfo.rawlrcInfo }),
+        isFromCache: true,
+      }
     }
 
-    if (fileLyricInfo) return buildLyricInfo(fileLyricInfo)
-    if (lyricInfo?.lyric) return buildLyricInfo(lyricInfo)
+    if (fileLyricInfo) {
+      return {
+        info: await buildLyricInfo(fileLyricInfo),
+        isFromCache: true,
+      }
+    }
+    if (lyricInfo?.lyric) {
+      return {
+        info: await buildLyricInfo(lyricInfo),
+        isFromCache: true,
+      }
+    }
   }
   return null
 }

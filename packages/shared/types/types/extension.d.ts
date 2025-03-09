@@ -7,6 +7,7 @@ declare global {
         | 'hotSearch'
         | 'musicSearch'
         | 'musicPic'
+        | 'musicPicSearch'
         | 'musicUrl'
         | 'songlistSearch'
         | 'songlist'

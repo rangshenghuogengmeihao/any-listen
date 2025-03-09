@@ -61,11 +61,11 @@ export const createClientExtension = (main: MainCall) => {
     async updateExtensionSettings(extId, config) {
       return main.updateExtensionSettings(extId, config)
     },
-    async resourceAction(action) {
-      return main.resourceAction(
-        // @ts-expect-error
-        action
-      )
+    async resourceAction<T extends keyof AnyListen.IPCExtension.ResourceAction>(
+      action: T,
+      params: Parameters<AnyListen.IPCExtension.ResourceAction[T]>[0]
+    ): Promise<Awaited<ReturnType<AnyListen.IPCExtension.ResourceAction[T]>>> {
+      return main.resourceAction(action, params)
     },
     onExtensionEvent(listener) {
       ipcPreloadEvent.on('extensionEvent', listener)

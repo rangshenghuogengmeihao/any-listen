@@ -36,6 +36,7 @@ const RESOURCE: AnyListen.Extension.ResourceAction[] = [
   'musicSearch',
   'musicPic',
   'musicUrl',
+  'musicPicSearch',
   'songlistSearch',
   'songlist',
   'leaderboard',
@@ -221,7 +222,7 @@ export const loadExtension = async (extension: AnyListen.Extension.Extension) =>
     await setupVmContext(vmState)
     runTotalTime = await runExtension(vmState.vmContext, vmState.extension)
   } catch (err) {
-    console.log('load extension error: ', err)
+    console.error('load extension error: ', err)
     extension.errorMessage = (err as Error).message
     extensionEvent.loadError(extension.id, (err as Error).message)
     return
@@ -305,7 +306,6 @@ const verifyExtension = async (unpackDir: string) => {
     const { x } = await import('tar')
     await x({
       file: extBundleFilePath,
-      strip: 1,
       C: extDir,
     }).catch(async (err: Error) => {
       await removePath(extDir)
@@ -335,7 +335,6 @@ export const unpackExtension = async (bundlePath: string) => {
   const { x } = await import('tar')
   await x({
     file: bundlePath,
-    strip: 1,
     C: targetDir,
   }).catch(async (err: Error) => {
     await removePath(targetDir)
@@ -363,11 +362,11 @@ export const restoreExtension = async (extensionDir: string) => {
   return newPath
 }
 
-export const mvExtension = async (extensionDir: string) => {
-  if (dirname(extensionDir) == extensionState.extensionDir) return extensionDir
-  const newPath = joinPath(extensionState.extensionDir, basename(extensionDir))
-  if (!(await renamePath(extensionDir, newPath))) {
-    throw new Error(`Could not rename extension: ${extensionDir}`)
+export const mvExtension = async (tempExtension: AnyListen.Extension.Extension) => {
+  if (dirname(tempExtension.directory) == extensionState.extensionDir) return tempExtension.directory
+  const newPath = joinPath(extensionState.extensionDir, `${tempExtension.id}_${tempExtension.version}`)
+  if (!(await renamePath(tempExtension.directory, newPath))) {
+    throw new Error(`Could not rename extension: ${tempExtension.directory}`)
   }
   return newPath
 }

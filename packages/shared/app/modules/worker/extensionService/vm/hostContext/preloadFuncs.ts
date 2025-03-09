@@ -42,13 +42,13 @@ export const updateI18nMessage = () => {
 //   }
 // }
 
-export const resourceAction: AnyListen.IPCExtension.ResourceAction = async (action) => {
-  const vmContext = contextState.vmContexts.get(action.data.extensionId)
+export const resourceAction = async <T extends keyof AnyListen.IPCExtension.ResourceAction>(
+  action: T,
+  params: Parameters<AnyListen.IPCExtension.ResourceAction[T]>[0]
+): Promise<Awaited<ReturnType<AnyListen.IPCExtension.ResourceAction[T]>>> => {
+  const vmContext = contextState.vmContexts.get(params.extensionId)
   if (!vmContext) throw new Error('extension not found')
-  return vmContext.preloadFuncs.resourceAction(
-    // @ts-expect-error
-    action
-  )
+  return vmContext.preloadFuncs.resourceAction(action, params)
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -59,7 +59,7 @@ let prevProgress = {
   currentTime: 0,
 }
 export const getMusicUrl = async (info: AnyListen.IPCMusic.GetMusicUrlInfo): Promise<AnyListen.IPCMusic.MusicUrlInfo> => {
-  let key = `${info.musicInfo.id}_${info.quality}_${info.toggleSource}_${info.isRefresh}`
+  let key = `${info.musicInfo.id}_${info.quality}_${info.isRefresh}`
 
   if (getOtherSourcePromises.has(key)) return getOtherSourcePromises.get(key)!
 
@@ -86,6 +86,7 @@ export const getMusicUrl = async (info: AnyListen.IPCMusic.GetMusicUrlInfo): Pro
  * @param data
  */
 export const setPlayHistoryList = async (data: AnyListen.IPCPlayer.PlayHistoryListActionSet) => {
+  console.warn('setPlayHistoryList', data)
   commit.setPlayHistoryList(data)
   await sendPlayHistoryListAction({ action: 'setList', data })
 }

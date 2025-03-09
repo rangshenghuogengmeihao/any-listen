@@ -141,11 +141,12 @@ export const updateExtensionSettings = async (extId: string, config: Record<stri
   return workers.extensionService.updateExtensionSettings(extId, config)
 }
 
-export const resourceAction: AnyListen.IPCExtension.ResourceAction = async (action) => {
-  return workers.extensionService.resourceAction(
-    // @ts-expect-error
-    action
-  )
+type RA = AnyListen.IPCExtension.ResourceAction
+export const resourceAction = async <T extends keyof RA>(
+  action: T,
+  params: Parameters<RA[T]>[0]
+): Promise<Awaited<ReturnType<RA[T]>>> => {
+  return workers.extensionService.resourceAction(action, params)
 }
 
 export { extensionEvent, extensionState }

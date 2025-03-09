@@ -18,6 +18,10 @@ export const getCachedLyricInfo = async (musicInfo: AnyListen.Music.MusicInfo): 
   return null
 }
 
+export const saveLyricInfo = async (musicInfo: AnyListen.Music.MusicInfo, info: AnyListen.Music.LyricInfo) => {
+  await workers.dbService.rawLyricSave(musicInfo.id, info)
+}
+
 // TODO rawlrcInfo s2t
 export const buildLyricInfo = async (lyricInfo: AnyListen.Music.LyricInfo): Promise<AnyListen.Music.LyricInfo> => {
   if (appState.appSetting['player.isS2t']) {

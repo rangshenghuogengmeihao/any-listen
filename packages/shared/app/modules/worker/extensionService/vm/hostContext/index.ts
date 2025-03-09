@@ -13,6 +13,8 @@ import {
   set_timeout,
   utils_aes_encrypt,
   utils_b642buf,
+  utils_iconv_decode,
+  utils_iconv_encode,
   utils_rsa_encrypt,
   utils_str2b64,
   utils_str2md5,
@@ -52,6 +54,8 @@ export const createContext = async (extension: AnyListen.Extension.Extension) =>
     __ext_host_call__utils_str2md5: utils_str2md5,
     __ext_host_call__utils_aes_encrypt: utils_aes_encrypt,
     __ext_host_call__utils_rsa_encrypt: utils_rsa_encrypt,
+    __ext_host_call__utils_iconv_decode: utils_iconv_decode,
+    __ext_host_call__utils_iconv_encode: utils_iconv_encode,
   }
   for (const name of EXTENSION_VM_IPC_FUNC_NAMES) {
     const rawFn = context[name]

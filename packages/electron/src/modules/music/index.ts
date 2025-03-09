@@ -13,6 +13,7 @@
 //   getLyricInfo as getDownloadLyricInfo,
 // } from './download'
 import { getLyricInfo as getLocalLyric, getMusicUrl as getLocalMusicUrl, getMusicPicUrl as getLocalPicUrl } from './local'
+import { getLyricInfo as getOnlineLyric, getMusicUrl as getOnlineMusicUrl, getMusicPicUrl as getOnlinePicUrl } from './online'
 
 export const getMusicUrl = async ({
   musicInfo,
@@ -21,7 +22,7 @@ export const getMusicUrl = async ({
 }: {
   musicInfo: AnyListen.Music.MusicInfo
   isRefresh?: boolean
-  quality?: string
+  quality?: AnyListen.Music.Quality
 }): Promise<AnyListen.IPCMusic.MusicUrlInfo> => {
   if (musicInfo.isLocal) {
     const info = await getLocalMusicUrl({
@@ -34,7 +35,7 @@ export const getMusicUrl = async ({
   } else {
     // return getOnlineMusicUrl({ musicInfo, isRefresh, quality })
   }
-  throw new Error('failed')
+  return getOnlineMusicUrl({ musicInfo, isRefresh, quality })
   // if ('progress' in musicInfo) {
   //   return getDownloadMusicUrl({ musicInfo, isRefresh })
   // } else if (musicInfo.source == 'local') {
@@ -64,7 +65,7 @@ export const getMusicPic = async ({
   } else {
     // return getOnlinePicUrl({ musicInfo, isRefresh, listId })
   }
-  throw new Error('failed')
+  return getOnlinePicUrl({ musicInfo, isRefresh, listId })
 
   // if ('progress' in musicInfo) {
   //   return getDownloadPicUrl({ musicInfo, isRefresh, listId })
@@ -81,7 +82,7 @@ export const getLyricInfo = async ({
 }: {
   musicInfo: AnyListen.Music.MusicInfo
   isRefresh?: boolean
-}): Promise<AnyListen.Music.LyricInfo> => {
+}): Promise<AnyListen.IPCMusic.MusicLyricInfo> => {
   if (musicInfo.isLocal) {
     const info = await getLocalLyric({
       musicInfo,
@@ -92,7 +93,7 @@ export const getLyricInfo = async ({
   } else {
     // return getOnlineLyricInfo({ musicInfo, isRefresh })
   }
-  throw new Error('failed')
+  return getOnlineLyric({ musicInfo, isRefresh })
   // if ('progress' in musicInfo) {
   //   return getDownloadLyricInfo({ musicInfo, isRefresh })
   // } else if (musicInfo.source == 'local') {

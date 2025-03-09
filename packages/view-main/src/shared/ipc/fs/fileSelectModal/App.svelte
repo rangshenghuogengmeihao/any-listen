@@ -167,7 +167,18 @@
   }
 </script>
 
-<Modal bind:visible teleport="#root" bgclose={false} {onafterleave} width="65%" maxwidth="900px" maxheight="80%">
+<Modal
+  bind:visible
+  teleport="#root"
+  bgclose={false}
+  {onafterleave}
+  width="65%"
+  maxwidth="900px"
+  maxheight="80%"
+  onclose={() => {
+    onsubmit({ canceled: true, filePaths: [] })
+  }}
+>
   <div class="header">
     <h2>{options.title}</h2>
     <Btn

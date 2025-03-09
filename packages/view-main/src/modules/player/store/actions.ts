@@ -69,7 +69,12 @@ export {
 } from './playerActions'
 
 export const addPlayLaterMusic = async (musicInfos: AnyListen.Music.MusicInfo[], listId: string, isOnline = false) => {
-  const list = createPlayMusicInfoList(musicInfos, listId, isOnline, true)
+  const list = createPlayMusicInfoList({
+    musicInfos,
+    listId,
+    isOnline,
+    playLater: true,
+  })
   await addPlayListMusic({ musics: list, pos: playerState.playList.findIndex((m) => m.playLater) + 1 })
 }
 

@@ -62,11 +62,11 @@ export const createClientExtension = (ipcSocket: IPCSocket) => {
     async updateExtensionSettings(extId, config) {
       return ipcSocket.remoteQueueExtension.updateExtensionSettings(extId, config)
     },
-    async resourceAction(action) {
-      return ipcSocket.remoteExtension.resourceAction(
-        // @ts-expect-error
-        action
-      )
+    async resourceAction<T extends keyof AnyListen.IPCExtension.ResourceAction>(
+      action: T,
+      params: Parameters<AnyListen.IPCExtension.ResourceAction[T]>[0]
+    ): Promise<Awaited<ReturnType<AnyListen.IPCExtension.ResourceAction[T]>>> {
+      return ipcSocket.remoteExtension.resourceAction(action, params)
     },
     onExtensionEvent(listener) {
       ipcPreloadEvent.on('extensionEvent', listener)

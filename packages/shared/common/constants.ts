@@ -131,6 +131,8 @@ export const EXTENSION_VM_IPC_FUNC_NAMES = [
   '__ext_host_call__utils_str2md5',
   '__ext_host_call__utils_aes_encrypt',
   '__ext_host_call__utils_rsa_encrypt',
+  '__ext_host_call__utils_iconv_decode',
+  '__ext_host_call__utils_iconv_encode',
 ] as const
 
 export const EXTENSION = {

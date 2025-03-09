@@ -29,8 +29,9 @@ export const updatePlayHistoryIndex = (historyIndex: number) => {
   playerEvent.playInfoChanged({ ...playerState.playInfo })
 }
 
-export const setPlayListId = (listId: string | null) => {
+export const setPlayListId = (listId: string | null, isOnline: boolean) => {
   playerState.playInfo.listId = listId
+  playerState.playInfo.isOnline = isOnline
 
   playerEvent.playInfoChanged({ ...playerState.playInfo })
 }

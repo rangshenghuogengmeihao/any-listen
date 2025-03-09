@@ -23,11 +23,14 @@ import { playerState } from './store/state'
 const init = async (isInited: boolean) => {
   initPlayerModules()
   sendCreatedEvent()
-  const [{ info, list, listId, historyList, isCollect }] = await Promise.all([getPlayInfo(), appState.workerInitPromiseMain])
+  const [{ info, list, listId, isOnline, historyList, isCollect }] = await Promise.all([
+    getPlayInfo(),
+    appState.workerInitPromiseMain,
+  ])
   console.log(info)
   console.log(list, listId, historyList)
   initPlayList(list)
-  setPlayListId(listId)
+  setPlayListId(listId, isOnline)
   setCollectStatus(isCollect)
   initPlayHistoryList(historyList)
   const targetMusicInfo = list[info.index] as AnyListen.Player.PlayMusicInfo | undefined

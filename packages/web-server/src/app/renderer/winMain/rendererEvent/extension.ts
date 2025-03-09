@@ -71,8 +71,8 @@ export const createExposeExtension = () => {
     async updateExtensionSettings(event, extId, config) {
       return updateExtensionSettings(extId, config)
     },
-    async resourceAction(event, action) {
-      return resourceAction(action)
+    async resourceAction(event, action, params) {
+      return resourceAction(action, params)
     },
   } satisfies Partial<ExposeClientFunctions>
 }

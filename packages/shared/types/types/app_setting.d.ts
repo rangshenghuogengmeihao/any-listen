@@ -83,9 +83,9 @@ declare global {
       'player.togglePlayMethod': 'listLoop' | 'random' | 'list' | 'singleLoop' | 'none'
 
       /**
-       * 是否优先播放320k音质
+       * 优先播放的音质
        */
-      'player.highQuality': boolean
+      'player.playQuality': '128k' | '320k' | 'flac' | 'flac24bit'
 
       /**
        * 是否显示任务栏进度条

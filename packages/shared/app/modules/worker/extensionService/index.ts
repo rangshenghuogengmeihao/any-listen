@@ -102,9 +102,12 @@ const extension = {
   // async resourceAction(extId: string, config: Record<string, unknown>) {
   //   await updateExtensionSettings(extId, config)
   // },
-  resourceAction: async function (action: Parameters<AnyListen.IPCExtension.ResourceAction>[0]) {
-    return resourceAction(action)
-  } as AnyListen.IPCExtension.ResourceAction,
+  async resourceAction<T extends keyof AnyListen.IPCExtension.ResourceAction>(
+    action: T,
+    params: Parameters<AnyListen.IPCExtension.ResourceAction[T]>[0]
+  ): Promise<Awaited<ReturnType<AnyListen.IPCExtension.ResourceAction[T]>>> {
+    return resourceAction(action, params)
+  },
   // clientConnected(id: string) {
   //   extensionEvent.clientConnected(id)
   // },

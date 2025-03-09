@@ -15,7 +15,10 @@ export class Event extends _Event {
   async playListAction(action: AnyListen.IPCPlayer.PlayListAction): Promise<void> {
     switch (action.action) {
       case 'set':
-        await Promise.all([dbService.playListOverride(action.data.list), dbService.saveMetadataPlayListId(action.data.listId)])
+        await Promise.all([
+          dbService.playListOverride(action.data.list),
+          dbService.saveMetadataPlayListInfo(action.data.listId, action.data.isOnline),
+        ])
         break
       case 'add':
         await dbService.playListAdd(action.data.pos, action.data.musics)

@@ -2,6 +2,7 @@
 import { logFormat } from '@any-listen/common/tools'
 import { dateFormat } from '@any-listen/common/utils'
 import { toMD5, toSha256 } from '@any-listen/nodejs'
+import iconv from 'iconv-lite'
 import crypto from 'node:crypto'
 import { extensionEvent } from '../../event'
 import { triggerTimeout } from './preloadFuncs'
@@ -89,12 +90,20 @@ export const utils_str2sha256 = (data: string) => {
   }
 }
 
+// const verifyParams = (params: Uint8Array | string) => {
+//   return typeof params == 'string' || params instanceof Uint8Array
+// }
 export const AES_MODE = {
   CBC_128_PKCS7Padding: 'aes-128-cbc',
   ECB_128_NoPadding: 'aes-128-ecb',
 } as const
-export const utils_aes_encrypt = (mode: AnyListen.ExtensionVM.AES_MODE, data: string, key: string, iv: string) => {
-  if (typeof data != 'string') return ''
+export const utils_aes_encrypt = (
+  mode: AnyListen.ExtensionVM.AES_MODE,
+  data: Uint8Array | string,
+  key: Uint8Array | string,
+  iv: Uint8Array | string
+) => {
+  // if (!verifyParams(data) || !verifyParams(key) || !verifyParams(iv)) return ''
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!AES_MODE[mode]) return ''
   try {
@@ -102,8 +111,9 @@ export const utils_aes_encrypt = (mode: AnyListen.ExtensionVM.AES_MODE, data: st
     let keyBuf = Buffer.from(key)
     let ivBuf = Buffer.from(iv)
     const cipher = crypto.createCipheriv(AES_MODE[mode], keyBuf, ivBuf)
-    return Buffer.concat([cipher.update(dataBuf), cipher.final()]).toString('base64')
-  } catch {
+    const result = Buffer.concat([cipher.update(dataBuf), cipher.final()]).toString('base64')
+    return result
+  } catch (err) {
     return ''
   }
 }
@@ -112,8 +122,12 @@ export const RSA_PADDING = {
   RSA_PKCS1_OAEP_PADDING: 'RSA_PKCS1_OAEP_PADDING',
   RSA_NO_PADDING: 'RSA_NO_PADDING',
 } as const
-export const utils_rsa_encrypt = (mode: AnyListen.ExtensionVM.RSA_PADDING, data: string, key: string) => {
-  if (typeof data != 'string') return ''
+export const utils_rsa_encrypt = (
+  mode: AnyListen.ExtensionVM.RSA_PADDING,
+  data: Uint8Array | string,
+  key: Uint8Array | string
+) => {
+  // if (!verifyParams(data) || !verifyParams(key)) return ''
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!RSA_PADDING[mode]) return ''
   try {
@@ -126,6 +140,14 @@ export const utils_rsa_encrypt = (mode: AnyListen.ExtensionVM.RSA_PADDING, data:
   }
 }
 
+export const utils_iconv_decode = (data: Uint8Array | Uint16Array, encoding: string) => {
+  return iconv.decode(Buffer.from(data), encoding)
+}
+
+export const utils_iconv_encode = (data: string, encoding: string) => {
+  return iconv.encode(data, encoding)
+}
+
 export const handlePreloadCall = <T extends keyof AnyListen.ExtensionVM.HostCallActions>(
   action: T,
   data: AnyListen.ExtensionVM.HostCallActions[T],
@@ -134,8 +156,8 @@ export const handlePreloadCall = <T extends keyof AnyListen.ExtensionVM.HostCall
   switch (action) {
     case 'logcat': {
       const info = data as AnyListen.ExtensionVM.HostCallActions['logcat']
-      if (info.message.length > 1000) {
-        info.message = `${info.message.substring(0, 1000)}...`
+      if (info.message.length > 50000) {
+        info.message = `${info.message.substring(0, 50000)}...`
       }
       if (import.meta.env.DEV) {
         console.log(`[ExtensionHost ${dateFormat(info.timestamp)} ${info.type.toUpperCase()} - ${info.id}] ${info.message}`)

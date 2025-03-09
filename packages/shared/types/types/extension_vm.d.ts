@@ -65,8 +65,15 @@ declare global {
         __ext_host_call__utils_str2b64?: (data: string) => string
         __ext_host_call__utils_b642buf?: (data: string) => number[]
         __ext_host_call__utils_str2md5?: (data: string) => string
-        __ext_host_call__utils_aes_encrypt?: (mode: AES_MODE, data: string, key: string, iv: string) => string
-        __ext_host_call__utils_rsa_encrypt?: (mode: RSA_PADDING, data: string, key: string) => string
+        __ext_host_call__utils_aes_encrypt?: (
+          mode: AES_MODE,
+          data: Uint8Array | string,
+          key: Uint8Array | string,
+          iv: Uint8Array | string
+        ) => string
+        __ext_host_call__utils_rsa_encrypt?: (mode: RSA_PADDING, data: Uint8Array | string, key: Uint8Array | string) => string
+        __ext_host_call__utils_iconv_decode?: (data: Uint8Array | Uint16Array, encoding: string) => string
+        __ext_host_call__utils_iconv_encode?: (data: string, encoding: string) => Uint8Array
 
         // host -> preload
         __ext_preload__?: (key: string, action: keyof PreloadCallActions, data?: string) => void

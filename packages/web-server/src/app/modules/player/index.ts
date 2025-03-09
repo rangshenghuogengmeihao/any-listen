@@ -157,9 +157,11 @@ export const initPlayer = async () => {
 
   playerEvent.on('playListAction', async (action) => {
     if (action.action == 'set') {
-      const historyList = await workers.dbService.queryMetadataPlayHistoryList()
-      if (!historyList.length) return
-      void playerEvent.playHistoryListAction({ action: 'setList', data: [] })
+      if (!action.data.isSync) {
+        const historyList = await workers.dbService.queryMetadataPlayHistoryList()
+        if (!historyList.length) return
+        void playerEvent.playHistoryListAction({ action: 'setList', data: [] })
+      }
     } else if (action.action == 'remove') {
       const ids = action.data
       const historyList = await workers.dbService.queryMetadataPlayHistoryList()
@@ -201,20 +203,21 @@ export const initPlayer = async () => {
 
 export const getPlayInfo = async (): Promise<AnyListen.IPCPlayer.PlayInfo> => {
   await initPlayInfo()
-  const [[list, isCollect], listId, historyList] = await Promise.all([
+  const [[list, isCollect], { listId, isOnline }, historyList] = await Promise.all([
     workers.dbService.getPlayList().then(async (list) => {
       const minfo = list[playInfo.index]
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!minfo) return [list, false] as const
       return [list, await checkCollect(minfo)] as const
     }),
-    workers.dbService.queryMetadataPlayListId(),
+    workers.dbService.queryMetadataPlayListInfo(),
     workers.dbService.queryMetadataPlayHistoryList(),
   ])
   return {
     info: playInfo,
     list,
     listId,
+    isOnline,
     historyList,
     isCollect,
   }

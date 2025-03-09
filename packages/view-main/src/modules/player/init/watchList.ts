@@ -43,9 +43,19 @@ const throttleListSync = throttle(async () => {
 
   const newList = playerState.playList.filter((m) => m.playLater)
   const targetMusicList = await getListMusics(targetListId)
-  const newTargetList = targetMusicList.map((m) => createPlayMusicInfo(m, targetListId, false, false))
+  const newTargetList = targetMusicList.map((m) => {
+    return createPlayMusicInfo({
+      musicInfo: m,
+      listId: targetListId,
+      isOnline: playerState.playInfo.isOnline,
+      playLater: false,
+      linked: true,
+    })
+  })
   arrPush(newList, newTargetList)
-  await setPlayListMusic({ list: newList, listId: targetListId })
+  // TODO music info update
+  console.log('throttleListSync setPlayListMusic')
+  await setPlayListMusic({ list: newList, listId: targetListId, isOnline: playerState.playInfo.isOnline, isSync: true })
 })
 const handleListSync = (listIds: string[]) => {
   for (const id of listIds) {
@@ -120,6 +130,7 @@ export const initWatchList = () => {
         })
       )
 
+      // TODO music info update
       unregistered.add(musicLibraryEvent.on('listMusicChanged', handleListSync))
 
       unregistered.add(

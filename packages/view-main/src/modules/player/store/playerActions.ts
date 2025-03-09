@@ -284,7 +284,7 @@ const handlePlayList = async (
       isOnline,
       playLater: false,
     })
-    await setPlayListMusic({ list: newList, listId })
+    await setPlayListMusic({ list: newList, listId, isOnline })
     targetPlayMusicInfo = newList.find((m) => m.musicInfo.id == targetMusicInfo.id)
     setPlayMusicInfo(targetPlayMusicInfo!, index)
   }

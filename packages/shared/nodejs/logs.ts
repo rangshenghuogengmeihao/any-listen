@@ -30,7 +30,7 @@ export const readLastLines = async (filePath: string, lineCount = 100) => {
 
     if (process.platform === 'win32') {
       // Windows 系统下使用 PowerShell 来获取文件的最后100行
-      command = `powershell -Command "chcp 65001; Get-Content ${filePath} -Encoding UTF8 -Tail ${lineCount}"`
+      command = `powershell -Command "chcp 65001; Get-Content '${filePath}' -Encoding UTF8 -Tail ${lineCount}"`
       exec(command, { encoding: 'utf8' }, (error, stdout, stderr) => {
         if (error) {
           console.error('exec error:', error)
@@ -48,7 +48,7 @@ export const readLastLines = async (filePath: string, lineCount = 100) => {
       })
     } else {
       // Linux/macOS 系统下使用 tail 命令
-      command = `tail -n ${lineCount} ${filePath}`
+      command = `tail -n ${lineCount} '${filePath}'`
       exec(
         command,
         {

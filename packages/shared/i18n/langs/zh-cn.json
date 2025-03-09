@@ -36,6 +36,7 @@
   "edit_list_modal__new_title": "新建列表",
   "extension.header.actions.install_local": "本地安装",
   "extension.install_local_failed.public_key_not_match": "安装失败，即将安装的扩展与已安装的签名不一致",
+  "extension.select_local_file": "选择扩展安装包",
   "extension__action_disable": "禁用",
   "extension__action_enable": "启用",
   "extension__action_install": "安装",

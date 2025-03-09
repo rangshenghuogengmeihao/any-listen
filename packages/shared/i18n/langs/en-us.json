@@ -36,6 +36,7 @@
   "edit_list_modal__new_title": "Create new list",
   "extension.header.actions.install_local": "Local installation",
   "extension.install_local_failed.public_key_not_match": "Installation failed, the upcoming extension is inconsistent with the installed signature",
+  "extension.select_local_file": "Select the extension installation package",
   "extension__action_disable": "Disable",
   "extension__action_enable": "Enable",
   "extension__action_install": "Install",

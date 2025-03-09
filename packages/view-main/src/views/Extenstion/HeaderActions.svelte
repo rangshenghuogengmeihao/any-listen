@@ -9,7 +9,7 @@
 
   const handleInstallLocal = async () => {
     const { canceled, filePaths } = await showOpenDialog({
-      title: i18n.t('user_list__select_local_file'),
+      title: i18n.t('extension.select_local_file'),
       properties: ['openFile'],
       filters: [
         // https://support.google.com/chromebook/answer/183093

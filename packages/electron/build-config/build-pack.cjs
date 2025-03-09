@@ -67,7 +67,7 @@ const winOptions = {
     allowToChangeInstallationDirectory: true,
     differentialPackage: true,
     license: './licenses/license.rtf',
-    shortcutName: 'LX Music',
+    shortcutName: 'Any Listen',
   },
 }
 /**
@@ -86,16 +86,16 @@ const linuxOptions = {
       // https://specifications.freedesktop.org/desktop-entry-spec/latest/example.html
       // https://developer.gnome.org/documentation/guidelines/maintainer/integrating.html#desktop-files
       entry: {
-        Name: 'LX Music',
-        'Name[zh_CN]': 'LX Music',
-        'Name[zh_TW]': 'LX Music',
+        Name: 'Any Listen',
+        'Name[zh_CN]': 'Any Listen',
+        'Name[zh_TW]': 'Any Listen',
         Encoding: 'UTF-8',
         MimeType: 'x-scheme-handler/lxmusic',
         StartupNotify: 'false',
       },
-      // Name: 'LX Music',
-      // 'Name[zh_CN]': 'LX Music',
-      // 'Name[zh_TW]': 'LX Music',
+      // Name: 'Any Listen',
+      // 'Name[zh_CN]': 'Any Listen',
+      // 'Name[zh_TW]': 'Any Listen',
       // Encoding: 'UTF-8',
       // MimeType: 'x-scheme-handler/lxmusic',
       // StartupNotify: 'false',
@@ -125,7 +125,7 @@ const macOptions = {
       {
         x: 106,
         y: 252,
-        name: 'LX Music',
+        name: 'Any Listen',
       },
       {
         x: 490,
@@ -134,7 +134,7 @@ const macOptions = {
         path: '/Applications',
       },
     ],
-    title: '洛雪音乐助手 v${version}',
+    title: 'Any Listen v${version}',
   },
 }
 

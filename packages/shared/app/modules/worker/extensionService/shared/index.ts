@@ -52,6 +52,7 @@ const buildPath = async (extensionPath: string, _path: string) => {
   if (isAbsolute(_path)) throw new Error(`path not a relative path: ${_path}`)
   const enterFilePath = joinPath(extensionPath, _path)
   if (!enterFilePath.startsWith(extensionPath + path.sep)) throw new Error('main path illegal')
+  if (!(await checkFile(enterFilePath))) return ''
   return enterFilePath
 }
 
@@ -69,6 +70,7 @@ const verifyManifest = async (extensionPath: string, manifest: AnyListen.Extensi
 
   if (manifest.main != null) manifest.main = String(manifest.main)
   manifest.main = await buildPath(extensionPath, manifest.main)
+  if (!manifest.main) throw new Error('Main enter not defined')
 
   if (manifest.version != null) manifest.version = String(manifest.version)
   if (manifest.targetEngine != null) manifest.targetEngine = String(manifest.targetEngine)

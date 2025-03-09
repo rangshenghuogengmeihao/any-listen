@@ -106,6 +106,7 @@ export const initExtension = async () => {
   })
 }
 
+// TODO: create extension icon public path
 export const loadLocalExtensions = async () => {
   return workers.extensionService.loadLocalExtensions()
 }

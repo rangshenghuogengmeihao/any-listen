@@ -177,7 +177,8 @@ export const findMusic = async ({
   albumName: string
   interval: string | null
 }): Promise<AnyListen.Music.MusicInfoOnline | null> => {
-  const list = await search(extensionId, s, name, singer, 1, 25).catch((err) => {
+  // TODO: auto reversal of singer and name
+  const list = await search(extensionId, s, name, singer, 1, 15).catch((err) => {
     console.error(err)
     return null
   })

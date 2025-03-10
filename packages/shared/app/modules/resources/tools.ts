@@ -74,8 +74,8 @@ export const findMusicByLocal = async <T>(
         try {
           return await findMusic<T>(
             {
-              name: singer,
-              singer: name,
+              name,
+              singer,
               albumName: musicInfo.meta.albumName,
               interval: musicInfo.interval,
             },

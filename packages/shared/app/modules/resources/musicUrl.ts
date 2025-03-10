@@ -1,5 +1,5 @@
-import { findMusic } from './search/music/actions'
 import { services } from './shared'
+import { findMusic, findMusicByLocal } from './tools'
 import { allowedUrl, buildExtSourceId, getExtSource } from './utils'
 
 export const getMusicUrlByExtensionSource = async ({
@@ -57,57 +57,41 @@ const handleGetMusicUrl = async (
     return handleGetMusicUrl({ musicInfo, quality, type }, excludeList)
   })
 }
-const handleFindMusicUrl = async (
-  info: {
-    name: string
-    singer: string
-    albumName: string
-    interval: string | null
-  },
-  quality?: AnyListen.Music.Quality,
-  type?: AnyListen.Music.FileType,
-  excludeList: string[] = []
-): Promise<AnyListen.IPCExtension.MusicUrlInfo> => {
-  const source = getExtSource('musicSearch', excludeList)
-  if (!source) throw new Error('Get url failed, no source')
-  const music = await findMusic({ extensionId: source.extensionId, source: source.id, ...info })
-  if (music) {
-    try {
-      return await handleGetMusicUrl({
-        musicInfo: music,
-        quality,
-        type,
-      })
-    } catch (e) {
-      console.error(e)
-    }
-  }
-  excludeList.push(buildExtSourceId(source.extensionId, source.id))
-  return handleFindMusicUrl(info, quality, type, excludeList)
-}
 
 export const getMusicUrl = async (data: {
   musicInfo: AnyListen.Music.MusicInfo
   quality?: AnyListen.Music.Quality
   type?: AnyListen.Music.FileType
 }): Promise<AnyListen.IPCExtension.MusicUrlInfo> => {
-  if (!data.musicInfo.isLocal) {
-    try {
-      return await handleGetMusicUrl({
-        musicInfo: data.musicInfo,
+  if (data.musicInfo.isLocal) {
+    return findMusicByLocal(data.musicInfo, async (info) => {
+      return handleGetMusicUrl({
+        musicInfo: info,
         quality: data.quality,
         type: data.type,
       })
-    } catch {}
+    })
   }
-  return handleFindMusicUrl(
+  try {
+    return await handleGetMusicUrl({
+      musicInfo: data.musicInfo,
+      quality: data.quality,
+      type: data.type,
+    })
+  } catch {}
+  return findMusic(
     {
       name: data.musicInfo.name,
       singer: data.musicInfo.singer,
       albumName: data.musicInfo.meta.albumName,
       interval: data.musicInfo.interval,
     },
-    data.quality,
-    data.type
+    async (info) => {
+      return handleGetMusicUrl({
+        musicInfo: info,
+        quality: data.quality,
+        type: data.type,
+      })
+    }
   )
 }

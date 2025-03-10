@@ -1,5 +1,5 @@
 import { services } from '../resources/shared'
-import { findMusic } from './search/music/actions'
+import { findMusic, findMusicByLocal } from './tools'
 import { allowedUrl, buildExtSourceId, getExtSource } from './utils'
 
 export const searchMusicPic = async ({
@@ -70,39 +70,28 @@ const handleGetMusicPic = async (
   })
 }
 
-const handleFindMusicPic = async (
-  info: {
-    name: string
-    singer: string
-    albumName: string
-    interval: string | null
-  },
-  excludeList: string[] = []
-): Promise<string> => {
-  const source = getExtSource('musicSearch', excludeList)
-  if (!source) throw new Error('Get url failed, no source')
-  const music = await findMusic({ extensionId: source.extensionId, source: source.id, ...info })
-  if (music) {
-    try {
-      return await handleGetMusicPic({ musicInfo: music })
-    } catch (e) {
-      console.error(e)
-    }
-  }
-  excludeList.push(buildExtSourceId(source.extensionId, source.id))
-  return handleFindMusicPic(info, excludeList)
-}
-
 export const getMusicPic = async (data: { musicInfo: AnyListen.Music.MusicInfo }): Promise<string> => {
-  if (!data.musicInfo.isLocal) {
-    try {
-      return await handleGetMusicPic({ musicInfo: data.musicInfo })
-    } catch {}
+  if (data.musicInfo.isLocal) {
+    return findMusicByLocal(data.musicInfo, async (info) => {
+      return handleGetMusicPic({ musicInfo: info })
+    })
   }
-  return handleFindMusicPic({
-    name: data.musicInfo.name,
-    singer: data.musicInfo.singer,
-    albumName: data.musicInfo.meta.albumName,
-    interval: data.musicInfo.interval,
-  })
+  try {
+    return await handleGetMusicPic({
+      musicInfo: data.musicInfo,
+    })
+  } catch {}
+  return findMusic(
+    {
+      name: data.musicInfo.name,
+      singer: data.musicInfo.singer,
+      albumName: data.musicInfo.meta.albumName,
+      interval: data.musicInfo.interval,
+    },
+    async (info) => {
+      return handleGetMusicPic({
+        musicInfo: info,
+      })
+    }
+  )
 }

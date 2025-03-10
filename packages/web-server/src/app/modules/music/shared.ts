@@ -5,7 +5,7 @@ import { existTimeExp } from '@any-listen/app/modules/music/utils'
 export const getCachedLyricInfo = async (musicInfo: AnyListen.Music.MusicInfo): Promise<AnyListen.Music.LyricInfo | null> => {
   let lrcInfo = await workers.dbService.getRawLyric(musicInfo.id)
   // lrcInfo = {} as unknown as AnyListen.Player.LyricInfo
-  if (existTimeExp.test(lrcInfo.lyric) && lrcInfo.tlyric != null) {
+  if (existTimeExp.test(lrcInfo.lyric)) {
     return lrcInfo
   }
   return null

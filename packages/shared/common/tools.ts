@@ -93,3 +93,10 @@ export const getFileType = (quality: AnyListen.Music.Quality): AnyListen.Music.F
       return 'flac'
   }
 }
+
+const existTimeExp = /\[\d{1,2}:.*\d{1,4}\]/
+/**
+ * 是否有效的 lyric
+ * @param lrc
+ */
+export const isValidLyric = (lrc?: string | null | number) => typeof lrc == 'string' && existTimeExp.test(lrc)

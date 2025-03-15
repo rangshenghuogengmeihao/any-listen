@@ -1,3 +1,4 @@
+import { isValidLyric } from '@any-listen/common/tools'
 import { services } from './shared'
 import { findMusic, findMusicByLocal } from './tools'
 import { buildExtSourceId, getExtSource } from './utils'
@@ -48,7 +49,7 @@ export const getMusicLyricByExtensionSource = async ({
     })
     .then((result) => {
       // console.log(result)
-      if (!result.lyric) throw new Error('Get music lyric failed')
+      if (!isValidLyric(result.lyric)) throw new Error('Get music lyric failed')
       return result
     })
 }

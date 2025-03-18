@@ -709,5 +709,8 @@ export const setCollectStatus = (status: boolean) => {
 
 export const release = async () => {
   stop()
+  commit.setPlayMusicInfo(null)
+  commit.setMusicInfo(null)
+  commit.updatePlayIndex(-1, -1)
   await releasePlayer()
 }

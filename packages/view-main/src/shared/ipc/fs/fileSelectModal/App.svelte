@@ -263,6 +263,9 @@
           }}>{select.list.length ? $t('btn_unselect_all') : $t('btn_select_all')}</Btn
         >
       {/if}
+      {#if select.list.length}
+        <span class="tip">{$t('btn_selected_tip', { num: select.list.length })}</span>
+      {/if}
       <!-- <span class="exts">{options.filters?.map((f) => `*.${f}`).join(', ')}</span> -->
     </div>
     <div class="right">
@@ -372,11 +375,19 @@
     gap: 10px;
     justify-content: space-between;
 
-    // .left {
-    // }
+    .left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
     // .exts {
     //   font-size: 12px;
     // }
+    .tip {
+      font-size: 12px;
+      color: var(--color-font-label);
+    }
     .right {
       display: flex;
       flex-direction: row;

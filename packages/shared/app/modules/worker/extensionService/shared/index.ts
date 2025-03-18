@@ -35,6 +35,7 @@ const RESOURCE: AnyListen.Extension.ResourceAction[] = [
   'hotSearch',
   'musicSearch',
   'musicPic',
+  'musicLyric',
   'musicUrl',
   'musicPicSearch',
   'songlistSearch',
@@ -45,7 +46,7 @@ const RESOURCE: AnyListen.Extension.ResourceAction[] = [
   'singerSearch',
   'singer',
   'lyricSearch',
-  'lyric',
+  'lyricDetail',
 ]
 
 const buildPath = async (extensionPath: string, _path: string) => {

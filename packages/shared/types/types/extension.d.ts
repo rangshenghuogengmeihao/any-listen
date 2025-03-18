@@ -7,7 +7,7 @@ declare global {
         | 'hotSearch'
         | 'musicSearch'
         | 'musicPic'
-        | 'musicPicSearch'
+        | 'musicLyric'
         | 'musicUrl'
         | 'songlistSearch'
         | 'songlist'
@@ -16,8 +16,9 @@ declare global {
         | 'album'
         | 'singerSearch'
         | 'singer'
+        | 'musicPicSearch'
         | 'lyricSearch'
-        | 'lyric'
+        | 'lyricDetail'
       interface SettingBase {
         field: string
         name: string

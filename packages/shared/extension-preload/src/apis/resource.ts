@@ -73,14 +73,12 @@ const verifyOnlineMusicArray = (
       } else musicInfo.interval = substrLength(musicInfo.interval)
       musicInfo.isLocal = false
       if (!musicInfo.meta) throw new Error(`${name} result.meta is null`)
-      if (musicInfo.meta.albumName) {
-        musicInfo.meta.albumName = substrLength(String(musicInfo.meta.albumName))
-      }
+      musicInfo.meta.albumName &&= substrLength(String(musicInfo.meta.albumName))
       musicInfo.meta.createTime = 0
       musicInfo.meta.posTime = 0
       musicInfo.meta.updateTime = 0
       musicInfo.meta.musicId = substrLength(String(musicInfo.meta.musicId))
-      if (musicInfo.meta.picUrl) musicInfo.meta.picUrl = substrLength(String(musicInfo.meta.picUrl), 2048)
+      musicInfo.meta.picUrl &&= substrLength(String(musicInfo.meta.picUrl), 2048)
       if (typeof musicInfo.meta.year != 'number' || musicInfo.meta.year > 10000000 || musicInfo.meta.year < 1) {
         delete musicInfo.meta.year
       } else musicInfo.meta.year = Math.trunc(musicInfo.meta.year)
@@ -141,7 +139,9 @@ const verifyMusicUrlAction = (result: AnyListen.IPCExtension.MusicUrlInfo): AnyL
   return result
 }
 // TODO verify datas
-const verifyLyricSearchAction = (result: AnyListen.Music.LyricInfo[]): AnyListen.Music.LyricInfo[] => {
+const verifyLyricSearchAction = (
+  result: AnyListen.IPCExtension.LyricSearchResult[]
+): AnyListen.IPCExtension.LyricSearchResult[] => {
   return result
 }
 const verifyLyricAction = (result: AnyListen.Music.LyricInfo): AnyListen.Music.LyricInfo => {
@@ -213,8 +213,8 @@ export const onResourceAction = async <T extends keyof RA>(
       return verifyMusicUrlAction(await actions.musicUrl!(params as AnyListen.IPCExtension.MusicUrlParams)) as Awaited<
         ReturnType<RA[T]>
       >
-    case 'lyric':
-      return verifyLyricAction(await actions.lyric!(params as AnyListen.IPCExtension.MusicCommonParams)) as Awaited<
+    case 'musicLyric':
+      return verifyLyricAction(await actions.musicLyric!(params as AnyListen.IPCExtension.MusicCommonParams)) as Awaited<
         ReturnType<RA[T]>
       >
     case 'musicPicSearch':
@@ -223,6 +223,10 @@ export const onResourceAction = async <T extends keyof RA>(
       >
     case 'lyricSearch':
       return verifyLyricSearchAction(await actions.lyricSearch!(params as AnyListen.IPCExtension.LyricSearchParams)) as Awaited<
+        ReturnType<RA[T]>
+      >
+    case 'lyricDetail':
+      return verifyLyricAction(await actions.lyricDetail!(params as AnyListen.IPCExtension.ListDetailParams)) as Awaited<
         ReturnType<RA[T]>
       >
     // case 'songlistSearch':

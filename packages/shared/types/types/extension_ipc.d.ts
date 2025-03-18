@@ -48,13 +48,18 @@ declare namespace AnyListen {
     }
     interface LyricSearchParams extends CommonParams {
       name: string
-      interval?: number
       artist?: string
+      interval?: number
     }
-    interface LyricSearchParams extends CommonParams {
+    interface LyricSearchResult {
+      id: string
       name: string
       artist?: string
       interval?: number
+      lyric?: string
+    }
+    interface LyricDetailParams extends CommonParams {
+      id: string
     }
     interface PicSearchParams extends CommonParams {
       name: string
@@ -96,9 +101,10 @@ declare namespace AnyListen {
       musicSearch: (params: SearchParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
       musicPic: (params: MusicCommonParams) => Promise<string>
       musicUrl: (params: MusicUrlParams) => Promise<MusicUrlInfo>
-      lyric: (params: MusicCommonParams) => Promise<Music.LyricInfo>
+      musicLyric: (params: MusicCommonParams) => Promise<Music.LyricInfo>
       musicPicSearch: (params: PicSearchParams) => Promise<string[]>
-      lyricSearch: (params: LyricSearchParams) => Promise<Music.LyricInfo[]>
+      lyricSearch: (params: LyricSearchParams) => Promise<LyricSearchResult[]>
+      lyricDetail: (params: LyricDetailParams) => Promise<Music.LyricInfo>
       // songlistSearch: (params: SearchParams) => Promise<ListCommonResult<Resource.SongListItem>>
       // songlistSorts: (params: CommonParams) => Promise<Resource.TagItem[]>
       // songlistTags: (params: CommonParams) => Promise<Resource.TagGroupItem[]>

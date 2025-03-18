@@ -20,7 +20,7 @@ export const getMusicFilePic = async (filePath: string): Promise<string | PicBuf
 export const getMusicFileLyric = async (filePath: string): Promise<AnyListen.Music.LyricInfo | null> => {
   const lyric = await getLocalMusicFileLyric(filePath)
   if (!isValidLyric(lyric)) return null
-  // TODO: lyric
+  // TODO: lyric awlyric
   return {
     lyric,
   }

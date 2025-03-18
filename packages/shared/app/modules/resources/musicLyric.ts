@@ -15,7 +15,7 @@ export const searchMusicLyric = async ({
   name: string
   artist?: string
   interval?: number
-}): Promise<AnyListen.Music.LyricInfo[]> => {
+}): Promise<AnyListen.IPCExtension.LyricSearchResult[]> => {
   // console.log(extensionId, source, name, artist, interval)
   if (!name.trim().length) return []
   return services.extensionSerive
@@ -42,7 +42,7 @@ export const getMusicLyricByExtensionSource = async ({
   musicInfo: AnyListen.Music.MusicInfo
 }): Promise<AnyListen.Music.LyricInfo> => {
   return services.extensionSerive
-    .resourceAction('lyric', {
+    .resourceAction('musicLyric', {
       extensionId,
       source,
       musicInfo,
@@ -62,7 +62,7 @@ const handleGetMusicLyric = async (
   },
   excludeList: string[] = []
 ): Promise<AnyListen.Music.LyricInfo> => {
-  const source = getExtSource('lyric', excludeList, musicInfo.meta.source)
+  const source = getExtSource('musicLyric', excludeList, musicInfo.meta.source)
   if (!source) throw new Error('Get url failed, no, source')
   return getMusicLyricByExtensionSource({
     extensionId: source.extensionId,

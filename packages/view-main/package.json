@@ -13,7 +13,9 @@
     "@any-listen/common": "workspace:@shared/common@*",
     "@any-listen/i18n": "workspace:@shared/i18n@*",
     "@any-listen/web": "workspace:@shared/web@*",
+    "hast-util-to-html": "^9.0.5",
     "message2call": "^1.1.1",
+    "refractor": "^5.0.0",
     "regexparam": "^3.0.0",
     "sortablejs": "^1.15.6"
   },

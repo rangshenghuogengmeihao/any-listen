@@ -1,6 +1,5 @@
 import { createMsg2call } from 'message2call'
 
-
 export const exposeWorker = (obj: any) => {
   const message2call = createMsg2call<{ inited: () => void }>({
     funcsObj: obj,

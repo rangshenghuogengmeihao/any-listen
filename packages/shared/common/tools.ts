@@ -72,7 +72,7 @@ export const buildSourceLabel = (musicinfo: AnyListen.Music.MusicInfo) => {
 }
 
 export const logFormat = (log: AnyListen.LogInfo) => {
-  return `${dateFormat(log.timestamp)} [${log.type}] ${log.message}`
+  return `${dateFormat(log.timestamp)} ${log.type.toUpperCase()} ${log.message}`
 }
 
 export const buildMusicCacheId = (musicInfo: AnyListen.Music.MusicInfo, quality: AnyListen.Music.Quality) => {

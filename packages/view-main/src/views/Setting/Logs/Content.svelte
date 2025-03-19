@@ -1,6 +1,9 @@
 <script lang="ts">
   import { tick } from 'svelte'
   import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar'
+  import { highlightCode } from '@/shared/highlight'
+  import '@/assets/styles/highlight.less'
+  /* eslint svelte/no-at-html-tags: "off" */
 
   let {
     log,
@@ -11,6 +14,7 @@
   } = $props()
 
   let domLogContent = $state<HTMLElement | null>(null)
+  let highlightLog = $derived(highlightCode(log, 'log'))
   export const toBottom = (isAnimation = true) => {
     void tick().then(() => {
       isBottom ||= true
@@ -38,7 +42,7 @@
       }
     }}
   >
-    <pre class="code">{log}</pre>
+    <pre class="code">{@html highlightLog}</pre>
   </div>
 </div>
 

@@ -14,7 +14,7 @@
     "postinstall": "pnpm -F electron rebuild:deps && pnpm -F web-server rebuild"
   },
   "engines": {
-    "node": ">=22.12.0",
+    "node": ">=22.12.0 || ^20.19.0",
     "pnpm": "9"
   },
   "workspaces": [

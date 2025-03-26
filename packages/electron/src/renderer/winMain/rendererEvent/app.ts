@@ -1,9 +1,9 @@
-import { closeWindow, minimize, showOpenDialog, showSaveDialog, toggleDevTools } from '../main'
 import { appState, updateSetting } from '@/app'
-import { winMainEvent } from '../event'
-import type { ExposeFunctions } from '.'
 import { clipboardReadText, clipboardWriteText, exitApp, openDirInExplorer, openUrl } from '@/shared/electron'
+import type { ExposeFunctions } from '.'
 import { checkUpdate, downloadUpdate, restartUpdate } from '../autoUpdate'
+import { winMainEvent } from '../event'
+import { closeWindow, minimize, showOpenDialog, showSaveDialog, toggleDevTools } from '../main'
 
 // 暴露给前端的方法
 export const createExposeApp = () => {
@@ -49,8 +49,11 @@ export const createExposeApp = () => {
     async openUrl(event, url) {
       return openUrl(url)
     },
+    async getCurrentVersionInfo() {
+      return appState.version
+    },
     async checkUpdate(event) {
-      checkUpdate()
+      await checkUpdate()
     },
     async downloadUpdate(event) {
       void downloadUpdate()

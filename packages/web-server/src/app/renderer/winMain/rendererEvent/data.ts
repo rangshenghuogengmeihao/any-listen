@@ -1,6 +1,7 @@
 import getStore from '@/app/shared/store'
-import type { ExposeClientFunctions } from '.'
 import { DATA_KEYS, STORE_NAMES } from '@any-listen/common/constants'
+import type { ExposeClientFunctions } from '.'
+import { updateIgnoreVersion } from '../autoUpdate'
 
 // 暴露给前端的方法
 export const createExposeData = () => {
@@ -24,6 +25,11 @@ export const createExposeData = () => {
     },
     async saveSearchHistoryList(event, list) {
       getStore(STORE_NAMES.DATA).set(DATA_KEYS.searchHistoryList, list)
+    },
+
+    async saveIgnoreVersion(event, ver) {
+      getStore(STORE_NAMES.DATA).set(DATA_KEYS.ignoreVersion, ver)
+      updateIgnoreVersion(ver)
     },
   } satisfies Partial<ExposeClientFunctions>
 }

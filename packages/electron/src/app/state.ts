@@ -6,6 +6,7 @@ export const appState: {
   dataPath: string
   appSetting: AnyListen.AppSetting
   isSkipTrayQuit: boolean
+  version: AnyListen.CurrentVersionInfo
   shouldUseDarkColors: boolean
   proxy: {
     host: string
@@ -25,6 +26,19 @@ export const appState: {
   },
   staticPath: '',
   dataPath: '',
+  version: {
+    version: '',
+    commit: '',
+    commitDate: 0,
+    newVersion: null,
+    showModal: false,
+    isUnknown: false,
+    isLatest: false,
+    reCheck: false,
+    status: 'idle',
+    ignoreVersion: null,
+    progress: null,
+  },
   appSetting: defaultSetting,
   isSkipTrayQuit: false,
   shouldUseDarkColors: false,

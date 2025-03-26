@@ -1,4 +1,4 @@
-import { type IPCSocket } from '@/preload/ws'
+import type { IPCSocket } from '@/preload/ws'
 
 // 暴露给前端的方法
 export const createClientData = (ipcSocket: IPCSocket) => {
@@ -25,6 +25,10 @@ export const createClientData = (ipcSocket: IPCSocket) => {
     },
     async saveSearchHistoryList(list) {
       return ipcSocket.remote.saveSearchHistoryList(list)
+    },
+
+    async saveIgnoreVersion(ver) {
+      return ipcSocket.remote.saveIgnoreVersion(ver)
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

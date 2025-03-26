@@ -13,3 +13,7 @@ export const getSearchHistoryList: AnyListen.IPC.ServerIPC['getSearchHistoryList
 export const saveSearchHistoryList: AnyListen.IPC.ServerIPC['saveSearchHistoryList'] = async (list) => {
   return ipc.saveSearchHistoryList(list)
 }
+
+export const saveIgnoreVersion: AnyListen.IPC.ServerIPC['saveIgnoreVersion'] = async (version) => {
+  return ipc.saveIgnoreVersion(version)
+}

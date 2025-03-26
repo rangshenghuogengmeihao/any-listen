@@ -45,6 +45,7 @@ export declare type ServerCommonActions = WarpPromiseRecord<{
   getSearchHistoryList: () => AnyListen.List.SearchHistoryList | null
   /** 保存搜索历史列表 */
   saveSearchHistoryList: (list: AnyListen.List.SearchHistoryList) => void
+  saveIgnoreVersion: (ver: string | null) => void
 
   /** 文件系统操作 */
   fileSystemAction: <T extends keyof AnyListen.FileSystem.Actions>(
@@ -53,6 +54,8 @@ export declare type ServerCommonActions = WarpPromiseRecord<{
 
   messageBoxConfirm: (key: string, result: unknown) => void
 
+  /** 获取当前版本信息 */
+  getCurrentVersionInfo: () => AnyListen.CurrentVersionInfo
   /** 检查软件更新 */
   checkUpdate: () => void
   /** 下载更新 */

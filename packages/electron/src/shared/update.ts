@@ -1,4 +1,5 @@
 import { appState } from '../app'
+import { checkUpdate, downloadUpdate, initUpdate, restartUpdate } from './electronUpdate'
 import { request } from './request'
 import { compareVersions, sleep } from './utils'
 
@@ -11,6 +12,7 @@ interface EventTypes {
   error: Error
   ignore_version: string | null
 }
+
 type Listener = (event: unknown) => void
 class UpdateEvent {
   private readonly listeners: Map<keyof EventTypes, Listener[]>
@@ -45,15 +47,15 @@ class UpdateEvent {
 
 const enName = 'YW55LWxpc3Rlbg=='
 const name = Buffer.from(enName, 'base64').toString()
-const pkgName = `@${name}-web-server`
+const pkgName = `@${name}-desktop`
 const address = [
-  [`https://raw.githubusercontent.com/${name}/${name}/main/packages/web-server/publish/version.json`, 'direct'],
+  [`https://raw.githubusercontent.com/${name}/${name}/main/packages/electron/publish/version.json`, 'direct'],
   [`https://registry.npmjs.org/${name}/${pkgName}/latest`, 'npm'],
-  [`https://cdn.jsdelivr.net/gh/${name}/${name}/packages/web-server/publish/version.json`, 'direct'],
-  [`https://fastly.jsdelivr.net/gh/${name}/${name}/packages/web-server/publish/version.json`, 'direct'],
-  [`https://gcore.jsdelivr.net/gh/${name}/${name}/packages/web-server/publish/version.json`, 'direct'],
+  [`https://cdn.jsdelivr.net/gh/${name}/${name}/packages/electron/publish/version.json`, 'direct'],
+  [`https://fastly.jsdelivr.net/gh/${name}/${name}/packages/electron/publish/version.json`, 'direct'],
+  [`https://gcore.jsdelivr.net/gh/${name}/${name}/packages/electron/publish/version.json`, 'direct'],
   [`https://registry.npmmirror.com/${name}/${pkgName}/latest`, 'npm'],
-  ['http://cdn.stsky.cn/any-listen/web-server/version.json', 'direct'],
+  ['http://cdn.stsky.cn/any-listen/electron/version.json', 'direct'],
 ] as const
 
 const getDirectInfo = async (url: string) => {
@@ -90,7 +92,10 @@ export const getUpdateInfo = async (index = 0): Promise<AnyListen.UpdateInfo> =>
   })
 }
 
-class Update extends UpdateEvent {
+export class Update extends UpdateEvent {
+  initUpdate() {
+    initUpdate(this)
+  }
   async checkForUpdates(isAutoUpdate: boolean) {
     this.emit('checking_for_update')
     let info: AnyListen.UpdateInfo
@@ -103,26 +108,22 @@ class Update extends UpdateEvent {
 
     if (compareVersions(appState.version.version, info.version) > 0) {
       this.emit('update_available', info)
-      if (isAutoUpdate) {
-        void this.downloadUpdate()
-      }
+      checkUpdate(isAutoUpdate)
       return true
     }
     this.emit('update_not_available', info)
     return false
   }
-  // TODO update
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   async downloadUpdate() {
-    this.emit('error', new Error('todo download'))
-    // throw new Error('')
+    await downloadUpdate()
   }
   async isUpdaterActive() {
     return this.checkForUpdates(false)
   }
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   async quitAndInstall() {
-    // TODO
-    throw new Error('todo install')
+    restartUpdate()
   }
 }
 export const update = new Update()

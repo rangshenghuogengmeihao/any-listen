@@ -1,6 +1,15 @@
 import { versionEvent } from './event'
 import { type State, versionState } from './state'
 
+export const initCurrentVersionInfo = ({ ignoreVersion, progress, ...info }: AnyListen.CurrentVersionInfo) => {
+  versionState.ignoreVersion = ignoreVersion
+  versionState.progress = progress
+  versionState.versionInfo = info
+  versionEvent.updated(versionState.versionInfo)
+  versionEvent.download_progress_updated(progress)
+  versionEvent.ignore_version_updated(ignoreVersion)
+}
+
 export const setIgnoreVersion = (version: State['ignoreVersion']) => {
   versionState.ignoreVersion = version
   versionEvent.ignore_version_updated(version)
@@ -17,9 +26,20 @@ export const setVisibleModal = (visible: boolean) => {
 
 export const setUpdateInfo = (info: AnyListen.IPCCommon.UpdateInfo) => {
   switch (info.type) {
+    case 'checking':
+      versionState.versionInfo.isLatest = false
+      versionEvent.updated({ ...versionState.versionInfo })
+      break
+    case 'not_available':
+      versionState.versionInfo.isLatest = true
+      versionState.versionInfo.status = 'idle'
+      versionState.versionInfo.newVersion = info.info
+      versionEvent.updated({ ...versionState.versionInfo })
+      break
     case 'available':
       versionState.versionInfo.isLatest = false
       versionState.versionInfo.status = 'idle'
+      versionState.versionInfo.newVersion = info.info
       versionEvent.updated({ ...versionState.versionInfo })
       break
     case 'downloaded':
@@ -34,16 +54,8 @@ export const setUpdateInfo = (info: AnyListen.IPCCommon.UpdateInfo) => {
       versionState.progress = info.info
       versionEvent.download_progress_updated(info.info)
       break
-    case 'checking':
-      versionState.versionInfo.isLatest = false
-      versionEvent.updated({ ...versionState.versionInfo })
-      break
-    case 'not_available':
-      versionState.versionInfo.isLatest = true
-      versionState.versionInfo.status = 'idle'
-      versionEvent.updated({ ...versionState.versionInfo })
-      break
     case 'error':
+      versionState.versionInfo.status = 'error'
       versionEvent.updated({ ...versionState.versionInfo })
       break
   }

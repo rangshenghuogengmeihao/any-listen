@@ -3,6 +3,7 @@ import os from 'node:os'
 import crypto from 'node:crypto'
 import { gunzip, gzip } from 'node:zlib'
 import path from 'node:path'
+import timers from 'node:timers/promises'
 
 // 重命名 process 防止 vite 转换
 export const nodeProcess = process
@@ -193,6 +194,8 @@ export const checkAndCreateDirSync = (path: string) => {
     fs.mkdirSync(path, { recursive: true })
   }
 }
+
+export const sleep = timers.setTimeout
 
 export const isLinux = process.platform == 'linux'
 export const isWin = process.platform == 'win32'

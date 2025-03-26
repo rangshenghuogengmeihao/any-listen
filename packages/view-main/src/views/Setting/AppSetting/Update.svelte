@@ -12,8 +12,8 @@
   let lastClickTime = 0
   let clickNum = 0
   // const commit_id = import.meta.env.VITE_COMMIT_ID
-  const commitId = ''
-  const commitDate = dateFormat('')
+  let commitId = $derived(versionInfo.val.commit)
+  let commitDate = $derived(dateFormat(versionInfo.val.commitDate))
   const handleOpenDevTools = () => {
     if (window.performance.now() - lastClickTime > 1000) {
       if (clickNum > 0) clickNum = 0

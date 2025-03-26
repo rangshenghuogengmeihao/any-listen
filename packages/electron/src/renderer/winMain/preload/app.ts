@@ -164,6 +164,9 @@ export const createClientApp = (main: MainCall) => {
         ipcPreloadEvent.off('closeMessageBox', listener)
       }
     },
+    async getCurrentVersionInfo() {
+      return main.getCurrentVersionInfo()
+    },
     async checkUpdate() {
       return main.checkUpdate()
     },

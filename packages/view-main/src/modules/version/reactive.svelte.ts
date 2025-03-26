@@ -32,6 +32,23 @@ export const useVersionInfo = () => {
   }
 }
 
+export const useIgnoreVersion = () => {
+  let val = $state(versionState.ignoreVersion)
+
+  $effect(() => {
+    const unsub = versionEvent.on('ignore_version_updated', (info) => {
+      val = info
+    })
+    return unsub
+  })
+
+  return {
+    get val() {
+      return val
+    },
+  }
+}
+
 export const useDownloadProgress = () => {
   let val = $state(versionState.progress)
 

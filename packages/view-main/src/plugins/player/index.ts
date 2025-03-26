@@ -559,5 +559,6 @@ export const onVisibilityChange = (callback: Noop) => {
 }
 
 export const getErrorCode = () => {
+  if (audio?.error) console.error(audio?.error)
   return audio?.error?.code
 }

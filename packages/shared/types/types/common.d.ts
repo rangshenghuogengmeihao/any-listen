@@ -74,6 +74,19 @@ declare global {
       ip: string
     }
 
+    interface CurrentVersionInfo {
+      version: string
+      commit: string
+      commitDate: number
+      newVersion: UpdateInfo | null
+      showModal: boolean
+      isUnknown: boolean
+      isLatest: boolean
+      reCheck: boolean
+      status: UpdateStatus
+      ignoreVersion: string | null
+      progress: DownloadProgressInfo | null
+    }
     type UpdateStatus = 'downloaded' | 'downloading' | 'error' | 'checking' | 'idle'
     interface DownloadProgressInfo {
       total: number

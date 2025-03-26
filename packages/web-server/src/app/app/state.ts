@@ -6,7 +6,7 @@ export const appState: {
   dataPath: string
   cacheDataPath: string
   tempDataPath: string
-  version: string
+  version: AnyListen.CurrentVersionInfo
   appSetting: AnyListen.AppSetting
   shouldUseDarkColors: boolean
   proxy: {
@@ -23,7 +23,19 @@ export const appState: {
   },
   staticPath: '',
   dataPath: '',
-  version: '',
+  version: {
+    version: '',
+    commit: '',
+    commitDate: 0,
+    newVersion: null,
+    showModal: false,
+    isUnknown: false,
+    isLatest: false,
+    reCheck: false,
+    status: 'idle',
+    ignoreVersion: null,
+    progress: null,
+  },
   cacheDataPath: '',
   tempDataPath: '',
   appSetting: defaultSetting,

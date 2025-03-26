@@ -26,5 +26,9 @@ export const createClientData = (main: MainCall) => {
     async saveSearchHistoryList(list) {
       return main.saveSearchHistoryList(list)
     },
+
+    async saveIgnoreVersion(ver) {
+      return main.saveIgnoreVersion(ver)
+    },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

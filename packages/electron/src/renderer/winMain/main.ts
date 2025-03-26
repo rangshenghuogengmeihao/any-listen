@@ -113,10 +113,9 @@ export const createWindow = () => {
   }
   browserWindow = new BrowserWindow(options)
 
-  const winURL =
-    process.env.NODE_ENV !== 'production'
-      ? `http://localhost:${DEV_SERVER_PORTS['view-main']}`
-      : `file://${path.join(encodePath(__dirname), '../view-main/index.html')}`
+  const winURL = import.meta.env.DEV
+    ? `http://localhost:${DEV_SERVER_PORTS['view-main']}`
+    : `file://${path.join(encodePath(__dirname), '../view-main/index.html')}`
   if (import.meta.env.DEV) {
     void browserWindow.loadURL(`${winURL}?os=${getPlatform()}&dt=${!!appState.envParams.cmdParams.dt}`)
   } else {

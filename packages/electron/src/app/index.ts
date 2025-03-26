@@ -1,16 +1,19 @@
-import path from 'node:path'
-import { appState } from './state'
-import { app, nativeTheme, screen, shell } from 'electron'
 import { URL_SCHEME_RXP } from '@any-listen/common/constants'
-import { appEvent } from './event'
+import { app, nativeTheme, screen, shell } from 'electron'
 import { existsSync, mkdirSync } from 'node:fs'
+import path from 'node:path'
+import { appEvent } from './event'
+import { appState } from './state'
 // import { navigationUrlWhiteList } from '@common/config'
 import { parseEnvParams } from '@any-listen/nodejs/env'
 import { isMac } from '@any-listen/nodejs/index'
 
-import { getAppSetting, saveSetting } from './data'
-import { setSkipTrayQuit } from './actions'
+import { log } from '@/shared/log'
 import { setProxy } from '@/shared/request'
+import { startCheckUpdateTimeout, update } from '@/shared/update'
+import { version } from '../../package.json'
+import { setSkipTrayQuit } from './actions'
+import { getAppSetting, saveSetting } from './data'
 
 export const initState = () => {
   const envParams = parseEnvParams<AnyListen.CmdParams>()
@@ -24,7 +27,11 @@ export const initState = () => {
   }
 
   appState.shouldUseDarkColors = nativeTheme.shouldUseDarkColors
-  appState.staticPath = process.env.NODE_ENV !== 'production' ? __STATIC_PATH__ : path.join(__dirname, '../static')
+  appState.staticPath = import.meta.env.DEV ? __STATIC_PATH__ : path.join(__dirname, '../static')
+
+  appState.version.version = version
+  appState.version.commit = __GIT_COMMIT__ || ''
+  appState.version.commitDate = __GIT_COMMIT_DATE__ ? new Date(__GIT_COMMIT_DATE__).getTime() : 0
 }
 
 export const initSingleInstanceHandle = () => {
@@ -88,7 +95,7 @@ export const setUserDataPath = () => {
 }
 
 export const registerDeeplink = () => {
-  if (process.env.NODE_ENV !== 'production' && process.platform === 'win32') {
+  if (import.meta.env.DEV && process.platform === 'win32') {
     // Set the path of electron.exe and your app.
     // These two additional parameters are only available on windows.
     // console.log(process.execPath, process.argv)
@@ -109,7 +116,7 @@ export const registerDeeplink = () => {
 export const listenerElectronEvent = () => {
   app.on('web-contents-created', (event, contents) => {
     contents.on('will-navigate', (event, navigationUrl) => {
-      if (process.env.NODE_ENV !== 'production') {
+      if (import.meta.env.DEV) {
         console.log('navigation to url:', navigationUrl.length > 130 ? `${navigationUrl.substring(0, 130)}...` : navigationUrl)
         return
       }
@@ -203,6 +210,44 @@ const listenerAppEvent = () => {
       handleProxyChange()
     }
   })
+  appEvent.on('inited', () => {
+    void startCheckUpdateTimeout()
+  })
+  update.on('checking_for_update', () => {
+    appState.version.status = 'checking'
+  })
+  update.on('update_available', (info) => {
+    appState.version.isLatest = false
+    appState.version.status = 'idle'
+    appState.version.newVersion = info
+  })
+  update.on('update_not_available', (info) => {
+    appState.version.isLatest = true
+    appState.version.status = 'idle'
+    appState.version.newVersion = info
+  })
+  update.on('error', (err) => {
+    console.log(err)
+    appState.version.status = 'error'
+    log.info('Check Update Error:', err)
+  })
+  update.on('download_progress', (info) => {
+    if (appState.version.status != 'downloading') {
+      appState.version.status = 'downloading'
+    }
+    appState.version.progress = info
+
+    let logMessage = `Download speed: ${info.bytesPerSecond}`
+    logMessage = `${logMessage} - Downloaded ${info.percent}%`
+    logMessage = `${logMessage} (${info.transferred}/${info.total})`
+    log.info(logMessage)
+  })
+  update.on('update_downloaded', (info) => {
+    appState.version.status = 'downloaded'
+  })
+  update.on('ignore_version', (version) => {
+    appState.version.ignoreVersion = version
+  })
   if (appState.appSetting['network.proxy.enable'] && appState.appSetting['network.proxy.host']) handleProxyChange()
 }
 
@@ -233,5 +278,5 @@ export const sendInitedEvent = () => {
 }
 
 export * as appActions from './actions'
-export { appState } from './state'
 export { appEvent } from './event'
+export { appState } from './state'

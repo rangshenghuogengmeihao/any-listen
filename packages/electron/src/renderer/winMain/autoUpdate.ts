@@ -1,105 +1,82 @@
-import { appActions, appState } from '@/app'
-import { log } from '@/shared/log'
-import { isWin } from '@any-listen/nodejs/index'
-import { autoUpdater } from 'electron-updater'
+import { appEvent, appState } from '@/app'
+import getStore from '@/shared/store'
+import { update } from '@/shared/update'
+import { DATA_KEYS, STORE_NAMES } from '@any-listen/common/constants'
 import { rendererIPC } from './rendererEvent'
 
-autoUpdater.logger = log
-autoUpdater.autoDownload = false
-// autoUpdater.forceDevUpdateConfig = true
-
-log.info('App starting...')
-
-// TODO
-function sendStatusToWindow(text: string) {
-  log.info(text)
-  // ipcMain.send('message', text)
-}
-
 export const initUpdate = () => {
-  autoUpdater.on('checking-for-update', () => {
-    sendStatusToWindow('Checking for update...')
+  update.on('checking_for_update', () => {
+    // sendStatusToWindow('Checking for update...')
     void rendererIPC.updateInfo({
       type: 'checking',
     })
   })
-  autoUpdater.on('update-available', (info) => {
-    sendStatusToWindow('Update available.')
+  update.on('update_available', (info) => {
+    // sendStatusToWindow('Update available.')
     void rendererIPC.updateInfo({
       type: 'available',
       info: {
         version: info.version,
         isAutoUpdate: appState.appSetting['common.tryAutoUpdate'],
         // url: info.
-        desc: info.releaseNotes as string,
+        desc: info.desc,
         // isForce: boolean
+        history: info.history,
       },
     })
   })
-  autoUpdater.on('update-not-available', (info) => {
-    sendStatusToWindow('Update not available.')
-    // TODO
+  update.on('update_not_available', (info) => {
+    // sendStatusToWindow('Update not available.')
     void rendererIPC.updateInfo({
       type: 'not_available',
-      info: {
-        desc: '',
-        version: '',
-      },
+      info,
     })
   })
-  autoUpdater.on('error', (err) => {
-    sendStatusToWindow('Error in auto-updater.')
+  update.on('error', (err) => {
+    // sendStatusToWindow('Error in auto_updater.')
     void rendererIPC.updateInfo({
       type: 'error',
       message: err.message,
     })
   })
-  autoUpdater.on('download-progress', (progressObj) => {
-    let logMessage = `Download speed: ${progressObj.bytesPerSecond}`
-    logMessage = `${logMessage} - Downloaded ${progressObj.percent}%`
-    logMessage = `${logMessage} (${progressObj.transferred}/${progressObj.total})`
-    sendStatusToWindow(logMessage)
+  update.on('download_progress', (progressObj) => {
+    // let logMessage = `Download speed: ${progressObj.bytesPerSecond}`
+    // logMessage = `${logMessage} - Downloaded ${progressObj.percent}%`
+    // logMessage = `${logMessage} (${progressObj.transferred}/${progressObj.total})`
+    // sendStatusToWindow(logMessage)
     void rendererIPC.updateInfo({
       type: 'download_progress',
-      info: {
-        bytesPerSecond: progressObj.bytesPerSecond,
-        percent: progressObj.percent,
-        total: progressObj.total,
-        transferred: progressObj.transferred,
-        delta: progressObj.delta,
-      },
+      info: progressObj,
     })
   })
-  autoUpdater.on('update-downloaded', (info) => {
-    sendStatusToWindow('Update downloaded.')
+  update.on('update_downloaded', (info) => {
+    // sendStatusToWindow('Update downloaded.')
     void rendererIPC.updateInfo({
       type: 'downloaded',
     })
   })
+  appEvent.on('inited', () => {
+    updateIgnoreVersion(getStore(STORE_NAMES.DATA).get(DATA_KEYS.ignoreVersion))
+  })
 }
 
-export const checkUpdate = () => {
-  // 由于集合安装包中不包含win arm版，这将会导致arm版更新失败
-  if (isWin && process.arch.includes('arm')) {
-    void rendererIPC.updateInfo({
-      type: 'error',
-      message: 'The current platform does not support automatic updates',
-    })
-  } else {
-    autoUpdater.autoDownload = appState.appSetting['common.tryAutoUpdate']
-    void autoUpdater.checkForUpdates()
-  }
+export const updateIgnoreVersion = (version: string | null) => {
+  update.emit('ignore_version', version)
+}
+
+export const checkUpdate = async () => {
+  return update.checkForUpdates(appState.appSetting['common.tryAutoUpdate'])
 }
 
 export const downloadUpdate = async () => {
-  if (!autoUpdater.isUpdaterActive()) return
-  void autoUpdater.downloadUpdate()
+  if (!(await update.isUpdaterActive())) return
+  void update.downloadUpdate()
 }
 
 export const restartUpdate = () => {
-  appActions.setSkipTrayQuit(true)
+  // appActions.setSkipTrayQuit(true)
 
   setTimeout(() => {
-    autoUpdater.quitAndInstall(true, true)
+    void update.quitAndInstall()
   }, 1000)
 }

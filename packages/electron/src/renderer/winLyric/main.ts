@@ -1,11 +1,11 @@
-import path from 'node:path'
-import { BrowserWindow } from 'electron'
-import { debounce, isLinux, isWin } from '@/shared/utils'
-import { initWindowSize } from './utils'
-import { mainSend } from '@/shared/mainIpc'
-import { encodePath } from '@/shared/electron'
 import { appState, updateSetting } from '@/app'
 import { themeState } from '@/modules/theme'
+import { encodePath } from '@/shared/electron'
+import { mainSend } from '@/shared/mainIpc'
+import { debounce, isLinux, isWin } from '@/shared/utils'
+import { BrowserWindow } from 'electron'
+import path from 'node:path'
+import { initWindowSize } from './utils'
 
 // require('./event')
 // require('./rendererEvent')
@@ -15,7 +15,7 @@ let isWinBoundsUpdateing = false
 
 const saveBoundsConfig = debounce((config: Partial<AnyListen.AppSetting>) => {
   updateSetting(config)
-  if (isWinBoundsUpdateing) isWinBoundsUpdateing = false
+  isWinBoundsUpdateing &&= false
 }, 500)
 
 const winEvent = () => {
@@ -76,8 +76,9 @@ const winEvent = () => {
     // if (isLinux && appState.appSetting['desktopLyric.isAlwaysOnTop']) {
     //   browserWindow!.setAlwaysOnTop(appState.appSetting['desktopLyric.isAlwaysOnTop'], 'screen-saver')
     // }
-    if (appState.appSetting['desktopLyric.isAlwaysOnTop'] && appState.appSetting['desktopLyric.isAlwaysOnTopLoop'])
+    if (appState.appSetting['desktopLyric.isAlwaysOnTop'] && appState.appSetting['desktopLyric.isAlwaysOnTopLoop']) {
       alwaysOnTopTools.startLoop()
+    }
     browserWindow!.blur()
   })
 }
@@ -136,11 +137,10 @@ export const createWindow = () => {
     },
   })
 
-  const winURL =
-    process.env.NODE_ENV !== 'production'
-      ? 'http://localhost:9081'
-      : `file://${path.join(encodePath(__dirname), '../renderer-lyric/index.html')}`
-  void browserWindow.loadURL(winURL + `?dark=${shouldUseDarkColors}&theme=${encodeURIComponent(JSON.stringify(theme))}`)
+  const winURL = import.meta.env.DEV
+    ? 'http://localhost:9081'
+    : `file://${path.join(encodePath(__dirname), '../renderer-lyric/index.html')}`
+  void browserWindow.loadURL(`${winURL}?dark=${shouldUseDarkColors}&theme=${encodeURIComponent(JSON.stringify(theme))}`)
 
   winEvent()
   // browserWindow.webContents.openDevTools()
@@ -185,17 +185,8 @@ export const setSkipTaskbar = (skip: boolean) => {
 
 export const setAlwaysOnTop = (
   flag: boolean,
-  level?:
-    | 'normal'
-    | 'floating'
-    | 'torn-off-menu'
-    | 'modal-panel'
-    | 'main-menu'
-    | 'status'
-    | 'pop-up-menu'
-    | 'screen-saver'
-    | undefined,
-  relativeLevel?: number | undefined
+  level?: 'normal' | 'floating' | 'torn-off-menu' | 'modal-panel' | 'main-menu' | 'status' | 'pop-up-menu' | 'screen-saver',
+  relativeLevel?: number
 ) => {
   if (!browserWindow) return
   browserWindow.setAlwaysOnTop(flag, level, relativeLevel)

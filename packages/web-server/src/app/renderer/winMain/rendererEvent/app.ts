@@ -31,6 +31,9 @@ export const createExposeApp = () => {
     async removeLoginDevice(event, id) {
       socketEvent.remove_session(id)
     },
+    async getCurrentVersionInfo() {
+      return appState.version
+    },
     async checkUpdate(event) {
       void checkUpdate()
     },

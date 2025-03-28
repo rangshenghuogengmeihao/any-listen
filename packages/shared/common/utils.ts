@@ -253,6 +253,12 @@ const prep = (t: string) =>
     .replace(/(?:\.0+)*(\.-\d+(?:\.\d+)?)\.*$/g, '$1')
     // return array
     .split('.')
+/**
+ * compare Versions
+ * @param a new version
+ * @param b old version
+ * @returns 1: a > b, 0: a = b, -1: a < b
+ */
 export const compareVersions = (a: string, b: string) => {
   const aArr = prep(a)
   const bArr = prep(b)

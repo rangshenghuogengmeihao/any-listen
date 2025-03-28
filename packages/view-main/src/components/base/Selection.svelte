@@ -67,7 +67,7 @@
   }
 </script>
 
-<div class="select" class:active={visible}>
+<div class={['select', { active: visible }]}>
   <button bind:this={domBtn} class="button" onclick={handleShow}>
     <span class="label">{label}</span>
     <div class="icon">

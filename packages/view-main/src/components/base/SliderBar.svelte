@@ -120,7 +120,7 @@
 
 <div class="slider" class:disabled>
   <div class="sliderContent">
-    <div class="sliderBar" bind:this={domSliderBar} style={`transform: scaleX(${(value - min) / (max - min) || 0});`}></div>
+    <div class="sliderBar" bind:this={domSliderBar} style:transform={`scaleX(${(value - min) / (max - min) || 0})`}></div>
   </div>
   <div
     class="sliderMask"

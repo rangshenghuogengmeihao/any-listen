@@ -28,7 +28,7 @@
   }
 </script>
 
-<div class={`list ${align}`} role="tablist">
+<div class={['list', align]} role="tablist">
   {#if tagname == 'a' && href}
     {#each list as item (item[itemkey])}
       <a

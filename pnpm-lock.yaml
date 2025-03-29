@@ -118,8 +118,8 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0
       message2call:
-        specifier: ^2.0.2
-        version: 2.0.2
+        specifier: ^2.0.3
+        version: 2.0.3
       music-metadata:
         specifier: ^11.0.2
         version: 11.0.2
@@ -194,8 +194,8 @@ importers:
         specifier: workspace:@shared/common@*
         version: link:../common
       message2call:
-        specifier: ^2.0.2
-        version: 2.0.2
+        specifier: ^2.0.3
+        version: 2.0.3
     devDependencies:
       '@any-listen/eslint':
         specifier: workspace:@shared/eslint@*
@@ -332,8 +332,8 @@ importers:
         specifier: ^9.0.5
         version: 9.0.5
       message2call:
-        specifier: ^2.0.2
-        version: 2.0.2
+        specifier: ^2.0.3
+        version: 2.0.3
       refractor:
         specifier: ^5.0.0
         version: 5.0.0
@@ -447,8 +447,8 @@ importers:
         specifier: ^11.1.0
         version: 11.1.0
       message2call:
-        specifier: ^2.0.2
-        version: 2.0.2
+        specifier: ^2.0.3
+        version: 2.0.3
       mime:
         specifier: ^4.0.6
         version: 4.0.6
@@ -3235,8 +3235,8 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
-  message2call@2.0.2:
-    resolution: {integrity: sha512-MbV85DHYyFWvsRbnMHY2Mn8Zjnfa0nH7QmqAofr8jYriCt2Vr4HdfBySl+8YdrqEiDj96sdG3BneoEeT0WTqow==}
+  message2call@2.0.3:
+    resolution: {integrity: sha512-3tnbRqaPeZLxu1WxKBoQGsrdPY1Hc0mlrFFF7JT2AR0ngaW3SCLJPC02FGcVEncrcSnxRlBjLZ7rwdV3t3IYxA==}
 
   micromark-util-character@2.1.1:
     resolution: {integrity: sha512-wv8tdUTJ3thSFFFJKtpYKOYiGP2+v96Hvk4Tu8KpCAsTMs6yi+nVmGh1syvSCsaxz45J6Jbw+9DD6g97+NV67Q==}
@@ -7714,7 +7714,7 @@ snapshots:
 
   merge2@1.4.1: {}
 
-  message2call@2.0.2: {}
+  message2call@2.0.3: {}
 
   micromark-util-character@2.1.1:
     dependencies:

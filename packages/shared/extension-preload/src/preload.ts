@@ -1,5 +1,5 @@
 import { triggerTimeout } from '@/apis/global'
-import { createMsg2call } from 'message2call'
+import { createMessage2Call } from 'message2call'
 import { onResourceAction } from './apis/resource'
 import { extensionAPIEvent } from './event'
 import { hostContext } from './host/state'
@@ -43,8 +43,8 @@ const exposeObj = {
   // },
 } satisfies AnyListen.IPCExtension.ExtensionIPCActions
 
-export const msg2call = createMsg2call<AnyListen.HostFuncs>({
-  funcsObj: exposeObj,
+export const msg2call = createMessage2Call<AnyListen.HostFuncs>({
+  exposeObj,
   isSendErrorStack: true,
   timeout: 0,
   sendMessage(data?: unknown) {

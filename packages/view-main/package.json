@@ -14,7 +14,7 @@
     "@any-listen/i18n": "workspace:@shared/i18n@*",
     "@any-listen/web": "workspace:@shared/web@*",
     "hast-util-to-html": "^9.0.5",
-    "message2call": "^2.0.2",
+    "message2call": "^2.0.3",
     "refractor": "^5.0.0",
     "regexparam": "^3.0.0",
     "sortablejs": "^1.15.6"

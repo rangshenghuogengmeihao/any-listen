@@ -9,11 +9,11 @@
   "main": "vite.config.ts",
   "dependencies": {
     "@any-listen/common": "workspace:@shared/common@*",
-    "message2call": "^1.1.1"
+    "message2call": "^2.0.2"
   },
   "devDependencies": {
     "@any-listen/eslint": "workspace:@shared/eslint@*",
     "@any-listen/types": "workspace:@shared/types@*",
-    "vite": "^6.2.2"
+    "vite": "^6.2.3"
   }
 }

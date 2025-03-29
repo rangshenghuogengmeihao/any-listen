@@ -1,7 +1,7 @@
 import { EXTENSION, EXTENSION_VM_IPC_FUNC_NAMES } from '@any-listen/common/constants'
 import { randomUUID } from '@any-listen/nodejs'
 import { createSimpleLogcat } from '@any-listen/nodejs/logs'
-import { createMsg2call } from 'message2call'
+import { createMessage2Call } from 'message2call'
 import vm from 'node:vm'
 import { createExposeObject } from './apis/exposeFuncs'
 import {
@@ -29,8 +29,8 @@ export const createContext = async (extension: AnyListen.Extension.Extension) =>
   const key = randomUUID()
   const id = extension.id
 
-  const msg2call = createMsg2call<AnyListen.PreloadFuncs>({
-    funcsObj: createExposeObject(extension),
+  const msg2call = createMessage2Call<AnyListen.PreloadFuncs>({
+    exposeObj: createExposeObject(extension),
     isSendErrorStack: true,
     timeout: 0,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

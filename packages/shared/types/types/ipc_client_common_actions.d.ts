@@ -124,6 +124,7 @@ declare global {
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-qualifier
             info: AnyListen.UpdateInfo & {
               isAutoUpdate: boolean
+              ignoreVersion: string | null
             }
           }
         | {

@@ -79,7 +79,6 @@ declare global {
       commit: string
       commitDate: number
       newVersion: UpdateInfo | null
-      showModal: boolean
       isUnknown: boolean
       isLatest: boolean
       reCheck: boolean

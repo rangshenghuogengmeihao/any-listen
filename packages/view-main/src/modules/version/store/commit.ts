@@ -18,16 +18,12 @@ export const setProgress = (info: State['progress']) => {
   versionState.progress = info
   versionEvent.download_progress_updated(versionState.progress)
 }
-export const setVisibleModal = (visible: boolean) => {
-  if (versionState.showModal == visible) return
-  versionState.showModal = visible
-  versionEvent.visible_modal(versionState.showModal)
-}
 
 export const setUpdateInfo = (info: AnyListen.IPCCommon.UpdateInfo) => {
   switch (info.type) {
     case 'checking':
-      versionState.versionInfo.isLatest = false
+      // versionState.versionInfo.isLatest = false
+      versionState.versionInfo.status = 'checking'
       versionEvent.updated({ ...versionState.versionInfo })
       break
     case 'not_available':
@@ -36,12 +32,17 @@ export const setUpdateInfo = (info: AnyListen.IPCCommon.UpdateInfo) => {
       versionState.versionInfo.newVersion = info.info
       versionEvent.updated({ ...versionState.versionInfo })
       break
-    case 'available':
+    case 'available': {
+      const { ignoreVersion, isAutoUpdate, ...newVersion } = info.info
       versionState.versionInfo.isLatest = false
       versionState.versionInfo.status = 'idle'
-      versionState.versionInfo.newVersion = info.info
+      versionState.versionInfo.newVersion = newVersion
+      versionState.ignoreVersion = ignoreVersion
+      versionEvent.ignore_version_updated(ignoreVersion)
       versionEvent.updated({ ...versionState.versionInfo })
+      versionEvent.new_version_available(newVersion, ignoreVersion)
       break
+    }
     case 'downloaded':
       versionState.versionInfo.status = 'downloaded'
       versionEvent.updated({ ...versionState.versionInfo })

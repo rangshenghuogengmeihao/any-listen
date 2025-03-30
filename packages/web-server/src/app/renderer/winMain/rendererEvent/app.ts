@@ -1,9 +1,9 @@
 import { appState, updateSetting } from '@/app/app'
-import type { ExposeServerFunctions, ExposeClientFunctions } from '.'
-import { broadcast } from '@/modules/ipc/websocket'
 import { fileSystemAction } from '@/app/modules/fileSystem'
-import { getClientInfos } from '@/shared/data'
 import { socketEvent } from '@/modules/ipc/event'
+import { broadcast } from '@/modules/ipc/websocket'
+import { getClientInfos } from '@/shared/data'
+import type { ExposeClientFunctions, ExposeServerFunctions } from '.'
 import { checkUpdate, downloadUpdate, restartUpdate } from '../autoUpdate'
 
 // 暴露给前端的方法
@@ -35,7 +35,7 @@ export const createExposeApp = () => {
       return appState.version
     },
     async checkUpdate(event) {
-      void checkUpdate()
+      return checkUpdate()
     },
     async downloadUpdate(event) {
       void downloadUpdate()

@@ -13,12 +13,21 @@
     saveIgnoreVersion,
   } from '@/modules/version/store/actions'
   import { onMount } from 'svelte'
+  import { showNotify } from '../notify'
+  import { i18n } from '@/plugins/i18n'
+
+  let {
+    onafterleave,
+  }: {
+    onafterleave: () => void
+  } = $props()
 
   const versionInfo = useVersionInfo()
   const downloadProgress = useDownloadProgress()
   const ignoreVersion = useIgnoreVersion()
 
   let disabledIgnoreFailBtn = $state(false)
+  let visible = $state(false)
 
   let history = $derived.by(() => {
     if (!versionInfo.val.newVersion?.history) return []
@@ -46,26 +55,55 @@
   onMount(() => {
     disabledIgnoreFailBtn = isIgnoreFileTip()
   })
+
+  export const setVisible = (val: boolean) => {
+    visible = val
+  }
 </script>
 
-<Modal bind:visible={versionInfo.val.showModal} maxwidth="60%">
+{#snippet versionSnippet()}
+  <div class="scroll select info">
+    <div class="current">
+      <h3>最新版本：{versionInfo.val.newVersion?.version}</h3>
+      <h3>当前版本：{versionInfo.val.version}</h3>
+      <h3>版本变化：</h3>
+      <pre class="desc">{versionInfo.val.newVersion?.desc}</pre>
+    </div>
+    {#if history.length}
+      <div class="history desc">
+        <h3>历史版本：</h3>
+        {#each history as ver (ver.version)}
+          <div class="item">
+            <h4>v{ver.version}</h4>
+            <pre>{ver.desc}</pre>
+          </div>
+        {/each}
+      </div>
+    {/if}
+  </div>
+{/snippet}
+
+<Modal teleport="#root" bind:visible maxwidth="60%" {onafterleave} minheight="0">
   {#if versionInfo.val.isLatest}
     <main class="version-modal-main">
       <h2>🎉 已是最新版本 🎉</h2>
-      <div class="scroll select info">
-        <div class="current">
-          <h3>最新版本：{versionInfo.val.newVersion?.version}</h3>
-          <h3>当前版本：{versionInfo.val.version}</h3>
-          <h3>版本变化：</h3>
-          <pre class="desc">{versionInfo.val.newVersion?.desc}</pre>
-        </div>
-      </div>
+      {@render versionSnippet()}
       <div class="footer">
-        <div class="btns">
+        <div class="btns btn">
           {#if versionInfo.val.status == 'checking'}
             <Btn disabled>检查更新中...</Btn>
           {:else}
-            <Btn onclick={checkUpdate}>重新检查更新</Btn>
+            <Btn
+              onclick={() => {
+                void checkUpdate().then((hasNewVer) => {
+                  if (hasNewVer) {
+                    showNotify(i18n.t('update_module.check_result_new'))
+                  } else {
+                    showNotify(i18n.t('update_module.check_result_latest'))
+                  }
+                })
+              }}>重新检查更新</Btn
+            >
           {/if}
         </div>
       </div>
@@ -93,7 +131,7 @@
         </div>
       </div>
       <div class="footer">
-        <div class="btns">
+        <div class="btns btn2">
           {#if versionInfo.val.status == 'error'}
             <Btn onclick={checkUpdate}>重新检查更新</Btn>
           {:else}
@@ -110,59 +148,23 @@
       </div>
     </main>
   {:else if versionInfo.val.status == 'downloaded'}
-    <main class="main">
+    <main class="version-modal-main">
       <h2>🚀程序更新🚀</h2>
-      <div class="scroll select info">
-        <div class="current">
-          <h3>最新版本：{versionInfo.val.newVersion?.version}</h3>
-          <h3>当前版本：{versionInfo.val.version}</h3>
-          <h3>版本变化：</h3>
-          <pre class="desc">{versionInfo.val.newVersion?.desc}</pre>
-        </div>
-        {#if history.length}
-          <div class="history desc">
-            <h3>历史版本：</h3>
-            {#each history as ver (ver.version)}
-              <div class="item">
-                <h4>v{ver.version}</h4>
-                <pre>{ver.desc}</pre>
-              </div>
-            {/each}
-          </div>
-        {/if}
-      </div>
+      {@render versionSnippet()}
       <div class="footer">
         <div class="desc">
           <p>新版本已下载完毕，</p>
           <p>你可以选择<strong>立即重启更新</strong>或稍后<strong>关闭程序时</strong>自动更新~</p>
         </div>
-        <div class="btns">
+        <div class="btns btn">
           <Btn onclick={restartUpdate}>立即重启更新</Btn>
         </div>
       </div>
     </main>
   {:else}
-    <main class="main">
+    <main class="version-modal-main">
       <h2>🌟发现新版本🌟</h2>
-      <div class="scroll select info">
-        <div class="current">
-          <h3>最新版本：{versionInfo.val.newVersion?.version}</h3>
-          <h3>当前版本：{versionInfo.val.version}</h3>
-          <h3>版本变化：</h3>
-          <pre class="desc">{versionInfo.val.newVersion?.desc}</pre>
-        </div>
-        {#if history.length}
-          <div class="history desc">
-            <h3>历史版本：</h3>
-            {#each history as ver (ver.version)}
-              <div class="item">
-                <h4>v{ver.version}</h4>
-                <pre>{ver.desc}</pre>
-              </div>
-            {/each}
-          </div>
-        {/if}
-      </div>
+      {@render versionSnippet()}
       <div class="footer">
         <div class="desc">
           <p>发现有新版本啦，你可以选择自动更新或手动更新。</p>
@@ -173,14 +175,14 @@
               class="hover underline"
               aria-label="点击打开"
               onclick={() => {
-                handleOpenUrl('https://github.com/lyswhut/lx-music-desktop/releases')
+                handleOpenUrl('https://github.com/any-listen/any-listen#readme')
               }}
             >
               软件发布页
             </strong>
             下载。
           </p>
-          <p>
+          <!-- <p>
             若遇到问题可以阅读
             <strong
               role="presentation"
@@ -193,14 +195,14 @@
               桌面版常见问题
             </strong>
             。
-          </p>
+          </p> -->
           {#if progress}
             <p>当前下载进度：{progress}</p>
           {:else}
             <p>&nbsp;</p>
           {/if}
         </div>
-        <div class="btns">
+        <div class="btns btn2">
           <Btn
             onclick={async () => {
               await saveIgnoreVersion(isIgnored ? (versionInfo.val.newVersion?.version ?? null) : null)
@@ -258,11 +260,6 @@
     height: 100%;
     padding: 0 15px;
   }
-  .current {
-    > p {
-      padding-left: 15px;
-    }
-  }
 
   .desc {
     h3,
@@ -271,10 +268,6 @@
     }
     h3 {
       padding: 5px 0 3px;
-    }
-    ul {
-      list-style: initial;
-      padding-inline-start: 30px;
     }
     p {
       font-size: 14px;
@@ -288,18 +281,12 @@
     }
 
     .item {
-      h3 {
-        padding: 5px 0 3px;
-      }
       padding: 0 15px;
       + .item {
         padding-top: 15px;
       }
       h4 {
         font-weight: 700;
-      }
-      > p {
-        padding-left: 15px;
       }
     }
   }
@@ -326,13 +313,17 @@
   }
 
   .btn {
-    margin-top: 10px;
-    display: block;
-    width: 100%;
+    :global(button) {
+      margin-top: 10px;
+      display: block;
+      width: 100%;
+    }
   }
   .btn2 {
-    margin-top: 10px;
-    display: block;
-    width: 50%;
+    :global(button) {
+      margin-top: 10px;
+      display: block;
+      width: 50%;
+    }
   }
 </style>

@@ -57,7 +57,7 @@ export declare type ServerCommonActions = WarpPromiseRecord<{
   /** 获取当前版本信息 */
   getCurrentVersionInfo: () => AnyListen.CurrentVersionInfo
   /** 检查软件更新 */
-  checkUpdate: () => void
+  checkUpdate: () => boolean
   /** 下载更新 */
   downloadUpdate: () => void
   /** 重启更新 */

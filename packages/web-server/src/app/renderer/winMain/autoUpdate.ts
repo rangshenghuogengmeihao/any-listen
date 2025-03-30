@@ -18,6 +18,7 @@ export const initUpdate = () => {
       info: {
         version: info.version,
         isAutoUpdate: appState.appSetting['common.tryAutoUpdate'],
+        ignoreVersion: appState.version.ignoreVersion,
         // url: info.
         desc: info.desc,
         // isForce: boolean

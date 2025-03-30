@@ -1,6 +1,8 @@
-import { createUnsubscriptionSet } from '@/shared'
+import { showUpdateModal } from '@/components/apis/updateModal'
 import { onConnected, onRelease } from '@/modules/app/shared'
-import { getCurrentVersionInfo, registerRemoteActions, initCurrentVersionInfo } from './store/actions'
+import { createUnsubscriptionSet } from '@/shared'
+import { getCurrentVersionInfo, initCurrentVersionInfo, registerRemoteActions } from './store/actions'
+import { versionEvent } from './store/event'
 
 const init = async () => {
   const info = await getCurrentVersionInfo()
@@ -14,6 +16,12 @@ export const initVersion = () => {
   onConnected(() => {
     unregistered.register((subscriptions) => {
       subscriptions.add(registerRemoteActions())
+      subscriptions.add(
+        versionEvent.on('new_version_available', (newVersion, ignoreVersion) => {
+          if (newVersion?.version == ignoreVersion) return
+          void showUpdateModal()
+        })
+      )
 
       void init()
     })

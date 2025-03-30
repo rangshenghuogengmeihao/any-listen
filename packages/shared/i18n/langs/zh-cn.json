@@ -300,6 +300,8 @@
   "theme_selector_modal__theme_name": "主题名称",
   "theme_selector_modal__title": "跟随系统主题设置",
   "theme_selector_modal__title_tip": "注：你可以预先设置一个亮色主题及暗色主题，此后将根据系统的亮、暗主题色自动切换为你预先设置的相应主题。",
+  "update_module.check_result_latest": "当前已是最新版本 👏",
+  "update_module.check_result_new": "发现新版本 ✨",
   "user_list__add_local_file_failed": "😢 已选择的 {num} 首歌曲全部解析失败",
   "user_list__add_local_file_success_part": "⚠️已选的 {all} 首歌曲中有 {count} 首解析失败",
   "user_list__add_local_file_successfull": "🎉 已选的 {num} 首歌曲已解析添加完成",

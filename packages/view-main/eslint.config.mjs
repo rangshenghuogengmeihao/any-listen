@@ -42,6 +42,7 @@ export default [
       '@typescript-eslint/no-unnecessary-condition': 'off',
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-confusing-void-expression': 'off',
     },
   },
   // {

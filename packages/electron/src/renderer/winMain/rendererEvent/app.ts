@@ -53,7 +53,7 @@ export const createExposeApp = () => {
       return appState.version
     },
     async checkUpdate(event) {
-      await checkUpdate()
+      return checkUpdate()
     },
     async downloadUpdate(event) {
       void downloadUpdate()

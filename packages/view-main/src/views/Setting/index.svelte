@@ -25,6 +25,7 @@
     // padding: 10px 15px;
     display: flex;
     flex-flow: column nowrap;
+    font-size: 14px;
 
     :global {
       .settings-item {
@@ -43,6 +44,16 @@
         margin-bottom: 15px;
         margin-top: 6px;
         font-size: 15px;
+      }
+
+      .p {
+        padding: 3px 0;
+        line-height: 1.3;
+        .btn {
+          + .btn {
+            margin-left: 10px;
+          }
+        }
       }
     }
   }

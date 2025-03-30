@@ -1,19 +1,5 @@
-import { versionState } from './store/state'
-
-import { readable } from 'svelte/store'
 import { versionEvent } from './store/event'
-
-export const showModal = readable(versionState.showModal, (set) => {
-  const handleUpdate = () => {
-    set(versionState.showModal)
-  }
-  handleUpdate()
-  versionEvent.on('visible_modal', handleUpdate)
-
-  return () => {
-    versionEvent.off('visible_modal', handleUpdate)
-  }
-})
+import { versionState } from './store/state'
 
 export const useVersionInfo = () => {
   let val = $state(versionState.versionInfo)

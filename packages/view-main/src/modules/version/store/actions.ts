@@ -1,7 +1,7 @@
 import { saveIgnoreVersion as saveIgnoreVersionRemote } from '@/shared/ipc/data'
 import * as commit from './commit'
 
-export { initCurrentVersionInfo, setProgress, setUpdateInfo, setVisibleModal } from './commit'
+export { initCurrentVersionInfo, setProgress, setUpdateInfo } from './commit'
 export { checkUpdate, downloadUpdate, getCurrentVersionInfo, registerRemoteActions, restartUpdate } from './remoteActions'
 
 export const ignoreFailTip = () => {

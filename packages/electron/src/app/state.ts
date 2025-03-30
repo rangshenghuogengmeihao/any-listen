@@ -31,7 +31,6 @@ export const appState: {
     commit: '',
     commitDate: 0,
     newVersion: null,
-    showModal: false,
     isUnknown: false,
     isLatest: false,
     reCheck: false,

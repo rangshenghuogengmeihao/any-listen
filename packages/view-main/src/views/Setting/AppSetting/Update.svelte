@@ -1,11 +1,10 @@
 <script lang="ts">
+  import { showUpdateModal } from '@/components/apis/updateModal'
   import Btn from '@/components/base/Btn.svelte'
   import { useDownloadProgress, useVersionInfo } from '@/modules/version/reactive.svelte'
-  import { setVisibleModal } from '@/modules/version/store/actions'
   import { t } from '@/plugins/i18n'
   import { dateFormat, sizeFormate } from '@/shared'
   import { openDevTools } from '@/shared/ipc/app'
-  import TitleContent from '../components/TitleContent.svelte'
   let versionInfo = useVersionInfo()
   let progress = useDownloadProgress()
 
@@ -37,7 +36,7 @@
   )
 </script>
 
-<TitleContent>
+<div class="update-content">
   <div class="gap-top">
     {#if import.meta.env.VITE_IS_ELECTRON}
       <div class="p small" role="presentation" onclick={handleOpenDevTools}>
@@ -73,17 +72,20 @@
       <div class="p"><span>{$t('settings__update_unknown_tip')}</span></div>
     {:else if versionInfo.val.status != 'downloading'}
       <div class="p"><span>{$t('settings__update_new_version')}</span></div>
-    {:else}
-      <div class="p">
-        <Btn
-          min
-          onclick={() => {
-            setVisibleModal(true)
-          }}>{$t('settings__update_open_version_modal_btn')}</Btn
-        >
-      </div>
     {/if}
+    <div class="p">
+      <Btn min onclick={showUpdateModal}>
+        {$t('settings__update_open_version_modal_btn')}
+      </Btn>
+    </div>
   {:else if versionInfo.val.status == 'checking'}
     <div class="p small">{$t('settings__update_checking')}</div>
   {/if}
-</TitleContent>
+</div>
+
+<style lang="less">
+  .update-content {
+    margin-top: 5px;
+    margin-left: 16px;
+  }
+</style>

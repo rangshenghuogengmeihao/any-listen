@@ -78,7 +78,9 @@ export const createLocalMusicInfo = async (path: string): Promise<AnyListen.Musi
 
   let metadata
   try {
-    metadata = await parseFile(path)
+    metadata = await parseFile(path, {
+      skipCovers: true,
+    })
   } catch (err) {
     console.log(err)
     return null

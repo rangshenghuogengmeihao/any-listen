@@ -1,3 +1,4 @@
+import { getLatestVersion } from '@any-listen/common/tools'
 import { appState } from '../app'
 import { request } from './request'
 import { compareVersions, sleep } from './utils'
@@ -100,8 +101,9 @@ class Update extends UpdateEvent {
       this.emit('error', err as Error)
       return false
     }
+    const latest = getLatestVersion(info, appState.appSetting['common.allowPreRelease'])
 
-    if (compareVersions(appState.version.version, info.version) > 0) {
+    if (latest && compareVersions(appState.version.version, latest.version) > 0) {
       this.emit('update_available', info)
       if (isAutoUpdate) {
         void this.downloadUpdate()

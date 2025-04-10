@@ -38,7 +38,7 @@
     <InputItem
       id={`extenstion_${item.field}_${item.type}`}
       name={$t(item.name)}
-      desc={item.description}
+      desc={item.description && $t(item.description)}
       textarea={item.textarea}
       value={setting.val as string}
       onchange={(val) => {
@@ -49,14 +49,14 @@
     <CheckboxItem
       id={`extenstion_${item.field}_${item.type}`}
       name={$t(item.name)}
-      desc={item.description}
+      desc={item.description && $t(item.description)}
       checked={setting.val as boolean}
       onchange={(val) => {
         void updateSetting({ [item.field]: val })
       }}
     />
   {:else if item.type === 'radio'}
-    <RadioGroup name={$t(item.name)} desc={item.description}>
+    <RadioGroup name={$t(item.name)} desc={item.description && $t(item.description)}>
       {#each list as radioItem (radioItem.value)}
         <RadioItem
           id={`extenstion_${item.field}_${item.type}_${radioItem.value}`}
@@ -72,7 +72,7 @@
   {:else if item.type === 'selection'}
     <SelectionItem
       name={$t(item.name)}
-      desc={item.description}
+      desc={item.description && $t(item.description)}
       value={setting.val as string | number}
       list={item.enum.map((n) => ({ label: n.name, value: n.value }))}
       onchange={(val) => {

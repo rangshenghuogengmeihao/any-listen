@@ -1,3 +1,4 @@
+import { getLatestVersion } from '@any-listen/common/tools'
 import { appState } from '../app'
 import { checkUpdate, downloadUpdate, initUpdate, restartUpdate } from './electronUpdate'
 import { request } from './request'
@@ -105,10 +106,11 @@ export class Update extends UpdateEvent {
       this.emit('error', err as Error)
       return false
     }
+    const latest = getLatestVersion(info, appState.appSetting['common.allowPreRelease'])
 
-    if (compareVersions(appState.version.version, info.version) > 0) {
+    if (latest && compareVersions(appState.version.version, latest.version) > 0) {
       this.emit('update_available', info)
-      checkUpdate(isAutoUpdate)
+      checkUpdate(isAutoUpdate, appState.appSetting['common.allowPreRelease'])
       return true
     }
     this.emit('update_not_available', info)

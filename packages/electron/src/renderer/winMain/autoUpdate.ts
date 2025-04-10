@@ -21,6 +21,7 @@ export const initUpdate = () => {
         ignoreVersion: appState.version.ignoreVersion,
         // url: info.
         desc: info.desc,
+        isPreRelease: info.isPreRelease,
         // isForce: boolean
         history: info.history,
       },

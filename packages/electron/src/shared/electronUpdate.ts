@@ -46,10 +46,11 @@ export const initUpdate = (_update: Update) => {
   })
 }
 
-export const checkUpdate = (isAutoUpdate: boolean) => {
+export const checkUpdate = (isAutoUpdate: boolean, allowPrerelease: boolean) => {
   // 由于集合安装包中不包含win arm版，这将会导致arm版更新失败
   if (!isWin || !process.arch.includes('arm')) {
     autoUpdater.autoDownload = isAutoUpdate
+    autoUpdater.allowPrerelease = allowPrerelease
     void autoUpdater.checkForUpdates()
   } else {
     update.emit('error', new Error('Windows ARM is not supported'))

@@ -100,3 +100,10 @@ const existTimeExp = /\[\d{1,2}:.*\d{1,4}\]/
  * @param lrc
  */
 export const isValidLyric = (lrc?: string | null | number) => typeof lrc == 'string' && existTimeExp.test(lrc)
+
+export const getLatestVersion = (info: AnyListen.UpdateInfo, allowPreRelease = false) => {
+  const latest = { version: info.version, desc: info.desc, isPreRelease: info.isPreRelease }
+  if (allowPreRelease || !latest.isPreRelease) return latest
+  const versions: AnyListen.VersionInfo[] = [latest, ...info.history]
+  return versions.find((v) => !v.isPreRelease)
+}

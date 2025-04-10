@@ -97,6 +97,7 @@ declare global {
     interface VersionInfo {
       version: string
       desc: string
+      isPreRelease?: boolean
     }
     interface UpdateInfo extends VersionInfo {
       history: VersionInfo[]

@@ -9,7 +9,7 @@ import Update from './Update.svelte'
 interface SettingBase {
   field: keyof AnyListen.AppSetting
   name: keyof Message
-  description?: string
+  description?: keyof Message
 }
 export interface EnumItem {
   name: keyof Message
@@ -17,7 +17,7 @@ export interface EnumItem {
 }
 export interface SettingListComponentItem {
   name: keyof Message
-  description?: string
+  description?: keyof Message
   type: 'component'
   component: Component
 }
@@ -139,8 +139,15 @@ export const settings: SettingListSection[] = [
           }
         : null,
       {
+        field: 'common.allowPreRelease',
+        name: 'settings__update_allow_pre_release',
+        description: 'settings__update_allow_pre_release_desc',
+        type: 'boolean',
+      },
+      {
         field: 'common.showChangeLog',
         name: 'settings__update_show_change_log',
+        description: 'settings__update_show_change_log_desc',
         type: 'boolean',
       },
       {

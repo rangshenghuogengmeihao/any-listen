@@ -68,6 +68,12 @@ declare global {
       'common.tryAutoUpdate': boolean
 
       /**
+       * 是否启用预发布版本
+       * @description 预发布版本是指在正式发布之前的版本，可能包含一些新功能或修复，但也可能不稳定
+       */
+      'common.allowPreRelease': boolean
+
+      /**
        * 更新版本后是否显示变更日志
        */
       'common.showChangeLog': boolean

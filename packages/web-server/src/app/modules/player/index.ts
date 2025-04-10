@@ -1,9 +1,8 @@
 import { appEvent, appState } from '@/app/app'
-import getStore from '@/app/shared/store'
 import { workers } from '@/app/worker'
 import { musicListEvent, sendMusicListAction } from '@any-listen/app/modules/musicList'
 import { initPlayer as initPlayerModule, playerEvent } from '@any-listen/app/modules/player'
-import { LIST_IDS, STORE_NAMES } from '@any-listen/common/constants'
+import { LIST_IDS } from '@any-listen/common/constants'
 import { throttle } from '@any-listen/common/utils'
 import { getPlayTime, savePlayTime } from './playTimeStore'
 
@@ -11,26 +10,17 @@ let playInfo: AnyListen.Player.SavedPlayInfo
 
 const initPlayInfo = async () => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (playInfo === undefined) {
-    let info = getStore(STORE_NAMES.PLAY_INFO).getAll<AnyListen.Player.SavedPlayInfo>()
-    playInfo =
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      info.index == null
-        ? {
-            index: -1,
-            time: 0,
-            maxTime: 0,
-            historyIndex: -1,
-          }
-        : info
-    const time = await getPlayTime()
-    if (playInfo.index > -1) playInfo.time = time
-  }
+  if (playInfo !== undefined) return
+  const [info, time] = await Promise.all([workers.dbService.queryMetadataPlayInfo(), getPlayTime()])
+  // eslint-disable-next-line require-atomic-updates
+  playInfo = info
+  if (playInfo.index > -1) playInfo.time = time
 }
 
 const savePlayInfoThrottle = throttle(() => {
-  getStore(STORE_NAMES.PLAY_INFO).override(playInfo)
+  void workers.dbService.saveMetadataPlayInfo(playInfo)
 }, 500)
+
 const savePlayTimeThrottle = throttle(() => {
   void savePlayTime(playInfo.time)
 }, 500)

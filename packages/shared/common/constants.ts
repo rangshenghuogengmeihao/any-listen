@@ -13,7 +13,6 @@ export const SPLIT_CHAR = {
 export const STORE_NAMES = {
   APP_SETTINGS: 'config',
   DATA: 'data',
-  PLAY_INFO: 'play_info',
   LIST_SCROLL_POSITION: 'list_scroll_position',
   SYNC: 'sync',
   HOTKEY: 'hot_key',

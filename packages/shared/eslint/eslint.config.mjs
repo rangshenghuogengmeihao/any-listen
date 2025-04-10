@@ -67,6 +67,7 @@ export const typescriptRule = {
   '@typescript-eslint/await-thenable': 'off',
   '@typescript-eslint/no-empty-function': 'off',
   '@typescript-eslint/no-misused-promises': 'off',
+  '@typescript-eslint/no-unsafe-assignment': 'off',
   '@typescript-eslint/no-explicit-any': 'warn',
 
   '@typescript-eslint/no-confusing-void-expression': [

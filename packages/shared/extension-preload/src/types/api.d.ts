@@ -897,6 +897,16 @@ declare global {
       // leaderboardDate: (params: SonglistListParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
       // leaderboardDetail: (params: SonglistListParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
     }
+
+    interface BackupDataAction {
+      runBackup: (opts: { backupData?: Array<'list' | 'dislike'> }) => Promise<void>
+      getListMD5: () => Promise<string | null>
+      getListData: () => Promise<string | null>
+      setListData: (data: string, md5: string) => Promise<void>
+      getDislikeMD5: () => Promise<string | null>
+      getDislikeData: () => Promise<string | null>
+      setDislikeData: (data: string, md5: string) => Promise<void>
+    }
     interface Logcat {
       debug: (...args: unknown[]) => void
       info: (...args: unknown[]) => void
@@ -944,6 +954,7 @@ declare global {
       storage: Storage
       configuration: Configuration
       registerResourceAction: (actions: Partial<ResourceAction>) => void
+      registerBackupDataAction: (actions: BackupDataAction) => void
       utils: {
         buffer: Buffer
         crypto: Crypto

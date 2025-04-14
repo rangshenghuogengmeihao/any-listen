@@ -133,7 +133,7 @@
     // outline: none;
     transition: @transition-normal;
     transition-property: background-color, opacity;
-    .mixin-ellipsis-1;
+    .mixin-ellipsis-1();
     background-color: transparent;
     border: none;
 

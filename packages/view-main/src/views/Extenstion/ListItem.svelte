@@ -98,7 +98,7 @@
       //   gap: 5px;
       //   justify-content: space-between;
       h3 {
-        .auto-hidden;
+        .auto-hidden();
         font-size: 14px;
       }
       //   p {
@@ -107,7 +107,7 @@
       // }
       .label {
         color: var(--color-font-label);
-        .mixin-ellipsis-2;
+        .mixin-ellipsis-2();
         font-size: 12px;
       }
     }
@@ -134,14 +134,14 @@
       .author {
         color: var(--color-font-label);
         font-size: 12px;
-        .auto-hidden;
+        .auto-hidden();
       }
       .label {
         flex: none;
         max-width: 120px;
         color: var(--color-font-label);
         font-size: 12px;
-        .auto-hidden;
+        .auto-hidden();
       }
       .load-time {
         flex: none;

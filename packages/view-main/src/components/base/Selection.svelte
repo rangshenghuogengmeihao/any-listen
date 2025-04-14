@@ -137,7 +137,7 @@
 
     span {
       flex: auto;
-      .mixin-ellipsis-1;
+      .mixin-ellipsis-1();
     }
     .icon {
       flex: none;
@@ -183,7 +183,7 @@
     // outline: none;
     transition: background-color @transition-normal;
     background-color: transparent;
-    .mixin-ellipsis-1;
+    .mixin-ellipsis-1();
     border: none;
     display: block;
     width: 100%;

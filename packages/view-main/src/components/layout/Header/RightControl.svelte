@@ -45,7 +45,7 @@
     }
 
     // &:before {
-    //   .mixin-after;
+    //   .mixin-after();
     //   left: 0;
     //   top: 0;
     //   width: 100%;

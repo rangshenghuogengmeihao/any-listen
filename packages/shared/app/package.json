@@ -13,15 +13,15 @@
     "jschardet": "^3.1.4",
     "jsonschema": "^1.5.0",
     "message2call": "^2.0.3",
-    "music-metadata": "^11.0.2",
+    "music-metadata": "^11.0.5",
     "tar": "^7.4.3",
     "ws": "^8.18.1"
   },
   "devDependencies": {
     "@any-listen/eslint": "workspace:@shared/eslint@*",
     "@any-listen/types": "workspace:@shared/types@*",
-    "@types/better-sqlite3": "^7.6.12",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/tar": "^6.1.13",
-    "vite": "^6.2.3"
+    "vite": "^6.2.6"
   }
 }

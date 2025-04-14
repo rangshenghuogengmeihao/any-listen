@@ -16,12 +16,12 @@
     "better-sqlite3": "^11.9.1",
     "bufferutil": "^4.0.9",
     "jsonwebtoken": "^9.0.2",
-    "koa": "^2.16.0",
+    "koa": "^2.16.1",
     "koa-router": "^13.0.1",
     "log4js": "6.9.1",
     "lru-cache": "^11.1.0",
     "message2call": "^2.0.3",
-    "mime": "^4.0.6",
+    "mime": "^4.0.7",
     "utf-8-validate": "^6.0.5",
     "ws": "^8.18.1"
   },
@@ -33,6 +33,6 @@
     "@types/koa-router": "^7.4.8",
     "@types/koa__cors": "^5.0.0",
     "@types/ws": "8.5.4",
-    "vite": "^6.2.3"
+    "vite": "^6.2.6"
   }
 }

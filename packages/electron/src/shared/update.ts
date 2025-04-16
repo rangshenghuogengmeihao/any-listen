@@ -48,14 +48,14 @@ class UpdateEvent {
 
 const enName = 'YW55LWxpc3Rlbg=='
 const name = Buffer.from(enName, 'base64').toString()
-const pkgName = `@${name}-desktop`
+const pkgName = `${name}-desktop`
 const address = [
   [`https://raw.githubusercontent.com/${name}/${name}/main/packages/electron/publish/version.json`, 'direct'],
-  [`https://registry.npmjs.org/${name}/${pkgName}/latest`, 'npm'],
+  [`https://registry.npmjs.org/@${name}/${pkgName}/latest`, 'npm'],
   [`https://cdn.jsdelivr.net/gh/${name}/${name}/packages/electron/publish/version.json`, 'direct'],
   [`https://fastly.jsdelivr.net/gh/${name}/${name}/packages/electron/publish/version.json`, 'direct'],
   [`https://gcore.jsdelivr.net/gh/${name}/${name}/packages/electron/publish/version.json`, 'direct'],
-  [`https://registry.npmmirror.com/${name}/${pkgName}/latest`, 'npm'],
+  [`https://registry.npmmirror.com/@${name}/${pkgName}/latest`, 'npm'],
   ['http://cdn.stsky.cn/any-listen/electron/version.json', 'direct'],
 ] as const
 
@@ -108,7 +108,7 @@ export class Update extends UpdateEvent {
     }
     const latest = getLatestVersion(info, appState.appSetting['common.allowPreRelease'])
 
-    if (latest && compareVersions(appState.version.version, latest.version) > 0) {
+    if (compareVersions(appState.version.version, latest.version) < 0) {
       this.emit('update_available', info)
       checkUpdate(isAutoUpdate, appState.appSetting['common.allowPreRelease'])
       return true

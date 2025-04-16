@@ -10,6 +10,8 @@
     "build:dir": "pnpm -F @shared/scripts build:electron:dir",
     "build:ele": "pnpm -F @shared/scripts build:electron",
     "build:web": "pnpm -F @shared/scripts build:web",
+    "pub:web": "pnpm -F @shared/publish pub web-server",
+    "pub:elec": "pnpm -F @shared/publish pub electron",
     "cldep": "rm -rf node_modules && pnpm -r exec rm -rf node_modules",
     "postinstall": "pnpm -F electron rebuild:deps && pnpm -F web-server rebuild"
   },

@@ -47,6 +47,10 @@
     "build": "vite build",
     "rebuild:deps": "electron-builder install-app-deps && node ./build-config/post-install.cjs"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/any-listen/any-listen-desktop.git"
+  },
   "dependencies": {
     "@any-listen/app": "workspace:@shared/app@*",
     "@any-listen/common": "workspace:@shared/common@*",

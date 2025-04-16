@@ -46,14 +46,14 @@ class UpdateEvent {
 
 const enName = 'YW55LWxpc3Rlbg=='
 const name = Buffer.from(enName, 'base64').toString()
-const pkgName = `@${name}-web-server`
+const pkgName = `${name}-web-server`
 const address = [
   [`https://raw.githubusercontent.com/${name}/${name}/main/packages/web-server/publish/version.json`, 'direct'],
-  [`https://registry.npmjs.org/${name}/${pkgName}/latest`, 'npm'],
+  [`https://registry.npmjs.org/@${name}/${pkgName}/latest`, 'npm'],
   [`https://cdn.jsdelivr.net/gh/${name}/${name}/packages/web-server/publish/version.json`, 'direct'],
   [`https://fastly.jsdelivr.net/gh/${name}/${name}/packages/web-server/publish/version.json`, 'direct'],
   [`https://gcore.jsdelivr.net/gh/${name}/${name}/packages/web-server/publish/version.json`, 'direct'],
-  [`https://registry.npmmirror.com/${name}/${pkgName}/latest`, 'npm'],
+  [`https://registry.npmmirror.com/@${name}/${pkgName}/latest`, 'npm'],
   ['http://cdn.stsky.cn/any-listen/web-server/version.json', 'direct'],
 ] as const
 
@@ -102,12 +102,9 @@ class Update extends UpdateEvent {
       return false
     }
     const latest = getLatestVersion(info, appState.appSetting['common.allowPreRelease'])
-
-    if (latest && compareVersions(appState.version.version, latest.version) > 0) {
+    if (compareVersions(appState.version.version, latest.version) < 0) {
       this.emit('update_available', info)
-      if (isAutoUpdate) {
-        void this.downloadUpdate()
-      }
+      if (isAutoUpdate) void this.downloadUpdate()
       return true
     }
     this.emit('update_not_available', info)

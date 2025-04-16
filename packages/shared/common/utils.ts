@@ -255,8 +255,8 @@ const prep = (t: string) =>
     .split('.')
 /**
  * compare Versions
- * @param a new version
- * @param b old version
+ * @param a old version
+ * @param b new version
  * @returns 1: a > b, 0: a = b, -1: a < b
  */
 export const compareVersions = (a: string, b: string) => {

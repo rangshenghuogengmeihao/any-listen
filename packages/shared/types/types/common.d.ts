@@ -97,10 +97,11 @@ declare global {
     interface VersionInfo {
       version: string
       desc: string
-      isPreRelease?: boolean
+      time: string
     }
     interface UpdateInfo extends VersionInfo {
       history: VersionInfo[]
+      beta?: VersionInfo[]
       // isForce: boolean
       // url: string
     }

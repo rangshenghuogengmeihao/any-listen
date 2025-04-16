@@ -2,7 +2,7 @@
   import { useDownloadProgress, useIgnoreVersion, useVersionInfo } from '@/modules/version/reactive.svelte'
   import Modal from '@/components/material/Modal.svelte'
   import Btn from '@/components/base/Btn.svelte'
-  import { compareVersions, sizeFormate } from '@/shared'
+  import { arrUnshift, compareVersions, dateFormat, sizeFormate } from '@/shared'
   import { openUrl } from '@/shared/ipc/app'
   import {
     checkUpdate,
@@ -14,7 +14,8 @@
   } from '@/modules/version/store/actions'
   import { onMount } from 'svelte'
   import { showNotify } from '../notify'
-  import { i18n } from '@/plugins/i18n'
+  import { i18n, t } from '@/plugins/i18n'
+  import { useSettingValue } from '@/modules/setting/reactive.svelte'
 
   let {
     onafterleave,
@@ -25,28 +26,45 @@
   const versionInfo = useVersionInfo()
   const downloadProgress = useDownloadProgress()
   const ignoreVersion = useIgnoreVersion()
+  const allowPreRelease = useSettingValue('common.allowPreRelease')
 
   let disabledIgnoreFailBtn = $state(false)
   let visible = $state(false)
 
-  let history = $derived.by(() => {
-    if (!versionInfo.val.newVersion?.history) return []
+  let [latest, history] = $derived.by<[AnyListen.VersionInfo | null, AnyListen.VersionInfo[]]>(() => {
+    if (!versionInfo.val.newVersion) return [null, []]
+    let history = [...(versionInfo.val.newVersion?.history ?? [])]
+    let latest: AnyListen.VersionInfo = {
+      version: versionInfo.val.newVersion.version,
+      desc: versionInfo.val.newVersion.desc,
+      time: versionInfo.val.newVersion.time,
+    }
+    if (allowPreRelease.val && versionInfo.val.newVersion.beta) {
+      history.unshift({
+        version: versionInfo.val.newVersion.version,
+        desc: versionInfo.val.newVersion.desc,
+        time: versionInfo.val.newVersion.time,
+      })
+      arrUnshift(history, versionInfo.val.newVersion.beta)
+      latest = versionInfo.val.newVersion.beta[0]
+    }
     let arr: AnyListen.VersionInfo[] = []
     let currentVer = versionInfo.val.version
-    versionInfo.val.newVersion?.history.forEach((ver) => {
+    for (const ver of history) {
+      ver.time &&= dateFormat(new Date(ver.time))
       if (compareVersions(currentVer, ver.version) < 0) arr.push(ver)
-    })
-
-    return arr
+      else break
+    }
+    return [latest, arr]
   })
   let progress = $derived(
     versionInfo.val.status == 'downloading'
       ? downloadProgress.val
         ? `${downloadProgress.val.percent.toFixed(2)}% - ${sizeFormate(downloadProgress.val.transferred)}/${sizeFormate(downloadProgress.val.total)} - ${sizeFormate(downloadProgress.val.bytesPerSecond)}/s`
-        : '处理更新中...'
+        : i18n.t('update_modal.update_handing')
       : ''
   )
-  let isIgnored = $derived(ignoreVersion.val == versionInfo.val.newVersion?.version)
+  let isIgnored = $derived(ignoreVersion.val == latest?.version)
 
   const handleOpenUrl = (url: string) => {
     void openUrl(url)
@@ -64,17 +82,17 @@
 {#snippet versionSnippet()}
   <div class="scroll select info">
     <div class="current">
-      <h3>最新版本：{versionInfo.val.newVersion?.version}</h3>
-      <h3>当前版本：{versionInfo.val.version}</h3>
-      <h3>版本变化：</h3>
-      <pre class="desc">{versionInfo.val.newVersion?.desc}</pre>
+      <h3>{$t('update_modal.current_version')}{versionInfo.val.version}</h3>
+      <h3>{$t('update_modal.latest_version')}{latest?.version}{latest?.time ? ` - ${latest?.time}` : ''}</h3>
+      <h3>{$t('update_modal.change_log')}</h3>
+      <pre class="desc">{latest?.desc}</pre>
     </div>
     {#if history.length}
       <div class="history desc">
-        <h3>历史版本：</h3>
+        <h3>{$t('update_modal.history_version')}</h3>
         {#each history as ver (ver.version)}
           <div class="item">
-            <h4>v{ver.version}</h4>
+            <h4>v{ver.version}{ver.time ? ` - ${ver.time}` : ''}</h4>
             <pre>{ver.desc}</pre>
           </div>
         {/each}
@@ -86,24 +104,26 @@
 <Modal teleport="#root" bind:visible maxwidth="60%" {onafterleave} minheight="0">
   {#if versionInfo.val.isLatest}
     <main class="version-modal-main">
-      <h2>🎉 已是最新版本 🎉</h2>
+      <h2>{$t('update_modal.latest_title')}</h2>
       {@render versionSnippet()}
       <div class="footer">
         <div class="btns btn">
           {#if versionInfo.val.status == 'checking'}
-            <Btn disabled>检查更新中...</Btn>
+            <Btn disabled>{$t('update_modal.update_checking')}</Btn>
           {:else}
             <Btn
               onclick={() => {
                 void checkUpdate().then((hasNewVer) => {
                   if (hasNewVer) {
-                    showNotify(i18n.t('update_module.check_result_new'))
+                    showNotify(i18n.t('update_modal.check_result_new'))
                   } else {
-                    showNotify(i18n.t('update_module.check_result_latest'))
+                    showNotify(i18n.t('update_modal.check_result_latest'))
                   }
                 })
-              }}>重新检查更新</Btn
+              }}
             >
+              {$t('update_modal.recheck_update')}
+            </Btn>
           {/if}
         </div>
       </div>
@@ -123,8 +143,11 @@
                 aria-label="点击打开"
                 onclick={() => {
                   handleOpenUrl('https://github.com/lyswhut/lx-music-desktop/releases')
-                }}>软件发布页</Btn
-              >，查看「Latest」发布的<strong>版本号</strong>与当前版本({versionInfo.val.version})对比是否一致。
+                }}
+              >
+                软件发布页
+              </Btn>
+              ，查看「Latest」发布的<strong>版本号</strong>与当前版本({versionInfo.val.version})对比是否一致。
             </p>
             <p>若一致则不必理会该弹窗，直接关闭即可；否则请手动下载新版本更新。</p>
           </div>

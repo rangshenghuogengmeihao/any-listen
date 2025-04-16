@@ -22,6 +22,7 @@ const initPlayListInfo = () => {
   if (data) {
     try {
       const result = JSON.parse(data) as PlayListInfo
+      if (typeof result != 'object') throw new Error('not object')
       playListInfo = result
       return
     } catch {}

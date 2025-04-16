@@ -1,16 +1,16 @@
 import type { ChildProcessWithoutNullStreams } from 'node:child_process'
 import colors from 'picocolors'
 // import del from 'del'
+import { debounce } from '@any-listen/common/utils'
+import { Arch, buildConfig, replaceLib, runDesktop } from '@any-listen/desktop'
+import Spinnies from 'spinnies'
 import type { Logger } from 'vite'
 import { type TaksName, buildSuatus, runBuildWorkerStatus } from './utils'
-import Spinnies from 'spinnies'
-import { Arch, buildConfig, replaceLib, runElectron } from '@any-listen/electron'
-import { debounce } from '@any-listen/common/utils'
 
+import treeKill from 'tree-kill'
+import copyAssets from './copyAssets'
 import { dynamicImport } from './import-esm.cjs'
 import type { Vite } from './types'
-import copyAssets from './copyAssets'
-import treeKill from 'tree-kill'
 
 let logger: Logger
 
@@ -24,7 +24,7 @@ const logs = [
   '"Electron sandbox_bundle.js script failed to run"',
   '"TypeError: object null is not iterable (cannot read property Symbol(Symbol.iterator))",',
 ]
-function electronLog(data: Buffer, color: 'red' | 'blue') {
+function desktopLog(data: Buffer, color: 'red' | 'blue') {
   let log = data.toString()
   if (/[0-9A-z]+/.test(log)) {
     // 抑制某些无关的报错日志
@@ -40,29 +40,29 @@ const runMainThread = async () => {
   logger = createLogger('info')
 
   // let server: ViteDevServer | undefined
-  let electronProcess: ChildProcessWithoutNullStreams | undefined
-  const runElectronDelay = debounce(() => {
-    electronProcess = runElectron(electronLog)
+  let desktopProcess: ChildProcessWithoutNullStreams | undefined
+  const runDesktopDelay = debounce(() => {
+    desktopProcess = runDesktop(desktopLog)
   }, 200)
 
   const noop = () => {}
   const handleUpdate = () => {
-    logger.info(colors.green('\nrebuild the electron main process successfully'))
+    logger.info(colors.green('\nrebuild the desktop main process successfully'))
 
-    if (electronProcess) {
-      electronProcess.removeAllListeners()
-      treeKill(electronProcess.pid!)
+    if (desktopProcess) {
+      desktopProcess.removeAllListeners()
+      treeKill(desktopProcess.pid!)
     }
-    runElectronDelay()
+    runDesktopDelay()
 
-    logger.info(colors.green('\nrestart electron app...'))
+    logger.info(colors.green('\nrestart desktop app...'))
   }
 
   const spinners = new Spinnies({ color: 'blue' })
   spinners.add('view-main', { text: 'view-main compiling' })
   // spinners.add('renderer-lyric', { text: 'renderer-lyric compiling' })
   // spinners.add('renderer-scripts', { text: 'renderer-scripts compiling' })
-  spinners.add('electron', { text: 'electron compiling' })
+  spinners.add('desktop', { text: 'desktop compiling' })
   spinners.add('extension-preload', { text: 'extension-preload compiling' })
   const handleResult = (name: TaksName) => {
     return (success: boolean) => {
@@ -80,15 +80,15 @@ const runMainThread = async () => {
     // runBuildWorkerStatus('renderer-lyric', noop).then(handleResult('renderer-lyric')),
     // runBuildWorkerStatus('renderer-scripts', handleUpdate).then(handleResult('renderer-scripts')),
     runBuildWorkerStatus('extension-preload', handleUpdate).then(handleResult('extension-preload')),
-    replaceLib({ electronPlatformName: process.platform, arch: Arch[process.arch as keyof typeof Arch] }).then(async () => {
-      return buildSuatus(buildConfig('electron'), handleUpdate).then(handleResult('electron'))
+    replaceLib({ desktopPlatformName: process.platform, arch: Arch[process.arch as keyof typeof Arch] }).then(async () => {
+      return buildSuatus(buildConfig('desktop'), handleUpdate).then(handleResult('desktop'))
     }),
   ]
 
   if (!(await Promise.all(buildTasks).then((result) => result.every((s) => s)))) return
   // listr.run().then(() => {
-  await copyAssets('electron')
-  electronProcess = runElectron(electronLog)
+  await copyAssets('desktop')
+  desktopProcess = runDesktop(desktopLog)
 
   logger.info(colors.green('\nAll task build successfully'))
   // })

@@ -17,13 +17,13 @@ const runMainThread = async () => {
   const logger = createLogger('info')
   console.time('Build time')
   deleteSync(['build/**'], { cwd: rootPath })
-  deleteSync(['dist/**'], { cwd: path.join(rootPath, 'packages/electron') })
+  deleteSync(['dist/**'], { cwd: path.join(rootPath, 'packages/desktop') })
 
   const noop = () => {}
 
   const spinners = new Spinnies({ color: 'blue' })
   spinners.add('view-main', { text: 'view-main compiling' })
-  spinners.add('electron', { text: 'electron compiling' })
+  spinners.add('desktop', { text: 'desktop compiling' })
   spinners.add('extension-preload', { text: 'extension-preload compiling' })
   const handleResult = (name: TaksName) => {
     return (success: boolean) => {
@@ -38,7 +38,7 @@ const runMainThread = async () => {
 
   const buildTasks = [
     runBuildWorkerStatus('view-main', noop).then(handleResult('view-main')),
-    runBuildWorkerStatus('electron', noop).then(handleResult('electron')),
+    runBuildWorkerStatus('desktop', noop).then(handleResult('desktop')),
     runBuildWorkerStatus('extension-preload', noop).then(handleResult('extension-preload')),
     // build(rendererConfig, noop).then(handleResult('renderer')),
   ]
@@ -48,7 +48,7 @@ const runMainThread = async () => {
     throw new Error('Build failed')
   }
 
-  await copyAssets('electron')
+  await copyAssets('desktop')
 
   // listr.run().then(() => {
 

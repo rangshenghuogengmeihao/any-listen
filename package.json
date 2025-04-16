@@ -2,18 +2,18 @@
   "name": "any-listen",
   "version": "0.1.0",
   "scripts": {
-    "dev": "pnpm dev:electron",
-    "dev:electron": "pnpm -F @shared/scripts dev:electron",
+    "dev": "pnpm dev:desktop",
+    "dev:desktop": "pnpm -F @shared/scripts dev:desktop",
     "dev:web": "pnpm -F @shared/scripts dev:web",
     "build:theme": "pnpm -F @shared/theme build:theme",
-    "build": "pnpm build:ele",
-    "build:dir": "pnpm -F @shared/scripts build:electron:dir",
-    "build:ele": "pnpm -F @shared/scripts build:electron",
+    "build": "pnpm build:desktop",
+    "build:dir": "pnpm -F @shared/scripts build:desktop:dir",
+    "build:desktop": "pnpm -F @shared/scripts build:desktop",
     "build:web": "pnpm -F @shared/scripts build:web",
     "pub:web": "pnpm -F @shared/publish pub web-server",
-    "pub:elec": "pnpm -F @shared/publish pub electron",
+    "pub:desk": "pnpm -F @shared/publish pub desktop",
     "cldep": "rm -rf node_modules && pnpm -r exec rm -rf node_modules",
-    "postinstall": "pnpm -F electron rebuild:deps && pnpm -F web-server rebuild"
+    "postinstall": "pnpm -F desktop rebuild:deps && pnpm -F web-server rebuild"
   },
   "engines": {
     "node": ">=22.12.0 || ^20.19.0",

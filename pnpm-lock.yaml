@@ -24,7 +24,7 @@ importers:
         specifier: ^2.5.10
         version: 2.5.10(prettier@3.5.3)
 
-  packages/electron:
+  packages/desktop:
     dependencies:
       '@any-listen/app':
         specifier: workspace:@shared/app@*
@@ -258,9 +258,9 @@ importers:
       '@any-listen/common':
         specifier: workspace:@shared/common@*
         version: link:../common
-      '@any-listen/electron':
-        specifier: workspace:electron@*
-        version: link:../../electron
+      '@any-listen/desktop':
+        specifier: workspace:desktop@*
+        version: link:../../desktop
       '@any-listen/eslint':
         specifier: workspace:@shared/eslint@*
         version: link:../eslint

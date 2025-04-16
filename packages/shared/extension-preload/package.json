@@ -2,7 +2,7 @@
   "name": "@shared/extension-preload",
   "scripts": {
     "build:web": "vite build --mode web",
-    "build:electron": "vite build --mode electron",
+    "build:desktop": "vite build --mode desktop",
     "build:mobile": "vite --mode mobile"
   },
   "types": "./src/types/global.d.ts",

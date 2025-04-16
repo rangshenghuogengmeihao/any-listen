@@ -38,7 +38,7 @@
 
 <div class="update-content">
   <div class="gap-top">
-    {#if import.meta.env.VITE_IS_ELECTRON}
+    {#if import.meta.env.VITE_IS_DESKTOP}
       <div class="p small" role="presentation" onclick={handleOpenDevTools}>
         {$t('settings__update_current_label')}{versionInfo.val.version}
       </div>

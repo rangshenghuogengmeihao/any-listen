@@ -1,10 +1,10 @@
-import path from 'path'
+import { openDirInExplorer } from '@/shared/electron'
 import { dialog } from 'electron'
 import { renameSync } from 'fs'
-import { openDirInExplorer } from '@/shared/electron'
+import path from 'path'
 // import { log } from '@/shared/log'
-import { startDBServiceWorker as _startDBServiceWorker, workers } from '@any-listen/app/modules/worker'
 import { i18n } from '@/i18n'
+import { startDBServiceWorker as _startDBServiceWorker, workers } from '@any-listen/app/modules/worker'
 
 let nativeBindingPath = '../../node_modules/better-sqlite3/build/Release/better_sqlite3.node'
 

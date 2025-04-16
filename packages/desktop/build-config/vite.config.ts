@@ -6,16 +6,16 @@ import type { UserConfig } from 'vite'
 
 const isProd = process.env.NODE_ENV == 'production'
 const rootPath = path.join(__dirname, '../../../')
-const projectPath = path.join(rootPath, 'packages/electron')
+const projectPath = path.join(rootPath, 'packages/desktop')
 
 export { Arch } from 'electron-builder'
 export { default as replaceLib } from './build-before-pack.cjs'
 
-export const runElectron = (onLog: (data: Buffer, color: 'red' | 'blue') => void) => {
+export const runDesktop = (onLog: (data: Buffer, color: 'red' | 'blue') => void) => {
   let args = [
     '--inspect=5858',
     // 'NODE_ENV=development',
-    path.join(projectPath, 'dist/electron/main.js'),
+    path.join(projectPath, 'dist/desktop/main.js'),
   ]
 
   // detect yarn or npm and process commandline args accordingly
@@ -95,7 +95,7 @@ export const buildConfig = (mode: string): UserConfig => {
         formats: ['cjs'],
         fileName: 'main',
       },
-      outDir: path.join(projectPath, 'dist/electron'),
+      outDir: path.join(projectPath, 'dist/desktop'),
       emptyOutDir: false,
       reportCompressedSize: false,
       modulePreload: false,

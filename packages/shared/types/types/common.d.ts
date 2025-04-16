@@ -2,7 +2,7 @@ import type { Locale as _Locale } from '@any-listen/i18n'
 
 declare global {
   namespace AnyListen {
-    type BuildTarget = 'electron' | 'web'
+    type BuildTarget = 'desktop' | 'web'
 
     type ClientType = 'desktop' | 'web' | 'mobile'
 

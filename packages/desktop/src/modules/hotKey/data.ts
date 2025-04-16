@@ -1,7 +1,7 @@
-import { STORE_NAMES } from '@any-listen/common/constants'
-import defaultHotKey from './config/defaultHotKey'
 import getStore from '@/shared/store'
 import { throttle } from '@/shared/utils'
+import { STORE_NAMES } from '@any-listen/common/constants'
+import defaultHotKey from './config/defaultHotKey'
 // import { appState } from '@/app'
 import type { HOTKEY_Type } from '@any-listen/common/hotKey'
 
@@ -9,17 +9,17 @@ import type { HOTKEY_Type } from '@any-listen/common/hotKey'
  * 获取快捷键设置
  */
 export const getHotKeyConfig = async () => {
-  const electronStoreHotKey = getStore(STORE_NAMES.HOTKEY)
+  const storeHotKey = getStore(STORE_NAMES.HOTKEY)
 
-  let localConfig = electronStoreHotKey.get<AnyListen.HotKey.HotKeyConfig<HOTKEY_Type>>('local')
-  let globalConfig = electronStoreHotKey.get<AnyListen.HotKey.HotKeyConfig<HOTKEY_Type>>('global')
+  let localConfig = storeHotKey.get<AnyListen.HotKey.HotKeyConfig<HOTKEY_Type>>('local')
+  let globalConfig = storeHotKey.get<AnyListen.HotKey.HotKeyConfig<HOTKEY_Type>>('global')
 
   if (!globalConfig) {
     localConfig = JSON.parse(JSON.stringify(defaultHotKey.local)) as AnyListen.HotKey.HotKeyConfig<HOTKEY_Type>
     globalConfig = JSON.parse(JSON.stringify(defaultHotKey.global)) as AnyListen.HotKey.HotKeyConfig<HOTKEY_Type>
 
-    electronStoreHotKey.set('local', localConfig)
-    electronStoreHotKey.set('global', globalConfig)
+    storeHotKey.set('local', localConfig)
+    storeHotKey.set('global', globalConfig)
   }
 
   return {

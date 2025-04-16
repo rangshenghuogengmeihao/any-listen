@@ -50,7 +50,7 @@ export const settings: SettingListSection[] = [
     id: 'basic',
     name: 'settings__basic',
     list: [
-      import.meta.env.VITE_IS_ELECTRON
+      import.meta.env.VITE_IS_DESKTOP
         ? {
             field: 'tray.enable',
             name: 'settings__basic_tray',
@@ -113,7 +113,7 @@ export const settings: SettingListSection[] = [
     id: 'player',
     name: 'settings__player',
     list: [
-      import.meta.env.VITE_IS_ELECTRON
+      import.meta.env.VITE_IS_DESKTOP
         ? {
             field: 'player.startupAutoPlay',
             name: 'settings__play_startup_auto_play',
@@ -131,7 +131,7 @@ export const settings: SettingListSection[] = [
     id: 'update',
     name: 'settings__update',
     list: [
-      import.meta.env.VITE_IS_ELECTRON
+      import.meta.env.VITE_IS_DESKTOP
         ? {
             field: 'common.tryAutoUpdate',
             name: 'settings__update_try_auto_update',

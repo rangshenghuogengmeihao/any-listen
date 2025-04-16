@@ -5,19 +5,19 @@ import type { Target } from './utils'
 const rootPath = path.join(__dirname, '../../../../')
 
 const assetsAll = {
-  electron: {
+  desktop: {
     dev: [
       [
         path.join(rootPath, 'packages/shared/theme/theme_images'),
-        path.join(rootPath, 'packages/electron/dist/electron/theme_images'),
+        path.join(rootPath, 'packages/desktop/dist/desktop/theme_images'),
       ],
     ],
     prod: [
       [
         path.join(rootPath, 'packages/shared/theme/theme_images'),
-        path.join(rootPath, 'packages/electron/dist/view-main/theme_images'),
+        path.join(rootPath, 'packages/desktop/dist/view-main/theme_images'),
       ],
-      [path.join(rootPath, 'packages/electron/src/static'), path.join(rootPath, 'packages/electron/dist/static')],
+      [path.join(rootPath, 'packages/desktop/src/static'), path.join(rootPath, 'packages/desktop/dist/static')],
     ],
   },
   web: {

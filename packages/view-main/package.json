@@ -2,9 +2,9 @@
   "name": "view-main",
   "scripts": {
     "dev:web": "vite --mode web",
-    "dev:electron": "vite --mode electron",
+    "dev:desktop": "vite --mode desktop",
     "build:web": "vite build --mode web",
-    "build:electron": "vite build --mode electron",
+    "build:desktop": "vite build --mode desktop",
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "type": "module",

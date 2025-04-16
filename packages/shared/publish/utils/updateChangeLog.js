@@ -45,12 +45,12 @@ let isBeta = false
 
 const dir = {
   'web-server': '../../../web-server',
-  electron: '../../../electron',
+  desktop: '../../../desktop',
 }
 
 /**
  *
- * @param {'web-server' | 'electron'} type
+ * @param {'web-server' | 'desktop'} type
  */
 const initPath = async (type) => {
   pkgDir = jp(dir[type], 'package.json')
@@ -61,7 +61,7 @@ const initPath = async (type) => {
 
 /**
  *
- * @param {'web-server' | 'electron'} type
+ * @param {'web-server' | 'desktop'} type
  * @param {string} version
  */
 const initVersionFile = async (type, version) => {
@@ -101,7 +101,7 @@ const handleUpdateChangeLog = async (newVerNum, newChangeLog) => {
 
 /**
  *
- * @param {'web-server' | 'electron'} type
+ * @param {'web-server' | 'desktop'} type
  * @param {string} newVersion
  * @returns
  */

@@ -23,12 +23,12 @@ export const lessConfig = {
   },
 }
 
-// type Target = 'electron' | 'web'
+// type Target = 'desktop' | 'web'
 
 const dirs = {
-  electron: {
-    publicDir: path.join(rootPath, 'packages/electron/dist/electron'),
-    outDir: path.join(rootPath, 'packages/electron/dist/view-main'),
+  desktop: {
+    publicDir: path.join(rootPath, 'packages/desktop/dist/desktop'),
+    outDir: path.join(rootPath, 'packages/desktop/dist/view-main'),
   },
   web: {
     publicDir: path.join(rootPath, 'packages/web-server/server/public'),
@@ -94,7 +94,7 @@ export const buildConfig = (target, port = 9200, ipcScript) => {
         inject: {
           data: {
             envScript: fs
-              .readFileSync(path.join(import.meta.dirname, 'build-config', target == 'web' ? 'web.js' : 'electron.js'))
+              .readFileSync(path.join(import.meta.dirname, 'build-config', target == 'web' ? 'web.js' : 'desktop.js'))
               .toString(),
           },
           tags: [

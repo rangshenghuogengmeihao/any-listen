@@ -13,7 +13,7 @@
   let controlBtnPosition = useSettingValue('common.controlBtnPosition')
 </script>
 
-{#if import.meta.env.VITE_IS_ELECTRON}
+{#if import.meta.env.VITE_IS_DESKTOP}
   <div class="toolbar" class:fullscreen={isFullscreen}>
     <div class="left">
       <SearchInput />

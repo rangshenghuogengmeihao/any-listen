@@ -14,7 +14,7 @@ const options = {
   productName: 'Any Listen',
   extraMetadata: {
     name: 'Any Listen',
-    main: 'dist/electron/main.js',
+    main: 'dist/desktop/main.js',
   },
   beforePack,
   afterPack,

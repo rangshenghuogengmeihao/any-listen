@@ -26,7 +26,16 @@ const options = {
     buildResources: './resources',
     output: path.join(rootPath, 'build'),
   },
-  files: ['!node_modules/**/*', 'node_modules/font-list', 'dist/**/*'],
+  files: [
+    '!node_modules/**/*',
+    'node_modules/font-list',
+    {
+      from: 'node_modules/better-sqlite3/build/Release',
+      to: 'dist/electron/native',
+      filter: ['better_sqlite3.node'],
+    },
+    'dist/**/*',
+  ],
   asar: {
     smartUnpack: false,
   },

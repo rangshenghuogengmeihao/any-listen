@@ -14,10 +14,10 @@ const assetsAll = {
       ],
     ],
     prod: [
-      [
-        path.join(rootPath, 'packages/desktop/node_modules/better-sqlite3/build/Release/better_sqlite3.node'),
-        path.join(rootPath, 'packages/desktop/dist/electron/native/better_sqlite3.node'),
-      ],
+      // [
+      //   path.join(rootPath, 'packages/desktop/node_modules/better-sqlite3/build/Release/better_sqlite3.node'),
+      //   path.join(rootPath, 'packages/desktop/dist/electron/native/better_sqlite3.node'),
+      // ],
       [
         path.join(rootPath, 'packages/shared/theme/theme_images'),
         path.join(rootPath, 'packages/desktop/dist/view-main/theme_images'),

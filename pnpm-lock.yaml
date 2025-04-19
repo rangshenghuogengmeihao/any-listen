@@ -267,6 +267,9 @@ importers:
       '@any-listen/extension-preload':
         specifier: workspace:@shared/extension-preload@*
         version: link:../extension-preload
+      '@any-listen/nodejs':
+        specifier: workspace:@shared/nodejs@*
+        version: link:../nodejs
       '@any-listen/types':
         specifier: workspace:@shared/types@*
         version: link:../types

@@ -59,6 +59,7 @@
     "@any-listen/common": "workspace:@shared/common@*",
     "@any-listen/desktop": "workspace:desktop@*",
     "@any-listen/eslint": "workspace:@shared/eslint@*",
+    "@any-listen/nodejs": "workspace:@shared/nodejs@*",
     "@any-listen/types": "workspace:@shared/types@*",
     "@any-listen/extension-preload": "workspace:@shared/extension-preload@*",
     "@any-listen/web-server": "workspace:web-server@*",

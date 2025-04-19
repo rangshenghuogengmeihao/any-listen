@@ -1,3 +1,4 @@
+import { getNativeName } from '@any-listen/nodejs'
 import fs from 'node:fs'
 import path from 'node:path'
 import type { Target } from './utils'
@@ -36,7 +37,7 @@ const assetsAll = {
       [path.join(rootPath, 'packages/web-server/index.cjs'), path.join(rootPath, 'build/index.cjs')],
       [
         path.join(rootPath, 'packages/web-server/node_modules/better-sqlite3/build/Release/better_sqlite3.node'),
-        path.join(rootPath, 'build/server/native/better_sqlite3.node'),
+        path.join(rootPath, `build/native/${getNativeName()}/better_sqlite3.node`),
       ],
       // [
       //   path.join(rootPath, 'packages/web-server/node_modules/node-gyp-build/package.json'),

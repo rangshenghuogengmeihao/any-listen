@@ -1,9 +1,10 @@
+import { NATIVE_VERSION } from '@any-listen/common/constants'
+import crypto from 'node:crypto'
 import fs from 'node:fs'
 import os from 'node:os'
-import crypto from 'node:crypto'
-import { gunzip, gzip } from 'node:zlib'
 import path from 'node:path'
 import timers from 'node:timers/promises'
+import { gunzip, gzip } from 'node:zlib'
 
 // 重命名 process 防止 vite 转换
 export const nodeProcess = process
@@ -210,4 +211,8 @@ export const getPlatform = (platform: NodeJS.Platform = process.platform) => {
     default:
       return 'linux'
   }
+}
+
+export const getNativeName = () => {
+  return `${process.platform}_${process.arch}_${process.versions.modules}_${NATIVE_VERSION}`
 }

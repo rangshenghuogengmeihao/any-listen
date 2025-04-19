@@ -57,10 +57,18 @@ export const setUpdateInfo = (info: AnyListen.IPCCommon.UpdateInfo) => {
       versionState.progress = info.info
       versionEvent.download_progress_updated(info.info)
       break
-    case 'error':
+    case 'error': {
+      let preStatus = versionState.versionInfo.status
       versionState.versionInfo.status = 'error'
       versionEvent.updated({ ...versionState.versionInfo })
-      void showSimpleModal(i18n.t('update_failed_tip'))
+      if (preStatus == 'downloading') {
+        const preTime = parseInt(localStorage.getItem('update__download_failed_tip') ?? '0')
+        if (Date.now() - preTime < 7 * 86400_000) return
+        void showSimpleModal(i18n.t('update_failed_tip')).finally(() => {
+          localStorage.setItem('update__download_failed_tip', String(Date.now()))
+        })
+      }
       break
+    }
   }
 }

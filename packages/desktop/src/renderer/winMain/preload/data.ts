@@ -6,8 +6,8 @@ export const createClientData = (main: MainCall) => {
     async getLastStartInfo() {
       return main.getLastStartInfo()
     },
-    async saveLastStartInfo(version) {
-      return main.saveLastStartInfo(version)
+    async saveLastStartInfo() {
+      return main.saveLastStartInfo()
     },
     async getPlayInfo() {
       return main.getPlayInfo()

@@ -105,6 +105,10 @@ declare global {
       // isForce: boolean
       // url: string
     }
+    interface LastStartInfo {
+      time: number
+      version: string
+    }
 
     interface LogInfo {
       type: 'debug' | 'info' | 'warn' | 'error'

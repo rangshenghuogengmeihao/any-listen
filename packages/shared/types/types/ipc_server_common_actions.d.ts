@@ -34,9 +34,9 @@ export declare type ServerCommonActions = WarpPromiseRecord<{
   removeLoginDevice: (id: string) => void
 
   /** 获取上一次启动的版本号 */
-  getLastStartInfo: () => string | null
+  getLastStartInfo: () => AnyListen.LastStartInfo | null
   /** 保存上一次启动的版本号 */
-  saveLastStartInfo: (version: string) => void
+  saveLastStartInfo: () => void
   /** 获取上一次选中的列表id */
   getListPrevSelectId: () => string | null
   /** 保存上一次选中的列表id */

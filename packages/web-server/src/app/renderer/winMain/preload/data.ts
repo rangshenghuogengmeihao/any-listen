@@ -6,8 +6,8 @@ export const createClientData = (ipcSocket: IPCSocket) => {
     async getLastStartInfo() {
       return ipcSocket.remote.getLastStartInfo()
     },
-    async saveLastStartInfo(version) {
-      return ipcSocket.remote.saveLastStartInfo(version)
+    async saveLastStartInfo() {
+      return ipcSocket.remote.saveLastStartInfo()
     },
     async getPlayInfo() {
       return ipcSocket.remoteQueuePlayer.getPlayInfo()

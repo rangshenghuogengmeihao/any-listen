@@ -1,3 +1,4 @@
+import { appState } from '@/app/state'
 import getStore from '@/shared/store'
 import { DATA_KEYS, STORE_NAMES } from '@any-listen/common/constants'
 import type { ExposeFunctions } from '.'
@@ -9,8 +10,11 @@ export const createExposeData = () => {
     async getLastStartInfo(event) {
       return getStore(STORE_NAMES.DATA).get(DATA_KEYS.lastStartInfo)
     },
-    async saveLastStartInfo(event, version) {
-      getStore(STORE_NAMES.DATA).set(DATA_KEYS.lastStartInfo, version)
+    async saveLastStartInfo(event) {
+      getStore(STORE_NAMES.DATA).set<AnyListen.LastStartInfo>(DATA_KEYS.lastStartInfo, {
+        version: appState.version.version,
+        time: Date.now(),
+      })
     },
 
     async getListPrevSelectId(event) {

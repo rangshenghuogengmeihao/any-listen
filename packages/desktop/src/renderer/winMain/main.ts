@@ -89,6 +89,7 @@ export const createWindow = () => {
     hasShadow: appState.envParams.cmdParams.dt,
     // enableRemoteModule: false,
     // icon: join(appState.__static, isWin ? 'icons/256x256.ico' : 'icons/512x512.png'),
+    roundedCorners: appState.envParams.cmdParams.dt,
     resizable: false,
     maximizable: false,
     fullscreenable: true,
@@ -117,10 +118,10 @@ export const createWindow = () => {
     ? `http://localhost:${DEV_SERVER_PORTS['view-main']}`
     : `file://${path.join(encodePath(__dirname), '../view-main/index.html')}`
   if (import.meta.env.DEV) {
-    void browserWindow.loadURL(`${winURL}?os=${getPlatform()}&dt=${!!appState.envParams.cmdParams.dt}`)
+    void browserWindow.loadURL(`${winURL}?os=${getPlatform()}&dt=${appState.envParams.cmdParams.dt}`)
   } else {
     void browserWindow.loadURL(
-      `${winURL}?os=${getPlatform()}&dt=${!!appState.envParams.cmdParams.dt}&t=${encodeURIComponent(JSON.stringify(theme.colors))}`
+      `${winURL}?os=${getPlatform()}&dt=${appState.envParams.cmdParams.dt}&t=${encodeURIComponent(JSON.stringify(theme.colors))}`
     )
   }
 

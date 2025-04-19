@@ -17,6 +17,7 @@ import { getAppSetting, saveSetting } from './data'
 
 export const initState = () => {
   const envParams = parseEnvParams<AnyListen.CmdParams>()
+  envParams.cmdParams.dt = !!envParams.cmdParams.dt
   appState.envParams = {
     cmdParams: envParams.cmdParams,
   }

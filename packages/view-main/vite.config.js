@@ -27,7 +27,7 @@ export const lessConfig = {
 
 const dirs = {
   desktop: {
-    publicDir: path.join(rootPath, 'packages/desktop/dist/desktop'),
+    publicDir: path.join(rootPath, 'packages/desktop/dist/electron'),
     outDir: path.join(rootPath, 'packages/desktop/dist/view-main'),
   },
   web: {

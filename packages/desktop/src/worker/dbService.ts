@@ -6,7 +6,8 @@ import path from 'path'
 import { i18n } from '@/i18n'
 import { startDBServiceWorker as _startDBServiceWorker, workers } from '@any-listen/app/modules/worker'
 
-let nativeBindingPath = '../../node_modules/better-sqlite3/build/Release/better_sqlite3.node'
+// let nativeBindingPath = '../../node_modules/better-sqlite3/build/Release/better_sqlite3.node'
+let nativeBindingPath = './native/better_sqlite3.node'
 
 if (import.meta.env.DEV) nativeBindingPath = '../../build-config/tempLib/better_sqlite3.node'
 

@@ -15,7 +15,7 @@ export const runDesktop = (onLog: (data: Buffer, color: 'red' | 'blue') => void)
   let args = [
     '--inspect=5858',
     // 'NODE_ENV=development',
-    path.join(projectPath, 'dist/desktop/main.js'),
+    path.join(projectPath, 'dist/electron/main.js'),
   ]
 
   // detect yarn or npm and process commandline args accordingly
@@ -49,7 +49,7 @@ export const runDesktop = (onLog: (data: Buffer, color: 'red' | 'blue') => void)
 
 let external = [
   'electron',
-  'undici',
+  // 'undici',
   // 'electron-log',
   // 'better-sqlite3',
   'font-list',
@@ -95,7 +95,7 @@ export const buildConfig = (mode: string): UserConfig => {
         formats: ['cjs'],
         fileName: 'main',
       },
-      outDir: path.join(projectPath, 'dist/desktop'),
+      outDir: path.join(projectPath, 'dist/electron'),
       emptyOutDir: false,
       reportCompressedSize: false,
       modulePreload: false,

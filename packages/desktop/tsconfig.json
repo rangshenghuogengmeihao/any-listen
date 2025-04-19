@@ -3,7 +3,7 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "checkJs": true,
-    "outDir": "../../dist/desktop",
+    "outDir": "../../dist/electron",
     "baseUrl": "./src",
     "paths": {
       "@/*": ["./*"]

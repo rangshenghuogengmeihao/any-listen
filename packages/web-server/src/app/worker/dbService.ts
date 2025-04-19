@@ -1,13 +1,13 @@
-import path from 'path'
 import { renameSync } from 'fs'
+import path from 'path'
 // import { log } from '@/shared/log'
-import { startDBServiceWorker as _startDBServiceWorker, workers } from '@any-listen/app/modules/worker'
 import { i18n } from '@/app/i18n'
 import { appLog } from '@/shared/log4js'
+import { startDBServiceWorker as _startDBServiceWorker, workers } from '@any-listen/app/modules/worker'
 
-let nativeBindingPath = '../node_modules/better-sqlite3/build/Release/better_sqlite3.node'
+let nativeBindingPath = './native/better_sqlite3.node'
 
-// if (import.meta.env.DEV) nativeBindingPath = '../node_modules/better-sqlite3/build/Release/better_sqlite3.node'
+if (import.meta.env.DEV) nativeBindingPath = '../node_modules/better-sqlite3/build/Release/better_sqlite3.node'
 
 const initServices = async (dataPath: string) => {
   let dbFileExists = await workers.dbService.init(dataPath, nativeBindingPath)

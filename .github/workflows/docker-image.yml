@@ -1,0 +1,40 @@
+name: Development
+
+on:
+  push:
+    branches:
+      - dev3
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 获取 commit SHA（短的前7位）
+      - name: Get short commit SHA
+        id: vars
+        run: echo "SHORT_SHA=$(git rev-parse --short=7 HEAD)" >> $GITHUB_ENV
+
+      # 构建 Docker 镜像
+      - name: Build Docker Image
+        run: |
+          docker build -t Any_listen_${SHORT_SHA} .
+
+      # 保存 Docker 镜像为 TAR 文件
+      - name: Save Docker Image as TAR
+        run: |
+          docker save -o Any_listen_${SHORT_SHA}.tar Any_listen_${SHORT_SHA}
+
+      # 上传 TAR 到 GitHub Releases
+      - name: Create Release and Upload Asset
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.SHORT_SHA }}
+          name: Release for commit ${{ env.SHORT_SHA }}
+          files: Any_listen_${{ env.SHORT_SHA }}.tar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

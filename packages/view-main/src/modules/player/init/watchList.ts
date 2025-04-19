@@ -56,7 +56,7 @@ const throttleListSync = throttle(async () => {
   // TODO music info update
   console.log('throttleListSync setPlayListMusic')
   await setPlayListMusic({ list: newList, listId: targetListId, isOnline: playerState.playInfo.isOnline, isSync: true })
-})
+}, 500)
 const handleListSync = (listIds: string[]) => {
   for (const id of listIds) {
     changedListIds.add(id)

@@ -28,6 +28,14 @@
   const ignoreVersion = useIgnoreVersion()
   const allowPreRelease = useSettingValue('common.allowPreRelease')
 
+  let urls = import.meta.env.VITE_IS_WEB
+    ? {
+        release: 'https://github.com/any-listen/any-listen-web-server/releases',
+      }
+    : {
+        release: 'https://github.com/any-listen/any-listen-web-desktop/releases',
+      }
+
   let disabledIgnoreFailBtn = $state(false)
   let visible = $state(false)
 
@@ -74,6 +82,16 @@
     disabledIgnoreFailBtn = isIgnoreFileTip()
   })
 
+  const handleCheckUpdate = () => {
+    void checkUpdate().then((hasNewVer) => {
+      if (hasNewVer) {
+        showNotify(i18n.t('update_modal.check_result_new'))
+      } else {
+        showNotify(i18n.t('update_modal.check_result_latest'))
+      }
+    })
+  }
+
   export const setVisible = (val: boolean) => {
     visible = val
   }
@@ -111,17 +129,7 @@
           {#if versionInfo.val.status == 'checking'}
             <Btn disabled>{$t('update_modal.update_checking')}</Btn>
           {:else}
-            <Btn
-              onclick={() => {
-                void checkUpdate().then((hasNewVer) => {
-                  if (hasNewVer) {
-                    showNotify(i18n.t('update_modal.check_result_new'))
-                  } else {
-                    showNotify(i18n.t('update_modal.check_result_latest'))
-                  }
-                })
-              }}
-            >
+            <Btn onclick={handleCheckUpdate}>
               {$t('update_modal.recheck_update')}
             </Btn>
           {/if}
@@ -130,80 +138,94 @@
     </main>
   {:else if versionInfo.val.isUnknown}
     <main class="version-modal-main">
-      <h2>❓ 获取最新版本信息失败 ❓</h2>
+      <h2>{$t('update_modal.unknown_title')}</h2>
       <div class="scroll select info">
         <div class="current">
-          <h3>当前版本：{versionInfo.val.version}</h3>
+          <h3>{$t('update_modal.current_version')}{versionInfo.val.version}</h3>
           <div class="desc">
-            <p>更新信息获取失败，可能是无法访问 GitHub 导致的，请手动检查更新！</p>
+            <p>{$t('update_modal.unknown_desc_1')}</p>
             <p>
-              检查方法：打开
+              {$t('update_modal.unknown_desc_2_1')}
               <Btn
                 min
-                aria-label="点击打开"
+                aria-label={urls.release}
                 onclick={() => {
-                  handleOpenUrl('https://github.com/lyswhut/lx-music-desktop/releases')
+                  handleOpenUrl(urls.release)
                 }}
               >
-                软件发布页
+                {$t('update_modal.unknown_desc_2_2')}
               </Btn>
-              ，查看「Latest」发布的<strong>版本号</strong>与当前版本({versionInfo.val.version})对比是否一致。
+              {$t('update_modal.unknown_desc_2_3')}
+              <strong>{$t('update_modal.unknown_desc_2_4')}</strong>{$t('update_modal.unknown_desc_2_5', {
+                ver: versionInfo.val.version,
+              })}
             </p>
-            <p>若一致则不必理会该弹窗，直接关闭即可；否则请手动下载新版本更新。</p>
+            <p>{$t('update_modal.unknown_desc_3')}</p>
           </div>
         </div>
       </div>
       <div class="footer">
         <div class="btns btn2">
           {#if versionInfo.val.status == 'error'}
-            <Btn onclick={checkUpdate}>重新检查更新</Btn>
+            <Btn onclick={handleCheckUpdate}>{$t('update_modal.recheck_update')}</Btn>
           {:else}
-            <Btn disabled>检查更新中...</Btn>
+            <Btn disabled>{$t('update_modal.update_checking')}</Btn>
           {/if}
           <Btn
             disabled={disabledIgnoreFailBtn}
             onclick={() => {
               ignoreFailTip()
               disabledIgnoreFailBtn = true
-            }}>一个星期内不再提醒</Btn
+            }}>{$t('update_modal.unknown_hide_tip_btn')}</Btn
           >
         </div>
       </div>
     </main>
   {:else if versionInfo.val.status == 'downloaded'}
     <main class="version-modal-main">
-      <h2>🚀程序更新🚀</h2>
+      <h2>{$t('update_modal.downloaded_title')}</h2>
       {@render versionSnippet()}
       <div class="footer">
         <div class="desc">
-          <p>新版本已下载完毕，</p>
-          <p>你可以选择<strong>立即重启更新</strong>或稍后<strong>关闭程序时</strong>自动更新~</p>
+          <p>{$t('update_modal.downloaded_desc_1')}</p>
+          <p>
+            {$t('update_modal.downloaded_desc_2_1')}
+            <strong>{$t('update_modal.downloaded_desc_2_2')}</strong>
+            {$t('update_modal.downloaded_desc_2_3')}
+            <strong>{$t('update_modal.downloaded_desc_2_4')}</strong>
+            {$t('update_modal.downloaded_desc_2_5')}
+          </p>
         </div>
         <div class="btns btn">
-          <Btn onclick={restartUpdate}>立即重启更新</Btn>
+          <Btn onclick={restartUpdate}>{$t('update_modal.downloaded_restart_btn')}</Btn>
         </div>
       </div>
     </main>
   {:else}
     <main class="version-modal-main">
-      <h2>🌟发现新版本🌟</h2>
+      <h2>{$t('update_modal.new_ver_title')}</h2>
       {@render versionSnippet()}
       <div class="footer">
         <div class="desc">
-          <p>发现有新版本啦，你可以选择自动更新或手动更新。</p>
+          {#if progress}
+            <p>{$t('update_modal.cur_progress')}{progress}</p>
+          {:else}
+            <p>&nbsp;</p>
+          {/if}
+          <p>{$t('update_modal.new_ver_desc_1')}</p>
           <p>
-            手动更新可以去&nbsp;
+            {$t('update_modal.new_ver_desc_2_1')}&nbsp;
             <strong
               role="presentation"
               class="hover underline"
-              aria-label="点击打开"
+              aria-label={urls.release}
               onclick={() => {
-                handleOpenUrl('https://github.com/any-listen/any-listen#readme')
+                handleOpenUrl(urls.release)
               }}
             >
-              软件发布页
+              {$t('update_modal.new_ver_desc_2_2')}
             </strong>
-            下载。
+            {$t('update_modal.new_ver_desc_2_3')}
           </p>
           <!-- <p>
             若遇到问题可以阅读
@@ -219,22 +241,17 @@
             </strong>
             。
           </p> -->
-          {#if progress}
-            <p>当前下载进度：{progress}</p>
-          {:else}
-            <p>&nbsp;</p>
-          {/if}
         </div>
         <div class="btns btn2">
           <Btn
             onclick={async () => {
-              await saveIgnoreVersion(isIgnored ? (versionInfo.val.newVersion?.version ?? null) : null)
-            }}>{isIgnored ? '取消忽略' : '忽略更新该版本'}</Btn
+              await saveIgnoreVersion(isIgnored ? null : (latest?.version ?? null))
+            }}>{isIgnored ? $t('update_modal.ignore_ver_cancel') : $t('update_modal.ignore_ver')}</Btn
           >
           {#if versionInfo.val.status == 'downloading'}
-            <Btn disabled>下载更新中...</Btn>
+            <Btn disabled>{$t('update_modal.update_downloading')}</Btn>
           {:else}
-            <Btn onclick={downloadUpdate}>下载更新</Btn>
+            <Btn onclick={downloadUpdate}>{$t('update_modal.download')}</Btn>
           {/if}
         </div>
       </div>

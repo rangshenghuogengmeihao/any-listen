@@ -39,3 +39,13 @@ export const showSimpleConfirmModal = async (
   ).catch(() => 0)
   return result == 1
 }
+
+export const showSimpleModal = async (message: string, options: { confirmBtn?: string; selectText?: boolean } = {}) => {
+  const buttons = [options.confirmBtn ?? i18n.t('btn_confirm')] as const
+  const result = await showConfirmModal(
+    message,
+    buttons.map((t) => ({ text: t })),
+    options.selectText
+  ).catch(() => 0)
+  return result == 0
+}

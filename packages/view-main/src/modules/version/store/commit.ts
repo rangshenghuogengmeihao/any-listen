@@ -1,3 +1,5 @@
+import { showSimpleModal } from '@/components/apis/dialog'
+import { i18n } from '@/plugins/i18n'
 import { versionEvent } from './event'
 import { type State, versionState } from './state'
 
@@ -58,6 +60,7 @@ export const setUpdateInfo = (info: AnyListen.IPCCommon.UpdateInfo) => {
     case 'error':
       versionState.versionInfo.status = 'error'
       versionEvent.updated({ ...versionState.versionInfo })
+      void showSimpleModal(i18n.t('update_failed_tip'))
       break
   }
 }

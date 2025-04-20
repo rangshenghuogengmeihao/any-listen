@@ -35,7 +35,7 @@ const assetsAll = {
     prod: [
       [path.join(rootPath, 'packages/shared/theme/theme_images'), path.join(rootPath, 'build/public/theme_images')],
       [path.join(rootPath, 'packages/web-server/index.cjs'), path.join(rootPath, 'build/index.cjs')],
-      [
+      !process.env.SKIP_LIB_COPY && [
         path.join(rootPath, 'packages/web-server/node_modules/better-sqlite3/build/Release/better_sqlite3.node'),
         path.join(rootPath, `build/native/${getNativeName()}/better_sqlite3.node`),
       ],
@@ -66,7 +66,9 @@ const assetsAll = {
 export default async (type: Target) => {
   const env = process.env.NODE_ENV === 'production' ? 'prod' : 'dev'
   const assets = assetsAll[type][env]
-  for (const [from, to] of assets) {
+  for (const info of assets) {
+    if (!info) continue
+    const [from, to] = info
     if (from.endsWith('*')) {
       const dir = from.replace('*', '')
       const files = await fs.promises.readdir(dir)

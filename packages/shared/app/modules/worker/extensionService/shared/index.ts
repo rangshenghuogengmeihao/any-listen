@@ -306,11 +306,8 @@ const verifyExtension = async (unpackDir: string) => {
   if (extBundleFilePath) {
     extDir = extBundleFilePath.replace(new RegExp(`\\${extname(EXTENSION.extBundleFileName)}`), '')
     await createDir(extDir)
-    const { x } = await import('tar')
-    await x({
-      file: extBundleFilePath,
-      C: extDir,
-    }).catch(async (err: Error) => {
+    const { unpack } = await import('@any-listen/nodejs/tar')
+    await unpack(extBundleFilePath, extDir).catch(async (err: Error) => {
       await removePath(extDir)
       throw err
     })
@@ -335,11 +332,8 @@ export const unpackExtension = async (bundlePath: string) => {
   const targetDir = bundlePath.replace(FILE_EXT_NAME_EXP, '')
   if (await checkFile(targetDir)) await removePath(targetDir)
   await createDir(targetDir)
-  const { x } = await import('tar')
-  await x({
-    file: bundlePath,
-    C: targetDir,
-  }).catch(async (err: Error) => {
+  const { unpack } = await import('@any-listen/nodejs/tar')
+  await unpack(bundlePath, targetDir).catch(async (err: Error) => {
     await removePath(targetDir)
     throw err
   })
@@ -450,7 +444,6 @@ export const updateExtensionSettings = async (id: string, config: Record<string,
   const targetSetting = extensionState.extensionSettings?.find((s) => s.id == targetExt.id)
   if (targetSetting) {
     for (const [key, value] of Object.entries(config)) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       targetSetting.settingItems.find((item) => item.field == key)!.value = value
     }
   }

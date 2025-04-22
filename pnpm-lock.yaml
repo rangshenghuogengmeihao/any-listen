@@ -123,9 +123,6 @@ importers:
       music-metadata:
         specifier: ^11.0.5
         version: 11.0.5
-      tar:
-        specifier: ^7.4.3
-        version: 7.4.3
       ws:
         specifier: ^8.18.1
         version: 8.18.1(bufferutil@4.0.9)(utf-8-validate@6.0.5)
@@ -218,6 +215,9 @@ importers:
       '@any-listen/common':
         specifier: workspace:@shared/common@*
         version: link:../common
+      tar:
+        specifier: ^7.4.3
+        version: 7.4.3
       tunnel:
         specifier: ^0.0.6
         version: 0.0.6

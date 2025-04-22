@@ -167,11 +167,21 @@ server.on('error', (error: NodeJS.ErrnoException) => {
 /**
  * Event listener for HTTP server "listening" event.
  */
-server.on('listening', () => {
+server.on('listening', async () => {
   const addr = server.address()
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr?.port}`
   startupLog.info(`Listening on ${bindIP} ${bind}`)
 
+  if (import.meta.env.PROD) {
+    await import('./envPrepare')
+      .then(async ({ envPrepare }) => {
+        await envPrepare()
+      })
+      .catch((err) => {
+        console.log(err)
+        process.exit()
+      })
+  }
   void import('./app').then(({ initApp }) => {
     void initApp()
   })

@@ -7,7 +7,7 @@ on:
       - 'webserver-v*'
 env:
   DESKTOP_REPO: any-listen-desktop
-  WEBSERVER_REPO: any-listen-web-server
+  WEBSERVER_REPO: any-listen-web-server-native-lib
 
 jobs:
   sync-desktop-app:
@@ -43,7 +43,7 @@ jobs:
       - name: Checkout web server
         uses: actions/checkout@v4
         with:
-          repository: any-listen/any-listen-web-server
+          repository: any-listen/${{ env.WEBSERVER_REPO }}
           token: ${{ secrets.GH_WEB_SERVER_PAT }}
 
       - name: Checkout monorepo

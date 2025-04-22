@@ -214,5 +214,5 @@ export const getPlatform = (platform: NodeJS.Platform = process.platform) => {
 }
 
 export const getNativeName = () => {
-  return `${process.platform}_${process.arch}_${process.versions.modules}_${NATIVE_VERSION}`
+  return `${process.platform}_${process.arch}_${process.versions.modules}_v${NATIVE_VERSION}`
 }

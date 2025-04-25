@@ -1,5 +1,7 @@
 # Any Listen
 
+[English](Readme.md) | [中文](Readme_zh.md)
+
 A cross-platform private song playback service.
 
 Note: The project is still under active development and only provides a web service version. You can deploy it to your server directly or using docker.
@@ -8,7 +10,17 @@ Note: The project is still under active development and only provides a web serv
 
 ### Docker
 
-<https://hub.docker.com/r/lyswhut/any-listen-web-server>
+[https://hub.docker.com/r/lyswhut/any-listen-web-server](https://hub.docker.com/r/lyswhut/any-listen-web-server)
+
+### Directly run
+
+[https://github.com/any-listen/any-listen-web-server/releases](https://github.com/any-listen/any-listen-web-server/releases)
+
+Download latest release version
+
+Refer to [https://github.com/lyswhut/lx-music-sync-server?tab=readme-ov-file](https://github.com/lyswhut/lx-music-sync-server?tab=readme-ov-file)
+
+---
 
 Use Example:
 

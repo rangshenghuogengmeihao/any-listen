@@ -1,6 +1,6 @@
 # Any Listen
 
-[English](Readme.md) | [中文](Readme_zh.md)
+[English](README.md) | [中文](README_zh.md)
 
 A cross-platform private song playback service.
 
@@ -14,11 +14,9 @@ Note: The project is still under active development and only provides a web serv
 
 ### Directly run
 
-[https://github.com/any-listen/any-listen-web-server/releases](https://github.com/any-listen/any-listen-web-server/releases)
+Download latest release version: [https://github.com/any-listen/any-listen-web-server/releases](https://github.com/any-listen/any-listen-web-server/releases)
 
-Download latest release version
-
-Refer to [https://github.com/lyswhut/lx-music-sync-server?tab=readme-ov-file](https://github.com/lyswhut/lx-music-sync-server?tab=readme-ov-file)
+Refer to [https://github.com/lyswhut/lx-music-sync-server](https://github.com/lyswhut/lx-music-sync-server#readme)
 
 ---
 

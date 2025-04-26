@@ -1,1 +1,13 @@
-{"version":"0.1.0","desc":"First version 🎉","time":"25-01-26T00:00:00.000Z","history":[],"beta":[{"version":"0.2.0-beta.0","desc":"Add\n- Add extension management\n- Add version check\n\nFix\n- Fix flac file lyric read\n- Fix allow public path `/`\n- Fix Safari play bar Music Pic size\n\n---\n\n添加\n- 添加扩展管理\n- 添加版本检查\n\n修复\n- 修复 Flac 文件歌词读取问题\n- 修复 `allowPublicDir` 为 `/` 时出现的问题\n- 修复 Safari 浏览器播放栏音乐图片大小问题","time":"2025-04-24T15:13:09.371Z"}]}
+{
+  "version": "0.1.0",
+  "desc": "First version 🎉",
+  "time": "2025-01-26T00:00:00.000Z",
+  "history": [],
+  "beta": [
+    {
+      "version": "0.2.0-beta.0",
+      "desc": "Add\n- Add extension management\n- Add version check\n\nFix\n- Fix flac file lyric read\n- Fix allow public path `/`\n- Fix Safari play bar Music Pic size\n\n---\n\n添加\n- 添加扩展管理\n- 添加版本检查\n\n修复\n- 修复 Flac 文件歌词读取问题\n- 修复 `allowPublicDir` 为 `/` 时出现的问题\n- 修复 Safari 浏览器播放栏音乐图片大小问题",
+      "time": "2025-04-24T15:13:09.371Z"
+    }
+  ]
+}

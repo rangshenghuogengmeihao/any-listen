@@ -47,14 +47,14 @@
       desc: versionInfo.val.newVersion.desc,
       time: versionInfo.val.newVersion.time,
     }
-    if (allowPreRelease.val && versionInfo.val.newVersion.beta) {
+    if (allowPreRelease.val && versionInfo.val.newVersion.beta?.length) {
       history.unshift({
         version: versionInfo.val.newVersion.version,
         desc: versionInfo.val.newVersion.desc,
         time: versionInfo.val.newVersion.time,
       })
       arrUnshift(history, versionInfo.val.newVersion.beta)
-      latest = versionInfo.val.newVersion.beta[0]
+      latest = { ...versionInfo.val.newVersion.beta[0] }
     }
     let arr: AnyListen.VersionInfo[] = []
     let currentVer = versionInfo.val.version
@@ -63,6 +63,7 @@
       if (compareVersions(currentVer, ver.version) < 0) arr.push(ver)
       else break
     }
+    latest.time &&= dateFormat(new Date(latest.time))
     return [latest, arr]
   })
   let progress = $derived(

@@ -6,7 +6,7 @@ export const verticalScrollbar: Action<
   { scrollbarWidth?: string; offset?: string; autoHide?: boolean } | undefined
 > = (dom: HTMLElement, { scrollbarWidth = '0.5rem', offset = '0.3125rem', autoHide = true } = {}) => {
   dom.style.overflowY = 'scroll'
-  dom.style.marginRight = '-17px'
+  dom.style.marginRight = 'var(--scrollbar-width-negative)'
 
   const parentNode = dom.parentNode as HTMLElement
   parentNode.style.position = 'relative'

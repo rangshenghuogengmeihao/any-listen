@@ -5,9 +5,9 @@ import { initWorkers } from './worker'
 import 'virtual:svg-icons-register'
 import './app.less'
 import App from './App.svelte'
-import { connectIPC, registerModules } from './modules'
-import { initTooltips } from './components/apis/tooltips/global'
 import { initNotify } from './components/apis/notify'
+import { initTooltips } from './components/apis/tooltips/global'
+import { connectIPC, registerModules } from './modules'
 
 // import './components/base/VirtualizedList'
 void initWorkers()

@@ -1,5 +1,5 @@
 import { formatPlayTime, sizeFormate } from '@any-listen/common/utils'
-import { basename, checkPath, extname, getFileStats, joinPath, readFile } from '@any-listen/nodejs'
+import { basename, checkFile, checkPath, dirname, extname, getFileStats, joinPath, readFile } from '@any-listen/nodejs'
 import type { IAudioMetadata } from 'music-metadata'
 import type { IComment } from 'music-metadata/lib/type'
 
@@ -139,22 +139,36 @@ const getFileMetadata = async (path: string) => {
       : null
   }))
 }
+const tryPicExt = ['.jpg', '.jpeg', '.png'] as const
 /**
  * 获取歌曲文件封面图片
  * @param path 路径
  */
 export const getLocalMusicFilePic = async (path: string) => {
   const filePath = new RegExp(`\\${extname(path)}$`)
-  let picPath = path.replace(filePath, '.jpg')
-  let stats = await getFileStats(picPath)
-  if (stats) return picPath
-  picPath = path.replace(filePath, '.png')
-  stats = await getFileStats(picPath)
-  if (stats) return picPath
+  for await (const ext of tryPicExt) {
+    const picPath = path.replace(filePath, ext)
+    if (await checkFile(picPath)) return picPath
+  }
+  // 尝试读取文件内图片
   const metadata = await getFileMetadata(path)
   if (!metadata) return null
   const { selectCover } = await import('music-metadata')
-  return selectCover(metadata.common.picture)
+  const pic = selectCover(metadata.common.picture)
+  if (pic) return pic
+
+  // 尝试读取同目录下的cover.jpg
+  let coverPath = joinPath(dirname(path), 'cover')
+  for await (const ext of tryPicExt) {
+    const picPath = coverPath + ext
+    if (await checkFile(picPath)) return picPath
+  }
+  coverPath = joinPath(dirname(path), 'Cover')
+  for await (const ext of tryPicExt) {
+    const picPath = coverPath + ext
+    if (await checkFile(picPath)) return picPath
+  }
+  return null
 }
 
 // const timeExp = /^\[([\d:.]*)\]{1}/

@@ -63,6 +63,11 @@ declare global {
       'common.playBarProgressStyle': 'mini' | 'full' | 'middle' | 'center'
 
       /**
+       * 启用透明窗口
+       */
+      'common.transparentWindow': boolean
+
+      /**
        * 尝试自动更新
        */
       'common.tryAutoUpdate': boolean

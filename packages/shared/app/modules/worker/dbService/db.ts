@@ -1,4 +1,4 @@
-import { LIST_IDS } from '@any-listen/common/constants'
+import { DB_NAME, LIST_IDS } from '@any-listen/common/constants'
 import Database from 'better-sqlite3'
 import path from 'path'
 import migrateData from './migrate'
@@ -25,7 +25,7 @@ const initTables = (db: Database.Database) => {
 
 // 打开、初始化数据库
 export const init = async (dataPath: string, nativeBindingPath: string): Promise<boolean | null> => {
-  const databasePath = path.join(dataPath, 'anylisten.data.db')
+  const databasePath = path.join(dataPath, DB_NAME)
   const nativeBinding = path.join(__dirname, nativeBindingPath)
   let dbFileExists = true
 

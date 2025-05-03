@@ -6,6 +6,8 @@ export const DEV_SERVER_PORTS = {
   'view-main': 9200,
 } as const
 
+export const DB_NAME = 'anylisten.data.db'
+
 export const SPLIT_CHAR = {
   DISLIKE_NAME: '@',
   DISLIKE_NAME_ALIAS: '#',

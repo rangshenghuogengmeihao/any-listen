@@ -1,10 +1,11 @@
-import { renameSync } from 'fs'
 import path from 'path'
 // import { log } from '@/shared/log'
 import { i18n } from '@/app/i18n'
 import { appLog } from '@/shared/log4js'
 import { startDBServiceWorker as _startDBServiceWorker, workers } from '@any-listen/app/modules/worker'
+import { DB_NAME } from '@any-listen/common/constants'
 import { getNativeName } from '@any-listen/nodejs'
+import { backupDB } from '@any-listen/nodejs/tools'
 
 const initServices = async (dataPath: string) => {
   let nativeBindingPath = `../native/${getNativeName()}/better_sqlite3.node`
@@ -12,17 +13,18 @@ const initServices = async (dataPath: string) => {
 
   let dbFileExists = await workers.dbService.init(dataPath, nativeBindingPath)
   if (dbFileExists === null) {
-    const backPath = path.join(dataPath, `anylisten.data.db.${Date.now()}.bak`)
+    const backupPath = path.join(dataPath, `${DB_NAME}.${Date.now()}.bak`)
     appLog.warn(i18n.t('database_verify_failed'))
-    appLog.warn(i18n.t('database_verify_failed_detail', { backPath }))
-    renameSync(path.join(dataPath, 'anylisten.data.db'), backPath)
+    appLog.warn(i18n.t('database_verify_failed_detail', { backupPath }))
+    backupDB(dataPath, backupPath)
     dbFileExists = await workers.dbService.init(dataPath, nativeBindingPath)
   }
 }
 
-export const startDBServiceWorker = async (dataPath: string) =>
-  new Promise<void>((resolve, reject) => {
+export const startDBServiceWorker = async (dataPath: string) => {
+  return new Promise<void>((resolve, reject) => {
     void _startDBServiceWorker(() => {
       initServices(dataPath).then(resolve).catch(reject)
     }).catch(reject)
   })
+}

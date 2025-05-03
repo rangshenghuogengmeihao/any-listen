@@ -192,7 +192,7 @@
   "select_all": "全選",
   "setting": "設定",
   "settings.common.transparent_window": "主窗口使用軟件內置的圓角及陰影",
-  "settings.common.transparent_window_desc": "關閉後將使用系統窗口圓角及陰影樣式，重啟軟化後生效",
+  "settings.common.transparent_window_desc": "關閉後將使用系統窗口圓角及陰影樣式，重啟軟件後生效",
   "settings.other": "其他設置",
   "settings__about": "關於 Any Listen",
   "settings__about_p1": "Any Listen 是一個免費開源的音訊播放器，目前支援 Windows、macOS、Linux 和 Web 平台。",

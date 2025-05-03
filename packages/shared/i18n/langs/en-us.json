@@ -192,7 +192,7 @@
   "select_all": "Select all",
   "setting": "Settings",
   "settings.common.transparent_window": "The main window uses the built-in rounded corners and shadows",
-  "settings.common.transparent_window_desc": "After closing, the system window rounded corners and shadow style will be used, and the restart will take effect after softening.",
+  "settings.common.transparent_window_desc": "After closing, the system window rounded corners and shadow styles will be used, and the software will take effect after restarting.",
   "settings.other": "Other settings",
   "settings__about": "About Any Listen",
   "settings__about_p1": "Any Listen is a free and open source audio player that currently supports Windows, macOS, Linux and web platforms.",

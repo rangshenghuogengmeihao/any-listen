@@ -121,6 +121,8 @@ export const buildConfig = (mode: string): UserConfig => {
     },
     define: {
       'process.env.NODE_ENV': `"${process.env.NODE_ENV!}"`,
+      'process.env.WS_NO_BUFFER_UTIL': 'true',
+      'process.env.WS_NO_UTF_8_VALIDATE': 'true',
       __GIT_COMMIT__: `"${gitInfo.commit_id}"`,
       __GIT_COMMIT_DATE__: `"${gitInfo.commit_date}"`,
       // __QRC_DECODE_NODE_PATH__: `"${(isProd ? '../../build/Release' : path.join(rootPath, 'build/Release')).replace(/\\/g, '\\\\')}"`,

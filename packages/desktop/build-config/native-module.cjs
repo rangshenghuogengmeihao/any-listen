@@ -5,7 +5,7 @@ const rootPath = path.join(__dirname, '../')
 const distLib = path.join(rootPath, 'build-config/tempLib/better_sqlite3.node')
 const sourceLib = path.join(rootPath, 'node_modules/better-sqlite3/build/Release/better_sqlite3.node')
 
-exports.rmModule = () => {
+exports.rmSourceModule = () => {
   try {
     fs.rmSync(path.dirname(sourceLib), {
       recursive: true,
@@ -13,6 +13,10 @@ exports.rmModule = () => {
   } catch {
     /* empty */
   }
+}
+
+exports.rmModule = () => {
+  exports.rmSourceModule()
   try {
     fs.rmSync(path.dirname(distLib), {
       recursive: true,

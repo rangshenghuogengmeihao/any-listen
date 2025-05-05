@@ -12,8 +12,7 @@
     "build:web": "pnpm -F @shared/scripts build:web",
     "pub:web": "pnpm -F @shared/publish pub web-server",
     "pub:desk": "pnpm -F @shared/publish pub desktop",
-    "cldep": "rm -rf node_modules && pnpm -r exec rm -rf node_modules",
-    "postinstall": "pnpm -F desktop rebuild:deps && pnpm -F web-server rebuild"
+    "cldep": "rm -rf node_modules && pnpm -r exec rm -rf node_modules"
   },
   "engines": {
     "node": ">=22.12.0 || ^20.19.0"
@@ -26,7 +25,6 @@
     "onlyBuiltDependencies": [
       "better-sqlite3",
       "electron",
-      "electron-winstaller",
       "esbuild",
       "svelte-preprocess"
     ]

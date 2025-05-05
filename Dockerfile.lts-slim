@@ -12,6 +12,7 @@ RUN apt-get update && \
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+ENV WEB_SERVER_ONLY="true"
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN npm install corepack -g && corepack enable pnpm && pnpm fetch
 

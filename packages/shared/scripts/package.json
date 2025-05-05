@@ -53,7 +53,8 @@
     "build:desktop:dir": "ts-node pack-desktop.ts && pnpm -F desktop pack:dir",
     "build:desktop": "ts-node pack-desktop.ts && pnpm -F desktop pack:win:setup:x64",
     "build:web": "ts-node pack-web.ts",
-    "build": "ts-node pack.ts"
+    "build": "ts-node pack.ts",
+    "postinstall": "ts-node ./postinstall.ts"
   },
   "devDependencies": {
     "@any-listen/common": "workspace:@shared/common@*",

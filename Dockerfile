@@ -23,6 +23,8 @@ RUN apk add --update --no-cache \
     npm
 
 ENV PNPM_HOME="/pnpm"
+ENV WEB_SERVER_ONLY="true"
+
 ENV PATH="$PNPM_HOME:$PATH"
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN npm install corepack -g && corepack enable pnpm && pnpm fetch

@@ -62,3 +62,23 @@ export const onDomScrollSizeChanged = (dom: HTMLElement, onChanged: (scrollheigh
 
 //   return scrollbarWidth
 // }
+
+export const createClickHandle = <T extends unknown[] = unknown[]>(
+  click: (...args: T) => void,
+  doubleClick: (...args: T) => void,
+  delay = 400
+) => {
+  let clickTime = 0
+  let clickInfo: T[0] | null = null
+  return (...args: T) => {
+    if (window.performance.now() - clickTime > delay || clickInfo !== args[0]) {
+      clickTime = window.performance.now()
+      clickInfo = args[0]
+      click(...args)
+      return
+    }
+    clickTime = 0
+    clickInfo = null
+    doubleClick(...args)
+  }
+}

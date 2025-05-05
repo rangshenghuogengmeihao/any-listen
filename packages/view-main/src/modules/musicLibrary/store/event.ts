@@ -28,8 +28,8 @@ class Event extends _Event {
     this.emitEvent('listMusicChanged', ids)
   }
 
-  fetchingListStatusUpdated(id: string) {
-    this.emitEvent('fetchingListStatusUpdated', id)
+  fetchingListStatusUpdated(id: string, val: boolean) {
+    this.emitEvent('fetchingListStatusUpdated', id, val)
   }
 }
 

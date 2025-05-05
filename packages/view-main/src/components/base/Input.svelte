@@ -82,7 +82,7 @@
   if (autofocus) {
     onMount(() => {
       void tick().then(() => {
-        domInput.focus()
+        setTimeout(focus, 100)
       })
     })
   }

@@ -3,4 +3,8 @@ export const IPC_NAMES = {
   VIEW_MAIN: 'view_main',
 } as const
 
-export const RESPONSE_PREFIX = '_resp'
+export const IPC_MESSAGE_PREFIX = 'm2c'
+
+export const createName = (namespace: string) => {
+  return `${namespace}${IPC_MESSAGE_PREFIX}`
+}

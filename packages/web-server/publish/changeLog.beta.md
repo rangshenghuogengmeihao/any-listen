@@ -1,23 +1,27 @@
 ### Add
 
-- Add extension management
-- Add version check
+- Added the ability to add songs by selecting a folder, which will scan the selected directory and its subdirectories for songs.
 
-### Fix
+### Optimization
 
-- Fix flac file lyric read
-- Fix allow public path `/`
-- Fix Safari play bar Music Pic size
+- Optimized the UI of the version check popup and fixed issues with displaying new version content.
+- Improved the appearance of the virtual scrollbar.
+
+### Fixes
+
+- Fixed the issue where notification bubbles were obscured by pop-up layers.
 
 ---
 
-### 添加
+### 新增
 
-- 添加扩展管理
-- 添加版本检查
+- 新增选择文件夹的方式添加歌曲，将会扫描所选目录及子目录内的歌曲
+
+### 优化
+
+- 优化版本检查弹窗 UI 及修复新版本内容显示问题
+- 优化虚拟滚动条显示效果
 
 ### 修复
 
-- 修复 Flac 文件歌词读取问题
-- 修复 `allowPublicDir` 为 `/` 时出现的问题
-- 修复 Safari 浏览器播放栏音乐图片大小问题
+- 修复通知气泡被弹出层遮挡的问题

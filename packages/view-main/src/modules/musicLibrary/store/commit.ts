@@ -1,8 +1,8 @@
 import { musicLibraryState } from './state'
 // import { overwriteListPosition, overwriteListUpdateInfo, removeListPosition, removeListUpdateInfo } from '@/shared/data'
-import { LIST_IDS } from '@any-listen/common/constants'
 import { arrPush, arrPushByPosition, arrUnshift } from '@/shared'
 import { workers } from '@/worker'
+import { LIST_IDS } from '@any-listen/common/constants'
 import { musicLibraryEvent } from './event'
 
 export const getSubUserLists = (parentId: AnyListen.List.ParentId) => {
@@ -376,7 +376,14 @@ export const listMusicUpdatePosition = async (listId: string, position: number, 
   musicLibraryEvent.listMusicChanged([listId])
 }
 
+export const initFetchingListStatus = (ids: string[]) => {
+  for (const id of ids) {
+    musicLibraryState.fetchingListStatus[id] = true
+    musicLibraryEvent.fetchingListStatusUpdated(id, true)
+  }
+}
+
 export const setFetchingListStatus = (id: string, status: boolean) => {
   musicLibraryState.fetchingListStatus[id] = status
-  musicLibraryEvent.fetchingListStatusUpdated(id)
+  musicLibraryEvent.fetchingListStatusUpdated(id, status)
 }

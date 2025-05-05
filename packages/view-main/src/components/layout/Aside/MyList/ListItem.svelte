@@ -3,6 +3,7 @@
   // import Image from '@/components/base/Image.svelte'
   import type { MouseEventHandler } from 'svelte/elements'
   import { location, push, query, replace } from '@/plugins/routes'
+  import { useFetchingListStatus } from '@/modules/musicLibrary/reactive.svelte'
   // console.log(querystring)
   let {
     listInfo,
@@ -17,6 +18,8 @@
     oncontextmenu?: MouseEventHandler<HTMLDivElement>
   } = $props()
 
+  const fetching = useFetchingListStatus(listInfo.id)
+
   const handleSelect = () => {
     const url = `/library?id=${listInfo.id}`
     if ($location == '/library') {
@@ -30,6 +33,7 @@
 <div
   class="container"
   class:active={$query.id == listInfo.id || active}
+  class:fetching={fetching.val}
   role="button"
   aria-label={listInfo.name}
   data-ignore-tip
@@ -83,6 +87,9 @@
   }
   .active {
     background-color: var(--color-primary-background);
+  }
+  .fetching {
+    opacity: 0.5;
   }
 
   .left {

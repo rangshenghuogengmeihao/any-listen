@@ -60,6 +60,9 @@ importers:
       font-list:
         specifier: ^1.5.1
         version: 1.5.1
+      message2call:
+        specifier: ^2.0.3
+        version: 2.0.3
       undici:
         specifier: ^7.8.0
         version: 7.8.0

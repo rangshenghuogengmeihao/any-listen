@@ -14,6 +14,7 @@
   import { useSelect } from './useSelect.svelte'
   import { useHotkey } from './useHotkey.svelte'
   import { keyboardEvent } from '@/modules/hotkey/keyboard'
+  import { createClickHandle } from '@any-listen/web'
 
   let {
     onafterleave,
@@ -28,7 +29,7 @@
   let virtualizedList = $state<ComponentExports<typeof VirtualizedList<File>> | null>(null)
   let select = useSelect({
     get isShiftDown() {
-      return hotkey.isShiftDown
+      return options.multi ? hotkey.isShiftDown : false
     },
     get list() {
       return list
@@ -87,6 +88,7 @@
     Omit<AnyListen.OpenDialogOptions, 'filters'> & {
       filters?: string[]
       openFile?: boolean
+      openDir?: boolean
       multi?: boolean
     }
   >({
@@ -96,14 +98,27 @@
   let dirInputValue = $state('')
   let list = $state.raw<File[]>([])
   let errorMessage = $state('')
-  let verifyStatus = $derived(!errorMessage && (!options.openFile || select.list.length))
+  let verifyStatus = $derived(!errorMessage && (select.list.length || (options.openDir && !!currentDir)))
 
   const closeModal = () => {
     visible = false
   }
 
+  const getSelectPath = () => {
+    return select.list.length
+      ? buildFilesPath(currentDir, [select.list[0]])[0]
+      : options.openDir && !!currentDir
+        ? currentDir
+        : ''
+  }
+
   const handleComfirm = async () => {
-    onsubmit({ canceled: false, filePaths: options.openFile ? buildFilesPath(currentDir, select.list) : [currentDir] })
+    const paths = select.list.length
+      ? buildFilesPath(currentDir, select.list)
+      : options.openDir && !!currentDir
+        ? [currentDir]
+        : []
+    onsubmit({ canceled: false, filePaths: paths })
     closeModal()
   }
 
@@ -113,7 +128,7 @@
       path = formatPath(path)
       currentDir = path
       dirInputValue = path
-      list = await readDir(path, options.filters)
+      list = await readDir(path, options.filters, options.openDir)
         .then((files) => {
           return files.map((file) => {
             return {
@@ -154,12 +169,26 @@
     }
   }
 
+  const handleClick = createClickHandle<[File, number]>(
+    (file, index) => {
+      if (options.openDir) {
+        if (!options.multi) select.clearSelect()
+        select.handleSelect(index)
+      }
+    },
+    (file, index) => {
+      select.clearSelect()
+      void gotoDir(buildFilesPath(currentDir, [file])[0])
+    }
+  )
+
   export const show = async ({ filters = [], ...opts }: AnyListen.OpenDialogOptions) => {
     const properties = opts.properties || []
     options = {
       ...opts,
       filters: filters.map((f) => f.extensions).flat(),
       openFile: properties.includes('openFile'),
+      openDir: properties.includes('openDirectory'),
       multi: properties.includes('multiSelections'),
     }
     void gotoDir(options.defaultPath)
@@ -232,16 +261,23 @@
           disabled={!options.openFile && file.isFile}
           selected={select.list.includes(file)}
           selectedactive={hotkey.isShiftDown && select.selectIndex == index}
+          selectfolder={options.openDir}
           picstyle={picStyle}
           onclick={() => {
             if (file.isFile) {
+              if (!options.multi) select.clearSelect()
               select.handleSelect(index)
               if (!hotkey.isKeyMultiKeyDown()) {
                 select.setSelectIndex(index)
               }
             } else {
-              void gotoDir(buildFilesPath(currentDir, [file])[0])
+              handleClick(file, index)
             }
+          }}
+          ongoto={() => {
+            if (file.isFile) return
+            select.clearSelect()
+            void gotoDir(buildFilesPath(currentDir, [file])[0])
           }}
         />
       {/snippet}
@@ -263,8 +299,15 @@
           }}>{select.list.length ? $t('btn_unselect_all') : $t('btn_select_all')}</Btn
         >
       {/if}
-      {#if select.list.length}
-        <span class="tip">{$t('btn_selected_tip', { num: select.list.length })}</span>
+      {#if options.multi}
+        {#if select.list.length}
+          <span class="tip">{$t('btn_selected_tip', { num: select.list.length })}</span>
+        {/if}
+      {:else}
+        {@const selectPath = getSelectPath()}
+        {#if selectPath}
+          <span class="tip" title={selectPath}>{$t('btn_selected_single_tip', { path: selectPath })}</span>
+        {/if}
       {/if}
       <!-- <span class="exts">{options.filters?.map((f) => `*.${f}`).join(', ')}</span> -->
     </div>
@@ -387,6 +430,7 @@
     .tip {
       font-size: 12px;
       color: var(--color-font-label);
+      .mixin-ellipsis-2;
     }
     .right {
       display: flex;

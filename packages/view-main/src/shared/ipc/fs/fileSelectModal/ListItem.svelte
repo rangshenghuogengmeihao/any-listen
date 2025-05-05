@@ -7,15 +7,19 @@
     picstyle,
     disabled = false,
     selected = false,
+    selectfolder = false,
     selectedactive,
     onclick,
+    ongoto,
   }: {
     file: File
     picstyle: string
     selected?: boolean
     disabled?: boolean
+    selectfolder?: boolean
     selectedactive?: boolean
     onclick: () => void
+    ongoto?: () => void
   } = $props()
 
   const handleSelect = () => {
@@ -38,11 +42,23 @@
       case ' ':
         event.preventDefault()
         event.stopPropagation()
-        handleSelect()
+        if (selectfolder) {
+          if (event.key === ' ') {
+            handleSelect()
+          } else {
+            ongoto?.()
+          }
+        } else if (file.isFile) {
+          handleSelect()
+        } else {
+          ongoto?.()
+        }
         break
     }
   }}
-  onclick={handleSelect}
+  onclick={() => {
+    handleSelect()
+  }}
 >
   <div class="pic" style={picstyle}>
     {#if file.isFile}
@@ -83,6 +99,9 @@
     }
     &.selected {
       background-color: var(--color-primary-background-selected);
+    }
+    &.disabled {
+      opacity: 0.5;
     }
     &.selectedactive {
       border-color: var(--color-primary-alpha-700);

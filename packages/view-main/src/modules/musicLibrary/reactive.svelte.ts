@@ -1,10 +1,10 @@
-import { derived, get, readable } from 'svelte/store'
-import { musicLibraryState } from './store/state'
-import { musicLibraryEvent } from './store/event'
-import { i18n } from '@/plugins/i18n'
 import { onSettingChanged } from '@/modules/setting/shared'
-import { getSubUserLists } from './store/actions'
+import { i18n } from '@/plugins/i18n'
 import { LIST_IDS } from '@any-listen/common/constants'
+import { derived, get, readable } from 'svelte/store'
+import { getSubUserLists } from './store/actions'
+import { musicLibraryEvent } from './store/event'
+import { musicLibraryState } from './store/state'
 
 const getDefaultLists = () => {
   return [
@@ -117,16 +117,14 @@ export const useUserList = (parentId: AnyListen.List.ParentId) => {
   }
 }
 
-export const useFetchingListStatus = (id: string) => {
+export const useFetchingListStatus = (id = '') => {
   let val = $state(musicLibraryState.fetchingListStatus[id])
   $effect(() => {
     val = musicLibraryState.fetchingListStatus[id]
-    const unsub = musicLibraryEvent.on('fetchingListStatusUpdated', (id) => {
-      val = musicLibraryState.fetchingListStatus[id]
+    return musicLibraryEvent.on('fetchingListStatusUpdated', (_id) => {
+      if (id != _id) return
+      val = musicLibraryState.fetchingListStatus[_id]
     })
-    return () => {
-      unsub()
-    }
   })
   return {
     get val() {

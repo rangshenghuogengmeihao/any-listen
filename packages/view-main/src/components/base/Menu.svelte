@@ -7,12 +7,12 @@
   }
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T extends string = string">
   import { menuLocaltion } from '@/shared/compositions/menuLocaltion'
   import Portal from './Portal.svelte'
   import { tick } from 'svelte'
 
-  type _Menus = MenuList
+  type _Menus = MenuList<T>
   let render = $state(false)
   let anim = $state(false)
 

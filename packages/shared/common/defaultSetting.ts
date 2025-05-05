@@ -12,6 +12,7 @@ const defaultSetting: AnyListen.AppSetting = {
   'common.isAgreePact': false,
   'common.controlBtnPosition': 'right',
   'common.playBarProgressStyle': 'mini',
+  'common.transparentWindow': true,
   'common.tryAutoUpdate': true,
   'common.allowPreRelease': false,
   'common.showChangeLog': true,

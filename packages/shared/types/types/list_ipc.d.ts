@@ -126,6 +126,8 @@ declare namespace AnyListen {
       getListScrollPosition: () => List.ListPositionInfo
       /** 保存列表滚动位置 */
       saveListScrollPosition: (id: string, position: number) => void
+      addFolderMusics: (listId: string, filePaths: string[], onEnd: (errorMessage?: string | null) => void) => string
+      cancelAddFolderMusics: (taskId: string) => void
     }>
     type ServerIPCActions<Socket = undefined> = IPC.WarpIPCHandlerActions<Socket, ServerActions>
 

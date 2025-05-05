@@ -134,6 +134,8 @@ export const buildConfig = (mode: string): UserConfig => {
     },
     define: {
       'process.env.NODE_ENV': `"${process.env.NODE_ENV!}"`,
+      'process.env.WS_NO_BUFFER_UTIL': 'true',
+      'process.env.WS_NO_UTF_8_VALIDATE': 'true',
       __STATIC_PATH__: `"${path.join(projectPath, 'src/static').replace(/\\/g, '\\\\')}"`,
       __USER_API_PATH__: `"${path.join(projectPath, 'src/modules/userApi').replace(/\\/g, '\\\\')}"`,
       __GIT_COMMIT__: `"${gitInfo.commit_id}"`,

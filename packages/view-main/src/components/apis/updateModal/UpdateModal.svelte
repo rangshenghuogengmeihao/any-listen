@@ -16,6 +16,7 @@
   import { showNotify } from '../notify'
   import { i18n, t } from '@/plugins/i18n'
   import { useSettingValue } from '@/modules/setting/reactive.svelte'
+  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar'
 
   let {
     onafterleave,
@@ -33,7 +34,7 @@
         release: 'https://github.com/any-listen/any-listen-web-server/releases',
       }
     : {
-        release: 'https://github.com/any-listen/any-listen-web-desktop/releases',
+        release: 'https://github.com/any-listen/any-listen-desktop/releases',
       }
 
   let disabledIgnoreFailBtn = $state(false)
@@ -47,22 +48,25 @@
       desc: versionInfo.val.newVersion.desc,
       time: versionInfo.val.newVersion.time,
     }
-    if (allowPreRelease.val && versionInfo.val.newVersion.beta) {
+    if (allowPreRelease.val && versionInfo.val.newVersion.beta?.length) {
       history.unshift({
         version: versionInfo.val.newVersion.version,
         desc: versionInfo.val.newVersion.desc,
         time: versionInfo.val.newVersion.time,
       })
       arrUnshift(history, versionInfo.val.newVersion.beta)
-      latest = versionInfo.val.newVersion.beta[0]
+      latest = { ...versionInfo.val.newVersion.beta[0] }
     }
     let arr: AnyListen.VersionInfo[] = []
     let currentVer = versionInfo.val.version
     for (const ver of history) {
-      ver.time &&= dateFormat(new Date(ver.time))
-      if (compareVersions(currentVer, ver.version) < 0) arr.push(ver)
-      else break
+      if (compareVersions(currentVer, ver.version) < 0) {
+        const v = { ...ver }
+        v.time &&= dateFormat(new Date(v.time))
+        arr.push(v)
+      } else break
     }
+    latest.time &&= dateFormat(new Date(latest.time))
     return [latest, arr]
   })
   let progress = $derived(
@@ -97,25 +101,35 @@
   }
 </script>
 
+{#snippet releaseTime(time?: string)}
+  {#if time}
+    <span class="release-time">&nbsp;-&nbsp;{time}</span>
+  {/if}
+{/snippet}
+
 {#snippet versionSnippet()}
-  <div class="scroll select info">
-    <div class="current">
-      <h3>{$t('update_modal.current_version')}{versionInfo.val.version}</h3>
-      <h3>{$t('update_modal.latest_version')}{latest?.version}{latest?.time ? ` - ${latest?.time}` : ''}</h3>
-      <h3>{$t('update_modal.change_log')}</h3>
-      <pre class="desc">{latest?.desc}</pre>
-    </div>
-    {#if history.length}
-      <div class="history desc">
-        <h3>{$t('update_modal.history_version')}</h3>
-        {#each history as ver (ver.version)}
-          <div class="item">
-            <h4>v{ver.version}{ver.time ? ` - ${ver.time}` : ''}</h4>
-            <pre>{ver.desc}</pre>
-          </div>
-        {/each}
+  <div class="version-modal-content">
+    <div class="select info" use:verticalScrollbar>
+      <div class="current">
+        <h3>{$t('update_modal.current_version')}{versionInfo.val.version}</h3>
+        <h3>
+          {$t('update_modal.latest_version')}{latest?.version}{@render releaseTime(latest?.time)}
+        </h3>
+        <h3>{$t('update_modal.change_log')}</h3>
+        <pre class="desc">{latest?.desc}</pre>
       </div>
-    {/if}
+      {#if history.length}
+        <div class="history desc">
+          <h3>{$t('update_modal.history_version')}</h3>
+          {#each history as ver (ver.version)}
+            <div class="item">
+              <h4>v{ver.version}{@render releaseTime(latest?.time)}</h4>
+              <pre>{ver.desc}</pre>
+            </div>
+          {/each}
+        </div>
+      {/if}
+    </div>
   </div>
 {/snippet}
 
@@ -139,28 +153,30 @@
   {:else if versionInfo.val.isUnknown}
     <main class="version-modal-main">
       <h2>{$t('update_modal.unknown_title')}</h2>
-      <div class="scroll select info">
-        <div class="current">
-          <h3>{$t('update_modal.current_version')}{versionInfo.val.version}</h3>
-          <div class="desc">
-            <p>{$t('update_modal.unknown_desc_1')}</p>
-            <p>
-              {$t('update_modal.unknown_desc_2_1')}
-              <Btn
-                min
-                aria-label={urls.release}
-                onclick={() => {
-                  handleOpenUrl(urls.release)
-                }}
-              >
-                {$t('update_modal.unknown_desc_2_2')}
-              </Btn>
-              {$t('update_modal.unknown_desc_2_3')}
-              <strong>{$t('update_modal.unknown_desc_2_4')}</strong>{$t('update_modal.unknown_desc_2_5', {
-                ver: versionInfo.val.version,
-              })}
-            </p>
-            <p>{$t('update_modal.unknown_desc_3')}</p>
+      <div class="version-modal-content">
+        <div class="select info" use:verticalScrollbar>
+          <div class="current">
+            <h3>{$t('update_modal.current_version')}{versionInfo.val.version}</h3>
+            <div class="desc">
+              <p>{$t('update_modal.unknown_desc_1')}</p>
+              <p>
+                {$t('update_modal.unknown_desc_2_1')}
+                <Btn
+                  min
+                  aria-label={urls.release}
+                  onclick={() => {
+                    handleOpenUrl(urls.release)
+                  }}
+                >
+                  {$t('update_modal.unknown_desc_2_2')}
+                </Btn>
+                {$t('update_modal.unknown_desc_2_3')}
+                <strong>{$t('update_modal.unknown_desc_2_4')}</strong>{$t('update_modal.unknown_desc_2_5', {
+                  ver: versionInfo.val.version,
+                })}
+              </p>
+              <p>{$t('update_modal.unknown_desc_3')}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -264,7 +280,7 @@
     position: relative;
     padding: 15px 0;
     // max-width: 450px;
-    min-width: 300px;
+    min-width: 500px;
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
@@ -290,6 +306,17 @@
       text-align: justify;
       margin-top: 10px;
     }
+  }
+  .version-modal-content {
+    flex: 1 1 auto;
+    overflow: hidden;
+    display: flex;
+    flex-flow: column nowrap;
+  }
+  .release-time {
+    color: var(--color-font-label);
+    font-size: 12px;
+    // margin-left: 5px;
   }
 
   .info {

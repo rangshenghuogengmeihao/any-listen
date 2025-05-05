@@ -1,7 +1,9 @@
 const builder = require('electron-builder')
 const beforePack = require('./build-before-pack.cjs')
 const afterPack = require('./build-after-pack.cjs')
+const fs = require('node:fs')
 const path = require('node:path')
+const { rmSourceModule } = require('./native-module.cjs')
 
 const rootPath = path.join(__dirname, '../../..')
 
@@ -30,7 +32,7 @@ const options = {
     '!node_modules/**/*',
     'node_modules/font-list',
     {
-      from: 'node_modules/better-sqlite3/build/Release',
+      from: fs.realpathSync(path.join(__dirname, '../node_modules/better-sqlite3/build/Release')),
       to: 'dist/electron/native',
       filter: ['better_sqlite3.node'],
     },
@@ -307,4 +309,6 @@ if (params.target != 'dir' && params.arch == null) throw new Error('Missing arch
 if (params.target != 'dir' && params.type == null) throw new Error('Missing type')
 
 console.log(params.target, params.arch, params.type, params.publish ?? '')
+
+rmSourceModule()
 build(params.target, params.arch, params.type, params.publish)

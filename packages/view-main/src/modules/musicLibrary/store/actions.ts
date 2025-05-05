@@ -1,6 +1,10 @@
 import * as commit from './commit'
 import { musicLibraryState } from './state'
 
+import { showNotify } from '@/components/apis/notify'
+import { settingState } from '@/modules/setting/store/state'
+import { i18n } from '@/plugins/i18n'
+import { generateIdSimple, throttle } from '@/shared'
 import {
   addListMusics as addListMusicsFromRemote,
   checkListExistMusic as checkListExistMusicFromRemote,
@@ -15,13 +19,9 @@ import {
   updateListMusics as updateListMusicsFromRemote,
   updateUserList as updateUserListFromRemote,
 } from './listRemoteActions'
-import { settingState } from '@/modules/setting/store/state'
-import { generateIdSimple, throttle } from '@/shared'
-import { showNotify } from '@/components/apis/notify'
-import { i18n } from '@/plugins/i18n'
 
-export { updateListMusicsPosition, removeUserList } from './listRemoteActions'
-export { setUserListInited, setFetchingListStatus, getSubUserLists, userListExist } from './commit'
+export { getSubUserLists, setFetchingListStatus, setUserListInited, userListExist } from './commit'
+export { removeUserList, updateListMusicsPosition } from './listRemoteActions'
 
 /**
  * 获取所有列表
@@ -42,6 +42,7 @@ export const getUserLists = async () => {
   const allList = await getAllListFromRemote()
   console.log(allList)
   commit.initUserLists(allList)
+  // commit.initFetchingListStatus(fetchingIds)
   return commit.getAllList()
 }
 

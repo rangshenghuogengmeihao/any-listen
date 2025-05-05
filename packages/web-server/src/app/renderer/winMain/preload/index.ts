@@ -1,15 +1,15 @@
+import { createIPC } from '@/preload/ipc'
 import type { IPCSocket } from '@/preload/ws'
 import { createClientApp, createExposeApp } from './app'
-import { createClientPlayer, createExposePlayer } from './player'
 import { createClientData } from './data'
+import { createClientDislike, createExposeDislike } from './dislike'
+import { createClientExtension, createExposeExtension } from './extension'
 import { createClientHotkey, createExposeHotkey } from './hotkey'
 import { createClientList, createExposeList } from './list'
 import { createClientMusic } from './music'
-import { createClientDislike, createExposeDislike } from './dislike'
-import { createClientTheme, createExposeTheme } from './theme'
-import { createClientExtension, createExposeExtension } from './extension'
+import { createClientPlayer, createExposePlayer } from './player'
 import { createClientSoundEffect } from './soundEffect'
-import { createIPC } from '@/preload/ipc'
+import { createClientTheme, createExposeTheme } from './theme'
 
 console.log('preload win main')
 

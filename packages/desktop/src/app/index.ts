@@ -17,7 +17,6 @@ import { getAppSetting, saveSetting } from './data'
 
 export const initState = () => {
   const envParams = parseEnvParams<AnyListen.CmdParams>()
-  envParams.cmdParams.dt = !!envParams.cmdParams.dt
   appState.envParams = {
     cmdParams: envParams.cmdParams,
   }
@@ -260,6 +259,8 @@ export const initAppEnv = async () => {
   registerDeeplink()
   listenerElectronEvent()
   appState.appSetting = (await getAppSetting()).setting
+  if (appState.envParams.cmdParams.dt == null) appState.envParams.cmdParams.dt = !appState.appSetting['common.transparentWindow']
+
   listenerAppEvent()
 }
 

@@ -39,3 +39,46 @@ export const onDomScrollSizeChanged = (dom: HTMLElement, onChanged: (scrollheigh
     observer.disconnect()
   }
 }
+
+// let scrollbarWidth: number
+// export const getScrollbarWidth = () => {
+//   // 用缓存避免多次创建元素
+//   if (scrollbarWidth !== undefined) return scrollbarWidth
+
+//   const scrollDiv = document.createElement('div')
+//   scrollDiv.style.cssText = `
+//     position: absolute;
+//     top: -9999px;
+//     width: 100px;
+//     height: 100px;
+//     overflow: scroll;
+//   `
+
+//   document.body.appendChild(scrollDiv)
+//   const sw = scrollDiv.offsetWidth - scrollDiv.clientWidth
+//   document.body.removeChild(scrollDiv)
+
+//   scrollbarWidth = sw
+
+//   return scrollbarWidth
+// }
+
+export const createClickHandle = <T extends unknown[] = unknown[]>(
+  click: (...args: T) => void,
+  doubleClick: (...args: T) => void,
+  delay = 400
+) => {
+  let clickTime = 0
+  let clickInfo: T[0] | null = null
+  return (...args: T) => {
+    if (window.performance.now() - clickTime > delay || clickInfo !== args[0]) {
+      clickTime = window.performance.now()
+      clickInfo = args[0]
+      click(...args)
+      return
+    }
+    clickTime = 0
+    clickInfo = null
+    doubleClick(...args)
+  }
+}

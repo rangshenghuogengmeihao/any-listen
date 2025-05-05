@@ -6,6 +6,7 @@ import {
 } from '@/modules/musicLibrary/store/actions'
 import { i18n } from '@/plugins/i18n'
 import { showOpenDialog } from '@/shared/ipc/app'
+import { addFolderMusics } from '@/shared/ipc/list'
 import { createLocalMusicInfos } from '@/shared/ipc/music'
 import { MEDIA_FILE_TYPES } from '@any-listen/common/constants'
 
@@ -44,6 +45,36 @@ export const importLocalFile = async (listInfo: AnyListen.List.MyListInfo) => {
         ? i18n.t('user_list__add_local_file_success_part', { all, count: failedCount })
         : i18n.t('user_list__add_local_file_failed', { num: all })
   showNotify(message)
+}
+export const importLocalFileFolder = async (listInfo: AnyListen.List.MyListInfo) => {
+  const { canceled, filePaths } = await showOpenDialog({
+    title: i18n.t('user_list__select_local_file_folder'),
+    properties: ['openDirectory'],
+    filters: [
+      // https://support.google.com/chromebook/answer/183093
+      // 3gp, .avi, .mov, .m4v, .m4a, .mp3, .mkv, .ogm, .ogg, .oga, .webm, .wav
+      { name: 'Media File', extensions: [...MEDIA_FILE_TYPES] },
+    ],
+  })
+  if (canceled || !filePaths.length) return
+  setFetchingListStatus(listInfo.id, true)
+  const taskId = await addFolderMusics(listInfo.id, filePaths, (message) => {
+    switch (message) {
+      case null:
+        showNotify(i18n.t('user_list__add_local_file_folder_cancelled'))
+        break
+      case undefined:
+        showNotify(i18n.t('user_list__add_local_file_folder_end'))
+        break
+      default:
+        break
+    }
+    setFetchingListStatus(listInfo.id, false)
+  })
+  // setTimeout(() => {
+  //   void cancelAddFolderMusics(taskId)
+  // }, 1000)
+  console.log(taskId)
 }
 
 export const removeUserList = async (id: string) => {

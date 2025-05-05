@@ -28,7 +28,7 @@ export const getParentDir = (dir: string, rootDirs: AnyListen.FileSystem.File[])
   }
   return ''
 }
-export const buildFilesPath = (curDir: string, files: File[]) => {
+export const buildFilesPath = (curDir: string, files: AnyListen.FileSystem.File[]) => {
   if (!curDir) return files.map((f) => f.name)
   const sep = getSep(curDir)
   if (curDir.endsWith(sep)) curDir = curDir.substring(0, curDir.length - 1)

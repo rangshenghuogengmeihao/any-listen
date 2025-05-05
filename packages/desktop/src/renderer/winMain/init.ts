@@ -30,8 +30,8 @@ import { initThumbarButtons } from './thumbarButtons'
 import { getWindowSizeInfo } from './utils'
 
 export const initWinMain = () => {
-  initRendererEvent((name: string, ...args) => {
-    getWebContents().send(name, ...args)
+  initRendererEvent((name, data) => {
+    getWebContents().send(name, data)
   })
   initUpdate()
   // if (process.env.NODE_ENV === 'production') initUpdate()

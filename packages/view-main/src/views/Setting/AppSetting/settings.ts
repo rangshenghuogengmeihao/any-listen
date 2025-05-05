@@ -183,3 +183,19 @@ if (import.meta.env.VITE_IS_WEB) {
     ],
   })
 }
+
+// t('settings.common.transparent_window_desc')
+if (import.meta.env.VITE_IS_DESKTOP) {
+  settings.splice(settings.length - 2, 0, {
+    id: 'other',
+    name: 'settings.other',
+    list: [
+      {
+        field: 'common.transparentWindow',
+        name: 'settings.common.transparent_window',
+        description: 'settings.common.transparent_window_desc',
+        type: 'boolean',
+      },
+    ],
+  })
+}

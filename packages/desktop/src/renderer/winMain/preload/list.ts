@@ -1,5 +1,6 @@
-import type { ExposeFunctions, MainCall } from '.'
 import { ipcPreloadEvent } from '@any-listen/app/modules/ipcPreloadEvent'
+import { createProxyCallback } from 'message2call'
+import type { ExposeFunctions, MainCall } from '.'
 
 // 暴露给后端的方法
 export const createExposeList = () => {
@@ -39,6 +40,16 @@ export const createClientList = (main: MainCall) => {
     },
     async saveListScrollPosition(id, position) {
       return main.saveListScrollPosition(id, position)
+    },
+    async addFolderMusics(listId, filePaths, onEnd) {
+      const proxyCallback = createProxyCallback((errorMessage?: string | null) => {
+        proxyCallback.releaseProxy()
+        onEnd(errorMessage)
+      })
+      return main.addFolderMusics(listId, filePaths, proxyCallback)
+    },
+    async cancelAddFolderMusics(taskId) {
+      return main.cancelAddFolderMusics(taskId)
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

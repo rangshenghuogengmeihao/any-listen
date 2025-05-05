@@ -33,6 +33,13 @@ export const saveListScrollPosition: AnyListen.IPC.ServerIPC['saveListScrollPosi
   return ipc.saveListScrollPosition(id, position)
 }
 
+export const addFolderMusics: AnyListen.IPC.ServerIPC['addFolderMusics'] = async (listId, filePaths, onEnd) => {
+  return ipc.addFolderMusics(listId, filePaths, onEnd)
+}
+export const cancelAddFolderMusics: AnyListen.IPC.ServerIPC['cancelAddFolderMusics'] = async (taskId) => {
+  return ipc.cancelAddFolderMusics(taskId)
+}
+
 // export const importLocalFile: AnyListen.IPC.ServerIPC['importLocalFile'] = async(listId) => {
 //   return ipc.importLocalFile(listId)
 // }

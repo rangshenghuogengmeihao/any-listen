@@ -12,19 +12,19 @@ import { IPC_NAMES } from '@/shared/ipc/names'
 // import { sendEvent } from '../main'
 // import { registerDislikeWinRendererEvents } from '@/modules/dislikeList'
 // import { registerMusicWinRendererEvents } from '@/modules/musicList'
-import { createExposeApp } from './app'
-import { createExposePlayer } from './player'
-import { createExposeData } from './data'
-import { createExposeHotkey } from './hotKey'
-import { createExposeList } from './list'
-import { createExposeMusic } from './music'
-import { createExposeDislike } from './dislike'
-import { createExposeTheme } from './theme'
-import { createExposeExtension } from './extension'
-import { createExposeSoundEffect } from './soundEffect'
 import { onDislikeAction } from '@any-listen/app/modules/dislikeList'
 import { onMusicListAction } from '@any-listen/app/modules/musicList'
 import { onPlayHistoryListAction, onPlayListAction } from '@any-listen/app/modules/player'
+import { createExposeApp } from './app'
+import { createExposeData } from './data'
+import { createExposeDislike } from './dislike'
+import { createExposeExtension } from './extension'
+import { createExposeHotkey } from './hotKey'
+import { createExposeList } from './list'
+import { createExposeMusic } from './music'
+import { createExposePlayer } from './player'
+import { createExposeSoundEffect } from './soundEffect'
+import { createExposeTheme } from './theme'
 
 export type ExposeFunctions = Omit<
   AnyListen.IPC.ServerIPCActions<Electron.IpcRendererEvent>,
@@ -33,7 +33,7 @@ export type ExposeFunctions = Omit<
 
 let isInitialized = false
 let ipc: AnyListen.IPC.ClientIPC
-export const init = (sendEvent: (name: string, ...args: unknown[]) => void) => {
+export const init = (sendEvent: (channelName: string, data: unknown) => void) => {
   if (isInitialized) return
   isInitialized = true
 

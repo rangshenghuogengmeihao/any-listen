@@ -53,7 +53,8 @@
     "build:desktop:dir": "ts-node pack-desktop.ts && pnpm -F desktop pack:dir",
     "build:desktop": "ts-node pack-desktop.ts && pnpm -F desktop pack:win:setup:x64",
     "build:web": "ts-node pack-web.ts",
-    "build": "ts-node pack.ts"
+    "build": "ts-node pack.ts",
+    "postinstall": "ts-node ./postinstall.ts"
   },
   "devDependencies": {
     "@any-listen/common": "workspace:@shared/common@*",
@@ -71,6 +72,6 @@
     "spinnies": "github:lyswhut/spinnies.git#233305c58694aa3b053e3ab9af9049993f918b9d",
     "tree-kill": "^1.2.2",
     "ts-node": "^10.9.2",
-    "vite": "^6.2.6"
+    "vite": "^6.3.4"
   }
 }

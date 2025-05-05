@@ -1,5 +1,6 @@
 import type { IPCSocket } from '@/preload/ws'
 import { ipcPreloadEvent } from '@any-listen/app/modules/ipcPreloadEvent'
+import { createProxyCallback } from 'message2call'
 import type { ExposeFunctions } from '.'
 
 // 暴露给后端的方法
@@ -40,6 +41,16 @@ export const createClientList = (ipcSocket: IPCSocket) => {
     },
     async saveListScrollPosition(id, position) {
       return ipcSocket.remoteQueueList.saveListScrollPosition(id, position)
+    },
+    async addFolderMusics(listId, filePaths, onEnd) {
+      const proxyCallback = createProxyCallback((errorMessage?: string | null) => {
+        proxyCallback.releaseProxy()
+        onEnd(errorMessage)
+      })
+      return ipcSocket.remoteQueueList.addFolderMusics(listId, filePaths, proxyCallback)
+    },
+    async cancelAddFolderMusics(taskId) {
+      return ipcSocket.remoteQueueList.cancelAddFolderMusics(taskId)
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

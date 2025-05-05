@@ -1,10 +1,12 @@
 <script lang="ts">
-  import { tick } from 'svelte'
+  import { onMount, tick } from 'svelte'
   import { t } from '@/plugins/i18n'
   import Menu, { type MenuItem, type MenuList } from '@/components/base/Menu.svelte'
   import { LIST_IDS } from '@any-listen/common/constants'
-  import { importLocalFile, removeUserList } from './action'
+  import { importLocalFile, importLocalFileFolder, removeUserList } from './action'
   import { showListEditModal } from '@/components/apis/listEditModal'
+  import { musicLibraryEvent } from '@/modules/musicLibrary/store/event'
+
   let {
     onhide,
   }: {
@@ -17,6 +19,7 @@
     | 'sort'
     | 'duplicate'
     | 'local_file'
+    | 'local_file_folder'
     | 'update'
     | 'sourceDetail'
     | 'import'
@@ -26,6 +29,7 @@
   let menuLocation = $state.raw({ x: 0, y: 0 })
   let menus = $state.raw<MenuList<MenuType>>([])
   let info: AnyListen.List.MyListInfo | null
+  let fetching = false
 
   const setMenu = () => {
     if (!info) {
@@ -52,8 +56,9 @@
     menus = [
       { action: 'create', label: $t('user_list_menu__create') },
       { action: 'edit', disabled: !edit, label: $t('user_list_menu__edit') },
-      { action: 'local_file', label: $t('user_list_menu__select_local_file') },
-      { action: 'update', disabled: !update, label: $t('user_list_menu__sync') },
+      { action: 'local_file', disabled: fetching, label: $t('user_list_menu__select_local_file') },
+      { action: 'local_file_folder', disabled: fetching, label: $t('user_list_menu__select_local_file_folder') },
+      { action: 'update', disabled: !update || fetching, label: $t('user_list_menu__sync') },
       // null,
       // { action: 'sort', label: $t('user_list_menu__sort_list') },
       // { action: 'duplicate', label: $t('user_list_menu__duplicate') },
@@ -61,7 +66,7 @@
       // { action: 'import', label: $t('user_list_menu__import') },
       // { action: 'export', label: $t('user_list_menu__export') },
       null,
-      { action: 'remove', disabled: !remove, label: $t('user_list_menu__remove') },
+      { action: 'remove', disabled: !remove || fetching, label: $t('user_list_menu__remove') },
     ]
   }
 
@@ -84,6 +89,9 @@
       case 'local_file':
         void importLocalFile(info!)
         break
+      case 'local_file_folder':
+        void importLocalFileFolder(info!)
+        break
       case 'remove':
         void removeUserList(info!.id)
         break
@@ -93,6 +101,18 @@
     }
     menuVisible = false
   }
+
+  onMount(() => {
+    const unsub = musicLibraryEvent.on('fetchingListStatusUpdated', (_id, status) => {
+      if (info?.id != _id) return
+      fetching = status
+      setMenu()
+    })
+
+    return () => {
+      unsub()
+    }
+  })
 </script>
 
 <Menu bind:visible={menuVisible} {menus} location={menuLocation} onclick={handleClick} {onhide} />

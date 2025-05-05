@@ -1,7 +1,8 @@
+import { LIST_IDS } from '@any-listen/common/constants'
 import { throttle } from '@any-listen/common/utils'
 import type { DBSeriveTypes } from '../worker/utils'
 import { initMusicListEvent, musicListEvent } from './event'
-import { LIST_IDS } from '@any-listen/common/constants'
+import { scanFolderMusics } from './scanMusics'
 
 let dbService: DBSeriveTypes
 let scrollInfo: Map<string, number>
@@ -83,6 +84,57 @@ export const onMusicListAction = (listAction: (action: AnyListen.IPCList.ActionL
   return () => {
     musicListEvent.off('listAction', listAction)
   }
+}
+
+const handleAddMusics = async (
+  filePaths: string[],
+  createLocalMusicInfos: (filePaths: string[]) => Promise<AnyListen.Music.MusicInfoLocal[]>,
+  addListMusics: (musicInfos: AnyListen.Music.MusicInfoLocal[]) => Promise<void>,
+  index = -1
+) => {
+  // console.log(index + 1, index + 201)
+  const paths = filePaths.slice(index + 1, index + 201)
+  const musicInfos = await createLocalMusicInfos(paths)
+  let failedCount = paths.length - musicInfos.length
+  if (musicInfos.length) await addListMusics(musicInfos)
+  index += 200
+  if (filePaths.length - 1 > index) {
+    failedCount += await handleAddMusics(filePaths, createLocalMusicInfos, addListMusics, index)
+  }
+  return failedCount
+}
+
+const addFolderMusicTasks = new Map<string, () => void>()
+export const addFolderMusics = async (
+  listId: string,
+  filePaths: string[],
+  onEnd: (errorMessage?: string | null) => void,
+  createLocalMusicInfos: (filePaths: string[]) => Promise<AnyListen.Music.MusicInfoLocal[]>,
+  addListMusics: (musicInfos: AnyListen.Music.MusicInfoLocal[]) => Promise<void>
+) => {
+  addFolderMusicTasks.set(
+    listId,
+    scanFolderMusics(
+      filePaths,
+      async (paths) => {
+        await handleAddMusics(paths, createLocalMusicInfos, addListMusics)
+      },
+      (canceled) => {
+        addFolderMusicTasks.delete(listId)
+        if (canceled) onEnd(null)
+        else onEnd()
+      }
+    )
+  )
+  return listId
+}
+export const cancelAddFolderMusics = async (taskId: string) => {
+  const cancel = addFolderMusicTasks.get(taskId)
+  if (!cancel) return
+  cancel()
+}
+export const getScanTaksIds = async () => {
+  return Array.from(addFolderMusicTasks.keys())
 }
 
 export { musicListEvent }

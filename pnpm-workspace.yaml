@@ -7,3 +7,17 @@ packages:
   # - 'components/**'
   # exclude packages that are inside test directories
   - '!**/test/**'
+
+overrides:
+  'depd': 'latest'
+  'node-abi': 'latest'
+  'json5': 'latest'
+  'semver': 'latest'
+  'minimatch': 'latest'
+  'micromatch': 'latest'
+  'ws>bufferutil': '-'
+  'ws>utf-8-validate': '-'
+
+# https://github.com/pnpm/pnpm/issues/8378
+publicHoistPattern:
+  - '*eslint*'

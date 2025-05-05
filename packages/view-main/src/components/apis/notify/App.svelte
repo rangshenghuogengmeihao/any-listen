@@ -73,7 +73,7 @@
     left: 50%;
     transform: translateX(-50%);
     bottom: @height-player + 20px;
-    z-index: 9;
+    z-index: 200;
     width: 100%;
     max-width: 80%;
     // pointer-events: none;

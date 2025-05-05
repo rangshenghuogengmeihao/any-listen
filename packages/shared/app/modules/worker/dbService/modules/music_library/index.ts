@@ -23,7 +23,7 @@ import {
 } from './dbHelper'
 import type { MusicInfo, MusicInfoOrder, UserListInfo } from './statements'
 
-let defaultList: AnyListen.List.MyDefaultListInfo
+let defaultList: AnyListen.List.MyDefaultListInfo | undefined
 let loveList: AnyListen.List.MyLoveListInfo
 let lastPlayList: AnyListen.List.MyLastPlayListInfo
 let userLists: AnyListen.List.UserListInfo[] = []
@@ -58,6 +58,7 @@ const toDBMusicInfo = (musicInfos: AnyListen.Music.MusicInfo[], listId: string, 
 }
 
 const parseList = <T extends AnyListen.List.UserListInfo>(list: UserListInfo) => {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const { position, parent_id, ...newList } = list
   const listInfo = {
     ...newList,
@@ -175,7 +176,7 @@ export const getAllUserLists = (): AnyListen.List.MyAllList => {
   initListInfo()
 
   return {
-    defaultList,
+    defaultList: defaultList!,
     loveList,
     lastPlayList,
     userList: userLists,
@@ -370,6 +371,9 @@ export const musicsAdd = (
   musicInfos: AnyListen.Music.MusicInfo[],
   addMusicLocationType: AnyListen.AddMusicLocationType
 ) => {
+  if (![LIST_IDS.DEFAULT, LIST_IDS.LOVE, LIST_IDS.LAST_PLAYED, ...userLists.map((l) => l.id)].includes(listId)) {
+    throw new Error(`listId ${listId} not found`)
+  }
   let targetList = getListMusics(listId)
 
   const set = new Set<string>()

@@ -1,0 +1,41 @@
+name: Development
+
+on:
+  push:
+    branches:
+      - dev3
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 设置变量（小写镜像名 & 大写 TAR 文件名）
+      - name: Set image name variables
+        run: |
+          SHORT_SHA=$(git rev-parse --short=7 HEAD)
+          echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_ENV
+          echo "IMAGE_NAME=any_listen_$SHORT_SHA" >> $GITHUB_ENV
+          echo "TAR_NAME=Any_listen_$SHORT_SHA.tar" >> $GITHUB_ENV
+      # 构建 Docker 镜像（小写镜像名）
+      - name: Build Docker Image
+        run: |
+          docker build -t $IMAGE_NAME .
+      # 保存 Docker 镜像为 TAR 文件（保留大写文件名）
+      - name: Save Docker Image as TAR
+        run: |
+          docker save -o $TAR_NAME $IMAGE_NAME
+      # 上传 TAR 文件到 GitHub Releases
+      - name: Create Release and Upload Asset
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.SHORT_SHA }}
+          name: Release for commit ${{ env.SHORT_SHA }}
+          files: ${{ env.TAR_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

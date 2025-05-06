@@ -55,7 +55,7 @@
         time: versionInfo.val.newVersion.time,
       })
       arrUnshift(history, versionInfo.val.newVersion.beta)
-      latest = { ...versionInfo.val.newVersion.beta[0] }
+      latest = history.shift()!
     }
     let arr: AnyListen.VersionInfo[] = []
     let currentVer = versionInfo.val.version

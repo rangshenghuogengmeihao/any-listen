@@ -1,12 +1,14 @@
 <script lang="ts">
   import { showUpdateModal } from '@/components/apis/updateModal'
   import Btn from '@/components/base/Btn.svelte'
+  import { useSettingValue } from '@/modules/setting/reactive.svelte'
   import { useDownloadProgress, useVersionInfo } from '@/modules/version/reactive.svelte'
   import { t } from '@/plugins/i18n'
   import { dateFormat, sizeFormate } from '@/shared'
   import { openDevTools } from '@/shared/ipc/app'
   let versionInfo = useVersionInfo()
   let progress = useDownloadProgress()
+  const allowPreRelease = useSettingValue('common.allowPreRelease')
 
   let lastClickTime = 0
   let clickNum = 0
@@ -34,14 +36,27 @@
         : $t('settings__update_init')
       : ''
   )
+
+  const latestVersion = $derived(
+    versionInfo.val.newVersion?.beta && allowPreRelease.val
+      ? versionInfo.val.newVersion.beta[0].version
+      : versionInfo.val.newVersion?.version
+  )
 </script>
 
 <div class="update-content">
   <div class="gap-top">
     {#if import.meta.env.VITE_IS_DESKTOP}
-      <div class="p small" role="presentation" onclick={handleOpenDevTools}>
-        {$t('settings__update_current_label')}{versionInfo.val.version}
-      </div>
+      {#if import.meta.env.VITE_IS_DESKTOP}
+        <div class="p small" role="presentation" onclick={handleOpenDevTools}>
+          {$t('settings__update_current_label')}{versionInfo.val.version}
+        </div>
+      {/if}
+      {#if import.meta.env.VITE_IS_WEB}
+        <div class="p small">
+          {$t('settings__update_current_label')}{versionInfo.val.version}
+        </div>
+      {/if}
     {/if}
     {#if import.meta.env.VITE_IS_WEB}
       <div class="p small">
@@ -56,8 +71,8 @@
     {/if}
   </div>
   <div class="p small gap-top">
-    {$t('settings__update_latest_label')}{versionInfo.val.newVersion && versionInfo.val.newVersion.version != '0.0.0'
-      ? versionInfo.val.newVersion.version
+    {$t('settings__update_latest_label')}{versionInfo.val.newVersion && latestVersion != '0.0.0'
+      ? latestVersion
       : $t('settings__update_unknown')}
   </div>
   {#if downloadProgress}

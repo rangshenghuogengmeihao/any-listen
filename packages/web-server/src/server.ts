@@ -8,7 +8,7 @@ import router from './modules'
 export const createServerApp = (config: AnyListen.Config) => {
   const app = new Koa()
 
-  app.use(reqInit)
+  app.use(reqInit())
 
   // http 日志
   if (config.httpLog) app.use(logHttp)

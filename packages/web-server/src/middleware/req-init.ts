@@ -1,6 +1,9 @@
-export default async (ctx: AnyListen.RequestContext, next: AnyListen.Next): Promise<unknown> => {
-  // TODO proxy.header
-  ctx.userIp = (ctx.headers['x-real-ip'] as string | undefined) ?? ctx.ip
-  ctx.now = Date.now()
-  return next()
+export default () => {
+  const proxyHeaderKey = global.anylisten.config['proxy.enabled'] && global.anylisten.config['proxy.header']
+
+  return async (ctx: AnyListen.RequestContext, next: AnyListen.Next): Promise<unknown> => {
+    ctx.userIp = (proxyHeaderKey && (ctx.headers[proxyHeaderKey] as string | undefined)) || ctx.ip
+    ctx.now = Date.now()
+    return next()
+  }
 }

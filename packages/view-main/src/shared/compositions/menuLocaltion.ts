@@ -102,7 +102,9 @@ export const menuLocaltion: Action<HTMLElement, { visible: boolean; location: Po
         if (show) {
           if (dom.style.transitionProperty != transition2) dom.style.transitionProperty = transition2
           dom.style.transform = `scale(1) translate(${getOffsetXY(dom, location.x, location.y)})`
-          dom.focus()
+          setTimeout(() => {
+            dom.focus()
+          }, 300)
         }
       }
     },

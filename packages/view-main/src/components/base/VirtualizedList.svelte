@@ -203,7 +203,10 @@
     }, 50)
   }
   $effect(() => {
-    domScrollContainer.addEventListener('scroll', onScroll, false)
+    domScrollContainer.addEventListener('scroll', onScroll, {
+      capture: false,
+      passive: true,
+    })
     cachedList = Array(list.length)
     startIndex = -1
     endIndex = -1

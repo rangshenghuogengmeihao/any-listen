@@ -1,18 +1,19 @@
+import { showMessageBox } from '@/components/apis/dialog/messageBox'
+import { showNotifyBox } from '@/components/apis/notify'
 import { createUnsubscriptionSet } from '@/shared'
-import { settingEvent } from '../setting/store/event'
-import { onRelease } from './shared'
-import { setWorkerInitPromise } from './store/action'
-import { appEvent } from './store/event'
 import {
+  messageBoxConfirm,
   onShowInputBox,
   onShowMessageBox,
   onShowOpenBox,
   onShowSaveBox,
-  messageBoxConfirm,
   sendInitedEvent,
 } from '@/shared/ipc/app'
-import { showMessageBox } from '@/components/apis/dialog/messageBox'
-import { showNotifyBox } from '@/components/apis/notify'
+import { keyboardEvent } from '../hotkey/keyboard'
+import { settingEvent } from '../setting/store/event'
+import { onRelease } from './shared'
+import { setWorkerInitPromise } from './store/action'
+import { appEvent } from './store/event'
 
 let unregistereds = createUnsubscriptionSet()
 export const initApp = () => {
@@ -72,6 +73,9 @@ export const initApp = () => {
   })
   window.addEventListener('blur', () => {
     appEvent.blur()
+  })
+  keyboardEvent.on('mod+a_down', (evt) => {
+    evt.event?.preventDefault()
   })
   if (import.meta.env.VITE_IS_WEB) {
     onRelease(() => {

@@ -1,6 +1,6 @@
 <script lang="ts" module>
-  export type MenuItem<T extends string = string> = Readonly<{ action: T; label: string; disabled?: boolean }>
-  export type MenuList<T extends string = string> = Readonly<Array<MenuItem<T> | null>>
+  export type MenuItem<T extends string> = Readonly<{ action: T; label: string; disabled?: boolean }>
+  export type MenuList<T extends string> = Readonly<Array<MenuItem<T> | null>>
   export interface Position {
     x: number
     y: number

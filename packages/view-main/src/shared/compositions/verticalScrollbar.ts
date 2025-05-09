@@ -73,7 +73,9 @@ export const verticalScrollbar: Action<
   }
 
   // 处理内容滚动时同步滚动条滑块
-  dom.addEventListener('scroll', updateThumbPosition)
+  dom.addEventListener('scroll', updateThumbPosition, {
+    passive: true,
+  })
   let unsub = onDomSizeChanged(dom, updateScrollbar)
   let unsub2 = onDomScrollSizeChanged(dom, updateScrollbar)
 

@@ -1,5 +1,5 @@
 import { URL_SCHEME_RXP } from '@any-listen/common/constants'
-import { app, nativeTheme, screen, shell } from 'electron'
+import { app, nativeTheme, screen, shell, webContents } from 'electron'
 import { existsSync, mkdirSync } from 'node:fs'
 import path from 'node:path'
 import { appEvent } from './event'
@@ -8,8 +8,9 @@ import { appState } from './state'
 import { parseEnvParams } from '@any-listen/nodejs/env'
 import { isMac } from '@any-listen/nodejs/index'
 
+import { buildElectronProxyConfig } from '@/shared/electron'
 import { log } from '@/shared/log'
-import { setProxy } from '@/shared/request'
+import { setProxyByHost } from '@/shared/request'
 import { startCheckUpdateTimeout, update } from '@/shared/update'
 import { version } from '../../package.json'
 import { setSkipTrayQuit } from './actions'
@@ -114,6 +115,11 @@ export const registerDeeplink = () => {
 }
 
 export const listenerElectronEvent = () => {
+  app.on('session-created', (session) => {
+    console.log('session-created')
+    const proxy = buildElectronProxyConfig(appState.proxy.host, appState.proxy.port)
+    void session.setProxy(proxy)
+  })
   app.on('web-contents-created', (event, contents) => {
     contents.on('will-navigate', (event, navigationUrl) => {
       if (import.meta.env.DEV) {
@@ -197,9 +203,9 @@ const listenerAppEvent = () => {
       host = ''
       port = ''
     }
+    if (appState.proxy.host == host && appState.proxy.port == port) return
     appState.proxy.host = host
     appState.proxy.port = port
-    setProxy(host ? `${host}:${port}` : undefined)
     appEvent.proxy_changed(host, port)
   }
   appEvent.on('updated_config', (keys, setting) => {
@@ -211,7 +217,18 @@ const listenerAppEvent = () => {
     }
   })
   appEvent.on('inited', () => {
+    app.setProxy(buildElectronProxyConfig(appState.proxy.host, appState.proxy.port))
+    handleProxyChange()
     void startCheckUpdateTimeout()
+  })
+  appEvent.on('proxy_changed', (host, port) => {
+    setProxyByHost(host, port)
+    const proxy = buildElectronProxyConfig(host, port)
+    app.setProxy(proxy)
+    for (const wc of webContents.getAllWebContents()) {
+      void wc.session.setProxy(proxy)
+    }
+    console.log(proxy)
   })
   update.on('checking_for_update', () => {
     appState.version.status = 'checking'
@@ -248,7 +265,6 @@ const listenerAppEvent = () => {
   update.on('ignore_version', (version) => {
     appState.version.ignoreVersion = version
   })
-  if (appState.appSetting['network.proxy.enable'] && appState.appSetting['network.proxy.host']) handleProxyChange()
 }
 
 export const initAppEnv = async () => {
@@ -259,7 +275,7 @@ export const initAppEnv = async () => {
   registerDeeplink()
   listenerElectronEvent()
   appState.appSetting = (await getAppSetting()).setting
-  if (appState.envParams.cmdParams.dt == null) appState.envParams.cmdParams.dt = !appState.appSetting['common.transparentWindow']
+  appState.envParams.cmdParams.dt ??= !appState.appSetting['common.transparentWindow']
 
   listenerAppEvent()
 }

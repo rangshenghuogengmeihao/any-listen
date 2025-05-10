@@ -5,7 +5,6 @@ import {
   isExistWindow,
   isShowWindow,
   minimize,
-  setProxy,
   setWindowBounds,
   showWindow,
   toggleHide,
@@ -63,9 +62,6 @@ export const initWinMain = () => {
     } else {
       createWindow()
     }
-  })
-  appEvent.on('proxy_changed', (host, port) => {
-    setProxy(host, port)
   })
   themeEvent.on('theme_change', (theme) => {
     void rendererIPC.themeChanged(theme)

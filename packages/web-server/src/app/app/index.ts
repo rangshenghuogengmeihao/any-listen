@@ -1,4 +1,4 @@
-import { setProxy } from '@/app/shared/request'
+import { setProxyByHost } from '@/app/shared/request'
 import { startCheckUpdateTimeout, update } from '@/app/shared/update'
 import { socketEvent } from '@/modules/ipc/event'
 import { appLog } from '@/shared/log4js'
@@ -28,6 +28,7 @@ const setUserDataPath = async () => {
   await removePath(appState.tempDataPath).catch(() => {})
   checkAndCreateDir(appState.tempDataPath)
 }
+
 const listenerAppEvent = () => {
   const handleProxyChange = () => {
     let host: string
@@ -43,9 +44,9 @@ const listenerAppEvent = () => {
       host = ''
       port = ''
     }
+    if (appState.proxy.host == host && appState.proxy.port == port) return
     appState.proxy.host = host
     appState.proxy.port = port
-    setProxy(host ? `${host}:${port}` : undefined)
     appEvent.proxy_changed(host, port)
   }
   appEvent.on('updated_config', (keys, setting) => {
@@ -57,9 +58,12 @@ const listenerAppEvent = () => {
     }
   })
   appEvent.on('inited', () => {
+    handleProxyChange()
     void startCheckUpdateTimeout()
   })
-  if (appState.appSetting['network.proxy.enable'] && appState.appSetting['network.proxy.host']) handleProxyChange()
+  appEvent.on('proxy_changed', (host, port) => {
+    setProxyByHost(host, port)
+  })
   socketEvent.on('new_socket_inited', (socket) => {
     setImmediate(() => {
       appEvent.clientConnected(socket)

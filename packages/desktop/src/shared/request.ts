@@ -11,6 +11,6 @@
 //   cancelRequest: '取消http请求',
 // } as const
 
-export { request, setProxy } from '@any-listen/nodejs/request'
+export { request, setProxy, setProxyByHost } from '@any-listen/nodejs/request'
 
 export type { Options } from '@any-listen/nodejs/request'

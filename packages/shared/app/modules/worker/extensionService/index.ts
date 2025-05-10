@@ -1,3 +1,4 @@
+import { setProxyByHost } from '@any-listen/nodejs/request'
 import { exposeWorker } from '../utils/worker'
 import { registerErrorHandler } from './errorHandler'
 import { extensionEvent } from './event'
@@ -54,6 +55,8 @@ const extension = {
     extensionState.tempDir = state.tempDir
     extensionState.preloadScript = state.preloadScript
     extensionState.onlineExtensionHost = state.onlineExtensionHost
+
+    setProxyByHost(state['proxy.host'], state['proxy.port'])
   },
   async updateLocale(locale: AnyListen.Locale) {
     extensionState.locale = locale
@@ -65,6 +68,7 @@ const extension = {
   updateProxy(host: string, port: string) {
     extensionState.proxy.host = host
     extensionState.proxy.port = port
+    setProxyByHost(host, port)
   },
   updateOnlineExtensionListHost(host: string) {
     extensionState.onlineExtensionHost = host

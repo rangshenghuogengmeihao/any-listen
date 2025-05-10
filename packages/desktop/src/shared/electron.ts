@@ -1,4 +1,4 @@
-import { shell, clipboard, app } from 'electron'
+import { app, clipboard, shell } from 'electron'
 
 /**
  * 在资源管理器中打开目录
@@ -41,4 +41,15 @@ export const encodePath = (path: string): string => {
 
 export const exitApp = (code = 0) => {
   app.exit(code)
+}
+
+export const buildElectronProxyConfig = (host: string, port: string): Electron.ProxyConfig => {
+  return host
+    ? {
+        mode: 'fixed_servers',
+        proxyRules: `http://${host}:${port}`,
+      }
+    : {
+        mode: 'direct',
+      }
 }

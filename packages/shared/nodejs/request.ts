@@ -55,6 +55,9 @@ export const setProxy = (url?: string) => {
   proxyAgent = url ? new ProxyAgent(url) : null
   setGlobalDispatcher(buildDispatcher(redirectDispatcher))
 }
+export const setProxyByHost = (host?: string, port?: string) => {
+  setProxy(host ? `http://${host}:${port}` : undefined)
+}
 const CONTENT_TYPE = {
   json: 'application/json',
   form: 'application/x-www-form-urlencoded',

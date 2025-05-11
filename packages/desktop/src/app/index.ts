@@ -116,7 +116,6 @@ export const registerDeeplink = () => {
 
 export const listenerElectronEvent = () => {
   app.on('session-created', (session) => {
-    console.log('session-created')
     const proxy = buildElectronProxyConfig(appState.proxy.host, appState.proxy.port)
     void session.setProxy(proxy)
   })

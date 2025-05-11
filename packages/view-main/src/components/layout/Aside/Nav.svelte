@@ -46,7 +46,7 @@
       {
         to: lastPlayedUrl,
         name: $t('list_name__last_play'),
-        icon: '#icon-love',
+        icon: '#icon-memories',
         iconSize: '0 0 444.87 391.18',
         enable: true,
       },
@@ -61,14 +61,14 @@
       {
         to: '/settings',
         name: $t('setting'),
-        icon: '#icon-setting',
+        icon: '#icon-settings',
         iconSize: '0 0 493.23 436.47',
         enable: true,
       },
       {
         to: '/extenstion',
         name: $t('extenstion'),
-        icon: '#icon-extenstion',
+        icon: '#icon-puzzle',
         iconSize: '0 0 493.23 436.47',
         enable: true,
       },
@@ -101,11 +101,11 @@
         use:link
       >
         <!-- <a class="link" class:active={activePath == item.to} role="tab" href={item.to} aria-label={item.name}> -->
-        <!-- <div class="icon">
+        <div class="icon">
           <svg viewBox={item.iconSize}>
             <use xlink:href={item.icon} />
           </svg>
-        </div> -->
+        </div>
         <span class="navName">{item.name}</span>
       </a>
     </li>
@@ -124,7 +124,7 @@
   }
   .link {
     text-decoration: none;
-    padding: 10px 15px;
+    padding: 10px 15px 10px 5px;
     transition: @transition-fast;
     transition-property: background-color, opacity;
     color: var(--color-primary-font);
@@ -132,6 +132,7 @@
     // font-size: 12px;
     outline: none;
     display: flex;
+    align-items: center;
     border-radius: @radius-border;
     .mixin-ellipsis-1();
 
@@ -155,17 +156,17 @@
     }
   }
 
-  // .icon {
-  //   // margin-bottom: 5px;
-  //   margin-right: 5px;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-  //   height: 15px;
-  //   &> svg {
-  //     height: 15px;
-  //   }
-  // }
+  .icon {
+    // margin-bottom: 5px;
+    margin-right: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+    & > svg {
+      height: 20px;
+    }
+  }
   .navName {
     line-height: 1.2;
     font-size: 13px;

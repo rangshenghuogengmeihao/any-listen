@@ -11,6 +11,7 @@
   // import { sortable } from '@/shared/compositions/sortable'
   // console.log(params)
   const listItemHeight = useListItemHeight(3.2)
+  // const picStyle = $derived(`height:${listItemHeight.val * 0.64}px; width:${listItemHeight.val * 0.64}px;`)
   const picStyle = $derived(`height:${listItemHeight.val * 0.5}px;`)
 
   let menu: ComponentExports<typeof Menu>

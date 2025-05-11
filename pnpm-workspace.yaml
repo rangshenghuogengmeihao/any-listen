@@ -9,6 +9,7 @@ packages:
   - '!**/test/**'
 
 overrides:
+  '@types/ws': '8.5.4'
   'depd': 'latest'
   'node-abi': 'latest'
   'json5': 'latest'

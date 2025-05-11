@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0-beta.2",
+  "version": "0.2.0-beta.3",
   "name": "web-server",
   "main": "build-config/vite.config.ts",
   "scripts": {
@@ -17,7 +17,7 @@
     "@any-listen/theme": "workspace:@shared/theme@*",
     "@any-listen/web": "workspace:@shared/web@*",
     "@koa/cors": "^5.0.0",
-    "better-sqlite3": "^11.9.1",
+    "better-sqlite3": "^11.10.0",
     "jsonwebtoken": "^9.0.2",
     "koa": "^3.0.0",
     "koa-router": "^13.0.1",
@@ -25,7 +25,7 @@
     "lru-cache": "^11.1.0",
     "message2call": "^2.0.3",
     "mime": "^4.0.7",
-    "ws": "^8.18.1"
+    "ws": "^8.18.2"
   },
   "devDependencies": {
     "@any-listen/eslint": "workspace:@shared/eslint@*",
@@ -34,7 +34,7 @@
     "@types/koa": "^2.15.0",
     "@types/koa-router": "^7.4.8",
     "@types/koa__cors": "^5.0.0",
-    "@types/ws": "8.5.4",
-    "vite": "^6.3.4"
+    "@types/ws": "8.18.1",
+    "vite": "^6.3.5"
   }
 }

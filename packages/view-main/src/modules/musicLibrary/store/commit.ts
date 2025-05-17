@@ -336,7 +336,7 @@ export const listMusicRemove = (listId: string, ids: string[]) => {
 }
 
 export const listMusicUpdateInfo = (musicInfos: AnyListen.IPCList.ListActionMusicUpdate) => {
-  const updateListIds = new Set<string>()
+  const updateList = new Map<string, AnyListen.Music.MusicInfo[]>()
   for (const { id, musicInfo } of musicInfos) {
     const targetList = musicLibraryState.allMusicList.get(id)
     if (!targetList) continue
@@ -350,9 +350,15 @@ export const listMusicUpdateInfo = (musicInfos: AnyListen.IPCList.ListActionMusi
       meta: musicInfo.meta,
     })
     targetList.splice(index, 1, info)
-    updateListIds.add(id)
+    let list = updateList.get(id)
+    if (!list) {
+      list = []
+      updateList.set(id, list)
+    }
+    list.push(info)
   }
-  musicLibraryEvent.listMusicChanged(Array.from(updateListIds))
+  musicLibraryEvent.listMusicUpdated(updateList)
+  // musicLibraryEvent.listMusicChanged(Array.from(updateList.keys()))
 }
 
 export const listMusicUpdatePosition = async (listId: string, position: number, ids: string[]) => {

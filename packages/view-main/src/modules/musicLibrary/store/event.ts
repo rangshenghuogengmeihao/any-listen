@@ -28,6 +28,11 @@ class Event extends _Event {
     this.emitEvent('listMusicChanged', ids)
   }
 
+  listMusicUpdated(updateInfo: Map<string, AnyListen.Music.MusicInfo[]>) {
+    if (!updateInfo.size) return
+    this.emitEvent('listMusicUpdated', updateInfo)
+  }
+
   fetchingListStatusUpdated(id: string, val: boolean) {
     this.emitEvent('fetchingListStatusUpdated', id, val)
   }

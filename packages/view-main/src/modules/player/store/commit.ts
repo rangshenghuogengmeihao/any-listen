@@ -134,7 +134,7 @@ export const setProgress = (currentTime: number, totalTime: number) => {
 export const setPlayListMusic = (list: AnyListen.Player.PlayMusicInfo[]) => {
   playerState.playList = list
 
-  const l = { ...playerState.playList }
+  const l = [...playerState.playList]
   playerEvent.playListMusicOverwrited(list)
   playerEvent.playListMusicChanged(l)
   playerEvent.playListChanged(l)
@@ -147,7 +147,7 @@ export const addPlayListMusic = (position: number, list: AnyListen.Player.PlayMu
     arrPushByPosition(playerState.playList, list, position)
   }
 
-  const l = { ...playerState.playList }
+  const l = [...playerState.playList]
   playerEvent.playListMusicAdded(position, list)
   playerEvent.playListMusicChanged(l)
   playerEvent.playListChanged(l)
@@ -156,31 +156,29 @@ export const addPlayListMusic = (position: number, list: AnyListen.Player.PlayMu
 export const removePlayListMusic = (ids: string[]) => {
   playerState.playList = playerState.playList.filter((l) => !ids.includes(l.itemId))
 
-  const l = { ...playerState.playList }
+  const l = [...playerState.playList]
   playerEvent.playListMusicRemoved(ids)
   playerEvent.playListMusicChanged(l)
   playerEvent.playListChanged(l)
 }
 
-export const updatePlayListMusic = (info: AnyListen.Player.PlayMusicInfo) => {
-  const musicMap = new Map<number, AnyListen.Player.PlayMusicInfo>()
-  playerState.playList.forEach((mInfo, index) => {
-    if (mInfo.listId == info.listId && mInfo.musicInfo.id == info.musicInfo.id) {
-      musicMap.set(index, mInfo)
-    }
-  })
-  if (!musicMap.size) return
-  for (const [index, oInfo] of musicMap.entries()) {
+export const updatePlayListMusic = (info: AnyListen.Player.PlayMusicInfo[]) => {
+  const musicMap = new Map<string, AnyListen.Player.PlayMusicInfo>()
+  for (const music of info) musicMap.set(music.itemId, music)
+
+  playerState.playList.forEach((oInfo, index, list) => {
+    const info = musicMap.get(oInfo.itemId)
+    if (!info) return
     oInfo.musicInfo.name = info.musicInfo.name
     oInfo.musicInfo.singer = info.musicInfo.singer
     oInfo.musicInfo.isLocal = info.musicInfo.isLocal
     oInfo.musicInfo.interval = info.musicInfo.interval
     oInfo.musicInfo.meta = info.musicInfo.meta
     oInfo.musicInfo = { ...oInfo.musicInfo }
-    playerState.playList.splice(index, 1, { ...oInfo })
-  }
+    list.splice(index, 1, { ...oInfo })
+  })
 
-  playerEvent.playListChanged({ ...playerState.playList })
+  playerEvent.playListChanged([...playerState.playList])
 }
 
 export const updatePlayListMusicPlayed = (played: boolean, ids: string[]) => {
@@ -192,7 +190,7 @@ export const updatePlayListMusicPlayed = (played: boolean, ids: string[]) => {
     playerState.playList.splice(index, 1, { ...playerState.playList[index], played })
   }
 
-  playerEvent.playListChanged({ ...playerState.playList })
+  playerEvent.playListChanged([...playerState.playList])
 }
 
 export const updatePlayListMusicPlayedAll = (played: boolean) => {
@@ -241,15 +239,16 @@ export const setPlayHistoryList = (list: AnyListen.IPCPlayer.PlayHistoryListItem
   playerEvent.playHistoryListChanged(list)
 }
 export const addPlayHistoryList = (ids: AnyListen.IPCPlayer.PlayHistoryListItem[]) => {
-  arrPush(playerState.playHistoryList, ids)
+  playerState.playHistoryList = arrPush([...playerState.playHistoryList], ids)
   playerEvent.playHistoryListAdded(ids)
-  playerEvent.playHistoryListChanged([...playerState.playHistoryList])
+  playerEvent.playHistoryListChanged(playerState.playHistoryList)
 }
 export const removePlayHistoryList = (idxs: number[]) => {
   idxs.sort((a, b) => b - a)
-  for (const idx of idxs) playerState.playHistoryList.splice(idx, 1)
+  const newList = [...playerState.playHistoryList]
+  for (const idx of idxs) newList.splice(idx, 1)
   playerEvent.playHistoryListRemoved(idxs)
-  playerEvent.playHistoryListChanged([...playerState.playHistoryList])
+  playerEvent.playHistoryListChanged(newList)
 }
 
 export const setVolume = (volume: number) => {

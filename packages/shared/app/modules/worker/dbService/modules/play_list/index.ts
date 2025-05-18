@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { arrPush, arrPushByPosition } from '@any-listen/common/utils'
 import {
   clearList,
@@ -11,7 +12,7 @@ import {
 } from './dbHelper'
 import type { ListMusicInfo, PlayedInfo } from './statements'
 
-let playList: AnyListen.Player.PlayMusicInfo[]
+let playList: AnyListen.Player.PlayMusicInfo[] | null = null
 
 const toDBList = (list: AnyListen.Player.PlayMusicInfo[], offset = 0): ListMusicInfo[] => {
   return list.map((info, index) => {
@@ -58,7 +59,7 @@ const initListInfo = (force = false) => {
  */
 export const getPlayList = (): AnyListen.Player.PlayMusicInfo[] => {
   initListInfo()
-  return playList
+  return playList!
 }
 
 /**
@@ -77,18 +78,18 @@ export const playListOverride = (newList: AnyListen.Player.PlayMusicInfo[]) => {
  */
 export const playListAdd = (position: number, list: AnyListen.Player.PlayMusicInfo[]) => {
   initListInfo()
-  if (position < 0 || position >= playList.length) {
-    const newLists: ListMusicInfo[] = toDBList(list, playList.length)
+  if (position < 0 || position >= playList!.length) {
+    const newLists: ListMusicInfo[] = toDBList(list, playList!.length)
     inertInfo(newLists)
-    playList = arrPush(playList, list)
+    playList = arrPush(playList!, list)
   } else {
-    const newUserLists = toDBList([...playList])
+    const newUserLists = toDBList([...playList!])
     arrPushByPosition(newUserLists, toDBList(list, 0), position)
     newUserLists.forEach((list, index) => {
       list.position = index
     })
     overrideList(newUserLists)
-    arrPushByPosition(playList, list, position)
+    arrPushByPosition(playList!, list, position)
   }
 }
 
@@ -99,20 +100,28 @@ export const playListAdd = (position: number, list: AnyListen.Player.PlayMusicIn
 export const playListRemove = (ids: string[]) => {
   initListInfo()
   deleteInfo(ids)
-  if (playList) playList = playList.filter((l) => !ids.includes(l.itemId))
+  playList = playList!.filter((l) => !ids.includes(l.itemId))
 }
 
 /**
  * 批量更新歌曲信息
  * @param list 信息
  */
-export const playListUpdate = (info: AnyListen.Player.PlayMusicInfo) => {
+export const playListUpdate = (info: AnyListen.Player.PlayMusicInfo[]) => {
   initListInfo()
-  const infos = playList.filter((i) => i.listId == info.listId && i.musicInfo.id == info.musicInfo.id)
+  const musicMap = new Map<string, AnyListen.Player.PlayMusicInfo>()
+  for (const music of info) musicMap.set(music.itemId, music)
+  const updateInfos: AnyListen.Player.PlayMusicInfo[] = []
+  const infos = playList!.filter((i) => {
+    const update = musicMap.has(i.itemId)
+    if (update) updateInfos.push(i)
+    return update
+  })
   if (!infos.length) return
-  const dbList: ListMusicInfo[] = toDBList([info], 0)
+  const dbList: ListMusicInfo[] = toDBList(updateInfos, 0)
   updateInfo(dbList)
   for (const oInfo of infos) {
+    const info = musicMap.get(oInfo.itemId)!
     oInfo.musicInfo.name = info.musicInfo.name
     oInfo.musicInfo.singer = info.musicInfo.singer
     oInfo.musicInfo.isLocal = info.musicInfo.isLocal
@@ -128,9 +137,9 @@ export const playListUpdate = (info: AnyListen.Player.PlayMusicInfo) => {
  */
 export const playListUpdatePlayed = (played: boolean, ids: string[]) => {
   initListInfo()
-  const db_played = Number(played)
-  updatePlayedInfo(ids.map((id) => ({ item_id: id, played: db_played })))
-  for (const info of playList) {
+  const dbPlayed = Number(played)
+  updatePlayedInfo(ids.map((id) => ({ item_id: id, played: dbPlayed })))
+  for (const info of playList!) {
     if (ids.includes(info.itemId)) info.played = played
   }
 }
@@ -142,17 +151,17 @@ export const playListUpdatePlayed = (played: boolean, ids: string[]) => {
  */
 export const playListUpdatePlayedAll = (played: boolean) => {
   initListInfo()
-  const db_played = Number(played)
+  const dbPlayed = Number(played)
   let update = false
   let dbList: PlayedInfo[] = []
-  for (const info of playList) {
+  for (const info of playList!) {
     if (info.played == played) continue
     update ||= true
-    dbList.push({ item_id: info.itemId, played: db_played })
+    dbList.push({ item_id: info.itemId, played: dbPlayed })
   }
   if (!update) return
   updatePlayedInfo(dbList)
-  for (const info of playList) {
+  for (const info of playList!) {
     info.played = played
   }
 }
@@ -164,7 +173,7 @@ export const playListUpdatePlayedAll = (played: boolean) => {
  */
 export const playListUpdatePosition = (position: number, ids: string[]) => {
   initListInfo()
-  const newList = [...playList]
+  const newList = [...playList!]
 
   const updateInfos: AnyListen.Player.PlayMusicInfo[] = []
 
@@ -185,7 +194,7 @@ export const playListUpdatePosition = (position: number, ids: string[]) => {
  * 清空播放列表
  */
 export const playListClear = () => {
-  if (!playList.length) return
+  if (!playList?.length) return
   playList = []
   clearList()
 }

@@ -60,12 +60,23 @@
         })
       })
     }
-    return musicLibraryEvent.on('listMusicChanged', (ids) => {
+    const unsub = musicLibraryEvent.on('listMusicChanged', (ids) => {
       if (!ids.includes(id) || !userListExist(id)) return
       void getListMusics(id).then((_list) => {
         list = [..._list]
       })
     })
+    const unsub2 = musicLibraryEvent.on('listMusicUpdated', (updateInfo) => {
+      if (!updateInfo.has(id) || !userListExist(id)) return
+      void getListMusics(id).then((_list) => {
+        list = [..._list]
+      })
+    })
+
+    return () => {
+      unsub()
+      unsub2()
+    }
   })
 
   $effect(() => {

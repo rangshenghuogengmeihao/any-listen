@@ -15,6 +15,7 @@ import {
   skipNext,
   updatePlayHistoryIndex,
   updatePlayIndex,
+  updatePlayListMusic,
 } from '../store/actions'
 import { playerEvent } from '../store/event'
 import { playerState } from '../store/state'
@@ -34,34 +35,85 @@ const checkLinkedAndApply = () => {
   })
 }
 const changedListIds = new Set<string | null>()
-const throttleListSync = throttle(async () => {
+const throttleListChangeSync = throttle(async () => {
   const targetListId = playerState.playInfo.listId
   if (!targetListId) return
   const isSkip = !changedListIds.has(targetListId)
   changedListIds.clear()
   if (isSkip || !playerState.isLinkedList) return
 
-  const newList = playerState.playList.filter((m) => m.playLater)
+  const musicMap = new Map<string, AnyListen.Player.PlayMusicInfo>()
+  const newList = playerState.playList.filter((m) => {
+    musicMap.set(m.itemId, m)
+    return m.playLater
+  })
   const targetMusicList = await getListMusics(targetListId)
   const newTargetList = targetMusicList.map((m) => {
-    return createPlayMusicInfo({
+    const newInfo = createPlayMusicInfo({
       musicInfo: m,
       listId: targetListId,
       isOnline: playerState.playInfo.isOnline,
       playLater: false,
       linked: true,
     })
+    const info = musicMap.get(newInfo.itemId)
+    if (info) newInfo.played = info.played
+    return newInfo
   })
   arrPush(newList, newTargetList)
-  // TODO music info update
+  // TODO diff update
   console.log('throttleListSync setPlayListMusic')
   await setPlayListMusic({ list: newList, listId: targetListId, isOnline: playerState.playInfo.isOnline, isSync: true })
 }, 500)
-const handleListSync = (listIds: string[]) => {
+const handleListChangeSync = (listIds: string[]) => {
   for (const id of listIds) {
     changedListIds.add(id)
   }
-  throttleListSync()
+  throttleListChangeSync()
+}
+
+let prelistId: string | null = null
+const updatedMusicInfos = new Set<AnyListen.Music.MusicInfo>()
+const throttleListMusicUpdateSync = throttle(async () => {
+  const targetListId = playerState.playInfo.listId
+  if (prelistId != targetListId) {
+    prelistId = targetListId
+    updatedMusicInfos.clear()
+    return
+  }
+  if (!targetListId) {
+    updatedMusicInfos.clear()
+    return
+  }
+
+  const musicMap = new Map<string, AnyListen.Music.MusicInfo>()
+  for (const m of updatedMusicInfos) musicMap.set(m.id, m)
+  updatedMusicInfos.clear()
+  const updatedInfos: AnyListen.Player.PlayMusicInfo[] = []
+  for (const m of playerState.playList) {
+    if (!musicMap.has(m.musicInfo.id)) continue
+    const target = musicMap.get(m.musicInfo.id)!
+    updatedInfos.push({
+      ...m,
+      musicInfo: target,
+    })
+  }
+  if (!updatedInfos.length) return
+  console.log('throttleListSync updatePlayListMusic')
+  await updatePlayListMusic(updatedInfos)
+}, 500)
+const handleListInfoUpdateSync = (updateInfo: Map<string, AnyListen.Music.MusicInfo[]>) => {
+  const targetListId = playerState.playInfo.listId
+  if (!targetListId) return
+  const musics = updateInfo.get(targetListId)
+  if (prelistId != playerState.playInfo.listId) {
+    prelistId = playerState.playInfo.listId
+    updatedMusicInfos.clear()
+  }
+  if (!musics) return
+
+  for (const m of musics) updatedMusicInfos.add(m)
+  throttleListMusicUpdateSync()
 }
 
 const updateDislikeIds = async () => {
@@ -130,8 +182,8 @@ export const initWatchList = () => {
         })
       )
 
-      // TODO music info update
-      unregistered.add(musicLibraryEvent.on('listMusicChanged', handleListSync))
+      unregistered.add(musicLibraryEvent.on('listMusicChanged', handleListChangeSync))
+      unregistered.add(musicLibraryEvent.on('listMusicUpdated', handleListInfoUpdateSync))
 
       unregistered.add(
         onSettingChanged('player.togglePlayMethod', (val) => {

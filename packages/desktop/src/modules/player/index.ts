@@ -3,33 +3,11 @@ import { workers } from '@/worker'
 import { musicListEvent, sendMusicListAction } from '@any-listen/app/modules/musicList'
 import { initPlayer as initPlayerModule, playerEvent } from '@any-listen/app/modules/player'
 import { LIST_IDS } from '@any-listen/common/constants'
-import { throttle } from '@any-listen/common/utils'
-import { getPlayTime, savePlayTime } from './playTimeStore'
-
-let playInfo: AnyListen.Player.SavedPlayInfo
-
-const initPlayInfo = async () => {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (playInfo !== undefined) return
-  const [info, time] = await Promise.all([workers.dbService.queryMetadataPlayInfo(), getPlayTime()])
-  // eslint-disable-next-line require-atomic-updates
-  playInfo = info
-  if (playInfo.index > -1) playInfo.time = time
-}
-
-const savePlayInfoThrottle = throttle(() => {
-  void workers.dbService.saveMetadataPlayInfo(playInfo)
-}, 500)
-
-const savePlayTimeThrottle = throttle(() => {
-  void savePlayTime(playInfo.time)
-}, 500)
+import { getPlayInfo as getPlayInfoRaw, setPlayInfo, setPlayMusic, setPlayTime } from './playInfo'
 
 const registerProgressSave = () => {
   const handler = async (progress: AnyListen.IPCPlayer.Progress) => {
-    await initPlayInfo()
-    playInfo.time = progress.nowPlayTime
-    savePlayTimeThrottle()
+    void setPlayTime(progress.nowPlayTime)
   }
   playerEvent.on('progress', handler)
 
@@ -82,26 +60,17 @@ const updateLatestPlayList = async (info: AnyListen.Player.PlayMusicInfo) => {
     }
   }
 }
+
 const checkCollect = async (minfo: AnyListen.Player.PlayMusicInfo) => {
   return minfo.listId == LIST_IDS.LOVE ? true : workers.dbService.checkListExistMusic(LIST_IDS.LOVE, minfo.musicInfo.id)
 }
-
 export const initPlayer = async () => {
   initPlayerModule(workers.dbService)
   let prevCollectStatus = false
   playerEvent.on('musicChanged', async (index, historyIndex) => {
-    await initPlayInfo()
-    playInfo = {
-      index,
-      time: 0,
-      maxTime: 0,
-      historyIndex,
-    }
-    savePlayInfoThrottle()
-    savePlayTimeThrottle()
-    const targetMusic = await getPlayerMusic()
-    // console.log(targetMusic)
+    void setPlayMusic(index, historyIndex)
 
+    const targetMusic = await getPlayerMusic()
     if (targetMusic) {
       void updateLatestPlayList(targetMusic)
       void checkCollect(targetMusic).then((isCollect) => {
@@ -116,9 +85,7 @@ export const initPlayer = async () => {
     }
   })
   playerEvent.on('playInfoUpdated', (info) => {
-    playInfo.maxTime = info.duration
-    playInfo.index = info.index
-    savePlayInfoThrottle()
+    void setPlayInfo(info.duration, info.index)
   })
   let unregistered: (() => void) | null = null
   if (appState.appSetting['player.isSavePlayTime']) unregistered = registerProgressSave()
@@ -201,16 +168,13 @@ export const initPlayer = async () => {
 // }
 
 export const getPlayInfo = async (): Promise<AnyListen.IPCPlayer.PlayInfo> => {
-  await initPlayInfo()
+  const playInfo = await getPlayInfoRaw()
   const [[list, isCollect], { listId, isOnline }, historyList] = await Promise.all([
     workers.dbService.getPlayList().then(async (list) => {
       const minfo = list[playInfo.index]
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!minfo) return [list, false] as const
-      return [
-        list,
-        minfo.listId == LIST_IDS.LOVE ? true : await workers.dbService.checkListExistMusic(LIST_IDS.LOVE, minfo.musicInfo.id),
-      ] as const
+      return [list, await checkCollect(minfo)] as const
     }),
     workers.dbService.queryMetadataPlayListInfo(),
     workers.dbService.queryMetadataPlayHistoryList(),
@@ -226,7 +190,7 @@ export const getPlayInfo = async (): Promise<AnyListen.IPCPlayer.PlayInfo> => {
 }
 
 export const getPlayerMusic = async (): Promise<AnyListen.Player.PlayMusicInfo | null> => {
-  await initPlayInfo()
+  const playInfo = await getPlayInfoRaw()
   const list = await workers.dbService.getPlayList()
   return list[playInfo.index] ?? null
 }

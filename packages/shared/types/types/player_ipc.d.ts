@@ -21,7 +21,7 @@ declare namespace AnyListen {
       musics: Player.PlayMusicInfo[]
       pos: number
     }
-    type PlayerActionUpdate = Player.PlayMusicInfo
+    type PlayerActionUpdate = Player.PlayMusicInfo[]
     type PlayerActionRemove = string[]
     type PlayerActionPlayed = string[]
     type PlayerActionUnplayed = string[]

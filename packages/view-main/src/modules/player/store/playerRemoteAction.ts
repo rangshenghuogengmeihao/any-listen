@@ -82,7 +82,7 @@ export const getMusicUrl = async (info: AnyListen.IPCMusic.GetMusicUrlInfo): Pro
 }
 
 /**
- * 更新歌曲位置
+ * 覆盖历史播放列表
  * @param data
  */
 export const setPlayHistoryList = async (data: AnyListen.IPCPlayer.PlayHistoryListActionSet) => {
@@ -92,7 +92,7 @@ export const setPlayHistoryList = async (data: AnyListen.IPCPlayer.PlayHistoryLi
 }
 
 /**
- * 更新歌曲位置
+ * 添加历史播放列表
  * @param data
  */
 export const addPlayHistoryList = async (data: AnyListen.IPCPlayer.PlayHistoryListActionAdd) => {
@@ -100,7 +100,7 @@ export const addPlayHistoryList = async (data: AnyListen.IPCPlayer.PlayHistoryLi
 }
 
 /**
- * 更新歌曲位置
+ * 移除历史播放列表
  * @param data
  */
 export const removePlayHistoryList = async (data: AnyListen.IPCPlayer.PlayHistoryListActionRemove) => {

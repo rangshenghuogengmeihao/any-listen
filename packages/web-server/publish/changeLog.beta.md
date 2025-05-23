@@ -1,9 +1,7 @@
-### Fixes
+### Add
 
-- Fixed playlist synchronization issues
-- Fixed issues with updating the played list
+- Add play bar style settings
 
-### 修复
+### 新增
 
-- 修复播放列表同步问题
-- 修复已播放列表更新问题
+- 新增播放栏样式设置

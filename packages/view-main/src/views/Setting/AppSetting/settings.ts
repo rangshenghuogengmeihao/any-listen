@@ -107,6 +107,18 @@ export const settings: SettingListSection[] = [
       //     { value: 'right', name: 'settings__basic_control_btn_position_right' },
       //   ],
       // },
+      // t('settings.basic.play_bar_style_center_btn')
+      {
+        field: 'common.playBarProgressStyle',
+        name: 'settings.basic.play_bar_style',
+        type: 'radio',
+        enum: [
+          { value: 'mini', name: 'settings.basic.play_bar_style_mini' },
+          { value: 'middle', name: 'settings.basic.play_bar_style_middle' },
+          { value: 'full', name: 'settings.basic.play_bar_style_full' },
+          { value: 'center', name: 'settings.basic.play_bar_style_center_btn' },
+        ] satisfies Array<{ value: AnyListen.AppSetting['common.playBarProgressStyle']; name: keyof Message }>,
+      },
     ],
   },
   {

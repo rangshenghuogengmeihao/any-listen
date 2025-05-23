@@ -4,7 +4,7 @@
   import Pic from './components/Pic.svelte'
   import PlayBtns from './components/PlayBtns.svelte'
   import ControlBtns from './components/ControlBtns.svelte'
-  import MiniPlayProgress from './components/MiniPlayProgress.svelte'
+  import MiddlePlayProgress from './components/MiddlePlayProgress.svelte'
   // export let params = {}
 
   // console.log(params)
@@ -17,7 +17,9 @@
   </div>
   <PlayBtns />
   <div class="side right">
-    <MiniPlayProgress />
+    <div class="progress">
+      <MiddlePlayProgress />
+    </div>
     <ControlBtns />
   </div>
 </Container>
@@ -34,6 +36,15 @@
 
   .right {
     justify-content: flex-end;
+    padding-left: 16px;
     margin-left: -10px;
+  }
+
+  .progress {
+    flex: auto;
+    display: flex;
+    :global(> .content) {
+      width: 100%;
+    }
   }
 </style>

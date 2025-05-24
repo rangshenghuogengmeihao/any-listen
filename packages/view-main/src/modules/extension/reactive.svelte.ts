@@ -1,6 +1,6 @@
 import { readable } from 'svelte/store'
-import { extensionState } from './store/state'
 import { extensionEvent } from './store/event'
+import { extensionState, type OnlineListItem } from './store/state'
 
 export const extensionStatus = readable(extensionState.status, (set) => {
   set(extensionState.status)
@@ -36,7 +36,7 @@ export const resourceList = readable(extensionState.resourceList, (set) => {
 })
 
 export const useOnlineExtensionList = () => {
-  let list = $state.raw<AnyListen.Extension.OnlineExtension[]>(extensionState.onlineExtensionList)
+  let list = $state.raw<OnlineListItem[]>(extensionState.onlineExtensionList)
 
   $effect(() => {
     list = extensionState.onlineExtensionList

@@ -4,8 +4,9 @@
   import SvgIcon from '@/components/base/SvgIcon.svelte'
   import { i18n, t } from '@/plugins/i18n'
   import ActionBtnOnline from './ActionBtnOnline.svelte'
+  import type { OnlineListItem } from '@/modules/extension/store/state'
 
-  let { ext }: { ext: AnyListen.Extension.OnlineExtension } = $props()
+  let { ext }: { ext: OnlineListItem } = $props()
   let version = $derived(/^\d/.test(ext.version) ? `v${ext.version}` : ext.version)
   let grants = $derived(ext.grant.map((g) => ({ id: g, icon: `ext_grant_${g}`, label: i18n.t(`extension__grant_${g}`) })))
   console.log(ext)

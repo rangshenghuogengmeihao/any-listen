@@ -1,6 +1,8 @@
+export type OnlineListItem = AnyListen.IPCExtension.OnlineListItem & { installed: boolean; enabled: boolean; latest: boolean }
+
 export interface InitState {
   extensionList: AnyListen.Extension.Extension[]
-  onlineExtensionList: AnyListen.Extension.OnlineExtension[]
+  onlineExtensionList: OnlineListItem[]
   status: 'LOADING' | 'STARTING' | 'IDLE'
   crashMessage: string | null
   resourceList: AnyListen.Extension.ResourceList

@@ -74,7 +74,7 @@ const verifyManifest = async (extensionPath: string, manifest: AnyListen.Extensi
   if (!manifest.main) throw new Error('Main enter not defined')
 
   if (manifest.version != null) manifest.version = String(manifest.version)
-  if (manifest.targetEngine != null) manifest.targetEngine = String(manifest.targetEngine)
+  if (manifest.target_engine != null) manifest.target_engine = String(manifest.target_engine)
   if (manifest.author != null) manifest.author = String(manifest.author)
   if (manifest.homepage != null) manifest.homepage = String(manifest.homepage)
   if (manifest.license != null) manifest.license = String(manifest.license)
@@ -165,7 +165,7 @@ export const parseExtension = async (extensionPath: string): Promise<AnyListen.E
     description: manifest.description,
     icon: manifest.icon,
     version: manifest.version,
-    targetEngine: manifest.targetEngine,
+    target_engine: manifest.target_engine,
     author: manifest.author,
     homepage: manifest.homepage,
     license: manifest.license,

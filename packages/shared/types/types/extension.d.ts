@@ -50,7 +50,7 @@ declare global {
         description: string
         icon: string
         version: string
-        targetEngine: string
+        target_engine: string
         author: string
         homepage: string
         license: string
@@ -103,7 +103,7 @@ declare global {
         description: Manifest['description']
         icon: Manifest['icon']
         version: Manifest['version']
-        targetEngine: Manifest['targetEngine']
+        target_engine: Manifest['target_engine']
         author: Manifest['author']
         homepage: Manifest['homepage']
         license: Manifest['license']

@@ -11,6 +11,7 @@ import {
   setList,
   setResourceList,
 } from './store/actions'
+import { setOnlineExtension } from './store/commit'
 import { extensionEvent } from './store/event'
 import { extensionState } from './store/state'
 
@@ -40,8 +41,9 @@ export const initExtension = () => {
       subscriptions.add(registerRemoteExtensionEvent())
       subscriptions.add(
         extensionEvent.on('listChanged', (isChanged) => {
-          if (isChanged) return
-          setMessages(extensionState.extensionList)
+          if (extensionState.onlineExtensionList.length) setOnlineExtension(extensionState.onlineExtensionList)
+
+          if (isChanged) setMessages(extensionState.extensionList)
         })
       )
     })

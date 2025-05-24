@@ -1,3 +1,4 @@
+import { compareVersions } from '@/shared'
 import { extensionEvent } from './event'
 import { type InitState, extensionState } from './state'
 
@@ -86,7 +87,19 @@ export const setResourceList = (list: AnyListen.Extension.ResourceList) => {
   extensionEvent.resourceListUpdated(list)
 }
 
-export const setOnlineExtension = (list: AnyListen.Extension.OnlineExtension[]) => {
-  extensionState.onlineExtensionList = list
-  extensionEvent.onlineExtensionListUpdated(list)
+export const setOnlineExtension = (list: AnyListen.IPCExtension.OnlineListItem[]) => {
+  const extMap = new Map<string, AnyListen.Extension.Extension>()
+  for (const ext of extensionState.extensionList) extMap.set(ext.id, ext)
+
+  extensionState.onlineExtensionList = list.map((item) => {
+    const target = extMap.get(item.id)
+    if (!target) return { ...item, installed: false, enabled: false, latest: false }
+    return {
+      ...item,
+      enabled: target.enabled,
+      installed: true,
+      latest: compareVersions(target.version, item.version) >= 0,
+    }
+  })
+  extensionEvent.onlineExtensionListUpdated(extensionState.onlineExtensionList)
 }

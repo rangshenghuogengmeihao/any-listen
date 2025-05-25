@@ -724,20 +724,46 @@ declare global {
       buttons?: MessageButton[]
     }
 
-    interface InputDialogOptions {
-      signal?: unknown
+    interface FormItemBase<V> {
+      /** An optional string that represents the title of the form. */
+      title?: string
+      /** The text to display underneath the form. */
+      description?: string
+      /** The value to pre-fill in the form. */
+      value?: V
+    }
+    interface InputOptions extends FormItemBase<string> {
+      type: 'input'
       /** Controls if a password input is shown. Password input hides the typed text. */
       password?: boolean
       /** An optional string to show as placeholder in the input box to guide the user what to type. */
       placeHolder?: string
-      /** The text to display underneath the input box. */
-      prompt?: string
-      /** An optional string that represents the title of the input box. */
+    }
+    interface BoolOptions extends FormItemBase<boolean> {
+      type: 'boolean'
+    }
+    interface EnumItem<T> {
+      name: string
+      value: T
+    }
+    interface RadioOptions<T extends string | number = string> extends FormItemBase<T> {
+      type: 'radio'
+      enum?: Array<EnumItem<T>>
+    }
+    interface SelectionOptions<T extends string | number = string> extends FormItemBase<T> {
+      type: 'selection'
+      enum: Array<EnumItem<T>>
+    }
+    interface FormDialogOptions {
+      signal?: unknown
+      /** An optional string that represents the title of the form dialog. */
       title?: string
-      /** The value to pre-fill in the input box. */
-      value?: string
+      /** An optional string that represents the description of the form dialog. */
+      description?: string
+      /** The form items */
+      items: Array<InputOptions | BoolOptions | RadioOptions | SelectionOptions>
       /** An optional function that will be called to validate input and to give a hint to the user. */
-      validateInput?: (value: string) => null | undefined | string
+      validateInput?: (index: number, value: string) => null | undefined | string
     }
 
     interface OpenDialogOptions {
@@ -818,7 +844,9 @@ declare global {
     /** 应用相关 */
     interface App {
       showMessage: (message: string, options?: MessageDialogOptions) => Promise<number | undefined>
-      showInput: (options: InputDialogOptions) => Promise<string | undefined>
+      // TODO
+      showFormDialog: (options: FormDialogOptions) => Promise<string | undefined>
+      // showInput: (options: InputDialogOptions) => Promise<string | undefined>
       showOpenDialog: (options: OpenDialogOptions) => Promise<string | string[] | undefined>
       showSaveDialog: (options: SaveDialogOptions) => Promise<string | undefined>
       // getConnectedClient: () => Promise<string[]>
@@ -899,7 +927,6 @@ declare global {
     }
 
     interface BackupDataAction {
-      runBackup: (opts: { backupData?: Array<'list' | 'dislike'> }) => Promise<void>
       getListMD5: () => Promise<string | null>
       getListData: () => Promise<string | null>
       setListData: (data: string, md5: string) => Promise<void>
@@ -954,6 +981,9 @@ declare global {
       storage: Storage
       configuration: Configuration
       registerResourceAction: (actions: Partial<ResourceAction>) => void
+      // TODO
+      runBackup: (opts: { backupData?: Array<'list' | 'dislike'> }) => Promise<void>
+      // TODO
       registerBackupDataAction: (actions: BackupDataAction) => void
       utils: {
         buffer: Buffer

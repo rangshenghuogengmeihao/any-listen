@@ -20,8 +20,8 @@
 
   onMount(() => {
     if (item.type == 'radio') {
-      if (item.asyncList) {
-        void item.asyncList().then((res) => {
+      if (item.asyncEnum) {
+        void item.asyncEnum().then((res) => {
           list = res
         })
       } else {

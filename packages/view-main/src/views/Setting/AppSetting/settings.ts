@@ -30,7 +30,7 @@ interface SettingBoolean extends SettingBase {
 }
 interface SettingRadio extends SettingBase {
   type: 'radio'
-  asyncList?: () => Promise<EnumItem[]>
+  asyncEnum?: () => Promise<EnumItem[]>
   enum?: EnumItem[]
 }
 interface SettingSelection extends SettingBase {
@@ -66,7 +66,7 @@ export const settings: SettingListSection[] = [
         field: 'theme.id',
         name: 'settings__basic_theme',
         type: 'radio',
-        async asyncList() {
+        async asyncEnum() {
           // t('settings__about')
           const themeList = await getThemeList()
           // console.log(themeList)

@@ -66,7 +66,10 @@ export const createDir = async (path: string) => {
   return fs.promises.mkdir(path, { recursive: true })
 }
 
-export const removePath = async (path: string) => fs.promises.rm(path, { recursive: true })
+export const removePath = async (path: string) =>
+  fs.promises.rm(path, { recursive: true }).catch((err: NodeJS.ErrnoException) => {
+    if (err.code !== 'ENOENT') throw err
+  })
 
 export const removeFile = async (path: string) =>
   new Promise<void>((resolve, reject) => {

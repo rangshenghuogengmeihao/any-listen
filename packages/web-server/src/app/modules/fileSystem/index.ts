@@ -1,14 +1,28 @@
 import { appState } from '@/app/app/state'
+import { PUBLIC_RESOURCE_PATH } from '@/shared/constants'
 import { MEDIA_FILE_TYPES, PIC_FILE_TYPES } from '@any-listen/common/constants'
 import { extname, joinPath, toSha256 } from '@any-listen/nodejs'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-const devHost = 'http://localhost:9500/'
+const devHost = 'http://localhost:9500'
 
 export const checkAllowPath = (filePath: string) => {
   if (!filePath.endsWith(path.sep)) filePath += path.sep
   return global.anylisten.config.allowPublicDir.some((p) => filePath.startsWith(p))
+}
+
+export const createExtensionIconPublicPath = (filePath: string) => {
+  const extName = extname(filePath).substring(1)
+  const fileName = `${toSha256(filePath)}.${extName}`
+  global.anylisten.publicStaticPaths.set(fileName, filePath)
+  if (import.meta.env.DEV) return `${devHost}${PUBLIC_RESOURCE_PATH}${fileName}`
+  return `${PUBLIC_RESOURCE_PATH}${fileName}`
+}
+export const removeExtensionIconPublicPath = (filePath: string) => {
+  const extName = extname(filePath).substring(1)
+  const fileName = `${toSha256(filePath)}.${extName}`
+  global.anylisten.publicStaticPaths.delete(fileName)
 }
 
 export const createMediaPublicPath = async (filePath: string) => {
@@ -16,8 +30,8 @@ export const createMediaPublicPath = async (filePath: string) => {
   if (MEDIA_FILE_TYPES.includes(extName)) {
     const fileName = `${toSha256(filePath)}.${extName}`
     global.anylisten.publicStaticPaths.set(fileName, filePath)
-    if (import.meta.env.DEV) return `${devHost}public/medias/${fileName}`
-    return `public/medias/${fileName}`
+    if (import.meta.env.DEV) return `${devHost}${PUBLIC_RESOURCE_PATH}${fileName}`
+    return `${PUBLIC_RESOURCE_PATH}${fileName}`
   }
 }
 
@@ -29,8 +43,8 @@ export const createPicFilePublicPath = async (rawPath: string, format: string, f
       // TODO clear temp file
       await fs.writeFile(filePath, file)
       global.anylisten.publicStaticPaths.set(fileName, filePath)
-      if (import.meta.env.DEV) return `${devHost}public/medias/${fileName}`
-      return `public/medias/${fileName}`
+      if (import.meta.env.DEV) return `${devHost}${PUBLIC_RESOURCE_PATH}${fileName}`
+      return `${PUBLIC_RESOURCE_PATH}${fileName}`
     } catch (err) {
       console.log(err)
     }
@@ -44,8 +58,8 @@ export const createPicPublicPath = async (rawPath: string, filePath: string) => 
   if (PIC_FILE_TYPES.includes(format as (typeof PIC_FILE_TYPES)[number])) {
     const fileName = `${toSha256(rawPath)}.${format}`
     global.anylisten.publicStaticPaths.set(fileName, filePath)
-    if (import.meta.env.DEV) return `${devHost}public/medias/${fileName}`
-    return `public/medias/${fileName}`
+    if (import.meta.env.DEV) return `${devHost}${PUBLIC_RESOURCE_PATH}${fileName}`
+    return `${PUBLIC_RESOURCE_PATH}${fileName}`
   }
   return null
 }

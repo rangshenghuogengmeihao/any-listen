@@ -1,8 +1,8 @@
 import { extensionEvent } from '@/modules/extension'
-import { getPlayInfo, playerEvent } from '../player'
-import { getAllUserLists, getListMusics, sendMusicListAction } from '@any-listen/app/modules/musicList'
-import { boxTools } from './clientTools'
 import { rendererIPC } from '@/renderer/winMain/rendererEvent'
+import { getAllUserLists, getListMusics, sendMusicListAction } from '@any-listen/app/modules/musicList'
+import { getPlayInfo, playerEvent } from '../player'
+import { boxTools } from './clientTools'
 
 /**
  * 暴露给扩展进程调用的方法
@@ -34,6 +34,11 @@ export const exposedFuncs: AnyListen.IPCExtension.MainIPCActions = {
   async musicListAction(action) {
     await sendMusicListAction(action)
   },
+
+  async createExtensionIconPublicPath(filePath) {
+    return filePath
+  },
+  async removeExtensionIconPublicPath(filePath) {},
 
   async showMessageBox(extId, key, options) {
     return boxTools.showBox(key, async () => {

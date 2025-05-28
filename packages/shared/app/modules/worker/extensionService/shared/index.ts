@@ -48,6 +48,7 @@ const RESOURCE: AnyListen.Extension.ResourceAction[] = [
   'lyricSearch',
   'lyricDetail',
 ]
+const availableIcons = ['.png', '.jpg', '.jpeg', '.webp', '.svg']
 
 const buildPath = async (extensionPath: string, _path: string) => {
   if (isAbsolute(_path)) throw new Error(`path not a relative path: ${_path}`)
@@ -68,6 +69,13 @@ const verifyManifest = async (extensionPath: string, manifest: AnyListen.Extensi
   if (manifest.description != null) manifest.description = String(manifest.description)
   if (manifest.icon != null) manifest.icon = String(manifest.icon)
   manifest.icon = manifest.icon ? await buildPath(extensionPath, manifest.icon).catch(() => '') : ''
+  if (manifest.icon) {
+    if (!availableIcons.includes(path.extname(manifest.icon).toLowerCase())) {
+      manifest.icon = ''
+    } else {
+      manifest.icon = await extensionState.remoteFuncs.createExtensionIconPublicPath(manifest.icon)
+    }
+  }
 
   if (manifest.main != null) manifest.main = String(manifest.main)
   manifest.main = await buildPath(extensionPath, manifest.main)
@@ -304,7 +312,7 @@ const verifyExtension = async (unpackDir: string) => {
   })
   let extDir: string
   if (extBundleFilePath) {
-    extDir = extBundleFilePath.replace(new RegExp(`\\${extname(EXTENSION.extBundleFileName)}`), '')
+    extDir = extBundleFilePath.replace(new RegExp(`${path.extname(EXTENSION.extBundleFileName).replaceAll('.', '\\.')}$`), '')
     await createDir(extDir)
     const { unpack } = await import('@any-listen/nodejs/tar')
     await unpack(extBundleFilePath, extDir).catch(async (err: Error) => {

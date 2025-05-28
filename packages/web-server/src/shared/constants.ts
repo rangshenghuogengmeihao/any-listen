@@ -19,3 +19,5 @@ export const File = {
   serverInfoJSON: 'serverInfo.json',
   clientInfoJSON: 'clientInfo.json',
 } as const
+
+export const PUBLIC_RESOURCE_PATH = '/public/medias/'

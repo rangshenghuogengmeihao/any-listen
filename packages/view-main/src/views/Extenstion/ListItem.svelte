@@ -17,7 +17,7 @@
       <Image src={ext.icon} />
     </div>
     <div class="right">
-      <h3>{$extT(ext.id, ext.name)}</h3>
+      <h3>{ext.name}</h3>
       {#if ext.description}
         <p class="label">{$extT(ext.id, ext.description)}</p>
       {/if}

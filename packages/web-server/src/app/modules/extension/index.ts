@@ -150,6 +150,15 @@ export const uninstallExtension = async (id: string) => {
 export const getOnlineExtensionList = async (filter: AnyListen.IPCExtension.OnlineListFilterOptions) => {
   return workers.extensionService.getOnlineExtensionList(filter)
 }
+export const getOnlineExtensionDetail = async (id: string) => {
+  return workers.extensionService.getOnlineExtensionDetail(id)
+}
+export const getOnlineCategories = async () => {
+  return workers.extensionService.getOnlineCategories()
+}
+export const getOnlineTags = async () => {
+  return workers.extensionService.getOnlineTags()
+}
 
 export const getLocalExtensionList = async () => {
   return workers.extensionService.getLocalExtensionList()

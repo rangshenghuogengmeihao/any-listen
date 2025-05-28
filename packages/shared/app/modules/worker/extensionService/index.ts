@@ -15,7 +15,8 @@ import {
   updateExtension,
   updateExtensionI18nMessages,
 } from './manage'
-import { getOnlineExtensionList } from './onlineExtension'
+import { getOnlineCategories, getOnlineExtensionDetail, getOnlineExtensionList, getOnlineTags } from './onlineExtension'
+import { resetI18n } from './onlineExtension/i18n'
 import { buildExtensionSettings, getExtensionLastLogs, updateExtensionSettings, updateResourceListDeounce } from './shared'
 import { extensionState } from './state'
 import { resourceAction, updateI18nMessage, updateLocale } from './vm'
@@ -64,6 +65,7 @@ const extension = {
     await updateExtensionI18nMessages()
     updateI18nMessage()
     updateLocale(locale)
+    resetI18n()
   },
   updateProxy(host: string, port: string) {
     extensionState.proxy.host = host
@@ -75,6 +77,15 @@ const extension = {
   },
   async getOnlineExtensionList(filter: AnyListen.IPCExtension.OnlineListFilterOptions) {
     return getOnlineExtensionList(filter)
+  },
+  async getOnlineCategories() {
+    return getOnlineCategories()
+  },
+  async getOnlineTags() {
+    return getOnlineTags()
+  },
+  async getOnlineExtensionDetail(id: string) {
+    return getOnlineExtensionDetail(id)
   },
   getLocalExtensionList() {
     return extensionState.extensions

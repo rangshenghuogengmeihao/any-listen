@@ -93,12 +93,13 @@ export const setOnlineExtension = (list: AnyListen.IPCExtension.OnlineListItem[]
 
   extensionState.onlineExtensionList = list.map((item) => {
     const target = extMap.get(item.id)
-    if (!target) return { ...item, installed: false, enabled: false, latest: false }
+    if (!target) return { ...item, installed: false, enabled: false, latest: false, currentVersion: '' }
     return {
       ...item,
       enabled: target.enabled,
       installed: true,
       latest: compareVersions(target.version, item.version) >= 0,
+      currentVersion: target.version,
     }
   })
   extensionEvent.onlineExtensionListUpdated(extensionState.onlineExtensionList)

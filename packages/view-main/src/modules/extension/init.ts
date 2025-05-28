@@ -5,6 +5,7 @@ import { setMessages } from './i18n'
 import {
   getExtensionErrorMessage,
   getExtensionList,
+  getOnlineExtensionList,
   getResourceList,
   registerRemoteExtensionEvent,
   setCrash,
@@ -44,6 +45,14 @@ export const initExtension = () => {
           if (extensionState.onlineExtensionList.length) setOnlineExtension(extensionState.onlineExtensionList)
 
           if (isChanged) setMessages(extensionState.extensionList)
+        })
+      )
+      subscriptions.add(
+        settingEvent.on('updated', (keys, setting) => {
+          if (!keys.includes('common.langId')) return
+          if (extensionState.onlineExtensionList.length) {
+            void getOnlineExtensionList(true)
+          }
         })
       )
     })

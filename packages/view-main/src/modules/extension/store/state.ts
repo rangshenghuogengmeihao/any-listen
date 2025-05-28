@@ -1,4 +1,9 @@
-export type OnlineListItem = AnyListen.IPCExtension.OnlineListItem & { installed: boolean; enabled: boolean; latest: boolean }
+export type OnlineListItem = AnyListen.IPCExtension.OnlineListItem & {
+  installed: boolean
+  enabled: boolean
+  latest: boolean
+  currentVersion: string
+}
 
 export interface InitState {
   extensionList: AnyListen.Extension.Extension[]

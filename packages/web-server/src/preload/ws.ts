@@ -275,7 +275,7 @@ export const connect = (
   client.remoteQueueList = message2read.createRemoteGroup('list', { queue: true, timeout: 0 })
   client.remoteQueueDislike = message2read.createRemoteGroup('dislike', { queue: true, timeout: 0 })
   client.remoteQueueExtension = message2read.createRemoteGroup('extension', { queue: true, timeout: 0 })
-  client.remoteExtension = message2read.createRemoteGroup('extension', { timeout: 20_000 })
+  client.remoteExtension = message2read.createRemoteGroup('extension', { timeout: 60_000 })
 
   client.addEventListener('message', ({ data }) => {
     if (data == 'ping') return

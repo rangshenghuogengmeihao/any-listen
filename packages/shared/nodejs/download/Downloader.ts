@@ -400,6 +400,7 @@ class Task extends EventEmitter {
   async start() {
     this.status = STATUS.init
     await this.__init()
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (this.status !== STATUS.init) return
     this.status = STATUS.running
     this.__httpFetch(this.downloadUrl, this.requestOptions)

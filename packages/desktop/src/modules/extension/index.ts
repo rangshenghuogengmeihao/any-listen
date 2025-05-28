@@ -112,6 +112,18 @@ export const getOnlineExtensionList = async (filter: AnyListen.IPCExtension.Onli
   return workers.extensionService.getOnlineExtensionList(filter)
 }
 
+export const getOnlineCategories = async () => {
+  return workers.extensionService.getOnlineCategories()
+}
+
+export const getOnlineTags = async () => {
+  return workers.extensionService.getOnlineTags()
+}
+
+export const getOnlineExtensionDetail = async (id: string) => {
+  return workers.extensionService.getOnlineExtensionDetail(id)
+}
+
 export const getLocalExtensionList = async () => {
   return workers.extensionService.getLocalExtensionList()
 }

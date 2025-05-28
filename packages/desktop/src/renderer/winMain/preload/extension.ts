@@ -22,6 +22,15 @@ export const createClientExtension = (main: MainCall) => {
     async getOnlineExtensionList(options) {
       return main.getOnlineExtensionList(options)
     },
+    async getOnlineExtensionDetail(id) {
+      return main.getOnlineExtensionDetail(id)
+    },
+    async getOnlineCategories() {
+      return main.getOnlineCategories()
+    },
+    async getOnlineTags() {
+      return main.getOnlineTags()
+    },
     async downloadAndParseExtension(url, manifest) {
       return main.downloadAndParseExtension(url, manifest)
     },

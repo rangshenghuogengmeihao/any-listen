@@ -140,7 +140,7 @@
     // align-items: center;
     // justify-content: center;
     border-radius: @radius-border;
-    overflow: hidden;
+    // overflow: hidden;
     // user-select: none;
     // flex: none;
     // > span {

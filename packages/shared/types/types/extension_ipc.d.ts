@@ -149,10 +149,28 @@ declare namespace AnyListen {
       categories: Extension.Manifest['categories']
       tags: Extension.Manifest['tags']
       // update_time: Extension.Manifest['update_time']
-      download_url: string
       homepage: Extension.Manifest['homepage']
       icon: Extension.Manifest['icon']
+      publicKey: Extension.Manifest['publicKey']
+      download_url: string
     }
+    interface OnlineDetail {
+      id: Extension.Manifest['id']
+      name: Extension.Manifest['name']
+      description: Extension.Manifest['description']
+      icon: Extension.Manifest['icon']
+      version: Extension.Manifest['version']
+      author: Extension.Manifest['author']
+      homepage: Extension.Manifest['homepage']
+      license: Extension.Manifest['license']
+      categories: Extension.Manifest['categories']
+      tags: Extension.Manifest['tags']
+      grant: Extension.Manifest['grant']
+      contributes: Extension.Manifest['contributes']
+      publicKey: Extension.Manifest['publicKey']
+      download_url: string
+    }
+
     interface OnlineListResult {
       limit: number
       page: number
@@ -170,6 +188,9 @@ declare namespace AnyListen {
       getExtensionErrorMessage: () => string | null
       getExtensionList: () => Extension.Extension[]
       getOnlineExtensionList: (options: OnlineListFilterOptions) => OnlineListResult
+      getOnlineExtensionDetail: (id: string) => OnlineDetail | null
+      getOnlineTags: () => OnlineTagResult
+      getOnlineCategories: () => OnlineCategorieResult
       downloadAndParseExtension: (url: string, manifest?: Extension.Manifest) => Extension.Extension
       installExtension: (tempExtension: Extension.Extension) => Extension.Extension
       updateExtension: (tempExtension: Extension.Extension) => Extension.Extension

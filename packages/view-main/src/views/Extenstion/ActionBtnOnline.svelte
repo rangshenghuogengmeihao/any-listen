@@ -2,7 +2,7 @@
   import PopupBtn from '@/components/material/PopupBtn.svelte'
   import { t } from '@/plugins/i18n'
   import Btn from '@/components/base/Btn.svelte'
-  import { disableExtension, enableExtension } from '@/modules/extension/store/actions'
+  import { disableExtension, enableExtension, uninstallExtension } from '@/modules/extension/store/actions'
   import type { ComponentExports } from 'svelte'
   import type { OnlineListItem } from '@/modules/extension/store/state'
   let { ext }: { ext: OnlineListItem } = $props()
@@ -34,6 +34,14 @@
           }}>{$t('extension__action_enable')}</Btn
         >
       {/if}
+      <Btn
+        min
+        onclick={async () => {
+          await uninstallExtension(ext.id)
+        }}
+      >
+        {$t('extension__action_uninstall')}
+      </Btn>
     </div>
   {/snippet}
 </PopupBtn>

@@ -17,7 +17,7 @@
       scrollListTo(mInfo.listId, mInfo.isOnline, mInfo.musicInfo.id)
     }}
   >
-    <Image src={pic} />
+    <Image decoding="auto" loading="eager" src={pic} />
   </button>
 </div>
 

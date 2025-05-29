@@ -135,9 +135,25 @@ body {
   min-height: 0;
   transition: opacity @transition-normal;
 }
-#root.show-modal > .view-container {
-  opacity: 0.3;
-}
+// #root.show-modal > .view-container {
+//   opacity: 0.3;
+// }
 #view.show-modal > .view-container {
   opacity: 0.2;
 }
+#app-main {
+  transition: @transition-normal;
+  transition-property: opacity;
+}
+#root.show-modal {
+  #app-main,
+  .view-container > .player > * {
+    opacity: 0.3;
+  }
+}
+// #view.show-modal {
+//   #app-main,
+//   .view-container > .player > * {
+//     opacity: 0.2;
+//   }
+// }

@@ -1,8 +1,8 @@
+import { PUBLIC_RESOURCE_PATH } from '@/shared/constants'
+import { API_PREFIX } from '@any-listen/common/constants'
 import { joinPath } from '@any-listen/nodejs'
 import { sendFileStream } from './shared/stream-file'
-import { API_PREFIX } from '@any-listen/common/constants'
 
-const mediaPath = '/public/medias/'
 const maxAge = 60 * 86400
 
 let publicDir = joinPath(__dirname, '../public')
@@ -10,8 +10,8 @@ if (import.meta.env.DEV) publicDir = joinPath(__dirname, 'public')
 
 export default async (ctx: AnyListen.RequestContext, next: AnyListen.Next): Promise<unknown> => {
   if (ctx.method == 'HEAD' || ctx.method == 'GET') {
-    if (ctx.path.startsWith(mediaPath)) {
-      const fileName = ctx.path.substring(mediaPath.length)
+    if (ctx.path.startsWith(PUBLIC_RESOURCE_PATH)) {
+      const fileName = ctx.path.substring(PUBLIC_RESOURCE_PATH.length)
       const rawPath = global.anylisten.publicStaticPaths.get(fileName)
       if (rawPath) {
         return sendFileStream(ctx, rawPath, {

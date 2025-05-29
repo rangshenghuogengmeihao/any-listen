@@ -120,8 +120,13 @@
 
   .progressBar3 {
     background-color: var(--color-primary-light-100-alpha-200);
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
-    opacity: 0.5;
+    transition: @transition-normal;
+    transition-property: opacity;
+    // box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    &.show {
+      opacity: 0.5;
+    }
   }
 
   .barTransition {

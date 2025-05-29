@@ -26,7 +26,6 @@
 
   const handleDown = (clientX: number, offsetX: number) => {
     // if (disabled) return
-    console.log('handle download')
     sliderEvent.isMsDown = true
     sliderEvent.msDownX = clientX
 

@@ -23,6 +23,15 @@ export const createClientExtension = (ipcSocket: IPCSocket) => {
     async getOnlineExtensionList(options) {
       return ipcSocket.remoteQueueExtension.getOnlineExtensionList(options)
     },
+    async getOnlineExtensionDetail(id) {
+      return ipcSocket.remoteQueueExtension.getOnlineExtensionDetail(id)
+    },
+    async getOnlineCategories() {
+      return ipcSocket.remoteQueueExtension.getOnlineCategories()
+    },
+    async getOnlineTags() {
+      return ipcSocket.remoteQueueExtension.getOnlineTags()
+    },
     async downloadAndParseExtension(url, manifest) {
       return ipcSocket.remoteQueueExtension.downloadAndParseExtension(url, manifest)
     },

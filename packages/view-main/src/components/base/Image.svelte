@@ -4,7 +4,16 @@
     icon = 'night_landscape',
     width = '100%',
     height = '100%',
-  }: { src?: string | null; icon?: string; width?: number | string; height?: number | string } = $props()
+    loading = 'lazy',
+    decoding = 'async',
+  }: {
+    src?: string | null
+    icon?: string
+    width?: number | string
+    height?: number | string
+    decoding?: 'async' | 'auto' | 'sync'
+    loading?: 'lazy' | 'eager'
+  } = $props()
   let isError = $state(false)
 
   $effect(() => {
@@ -19,8 +28,8 @@
     alt="PIC"
     style:width
     style:height
-    loading="lazy"
-    decoding="async"
+    {loading}
+    {decoding}
     onerror={() => {
       isError = true
     }}
@@ -38,13 +47,14 @@
     // width: 100%;
     // height: 100%;
     object-fit: cover;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 2px var(--color-primary-dark-200-alpha-800);
     border-radius: @radius-border;
     aspect-ratio: 1;
   }
   .empty-pic {
     background-color: var(--color-primary-light-200-alpha-900);
     border-radius: @radius-border;
+    box-shadow: 0 0 2px var(--color-primary-dark-200-alpha-800);
     // width: 100%;
     // height: 100%;
     display: flex;

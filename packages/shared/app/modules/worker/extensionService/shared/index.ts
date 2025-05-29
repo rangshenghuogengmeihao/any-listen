@@ -48,6 +48,7 @@ const RESOURCE: AnyListen.Extension.ResourceAction[] = [
   'lyricSearch',
   'lyricDetail',
 ]
+const availableIcons = ['.png', '.jpg', '.jpeg', '.webp', '.svg']
 
 const buildPath = async (extensionPath: string, _path: string) => {
   if (isAbsolute(_path)) throw new Error(`path not a relative path: ${_path}`)
@@ -68,13 +69,20 @@ const verifyManifest = async (extensionPath: string, manifest: AnyListen.Extensi
   if (manifest.description != null) manifest.description = String(manifest.description)
   if (manifest.icon != null) manifest.icon = String(manifest.icon)
   manifest.icon = manifest.icon ? await buildPath(extensionPath, manifest.icon).catch(() => '') : ''
+  if (manifest.icon) {
+    if (!availableIcons.includes(path.extname(manifest.icon).toLowerCase())) {
+      manifest.icon = ''
+    } else {
+      manifest.icon = await extensionState.remoteFuncs.createExtensionIconPublicPath(manifest.icon)
+    }
+  }
 
   if (manifest.main != null) manifest.main = String(manifest.main)
   manifest.main = await buildPath(extensionPath, manifest.main)
   if (!manifest.main) throw new Error('Main enter not defined')
 
   if (manifest.version != null) manifest.version = String(manifest.version)
-  if (manifest.targetEngine != null) manifest.targetEngine = String(manifest.targetEngine)
+  if (manifest.target_engine != null) manifest.target_engine = String(manifest.target_engine)
   if (manifest.author != null) manifest.author = String(manifest.author)
   if (manifest.homepage != null) manifest.homepage = String(manifest.homepage)
   if (manifest.license != null) manifest.license = String(manifest.license)
@@ -165,7 +173,7 @@ export const parseExtension = async (extensionPath: string): Promise<AnyListen.E
     description: manifest.description,
     icon: manifest.icon,
     version: manifest.version,
-    targetEngine: manifest.targetEngine,
+    target_engine: manifest.target_engine,
     author: manifest.author,
     homepage: manifest.homepage,
     license: manifest.license,
@@ -304,7 +312,7 @@ const verifyExtension = async (unpackDir: string) => {
   })
   let extDir: string
   if (extBundleFilePath) {
-    extDir = extBundleFilePath.replace(new RegExp(`\\${extname(EXTENSION.extBundleFileName)}`), '')
+    extDir = extBundleFilePath.replace(new RegExp(`${path.extname(EXTENSION.extBundleFileName).replaceAll('.', '\\.')}$`), '')
     await createDir(extDir)
     const { unpack } = await import('@any-listen/nodejs/tar')
     await unpack(extBundleFilePath, extDir).catch(async (err: Error) => {

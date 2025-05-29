@@ -4,7 +4,7 @@
   import Pic from './components/Pic.svelte'
   import PlayBtns from './components/PlayBtns.svelte'
   import ControlBtns from './components/ControlBtns.svelte'
-  import MiniPlayProgress from './components/MiniPlayProgress.svelte'
+  import MiddlePlayProgress from './components/MiddlePlayProgress.svelte'
   // export let params = {}
 
   // console.log(params)
@@ -13,7 +13,7 @@
 <Container>
   <Pic />
   <PlayInfo />
-  <MiniPlayProgress />
+  <MiddlePlayProgress />
   <ControlBtns />
   <PlayBtns />
 </Container>

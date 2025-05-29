@@ -31,7 +31,7 @@ const defaultOptions: Options = {
 class Task extends EventEmitter {
   resumeLastChunk: Buffer | null
   downloadUrl: string
-  chunkInfo: { path: string; startByte: string; endByte: string }
+  chunkInfo: { savePath: string; startByte: string; endByte: string }
   status: (typeof STATUS)[keyof typeof STATUS]
   options: Options
   requestOptions: Options['requestOptions']
@@ -52,7 +52,7 @@ class Task extends EventEmitter {
     this.downloadUrl = url
     this.chunkInfo = {
       ...defaultChunkInfo,
-      path: savePath,
+      savePath,
       startByte: '0',
     }
     // if (!this.chunkInfo.endByte) this.chunkInfo.endByte = ''
@@ -66,7 +66,7 @@ class Task extends EventEmitter {
   }
 
   async __init() {
-    const { path, startByte, endByte } = this.chunkInfo
+    const { savePath, startByte, endByte } = this.chunkInfo
     this.redirectNum = 0
     this.progress.downloaded = 0
     this.progress.progress = 0
@@ -77,18 +77,21 @@ class Task extends EventEmitter {
     this.__startTimeout()
     if (startByte) this.requestOptions.headers!.range = `bytes=${startByte}-${endByte}`
 
-    if (!path) return
+    if (!savePath) return
     return new Promise<void>((resolve, reject) => {
-      fs.stat(path, (errStat, stats) => {
+      fs.stat(savePath, async (errStat, stats) => {
         if (errStat) {
           // console.log(errStat.code)
-          if (errStat.code !== 'ENOENT') {
+          if (errStat.code == 'ENOENT') {
+            const dir = path.dirname(savePath)
+            await fs.promises.mkdir(dir, { recursive: true }).catch(() => {})
+          } else {
             this.__handleError(errStat)
             reject(errStat)
             return
           }
         } else if (stats.size >= 10) {
-          fs.open(path, 'r', (errOpen, fd) => {
+          fs.open(savePath, 'r', (errOpen, fd) => {
             if (errOpen) {
               this.__handleError(errOpen)
               reject(errOpen)
@@ -130,7 +133,7 @@ class Task extends EventEmitter {
       .on('response', (response) => {
         if (response.statusCode !== 200 && response.statusCode !== 206) {
           if (response.statusCode == 416) {
-            fs.unlink(this.chunkInfo.path, (err) => {
+            fs.unlink(this.chunkInfo.savePath, (err) => {
               this.__handleError(new Error(response.statusMessage))
               this.chunkInfo.startByte = '0'
               this.resumeLastChunk = null
@@ -216,18 +219,18 @@ class Task extends EventEmitter {
     }
     this.progress.total += this.progress.downloaded
     this.statsEstimate.prevBytes = this.progress.downloaded
-    if (!this.chunkInfo.path) {
+    if (!this.chunkInfo.savePath) {
       this.__handleError(new Error('Chunk save Path is not set.'))
       return
     }
-    this.ws = fs.createWriteStream(this.chunkInfo.path, options)
+    this.ws = fs.createWriteStream(this.chunkInfo.savePath, options)
 
     this.ws.on('finish', () => {
       if (this.closeWaiting) return
       void this.__closeWriteStream()
     })
     this.ws.on('error', (err) => {
-      fs.unlink(this.chunkInfo.path, (unlinkErr) => {
+      fs.unlink(this.chunkInfo.savePath, (unlinkErr) => {
         this.__handleError(err)
         this.chunkInfo.startByte = '0'
         this.resumeLastChunk = null
@@ -303,7 +306,7 @@ class Task extends EventEmitter {
           // this.__handleError(new Error('Resume failed, response chunk does not match.'))
           // Resume failed, response chunk does not match, remove file and restart download
           console.log('Resume failed, response chunk does not match.')
-          fs.unlink(this.chunkInfo.path, (unlinkErr) => {
+          fs.unlink(this.chunkInfo.savePath, (unlinkErr) => {
             // this.__handleError(err)
             this.chunkInfo.startByte = '0'
             this.resumeLastChunk = null
@@ -400,6 +403,7 @@ class Task extends EventEmitter {
   async start() {
     this.status = STATUS.init
     await this.__init()
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (this.status !== STATUS.init) return
     this.status = STATUS.running
     this.__httpFetch(this.downloadUrl, this.requestOptions)
@@ -418,7 +422,7 @@ class Task extends EventEmitter {
   }
 
   updateSaveInfo(filePath: string, fileName: string) {
-    this.chunkInfo.path = path.join(filePath, fileName)
+    this.chunkInfo.savePath = path.join(filePath, fileName)
   }
 }
 

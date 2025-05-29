@@ -137,12 +137,48 @@ declare namespace AnyListen {
       page: number
       limit: number
     }
+    interface OnlineListItem {
+      id: Extension.Manifest['id']
+      name: Extension.Manifest['name']
+      description: Extension.Manifest['description']
+      version: Extension.Manifest['version']
+      author: Extension.Manifest['author']
+      grant: Extension.Manifest['grant']
+      license: Extension.Manifest['license']
+      target_engine: Extension.Manifest['target_engine']
+      categories: Extension.Manifest['categories']
+      tags: Extension.Manifest['tags']
+      // update_time: Extension.Manifest['update_time']
+      homepage: Extension.Manifest['homepage']
+      icon: Extension.Manifest['icon']
+      publicKey: Extension.Manifest['publicKey']
+      download_url: string
+    }
+    interface OnlineDetail {
+      id: Extension.Manifest['id']
+      name: Extension.Manifest['name']
+      description: Extension.Manifest['description']
+      icon: Extension.Manifest['icon']
+      version: Extension.Manifest['version']
+      author: Extension.Manifest['author']
+      homepage: Extension.Manifest['homepage']
+      license: Extension.Manifest['license']
+      categories: Extension.Manifest['categories']
+      tags: Extension.Manifest['tags']
+      grant: Extension.Manifest['grant']
+      contributes: Extension.Manifest['contributes']
+      publicKey: Extension.Manifest['publicKey']
+      download_url: string
+    }
+
     interface OnlineListResult {
       limit: number
       page: number
       total: number
-      list: Extension.OnlineExtension[]
+      list: OnlineListItem[]
     }
+    type OnlineTagResult = Array<{ id: string; name: string }>
+    type OnlineCategorieResult = Array<{ id: string; name: string }>
     interface LastLog {
       id: string
       name: string
@@ -152,6 +188,9 @@ declare namespace AnyListen {
       getExtensionErrorMessage: () => string | null
       getExtensionList: () => Extension.Extension[]
       getOnlineExtensionList: (options: OnlineListFilterOptions) => OnlineListResult
+      getOnlineExtensionDetail: (id: string) => OnlineDetail | null
+      getOnlineTags: () => OnlineTagResult
+      getOnlineCategories: () => OnlineCategorieResult
       downloadAndParseExtension: (url: string, manifest?: Extension.Manifest) => Extension.Extension
       installExtension: (tempExtension: Extension.Extension) => Extension.Extension
       updateExtension: (tempExtension: Extension.Extension) => Extension.Extension
@@ -186,6 +225,8 @@ declare namespace AnyListen {
       getAllUserLists: () => Promise<List.MyAllList>
       getListMusics: (listId: string) => Promise<Music.MusicInfo[]>
       musicListAction: (action: IPCList.ActionList) => Promise<void>
+      createExtensionIconPublicPath: (filePath: string) => Promise<string>
+      removeExtensionIconPublicPath: (filePath: string) => Promise<void>
 
       getPlayInfo: () => Promise<IPCPlayer.PlayInfo>
       playListAction: (action: IPCPlayer.PlayListAction) => Promise<void>

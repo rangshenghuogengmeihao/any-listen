@@ -123,7 +123,7 @@
   }
 
   .min {
-    padding: 3px 8px;
+    padding: 2.5px 8px;
     font-size: 12px;
   }
 </style>

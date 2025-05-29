@@ -11,6 +11,15 @@ export const getExtensionList = async () => {
 export const getOnlineExtensionList: AnyListen.IPC.ServerIPC['getOnlineExtensionList'] = async (opts) => {
   return ipc.getOnlineExtensionList(opts)
 }
+export const getOnlineExtensionDetail: AnyListen.IPC.ServerIPC['getOnlineExtensionDetail'] = async (id) => {
+  return ipc.getOnlineExtensionDetail(id)
+}
+export const getOnlineCategories: AnyListen.IPC.ServerIPC['getOnlineCategories'] = async () => {
+  return ipc.getOnlineCategories()
+}
+export const getOnlineTags: AnyListen.IPC.ServerIPC['getOnlineTags'] = async () => {
+  return ipc.getOnlineTags()
+}
 
 export const downloadAndParseExtension: AnyListen.IPC.ServerIPC['downloadAndParseExtension'] = async (url, manifest) => {
   return ipc.downloadAndParseExtension(url, manifest)

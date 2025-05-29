@@ -1,5 +1,6 @@
 import { extensionEvent } from '@/app/modules/extension'
 import { getAllUserLists, getListMusics, sendMusicListAction } from '@any-listen/app/modules/musicList'
+import { createExtensionIconPublicPath, removeExtensionIconPublicPath } from '../fileSystem'
 import { getPlayInfo, playerEvent } from '../player'
 import { boxTools } from './clientTools'
 
@@ -35,6 +36,13 @@ export const exposedFuncs: AnyListen.IPCExtension.MainIPCActions = {
   },
   async musicListAction(action) {
     await sendMusicListAction(action)
+  },
+
+  async createExtensionIconPublicPath(filePath) {
+    return createExtensionIconPublicPath(filePath)
+  },
+  async removeExtensionIconPublicPath(filePath) {
+    removeExtensionIconPublicPath(filePath)
   },
 
   async showMessageBox(extId, key, options) {

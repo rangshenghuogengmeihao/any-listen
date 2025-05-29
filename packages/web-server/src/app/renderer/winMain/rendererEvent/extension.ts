@@ -6,7 +6,10 @@ import {
   getExtensionErrorMessage,
   getExtensionLastLogs,
   getLocalExtensionList,
+  getOnlineCategories,
+  getOnlineExtensionDetail,
   getOnlineExtensionList,
+  getOnlineTags,
   getResourceList,
   installExtension,
   resourceAction,
@@ -31,6 +34,15 @@ export const createExposeExtension = () => {
     },
     async getOnlineExtensionList(event, filter) {
       return getOnlineExtensionList(filter)
+    },
+    async getOnlineExtensionDetail(event, id) {
+      return getOnlineExtensionDetail(id)
+    },
+    async getOnlineCategories(event) {
+      return getOnlineCategories()
+    },
+    async getOnlineTags(event) {
+      return getOnlineTags()
     },
     async downloadAndParseExtension(event, url, manifest) {
       return downloadAndParseExtension(url, manifest)

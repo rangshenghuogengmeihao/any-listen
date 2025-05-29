@@ -210,6 +210,7 @@ export const uninstallExtension = async (id: string) => {
     await removeExtensions([targetExtension])
     extensionState.extensions.splice(targetExtensionIndex, 1)
     await saveExtensionsSetting(extensionState.extensions)
+    if (targetExtension.icon) await extensionState.remoteFuncs.createExtensionIconPublicPath(targetExtension.icon)
     extensionEvent.listRemove(id)
   }
 }

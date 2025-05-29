@@ -1,9 +1,11 @@
-### Fixes
+### Add
 
-- Fixed playlist synchronization issues
-- Fixed issues with updating the played list
+- Add play bar style settings
+- Add extension icon display
+- Add online extension store list loading and online extension installation, upgrade
 
-### 修复
+### 新增
 
-- 修复播放列表同步问题
-- 修复已播放列表更新问题
+- 新增播放栏样式设置
+- 添加扩展图标显示
+- 添加在线扩展商店列表加载与在线扩展安装、升级

@@ -456,7 +456,7 @@ export const updateExtensionSettings = async (id: string, config: Record<string,
     }
   }
   extensionEvent.extenstionSettingUpdated(id, Object.keys(config), config)
-  sendConfigUpdatedEvent(id, Object.keys(config), config)
+  if (targetExt.loaded) sendConfigUpdatedEvent(id, Object.keys(config), config)
 }
 
 export const getExtensionLastLogs = async (extId?: string): Promise<AnyListen.IPCExtension.LastLog[]> => {

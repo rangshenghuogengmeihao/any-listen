@@ -1,11 +1,11 @@
 // import Vue from 'vue'
 import type Router from '@/plugins/svelte-spa-router/Router.svelte'
 
-import Online from '@/views/Online/index.svelte'
+import Extenstion from '@/views/Extenstion/index.svelte'
 import Library from '@/views/Library/index.svelte'
+import Online from '@/views/Online/index.svelte'
 import Search from '@/views/Search/index.svelte'
 import Setting from '@/views/Setting/index.svelte'
-import Extenstion from '@/views/Extenstion/index.svelte'
 import type { ComponentProps } from 'svelte'
 
 const routes: ComponentProps<typeof Router>['routes'] = {
@@ -30,4 +30,4 @@ const routes: ComponentProps<typeof Router>['routes'] = {
 
 export default routes
 
-export { link, location, query, replace, push, getLocation } from '@/plugins/svelte-spa-router/navigator'
+export { getLocation, link, location, push, query, replace } from '@/plugins/svelte-spa-router/navigator'

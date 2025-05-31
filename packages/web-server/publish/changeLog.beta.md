@@ -1,7 +1,7 @@
-### Fixes
+### Optimization
 
-- Fixed lyrics scrolling
+- Optimize window dragging behavior (#50)
 
-### 修复
+### 优化
 
-- 修复歌词滚动
+- 优化窗口拖动行为（#50）

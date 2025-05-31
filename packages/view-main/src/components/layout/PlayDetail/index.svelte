@@ -39,8 +39,8 @@
 
 {#if $isShowPlayDetail}
   <div
-    in:fly={{ x: '100%', opacity: 1 }}
-    out:fly={{ y: '100%', opacity: 1 }}
+    in:fly={{ x: '100%', opacity: 1, delay: 10 }}
+    out:fly={{ y: '100%', opacity: 1, delay: 10 }}
     class="play-detail"
     class:dybg={bgSrc}
     use:hidePlayDtail
@@ -70,12 +70,13 @@
     background-color: var(--color-content-background);
     z-index: 10;
     // -webkit-app-region: drag;
-    overflow: hidden;
+    // overflow: hidden;
     border-radius: @radius-border;
     color: var(--color-font);
     // border-left: 12px solid var(--color-primary-alpha-900);
     -webkit-app-region: no-drag;
     contain: strict;
+    // will-change: transform;
 
     &.dybg {
       :global {

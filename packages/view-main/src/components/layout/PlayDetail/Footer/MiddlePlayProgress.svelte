@@ -35,10 +35,5 @@
     // padding-bottom: 6px;
     margin: 0 8px;
     padding: 8px 0;
-    // height: 15px;
-    // .progressBar {
-    //   height: 4px;
-    //   // border-radius: 0;
-    // }
   }
 </style>

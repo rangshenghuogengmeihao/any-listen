@@ -10,6 +10,8 @@
     loading = false,
     onclick,
     oncontextmenu,
+    onmouseenter,
+    onmouseleave,
     icon = false,
     icontext = false,
     children,
@@ -27,6 +29,8 @@
     rawtype?: 'button' | 'submit' | 'reset'
     onclick?: (event: Parameters<MouseEventHandler<HTMLButtonElement>>[0]) => Promise<unknown> | unknown
     oncontextmenu?: MouseEventHandler<HTMLButtonElement>
+    onmouseenter?: MouseEventHandler<HTMLButtonElement>
+    onmouseleave?: MouseEventHandler<HTMLButtonElement>
     children: Snippet
   } = $props()
 
@@ -50,6 +54,8 @@
     }
   }}
   {oncontextmenu}
+  {onmouseenter}
+  {onmouseleave}
 >
   {@render children()}
 </button>

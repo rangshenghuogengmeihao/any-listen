@@ -82,3 +82,18 @@ export const createClickHandle = <T extends unknown[] = unknown[]>(
     doubleClick(...args)
   }
 }
+
+export const getDocumentHidden = () => {
+  return document.hidden
+}
+
+// 可见性改变
+export const onVisibilityChange = (callback: (hidden: boolean) => void) => {
+  const handleVisibilityChange = () => {
+    callback(document.hidden)
+  }
+  document.addEventListener('visibilitychange', handleVisibilityChange)
+  return () => {
+    document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }
+}

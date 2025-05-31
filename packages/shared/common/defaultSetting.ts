@@ -55,10 +55,12 @@ const defaultSetting: AnyListen.AppSetting = {
   'player.soundEffect.panner.speed': 50,
   'player.soundEffect.pitchShifter.playbackRate': 1,
 
-  'playDetail.isZoomActiveLrc': false,
+  'playDetail.isZoomActiveLrc': true,
   'playDetail.isShowLyricProgressSetting': false,
-  'playDetail.style.fontSize': 100,
+  'playDetail.style.fontSize': 120,
   'playDetail.style.align': 'center',
+  'playDetail.isDelayScroll': true,
+  'playDetail.isDynamicBackground': false,
 
   'desktopLyric.enable': false,
   'desktopLyric.isLock': false,

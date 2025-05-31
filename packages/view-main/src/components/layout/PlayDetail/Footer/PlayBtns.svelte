@@ -11,8 +11,8 @@
   onMount(() => {
     if (!domContainer) return
     return onDomSizeChanged(domContainer, (width, height) => {
-      iconSize = `${Math.trunc(height * 0.52)}px`
-      iconSize2 = `${Math.trunc(height * 0.65)}px`
+      iconSize = `${Math.trunc(height * 0.72)}px`
+      iconSize2 = `${Math.trunc(height * 0.85)}px`
     })
   })
 </script>
@@ -48,14 +48,12 @@
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
-    padding-left: 10px;
-    padding-right: 10px;
-    gap: 14px;
+    padding-left: 30px;
+    padding-right: 30px;
+    gap: 18px;
   }
   .btn {
     flex: none;
-    // height: 52%;
-    // margin-top: -2px;
     transition: @transition-fast;
     transition-property: color, opacity;
     color: var(--color-button-font);
@@ -66,10 +64,6 @@
     // padding: 5px;
     padding: 0;
     display: flex;
-
-    // svg {
-    //   filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.2));
-    // }
     &:hover {
       opacity: 0.8;
     }

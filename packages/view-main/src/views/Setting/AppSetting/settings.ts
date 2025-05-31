@@ -137,6 +137,38 @@ export const settings: SettingListSection[] = [
         name: 'settings__play_save_play_time',
         type: 'boolean',
       },
+      {
+        field: 'player.isShowLyricTranslation',
+        name: 'settings.player.lyric_transition',
+        type: 'boolean',
+      },
+      {
+        field: 'player.isShowLyricRoma',
+        name: 'settings.player.lyric_roma',
+        type: 'boolean',
+      },
+    ],
+  },
+  {
+    id: 'playDetail',
+    name: 'settings.play_detail',
+    list: [
+      // t('settings.play_detail.dynamic_background')
+      {
+        field: 'playDetail.isDynamicBackground',
+        name: 'settings.play_detail.dynamic_background',
+        type: 'boolean',
+      },
+      {
+        field: 'playDetail.isDelayScroll',
+        name: 'settings.play_detail.delay_scroll',
+        type: 'boolean',
+      },
+      {
+        field: 'playDetail.isZoomActiveLrc',
+        name: 'settings.play_detail.zoom_active_lrc',
+        type: 'boolean',
+      },
     ],
   },
   {

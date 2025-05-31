@@ -65,9 +65,15 @@ export const initApp = () => {
   setWorkerInitPromise(new Promise((resolve) => (mainWorkerResolve = resolve)))
   window.addEventListener('worker-initialized-main', mainWorkerResolve!)
 
-  document.documentElement.addEventListener('contextmenu', (event) => {
-    event.preventDefault()
-  })
+  document.documentElement.addEventListener(
+    'contextmenu',
+    (event) => {
+      event.preventDefault()
+    },
+    {
+      capture: true,
+    }
+  )
   window.addEventListener('focus', () => {
     appEvent.focus()
   })

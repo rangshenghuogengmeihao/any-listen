@@ -1,11 +1,11 @@
 <script lang="ts">
   import { lyricLine, lyricLines } from '@/modules/lyric/reactive.svelte'
-  import { musicInfo, playerPlayStatus, statusText } from '@/modules/player/reactive.svelte'
+  import { musicInfo, playerPlaying, statusText } from '@/modules/player/reactive.svelte'
   import { useSettingValue } from '@/modules/setting/reactive.svelte'
   import { buildMusicName } from '@any-listen/common/tools'
   let nameFormat = useSettingValue('download.fileName')
 
-  let status = $derived($playerPlayStatus && $lyricLines.length ? $lyricLine.text : $statusText)
+  let status = $derived($playerPlaying && $lyricLines.length ? $lyricLine.text : $statusText)
   let musicLabel = $derived.by(() => {
     const info = $musicInfo
     if (!info.id) return ''

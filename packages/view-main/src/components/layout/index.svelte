@@ -3,6 +3,7 @@
   import Header from '@/components/layout/Header/index.svelte'
   import Main from '@/components/layout/Main.svelte'
   import PlayBar from '@/components/layout/PlayBar/index.svelte'
+  import PlayDetail from '@/components/layout/PlayDetail/index.svelte'
 </script>
 
 <div id="app-main">
@@ -13,6 +14,7 @@
   </div>
 </div>
 <PlayBar />
+<PlayDetail />
 
 <style lang="less">
   #app-main {

@@ -289,6 +289,16 @@ declare global {
       'playDetail.style.align': 'center' | 'left' | 'right'
 
       /**
+       * 播放详情页-是否延迟桌面歌词滚动
+       */
+      'playDetail.isDelayScroll': boolean
+
+      /**
+       * 播放详情页-是否使用动态背景
+       */
+      'playDetail.isDynamicBackground': boolean
+
+      /**
        * 是否启用桌面歌词
        */
       'desktopLyric.enable': boolean

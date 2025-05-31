@@ -61,7 +61,7 @@ const defaultSetting: AnyListen.AppSetting = {
 
   'playDetail.isZoomActiveLrc': true,
   'playDetail.isShowLyricProgressSetting': false,
-  'playDetail.style.fontSize': 120,
+  'playDetail.style.fontSize': 100,
   'playDetail.style.align': 'center',
   'playDetail.isDelayScroll': true,
   'playDetail.isDynamicBackground': false,

@@ -190,11 +190,11 @@ export const useLyric = (options: {
 
   let oldLines = 0
   const initLrc = (lines: Line[]) => {
-    if (!lines && isStopScroll) {
+    if (isStopScroll) {
       isStopScroll = false
       options.onSetStopScroll(false)
+      clearLyricScrollTimeout()
     }
-    clearLyricScrollTimeout()
     isSetedLines = true
     if (oldLines) {
       if (lines.length) {

@@ -1,6 +1,7 @@
 <script lang="ts">
   let {
     src,
+    alt = 'PIC',
     icon = 'night_landscape',
     width = '100%',
     height = '100%',
@@ -9,6 +10,7 @@
   }: {
     src?: string | null
     icon?: string
+    alt?: string
     width?: number | string
     height?: number | string
     decoding?: 'async' | 'auto' | 'sync'
@@ -25,7 +27,7 @@
   <img
     {src}
     class="pic img"
-    alt="PIC"
+    {alt}
     style:width
     style:height
     {loading}

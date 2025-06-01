@@ -28,9 +28,18 @@ type ScrollElement<T> = {
   __scrollNextParams?: [ScrollElement<HTMLElement>, number, number, Noop, Noop]
   __scrollTimeout?: number
   __scrollDelayTimeout?: number
-} & T
+  scrollTop?: number
+  scrollY?: number
+  scrollTo?: HTMLElement['scrollTo']
+} & Omit<T, 'scrollTop' | 'scrollTo'>
 
-const handleScrollY = (element: ScrollElement<HTMLElement>, to: number, duration = 300, onEnd = noop, onCancel = noop): Noop => {
+const handleScrollY = (
+  element: ScrollElement<HTMLElement> | null,
+  to: number,
+  duration = 300,
+  onEnd = noop,
+  onCancel = noop
+): Noop => {
   if (!element) {
     onCancel()
     return noop
@@ -47,7 +56,7 @@ const handleScrollY = (element: ScrollElement<HTMLElement>, to: number, duration
     element.__scrollLockKey = -1
     return clean
   }
-  // @ts-expect-error
+
   const start = element.scrollTop ?? element.scrollY ?? 0
   if (to > start) {
     let maxScrollTop = element.scrollHeight - element.clientHeight
@@ -127,14 +136,14 @@ export const handleScroll = (
     element.__scrollDelayTimeout = undefined
   }
   if (delay) {
-    let scrollCancelFn: Noop
+    let scrollCancelFn: Noop | null = null
     cancelFn = () => {
       if (element.__scrollDelayTimeout == null) {
         scrollCancelFn?.()
       } else {
         window.clearTimeout(element.__scrollDelayTimeout)
         element.__scrollDelayTimeout = undefined
-        onCancel?.()
+        onCancel()
       }
     }
     element.__scrollDelayTimeout = window.setTimeout(() => {
@@ -142,7 +151,7 @@ export const handleScroll = (
       scrollCancelFn = handleScrollY(element, to, duration, onEnd, onCancel)
     }, delay)
   } else {
-    cancelFn = handleScrollY(element, to, duration, onEnd, onCancel) ?? noop
+    cancelFn = handleScrollY(element, to, duration, onEnd, onCancel)
   }
   return cancelFn
 }

@@ -16,7 +16,9 @@ const defaultSetting: AnyListen.AppSetting = {
   'common.isAgreePact': false,
   'common.controlBtnPosition': isMac ? 'left' : 'right',
   'common.playBarProgressStyle': 'mini',
+  'common.transparentWindow': true,
   'common.tryAutoUpdate': true,
+  'common.allowPreRelease': false,
   'common.showChangeLog': true,
 
   'player.startupAutoPlay': false,
@@ -57,10 +59,12 @@ const defaultSetting: AnyListen.AppSetting = {
   'player.soundEffect.panner.speed': 25,
   'player.soundEffect.pitchShifter.playbackRate': 1,
 
-  'playDetail.isZoomActiveLrc': false,
+  'playDetail.isZoomActiveLrc': true,
   'playDetail.isShowLyricProgressSetting': false,
   'playDetail.style.fontSize': 100,
   'playDetail.style.align': 'center',
+  'playDetail.isDelayScroll': true,
+  'playDetail.isDynamicBackground': false,
 
   'desktopLyric.enable': false,
   'desktopLyric.isLock': false,
@@ -133,8 +137,8 @@ const defaultSetting: AnyListen.AppSetting = {
   'sync.client.host': '',
 
   // 'theme.id': 'blue_plus',
-  'theme.id': 'blue_plus',
-  'theme.lightId': 'blue_plus',
+  'theme.id': 'red',
+  'theme.lightId': 'red',
   'theme.darkId': 'black',
 
   'odc.isAutoClearSearchInput': false,

@@ -6,11 +6,16 @@
   // import { extensionList } from '@/modules/extension/reactive'
   import ListItemOnline from './ListItemOnline.svelte'
   import ListItemEnpty from './ListItemEnpty.svelte'
+  import { t } from '@/plugins/i18n'
+  let loading = $state(false)
 
   const list = useOnlineExtensionList()
 
   $effect(() => {
-    void getOnlineExtensionList()
+    loading = true
+    void getOnlineExtensionList().finally(() => {
+      loading = false
+    })
   })
 </script>
 
@@ -28,7 +33,7 @@
       <ListItemEnpty />
     </ul>
   {:else}
-    <Empty />
+    <Empty label={loading ? $t('loading') : ''} />
   {/if}
 </div>
 

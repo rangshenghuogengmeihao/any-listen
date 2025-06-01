@@ -3,7 +3,7 @@
   import { duration, progress } from '@/modules/player/reactive.svelte'
 </script>
 
-<div class="content">
+<div class="middle-play-progress">
   <span>{$progress.nowPlayTimeStr}</span>
   <div class="progress">
     <PlayerProgressBar />
@@ -13,7 +13,7 @@
 </div>
 
 <style lang="less">
-  .content {
+  .middle-play-progress {
     width: 30%;
     // position: relative;
     flex: none;

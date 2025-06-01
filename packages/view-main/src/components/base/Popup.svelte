@@ -33,7 +33,7 @@
 
   const arrowHeight = 9
   const arrowWidth = 8
-  const sidePadding = 50
+  const sidePadding = 15
   const popupStyleObj = {
     maxHeight: 'none' as string | number,
     top: 0,

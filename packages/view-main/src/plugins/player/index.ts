@@ -550,14 +550,6 @@ export const onWaiting = (callback: Noop) => {
   }
 }
 
-// 可见性改变
-export const onVisibilityChange = (callback: Noop) => {
-  document.addEventListener('visibilitychange', callback)
-  return () => {
-    document.removeEventListener('visibilitychange', callback)
-  }
-}
-
 export const getErrorCode = () => {
   if (audio?.error) console.error(audio?.error)
   return audio?.error?.code

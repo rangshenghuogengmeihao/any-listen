@@ -1,8 +1,8 @@
 import { mount, type ComponentExports } from 'svelte'
 
-import App from './App.svelte'
 import { onDesconnected } from '@/modules/app/shared'
 import { onCloseMessageBox } from '@/shared/ipc/app'
+import App from './App.svelte'
 
 let app: ComponentExports<typeof App>
 export const initNotify = () => {

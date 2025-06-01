@@ -80,7 +80,7 @@
     addAutoCloseTimer()
   }}
 >
-  <div class:select={item.selectText}>
+  <div class="content" class:select={item.selectText}>
     {#if extensionName}
       <span>[{extensionName}]</span>
     {/if}{item.message}
@@ -101,6 +101,7 @@
 <style lang="less">
   .notify-content {
     position: absolute;
+    max-width: 100%;
     left: 50%;
     bottom: 0;
     transform: translateX(-50%);
@@ -124,6 +125,11 @@
     justify-content: space-between;
     gap: 5px;
     min-width: 100px;
+
+    .content {
+      flex: auto;
+      min-width: 0;
+    }
 
     .select {
       user-select: text;

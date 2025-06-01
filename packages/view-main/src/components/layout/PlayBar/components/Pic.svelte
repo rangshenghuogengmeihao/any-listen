@@ -1,6 +1,7 @@
 <script lang="ts">
   import Image from '@/components/base/Image.svelte'
   import { scrollListTo } from '@/modules/app/store/action'
+  import { setShowPlayDetail } from '@/modules/playDetail/store/commit'
   import { musicInfo } from '@/modules/player/reactive.svelte'
   import { playerState } from '@/modules/player/store/state'
   let pic = $derived($musicInfo.pic)
@@ -10,7 +11,9 @@
   <button
     type="button"
     class="btn"
-    onclick={() => {}}
+    onclick={() => {
+      setShowPlayDetail(true)
+    }}
     oncontextmenu={() => {
       let mInfo = playerState.playMusicInfo
       if (!mInfo) return

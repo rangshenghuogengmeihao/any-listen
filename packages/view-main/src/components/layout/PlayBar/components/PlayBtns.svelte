@@ -1,6 +1,6 @@
 <script lang="ts">
   import { skipNext, skipPrev, togglePlay } from '@/modules/player/actions'
-  import { playStatus } from '@/modules/player/reactive.svelte'
+  import { playing } from '@/modules/player/reactive.svelte'
   import { t } from '@/plugins/i18n'
   import { onDomSizeChanged } from '@any-listen/web'
   import { onMount } from 'svelte'
@@ -23,8 +23,8 @@
       <use xlink:href="#icon-skip-prev" />
     </svg>
   </button>
-  <button class="btn" aria-label={$playStatus ? $t('player__pause') : $t('player__play')} onclick={togglePlay}>
-    {#if $playStatus}
+  <button class="btn" aria-label={$playing ? $t('player__pause') : $t('player__play')} onclick={togglePlay}>
+    {#if $playing}
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width={iconSize2} height={iconSize2} viewBox="0 0 24 24">
         <use xlink:href="#icon-pause" />
       </svg>

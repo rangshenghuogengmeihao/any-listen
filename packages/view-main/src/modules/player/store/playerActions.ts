@@ -199,7 +199,11 @@ export const setPlayMusicInfo = (info: AnyListen.Player.PlayMusicInfo | null, in
         commit.setMusicInfo({ pic: url })
         playerEvent.picUpdated(url)
       })
-      .catch(() => {})
+      .catch(() => {
+        if (info.musicInfo.id != playerState.playMusicInfo?.musicInfo.id) return
+        commit.setMusicInfo({ pic: null })
+        playerEvent.picUpdated(null)
+      })
 
     void getMusicLyric({ musicInfo: info.musicInfo })
       .then((lyricInfo) => {

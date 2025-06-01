@@ -1,12 +1,13 @@
-import { createUnsubscriptionSet, formatPlayTime2, getRandom } from '@/shared'
-import { getCurrentTime, getDuration, onTimeupdate, onVisibilityChange, setCurrentTime } from '@/plugins/player'
+import { onRelease } from '@/modules/app/shared'
+import { updateListMusic } from '@/modules/musicLibrary/store/actions'
 import { settingState } from '@/modules/setting/store/state'
-import { playerState } from '../store/state'
+import { getCurrentTime, getDuration, onTimeupdate, setCurrentTime } from '@/plugins/player'
+import { createUnsubscriptionSet, formatPlayTime2, getRandom } from '@/shared'
+import { getDocumentHidden, onVisibilityChange } from '@any-listen/web'
+import { onPlayerCreated } from '../shared'
 import { setMaxPlayTime, setNowPlayTime, skipNext } from '../store/actions'
 import { playerEvent } from '../store/event'
-import { onRelease } from '@/modules/app/shared'
-import { onPlayerCreated } from '../shared'
-import { updateListMusic } from '@/modules/musicLibrary/store/actions'
+import { playerState } from '../store/state'
 
 // const delaySavePlayInfo = throttle(savePlayInfo, 2000)
 
@@ -138,7 +139,7 @@ export const initProgress = () => {
           clearBufferTimeout()
         })
       )
-      let documentHidden = document.hidden
+      let documentHidden = getDocumentHidden()
       unregistered.add(
         playerEvent.on('progressChanged', (progress, old) => {
           if (documentHidden) return
@@ -157,8 +158,8 @@ export const initProgress = () => {
 
       let currentPlayProgress = 0
       unregistered.add(
-        onVisibilityChange(() => {
-          documentHidden = document.hidden
+        onVisibilityChange((hidden) => {
+          documentHidden = hidden
           if (documentHidden) {
             currentPlayProgress = playerState.progress.progress
           } else {

@@ -4,12 +4,12 @@ import { type InitState, extensionState } from './state'
 
 export const setList = (list: AnyListen.Extension.Extension[]) => {
   extensionState.extensionList = list
-  extensionEvent.listChanged()
+  extensionEvent.listChanged(true)
 }
 
 export const addExtension = (ext: AnyListen.Extension.Extension) => {
   extensionState.extensionList.unshift(ext)
-  extensionEvent.listChanged()
+  extensionEvent.listChanged(true)
 }
 
 export const removeExtension = (id: string) => {
@@ -17,7 +17,7 @@ export const removeExtension = (id: string) => {
     extensionState.extensionList.findIndex((ext) => ext.id == id),
     1
   )
-  extensionEvent.listChanged()
+  extensionEvent.listChanged(true)
 }
 
 export const updateExtension = (ext: AnyListen.Extension.Extension) => {
@@ -26,7 +26,7 @@ export const updateExtension = (ext: AnyListen.Extension.Extension) => {
     1,
     ext
   )
-  extensionEvent.listChanged()
+  extensionEvent.listChanged(true)
 }
 
 export const setExtensionRuning = (id: string, loadTimestamp: number) => {
@@ -37,7 +37,7 @@ export const setExtensionRuning = (id: string, loadTimestamp: number) => {
   tagretExt.loadTimestamp = loadTimestamp
   tagretExt.errorMessage &&= ''
   extensionState.extensionList.splice(tagretExtIndex, 1, { ...tagretExt })
-  extensionEvent.listChanged(true)
+  extensionEvent.listChanged()
 }
 
 export const setExtensionEnabled = (id: string, enabled: boolean) => {
@@ -46,7 +46,7 @@ export const setExtensionEnabled = (id: string, enabled: boolean) => {
   const tagretExt = extensionState.extensionList[tagretExtIndex]
   tagretExt.enabled = enabled
   extensionState.extensionList.splice(tagretExtIndex, 1, { ...tagretExt })
-  extensionEvent.listChanged(true)
+  extensionEvent.listChanged()
 }
 
 export const setExtensionStop = (id: string) => {
@@ -57,7 +57,7 @@ export const setExtensionStop = (id: string) => {
   tagretExt.loadTimestamp = 0
   tagretExt.errorMessage &&= ''
   extensionState.extensionList.splice(tagretExtIndex, 1, { ...tagretExt })
-  extensionEvent.listChanged(true)
+  extensionEvent.listChanged()
 }
 
 export const setExtensionError = (id: string, message: string) => {
@@ -68,7 +68,7 @@ export const setExtensionError = (id: string, message: string) => {
   tagretExt.errorMessage = message
   tagretExt.loadTimestamp = 0
   extensionState.extensionList.splice(tagretExtIndex, 1, { ...tagretExt })
-  extensionEvent.listChanged(true)
+  extensionEvent.listChanged()
 }
 
 export const setCrash = (message: string | null) => {

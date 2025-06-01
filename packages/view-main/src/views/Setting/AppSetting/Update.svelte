@@ -47,16 +47,9 @@
 <div class="update-content">
   <div class="gap-top">
     {#if import.meta.env.VITE_IS_DESKTOP}
-      {#if import.meta.env.VITE_IS_DESKTOP}
-        <div class="p small" role="presentation" onclick={handleOpenDevTools}>
-          {$t('settings__update_current_label')}{versionInfo.val.version}
-        </div>
-      {/if}
-      {#if import.meta.env.VITE_IS_WEB}
-        <div class="p small">
-          {$t('settings__update_current_label')}{versionInfo.val.version}
-        </div>
-      {/if}
+      <div class="p small" role="presentation" onclick={handleOpenDevTools}>
+        {$t('settings__update_current_label')}{versionInfo.val.version}
+      </div>
     {/if}
     {#if import.meta.env.VITE_IS_WEB}
       <div class="p small">

@@ -68,6 +68,7 @@ export const typescriptRule = {
   '@typescript-eslint/no-empty-function': 'off',
   '@typescript-eslint/no-misused-promises': 'off',
   '@typescript-eslint/no-unsafe-assignment': 'off',
+  '@typescript-eslint/no-unnecessary-type-conversion': 'off',
   '@typescript-eslint/no-explicit-any': 'warn',
 
   '@typescript-eslint/no-confusing-void-expression': [

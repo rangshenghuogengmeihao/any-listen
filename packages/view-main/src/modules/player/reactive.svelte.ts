@@ -1,7 +1,6 @@
 import { readable } from 'svelte/store'
-import { playerState } from './store/state'
 import { playerEvent } from './store/event'
-
+import { playerState } from './store/state'
 
 export const musicInfo = readable(playerState.musicInfo, (set) => {
   const handleUpdate = () => {
@@ -51,7 +50,7 @@ export const statusText = readable(playerState.statusText, (set) => {
   }
 })
 
-export const playStatus = readable(playerState.playing, (set) => {
+export const playing = readable(playerState.playing, (set) => {
   const handleUpdate = () => {
     set(playerState.playing)
   }
@@ -63,7 +62,7 @@ export const playStatus = readable(playerState.playing, (set) => {
   }
 })
 
-export const playerPlayStatus = readable(playerState.playerPlaying, (set) => {
+export const playerPlaying = readable(playerState.playerPlaying, (set) => {
   const handleUpdate = () => {
     set(playerState.playerPlaying)
   }
@@ -87,18 +86,20 @@ export const progress = readable(playerState.progress, (set) => {
   }
 })
 
-export const duration = readable({ label: playerState.progress.maxPlayTimeStr, duration: playerState.progress.maxPlayTime }, (set) => {
-  const handleUpdate = () => {
-    set({ label: playerState.progress.maxPlayTimeStr, duration: playerState.progress.maxPlayTime })
-  }
-  handleUpdate()
-  playerEvent.on('durationChanged', handleUpdate)
+export const duration = readable(
+  { label: playerState.progress.maxPlayTimeStr, duration: playerState.progress.maxPlayTime },
+  (set) => {
+    const handleUpdate = () => {
+      set({ label: playerState.progress.maxPlayTimeStr, duration: playerState.progress.maxPlayTime })
+    }
+    handleUpdate()
+    playerEvent.on('durationChanged', handleUpdate)
 
-  return function stop() {
-    playerEvent.off('durationChanged', handleUpdate)
+    return function stop() {
+      playerEvent.off('durationChanged', handleUpdate)
+    }
   }
-})
-
+)
 
 export const playList = readable(playerState.playList, (set) => {
   const handleUpdate = () => {

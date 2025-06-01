@@ -1,12 +1,46 @@
 <script lang="ts">
+  import { appEvent } from '@/modules/app/store/event'
   import { t } from '@/plugins/i18n'
   // import { link, location } from '@/plugins/routes'
   import { closeWindow, minWindow } from '@/shared/ipc/app'
+  import { onMount } from 'svelte'
+  let domBtns = $state<HTMLDivElement>()
 
   // import { isFullscreen } from '@/store'
+
+  onMount(() => {
+    const getBtnEl = (el: HTMLElement | null): HTMLButtonElement | null => {
+      return el ? (el.tagName == 'BUTTON' ? (el as HTMLButtonElement) : getBtnEl(el.parentNode as HTMLElement | null)) : null
+    }
+    const handleMouseover = (event: MouseEvent) => {
+      const btn = getBtnEl(event.target as HTMLElement)
+      if (!btn) return
+      btn.classList.add('hover')
+    }
+    const handleMouseout = (event: MouseEvent) => {
+      const btn = getBtnEl(event.target as HTMLElement)
+      if (!btn) return
+      btn.classList.remove('hover')
+    }
+
+    const unsub = appEvent.on('focus', () => {
+      if (!domBtns) return
+      for (const node of domBtns.childNodes) {
+        if ((node as HTMLElement).tagName != 'BUTTON') continue
+        ;(node as HTMLElement).classList.remove('hover')
+      }
+    })
+    domBtns!.addEventListener('mouseover', handleMouseover)
+    domBtns!.addEventListener('mouseout', handleMouseout)
+    return () => {
+      unsub()
+      domBtns!.removeEventListener('mouseover', handleMouseover)
+      domBtns!.removeEventListener('mouseout', handleMouseout)
+    }
+  })
 </script>
 
-<div class="control">
+<div class="control" bind:this={domBtns}>
   <!-- <a
     tabindex="0"
     role="button"
@@ -70,7 +104,7 @@
       // &.active {
       //   background-color: var(--color-button-background-hover);
       // }
-      &:hover {
+      &:global(.hover) {
         &.min {
           background-color: var(--color-button-background-hover);
         }

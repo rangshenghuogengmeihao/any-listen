@@ -1,13 +1,13 @@
-import { app } from 'electron'
-import './shared/log'
-import './shared/error'
-import { isLinux } from '@any-listen/nodejs/index'
 import { appState, initAppEnv, sendInitedEvent } from '@/app'
+import { isLinux } from '@any-listen/nodejs/index'
+import { app } from 'electron'
+import './shared/error'
+import './shared/log'
 // import registerModules from '@/modules'
-import { startCommonWorkers, startExtensionServiceWorker } from './worker'
+import { initI18n } from './i18n'
 import { initModules } from './modules'
 import { initRenderers } from './renderer'
-import { initI18n } from './i18n'
+import { startCommonWorkers, startExtensionServiceWorker } from './worker'
 
 let isInited = false
 // 初始化应用

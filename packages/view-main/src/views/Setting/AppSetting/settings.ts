@@ -1,15 +1,17 @@
+import { showNotify } from '@/components/apis/notify'
 import { getThemeList } from '@/modules/theme/store/action'
-import { langList, type Message } from '@/plugins/i18n'
+import { i18n, langList, type Message } from '@/plugins/i18n'
 import { windowSizeList } from '@any-listen/common/constants'
 import type { Component } from 'svelte'
 import About from './About.svelte'
 import LoginDevices from './LoginDevices.svelte'
 import Update from './Update.svelte'
 
-interface SettingBase {
+interface SettingBase<T = unknown> {
   field: keyof AnyListen.AppSetting
   name: keyof Message
   description?: keyof Message
+  onChnaged?: (value: T) => void
 }
 export interface EnumItem {
   name: keyof Message
@@ -21,19 +23,19 @@ export interface SettingListComponentItem {
   type: 'component'
   component: Component
 }
-interface SettingInput extends SettingBase {
+interface SettingInput extends SettingBase<string> {
   type: 'input'
   textarea?: boolean
 }
-interface SettingBoolean extends SettingBase {
+interface SettingBoolean extends SettingBase<boolean> {
   type: 'boolean'
 }
-interface SettingRadio extends SettingBase {
+interface SettingRadio extends SettingBase<EnumItem['value']> {
   type: 'radio'
   asyncEnum?: () => Promise<EnumItem[]>
   enum?: EnumItem[]
 }
-interface SettingSelection extends SettingBase {
+interface SettingSelection extends SettingBase<EnumItem['value']> {
   type: 'selection'
   enum: EnumItem[]
 }
@@ -67,7 +69,7 @@ export const settings: SettingListSection[] = [
         name: 'settings__basic_theme',
         type: 'radio',
         async asyncEnum() {
-          // t('settings__about')
+          // t('settings__basic_window_size_tip')
           const themeList = await getThemeList()
           // console.log(themeList)
           return themeList.themes.map((t) => ({ name: `theme_${t.id}` as keyof Message, value: t.id }))
@@ -77,21 +79,31 @@ export const settings: SettingListSection[] = [
         field: 'common.windowSizeId',
         name: 'settings__basic_window_size',
         type: 'radio',
-        enum: windowSizeList.map((w) => ({ value: w.id, name: `settings__basic_window_size_${w.name}` as keyof Message })),
+        enum: (import.meta.env.VITE_IS_WEB ? windowSizeList.slice(0, 4) : windowSizeList).map((w) => ({
+          value: w.id,
+          name: `settings__basic_window_size_${w.name}` as keyof Message,
+        })),
+        onChnaged: import.meta.env.VITE_IS_WEB
+          ? () => {
+              showNotify(i18n.t('settings__basic_window_size_tip'))
+            }
+          : undefined,
       },
-      {
-        field: 'common.fontSize',
-        name: 'settings__basic_font_size',
-        type: 'radio',
-        enum: [
-          { value: 14, name: 'settings__basic_font_size_14px' },
-          { value: 15, name: 'settings__basic_font_size_15px' },
-          { value: 16, name: 'settings__basic_font_size_16px' },
-          { value: 17, name: 'settings__basic_font_size_17px' },
-          { value: 18, name: 'settings__basic_font_size_18px' },
-          { value: 19, name: 'settings__basic_font_size_19px' },
-        ],
-      },
+      import.meta.env.VITE_IS_DESKTOP
+        ? {
+            field: 'common.fontSize',
+            name: 'settings__basic_font_size',
+            type: 'radio',
+            enum: [
+              { value: 14, name: 'settings__basic_font_size_14px' },
+              { value: 15, name: 'settings__basic_font_size_15px' },
+              { value: 16, name: 'settings__basic_font_size_16px' },
+              { value: 17, name: 'settings__basic_font_size_17px' },
+              { value: 18, name: 'settings__basic_font_size_18px' },
+              { value: 19, name: 'settings__basic_font_size_19px' },
+            ],
+          }
+        : null,
       {
         field: 'common.langId',
         name: 'settings__basic_lang',

@@ -20,11 +20,13 @@ export const windowDarg: Action = (dom: HTMLElement) => {
     msDownY: 0,
     winY: 0,
     winX: 0,
+    minLeft: 0,
+    minTop: 0,
   }
   const handleMove = (clientX: number, clientY: number) => {
     if (!msEvent.isMsDown) return
-    const x = msEvent.winX + clientX - msEvent.msDownX
-    const y = msEvent.winY + clientY - msEvent.msDownY
+    const x = Math.max(msEvent.winX + clientX - msEvent.msDownX, msEvent.minLeft)
+    const y = Math.max(msEvent.winY + clientY - msEvent.msDownY, msEvent.minTop)
     setRootOffset(x, y)
     document.body.style.left = `${x}px`
     document.body.style.top = `${y}px`
@@ -37,6 +39,8 @@ export const windowDarg: Action = (dom: HTMLElement) => {
     msEvent.isMsDown = true
     msEvent.winX = parseInt(document.body.style.left)
     msEvent.winY = parseInt(document.body.style.top)
+    msEvent.minLeft = -parseInt(document.body.style.width) + 80
+    // msEvent.minTop = parseInt(document.body.style.height)
   }
 
   const handleMouseDown = (event: MouseEvent) => {

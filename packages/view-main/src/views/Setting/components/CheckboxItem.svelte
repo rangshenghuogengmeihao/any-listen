@@ -14,16 +14,10 @@
     onchange: (checked: boolean) => void
   } = $props()
   // let id = $derived(`${name}_${desc}_${f}`)
-
-  let val = $state(false)
-
-  $effect(() => {
-    val = checked
-  })
 </script>
 
 <div class="settings-item-checkbox">
-  <Checkbox label={name} {id} checked={val} {onchange} />
+  <Checkbox label={name} {id} {checked} {onchange} />
   {#if desc}
     <p class="settings-item-desc">{desc}</p>
   {/if}

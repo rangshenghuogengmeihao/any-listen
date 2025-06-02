@@ -18,20 +18,14 @@
     onchange: (value: string) => void
   } = $props()
   // let id = $derived(`${name}_${desc}_${f}`)
-
-  let val = $state('')
-
-  $effect(() => {
-    val = value
-  })
 </script>
 
 <TitleContent {name} {desc}>
   <div class="settings-item-input">
     {#if textarea}
-      <Textarea {id} value={val} {onchange} />
+      <Textarea {id} {value} {onchange} />
     {:else}
-      <Input {id} value={val} {onchange} />
+      <Input {id} {value} {onchange} />
     {/if}
   </div>
 </TitleContent>

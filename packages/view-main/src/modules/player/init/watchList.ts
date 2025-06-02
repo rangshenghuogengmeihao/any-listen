@@ -166,6 +166,9 @@ export const initWatchList = () => {
       unregistered.add(
         playerEvent.on('playHistoryListOverwrited', (list) => {
           if (playerState.playInfo.historyIndex < 0) return
+          if (list.length && list[playerState.playInfo.historyIndex]?.id == playerState.playMusicInfo?.itemId) {
+            return
+          }
           updatePlayHistoryIndex(-1)
         })
       )

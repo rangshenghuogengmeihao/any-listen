@@ -23,7 +23,6 @@ export const useLyric = (options: {
   let timeout: number | null = null
   let cancelScrollFn: null | (() => void) = null
   let domLines: HTMLElement[] = []
-  let isSetedLines = false
   let point = {
     x: null as null | number,
     y: null as null | number,
@@ -91,7 +90,7 @@ export const useLyric = (options: {
     if (!domLines.length || !options.domLyric) return
     if (isSkipMouseEnter) return
     if (isStopScroll) return
-    let domP = domLines[lyricState.line] as HTMLElement | null
+    let domP = domLines[Math.max(lyricState.line, 0)] as HTMLElement | null
     cancelScrollFn = handleScroll(options.domLyric, domP ? domP.offsetTop - options.domLyric.clientHeight * 0.38 : 0, duration)
   }
   const clearLyricScrollTimeout = () => {
@@ -195,7 +194,6 @@ export const useLyric = (options: {
       options.onSetStopScroll(false)
       clearLyricScrollTimeout()
     }
-    isSetedLines = true
     if (oldLines) {
       if (lines.length) {
         setLyric(lines)
@@ -219,17 +217,15 @@ export const useLyric = (options: {
   }
 
   let delayScrollTimeout: number | null
-  let oldLine = 0
+  let oldLine = -1
   const clearDelayScrollTimeout = () => {
     if (!delayScrollTimeout) return
     clearTimeout(delayScrollTimeout)
     delayScrollTimeout = null
   }
   const scrollLine = (line: number) => {
-    if (line < 0) return
-    if (line == 0 && isSetedLines) return (isSetedLines = false)
-    isSetedLines &&= false
-    if (!oldLine || line - oldLine != 1) {
+    if (line < 0 || oldLine < 0) return
+    if (line - oldLine != 1) {
       handleScrollLrc()
       return
     }

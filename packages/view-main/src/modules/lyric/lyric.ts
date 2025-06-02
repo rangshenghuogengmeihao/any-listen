@@ -27,28 +27,28 @@ export const pause = () => {
 
 export const stop = () => {
   lrc?.setLyric('')
-  setText('', 0)
+  setText('', -1)
 }
 
 export const initLyric = () => {
   lrc = new Lyric({
     shadowContent: false,
     onPlay(line: number, text: string) {
-      setText(text, Math.max(line, 0))
+      setText(text, line)
       // setStatusText(text)
-      // console.log(line, text)
+      // console.log('onPlay', line, text)
     },
     onSetLyric(lines: Line[], offset: number) {
       // listening lyrics seting event
       // console.log(lines) // lines is array of all lyric text
       setLines([...lines])
-      setText(lines[0]?.text ?? '', 0)
+      setText('', -1)
       setOffset(offset) // 歌词延迟
       setTempOffset(0) // 重置临时延迟
     },
     onUpdateLyric(lines: Line[]) {
       setLines([...lines])
-      setText(lines[0]?.text ?? '', 0)
+      setText('', -1)
     },
     rate: settingState.setting['player.playbackRate'],
     // offset: 80,

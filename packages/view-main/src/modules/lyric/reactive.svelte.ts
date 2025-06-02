@@ -1,6 +1,6 @@
 import { readable } from 'svelte/store'
-import { lyricState } from './store/state'
 import { lyricEvent } from './store/event'
+import { lyricState } from './store/state'
 
 const getLyricLine = () => lyricState.lines[lyricState.line] ?? { line: 0, text: '' }
 

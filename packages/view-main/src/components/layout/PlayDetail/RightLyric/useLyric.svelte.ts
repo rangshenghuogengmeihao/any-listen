@@ -224,8 +224,13 @@ export const useLyric = (options: {
     delayScrollTimeout = null
   }
   const scrollLine = (line: number) => {
-    if (line < 0 || oldLine < 0) return
+    if (line < 0) return
+    if (oldLine < 0) {
+      oldLine = line
+      return
+    }
     if (line - oldLine != 1) {
+      oldLine = line
       handleScrollLrc()
       return
     }

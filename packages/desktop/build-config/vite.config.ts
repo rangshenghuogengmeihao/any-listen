@@ -62,16 +62,18 @@ const gitInfo = {
   commit_id: '',
   commit_date: '',
 }
-
 try {
   if (!execSync('git status --porcelain').toString().trim()) {
     gitInfo.commit_id = execSync('git log -1 --pretty=format:"%H"').toString().trim()
     gitInfo.commit_date = execSync('git log -1 --pretty=format:"%ad" --date=iso-strict').toString().trim()
   } else if (process.env.IS_CI) {
-    throw new Error('Working directory is not clean')
+    console.error('Working directory is not clean')
+    process.exit(1)
   }
 } catch {
-  /* empty */
+  if (process.env.IS_CI) {
+    throw new Error('Getting git commit info failed.')
+  }
 }
 
 export const buildConfig = (mode: string): UserConfig => {

@@ -85,7 +85,11 @@ export const settings: SettingListSection[] = [
         })),
         onChnaged: import.meta.env.VITE_IS_WEB
           ? () => {
-              showNotify(i18n.t('settings__basic_window_size_tip'))
+              if (window.os === 'mac') {
+                showNotify(i18n.t('settings__basic_window_size_tip_mac'))
+              } else {
+                showNotify(i18n.t('settings__basic_window_size_tip'))
+              }
             }
           : undefined,
       },

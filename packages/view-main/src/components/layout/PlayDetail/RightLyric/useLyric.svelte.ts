@@ -23,6 +23,7 @@ export const useLyric = (options: {
   let timeout: number | null = null
   let cancelScrollFn: null | (() => void) = null
   let domLines: HTMLElement[] = []
+  let isSetedLines = false
   let point = {
     x: null as null | number,
     y: null as null | number,
@@ -194,6 +195,7 @@ export const useLyric = (options: {
       options.onSetStopScroll(false)
       clearLyricScrollTimeout()
     }
+    isSetedLines = true
     if (oldLines) {
       if (lines.length) {
         setLyric(lines)
@@ -224,11 +226,15 @@ export const useLyric = (options: {
     delayScrollTimeout = null
   }
   const scrollLine = (line: number) => {
-    if (line < 0) return
-    if (oldLine < 0) {
+    // 切歌或者第一句未开始
+    if (line < 0) {
       oldLine = line
+      // 如果是切换歌词，那么跳过滚动
+      if (isSetedLines) isSetedLines = false
+      else handleScrollLrc()
       return
     }
+    isSetedLines &&= false
     if (line - oldLine != 1) {
       oldLine = line
       handleScrollLrc()

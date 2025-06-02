@@ -14,17 +14,11 @@
     list: Array<{ label: string; value: T }>
     onchange: (value: T) => void
   } = $props()
-
-  let val = $state<T>('' as T)
-
-  $effect(() => {
-    val = value
-  })
 </script>
 
 <TitleContent {name} {desc}>
   <div class="settings-item-selection">
-    <Selection value={val} {list} itemkey="value" itemname="label" {onchange} />
+    <Selection {value} {list} itemkey="value" itemname="label" {onchange} />
   </div>
 </TitleContent>
 

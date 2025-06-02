@@ -16,16 +16,10 @@
     onselect: (checked: T) => void
   } = $props()
   // let id = $derived(`${name}_${desc}_${f}`)
-
-  let val = $state(false)
-
-  $effect(() => {
-    val = checked
-  })
 </script>
 
 <div class="settings-item-radio">
-  <Radio label={name} {value} {id} checked={val} {onselect} />
+  <Radio label={name} {value} {id} {checked} {onselect} />
   {#if desc}
     <p class="settings-item-desc">{desc}</p>
   {/if}

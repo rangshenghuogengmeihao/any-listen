@@ -240,6 +240,7 @@
   "settings__basic_window_size_oversized": "超大",
   "settings__basic_window_size_small": "小",
   "settings__basic_window_size_smaller": "较小",
+  "settings__basic_window_size_tip": "📢 请使用 Ctrl + 鼠标滚轮 来缩放界面",
   "settings__basic_window_size_title": "设置软件窗口尺寸",
   "settings__play_save_play_time": "记住播放进度",
   "settings__play_startup_auto_play": "启动软件后自动播放音乐",

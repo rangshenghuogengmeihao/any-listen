@@ -241,6 +241,7 @@
   "settings__basic_window_size_oversized": "超大",
   "settings__basic_window_size_small": "小",
   "settings__basic_window_size_smaller": "較小",
+  "settings__basic_window_size_tip": "📢 請使用 Ctrl + 鼠標滾輪 來縮放界面",
   "settings__basic_window_size_title": "設定軟體視窗尺寸",
   "settings__play_save_play_time": "記住播放進度",
   "settings__play_startup_auto_play": "啟動軟體後自動播放音樂",

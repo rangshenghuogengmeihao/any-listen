@@ -43,6 +43,7 @@
       value={setting.val as string}
       onchange={(val) => {
         void updateSetting({ [item.field]: val.trim() })
+        item.onChnaged?.(val.trim())
       }}
     />
   {:else if item.type === 'boolean'}
@@ -53,6 +54,7 @@
       checked={setting.val as boolean}
       onchange={(val) => {
         void updateSetting({ [item.field]: val })
+        item.onChnaged?.(val)
       }}
     />
   {:else if item.type === 'radio'}
@@ -65,6 +67,7 @@
           checked={(setting.val as string) == radioItem.value}
           onselect={(val) => {
             void updateSetting({ [item.field]: val })
+            item.onChnaged?.(val)
           }}
         />
       {/each}
@@ -77,6 +80,7 @@
       list={item.enum.map((n) => ({ label: n.name, value: n.value }))}
       onchange={(val) => {
         void updateSetting({ [item.field]: val })
+        item.onChnaged?.(val)
       }}
     />
   {/if}

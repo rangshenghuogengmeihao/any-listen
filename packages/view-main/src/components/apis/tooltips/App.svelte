@@ -9,50 +9,57 @@
     onafterleave?: () => void
   } = $props()
 
+  let rawPosition = { x: 0, y: 0 }
   let position = $state.raw({ x: 0, y: 0 })
   let message = $state('')
   let visible = $state(false)
-  let maxWidth = $state('80%')
+  let width = $state('auto')
   let transform = $state('translate(0, 0)')
-  let style = $derived(`left:${position.x}px;top:${position.y}px;transform:${transform};max-width:${maxWidth};`)
+  let style = $derived(`left:${position.x}px;top:${position.y}px;transform:${transform};max-width:80%;width:${width};`)
   let domTips = $state<HTMLDivElement>()
   let autoCloseTimer: null | number = null
 
-  const handleGetMaxWidth = (left: number) => {
-    const containerWidth = document.documentElement.clientWidth
-    let maxWidth = containerWidth - left
-    return (maxWidth > left ? maxWidth : left - 12) - 30
-  }
+  // const handleGetMaxWidth = (left: number) => {
+  //   const containerWidth = document.documentElement.clientWidth
+  //   let maxWidth = containerWidth - left
+  //   return (maxWidth > left ? maxWidth : left - 12) - 30
+  // }
   const handleGetOffsetXY = (left: number, top: number) => {
+    // const maxWidth = handleGetMaxWidth(left)
+
     const tipsWidth = domTips!.clientWidth
     const tipsHeight = domTips!.clientHeight
     const domContainer = document.documentElement
     const containerWidth = domContainer.clientWidth
     const containerHeight = domContainer.clientHeight
-    const offsetWidth = containerWidth - left - tipsWidth
-    const offsetHeight = containerHeight - top - tipsHeight
     let x = 0
     let y = 0
-    if (tipsWidth < left && containerWidth > tipsWidth && offsetWidth < 5) {
-      x = -tipsWidth - 12
+    if (left + tipsWidth > containerWidth - 5) {
+      x = containerWidth - left - tipsWidth - 6
     }
-    if (tipsHeight < top && containerHeight > tipsHeight && offsetHeight < 5) {
-      y = -tipsHeight - 8
+    if (top + tipsHeight > containerHeight - 5) {
+      y = -tipsHeight - 14
     }
     return `${x}px, ${y}px`
+  }
+  const setPosition = () => {
+    position = { x: 0, y: 0 }
+    width = 'auto'
+    transform = 'translate(0, 0)'
+    void tick().then(() => {
+      // maxWidth = `${handleGetMaxWidth(position.x)}px`
+      // await tick()
+      if (!domTips) return
+      position = rawPosition
+      width = window.getComputedStyle(domTips, null).width
+      transform = `translate(${handleGetOffsetXY(rawPosition.x, rawPosition.y)})`
+    })
   }
 
   $effect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     message
-    untrack(() => {
-      void tick().then(async () => {
-        maxWidth = `${handleGetMaxWidth(position.x)}px`
-        await tick()
-        if (!domTips) return
-        transform = `translate(${handleGetOffsetXY(position.x, position.y)})`
-      })
-    })
+    untrack(setPosition)
   })
 
   let autoCloseTime = 0
@@ -69,7 +76,10 @@
     autoCloseTimer = null
   }
   export const show = (_position: Position, _message: string, _autoCloseTime = 0) => {
-    position = _position
+    if ((rawPosition.x !== _position.x || rawPosition.y !== _position.y) && message === _message) {
+      setPosition()
+    }
+    rawPosition = _position
     message = _message
     autoCloseTime = _autoCloseTime
     addAutoCloseTimer()

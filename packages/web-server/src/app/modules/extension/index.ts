@@ -37,6 +37,7 @@ const setupExtension = async () => {
     dataDir: joinPath(extensionState.extensionDir, EXTENSION.dataDirName),
     preloadScript: (await readFile(joinPath(__dirname, 'extension-preload.js'))).toString(),
     onlineExtensionHost: appState.appSetting['extension.onlineExtensionHost'],
+    gHMirrorHosts: appState.appSetting['extension.ghMirrorHosts'],
   })
   await workers.extensionService.loadLocalExtensions()
   await workers.extensionService.startExtensions()
@@ -66,6 +67,11 @@ export const initExtension = async () => {
     if (keys.includes('extension.onlineExtensionHost')) {
       try {
         void workers.extensionService.updateOnlineExtensionListHost(setting['extension.onlineExtensionHost']!)
+      } catch {}
+    }
+    if (keys.includes('extension.ghMirrorHosts')) {
+      try {
+        void workers.extensionService.updateGHMirrorHosts(setting['extension.ghMirrorHosts']!)
       } catch {}
     }
   })

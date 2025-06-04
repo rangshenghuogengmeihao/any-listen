@@ -18,6 +18,7 @@ import {
 } from '@any-listen/nodejs'
 import { simpleDownload } from '@any-listen/nodejs/download'
 import { readLastLines } from '@any-listen/nodejs/logs'
+import { eachMirror } from '@any-listen/nodejs/mirrorReuqest'
 import { verifySignature } from '@any-listen/nodejs/sign'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -252,6 +253,15 @@ export const stopRunExtension = async (extension: AnyListen.Extension.Extension)
   return false
 }
 
+const downloadExtensionFile = async (url: string, bundlePath: string) => {
+  return eachMirror(null, url, url, async (url: string) => {
+    await simpleDownload(url, bundlePath).catch(async (err) => {
+      await removePath(bundlePath)
+      throw err
+    })
+  })
+}
+
 export const downloadExtension = async (url: string, manifest?: AnyListen.Extension.Manifest) => {
   if (!/^https?:\/\//i.test(url)) {
     const stats = await getFileStats(url)
@@ -275,10 +285,7 @@ export const downloadExtension = async (url: string, manifest?: AnyListen.Extens
   }
 
   const bundlePath = joinPath(extensionState.tempDir, `${toSha256(manifest?.id ?? generateId())}${FILE_EXT_NAME}`)
-  await simpleDownload(url, bundlePath).catch(async (err: Error) => {
-    await removePath(bundlePath)
-    throw err
-  })
+  await downloadExtensionFile(url, bundlePath)
   return bundlePath
 }
 

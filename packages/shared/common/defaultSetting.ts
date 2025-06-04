@@ -141,6 +141,7 @@ const defaultSetting: AnyListen.AppSetting = {
   'odc.isAutoClearSearchList': false,
 
   'extension.onlineExtensionHost': '',
+  'extension.ghMirrorHosts': 'https://ghproxy.net\nhttps://gh-proxy.com\nhttps://ghproxy.cn\nhttps://github.moeyy.xyz',
 }
 
 // 使用新年皮肤

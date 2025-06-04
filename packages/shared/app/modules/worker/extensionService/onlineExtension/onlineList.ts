@@ -1,5 +1,5 @@
 import type { Locale } from '@any-listen/i18n'
-import { request } from '@any-listen/nodejs/request'
+import { mirrorRequest } from '@any-listen/nodejs/mirrorReuqest'
 import { extensionState } from '../state'
 import { setMessages, t } from './i18n'
 
@@ -19,7 +19,7 @@ let datas = {
 
 const getRemoteI18nMessages = async (lang: Locale) => {
   if (!datas.i18nMessages[lang]) {
-    let { body, statusCode } = await request<Record<string, string> | null>(`${API_URL}/i18n/${lang}.json`)
+    let { body, statusCode } = await mirrorRequest<Record<string, string> | null>(`${API_URL}/i18n/${lang}.json`)
     if (statusCode == 404) {
       body = {} // No i18n data for this locale, return empty object
     } else if (statusCode == 200) {
@@ -51,7 +51,7 @@ const initI18nMessages = async () => {
 
 const getRemoteOnlineTags = async (): Promise<AnyListen.IPCExtension.OnlineTagResult> => {
   if (!datas.tags) {
-    const { body } = await request<AnyListen.IPCExtension.OnlineTagResult | null>(`${API_URL}/tags.json`)
+    const { body } = await mirrorRequest<AnyListen.IPCExtension.OnlineTagResult | null>(`${API_URL}/tags.json`)
 
     if (!body || !Array.isArray(body)) throw new Error('Invalid tags data')
     if (body.length) {
@@ -72,7 +72,7 @@ export const getOnlineTags = async (): Promise<AnyListen.IPCExtension.OnlineTagR
 
 const getRemoteOnlineCategories = async (): Promise<AnyListen.IPCExtension.OnlineCategorieResult> => {
   if (!datas.categories) {
-    const { body } = await request<AnyListen.IPCExtension.OnlineCategorieResult | null>(`${API_URL}/categories.json`)
+    const { body } = await mirrorRequest<AnyListen.IPCExtension.OnlineCategorieResult | null>(`${API_URL}/categories.json`)
 
     if (!body || !Array.isArray(body)) throw new Error('Invalid categories data')
     if (body.length) {
@@ -92,7 +92,7 @@ export const getOnlineCategories = async (): Promise<AnyListen.IPCExtension.Onli
 
 const getList = async (): Promise<AnyListen.IPCExtension.OnlineListItem[]> => {
   if (!datas.list) {
-    const { body } = await request<{ all: AnyListen.IPCExtension.OnlineListItem[] } | null>(`${API_URL}/list.json`)
+    const { body } = await mirrorRequest<{ all: AnyListen.IPCExtension.OnlineListItem[] } | null>(`${API_URL}/list.json`)
 
     if (!body || !Array.isArray(body.all)) throw new Error('Invalid list data')
     if (body.all.length) {
@@ -120,7 +120,7 @@ export const getOnlineExtensionList = async (
 }
 
 export const getOnlineExtensionDetail = async (id: string) => {
-  const resp = await request<AnyListen.IPCExtension.OnlineDetail>(`${API_URL}/registry/${id}.json`)
+  const resp = await mirrorRequest<AnyListen.IPCExtension.OnlineDetail>(`${API_URL}/registry/${id}.json`)
   if (resp.statusCode == 404) return null
   if (resp.statusCode !== 200) throw new Error(`Failed to fetch extension detail for ${id}: ${resp.statusMessage}`)
   return resp.body
@@ -134,4 +134,14 @@ export const resetOnlineData = () => {
   datas.i18nMessages = {}
   datas.i18nLocale = ''
   datas.i18nPromise = null
+}
+
+export const initOnlineList = async () => {
+  try {
+    await getList()
+    // TODO: check update
+  } catch {
+    if (import.meta.env.DEV) console.error('Failed to fetch online extension list')
+    setTimeout(initOnlineList, 5000)
+  }
 }

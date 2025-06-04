@@ -31,7 +31,7 @@
 
   let domInput: HTMLTextAreaElement
 
-  const handleInput = (event: Event) => {
+  const handleInput = () => {
     let newValue = domInput.value
     if (trim) {
       newValue = newValue.trim()
@@ -57,7 +57,8 @@
       str +
       text.substring(domInput.selectionEnd ?? domInput.selectionStart, text.length)
     domInput.value = newValue
-    value = newValue
+    handleInput()
+    onchange(domInput.value.trim())
     // } else {
     //   clipboardWriteText(text.substring(domInput.selectionStart, domInput.selectionEnd))
     // }
@@ -95,11 +96,11 @@
     border: none;
     border-radius: @form-radius;
     padding: 7px 8px;
-    color: var(--color-button-font);
+    color: var(--color-font);
     outline: none;
     transition: background-color 0.2s ease;
     background-color: var(--color-primary-background);
-    font-size: 13.3px;
+    font-size: 14px;
     height: 90px;
     min-width: 130px;
     max-width: 100%;

@@ -39,7 +39,7 @@
 
   let domInput: HTMLInputElement
 
-  const handleInput = (event: Event) => {
+  const handleInput = () => {
     if (readonly) {
       domInput.value = value
       return
@@ -73,7 +73,8 @@
       str +
       text.substring(domInput.selectionEnd ?? domInput.selectionStart, text.length)
     domInput.value = newValue
-    value = newValue
+    handleInput()
+    onchange(domInput.value.trim())
     // } else {
     //   clipboardWriteText(text.substring(domInput.selectionStart, domInput.selectionEnd))
     // }
@@ -118,7 +119,7 @@
     outline: none;
     transition: background-color 0.2s ease;
     background-color: var(--color-primary-background);
-    font-size: 13.3px;
+    font-size: 14px;
 
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {

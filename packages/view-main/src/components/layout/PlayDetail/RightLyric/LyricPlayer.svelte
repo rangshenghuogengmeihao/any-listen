@@ -120,7 +120,7 @@
         padding-bottom: calc(var(--playDetail-lrc-font-size, 16px) / 1.8);
         overflow-wrap: break-word;
         color: @unplay-color;
-        transition: @transition-slow;
+        transition: @transition-slow !important;
         transition-property: padding transform;
         transform-origin: 0;
         // font-weight: 600;

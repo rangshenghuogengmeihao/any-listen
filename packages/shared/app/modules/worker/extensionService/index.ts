@@ -1,3 +1,4 @@
+import { setGHMirrorHosts } from '@any-listen/nodejs/mirrorReuqest'
 import { setProxyByHost } from '@any-listen/nodejs/request'
 import { exposeWorker } from '../utils/worker'
 import { registerErrorHandler } from './errorHandler'
@@ -15,7 +16,13 @@ import {
   updateExtension,
   updateExtensionI18nMessages,
 } from './manage'
-import { getOnlineCategories, getOnlineExtensionDetail, getOnlineExtensionList, getOnlineTags } from './onlineExtension'
+import {
+  getOnlineCategories,
+  getOnlineExtensionDetail,
+  getOnlineExtensionList,
+  getOnlineTags,
+  initOnlineList,
+} from './onlineExtension'
 import { resetI18n } from './onlineExtension/i18n'
 import { buildExtensionSettings, getExtensionLastLogs, updateExtensionSettings, updateResourceListDeounce } from './shared'
 import { extensionState } from './state'
@@ -45,6 +52,7 @@ const extension = {
     tempDir: string
     preloadScript: string
     onlineExtensionHost: string
+    gHMirrorHosts: string
   }) {
     extensionState.locale = state.locale
     extensionState.proxy.host = state['proxy.host']
@@ -58,6 +66,7 @@ const extension = {
     extensionState.onlineExtensionHost = state.onlineExtensionHost
 
     setProxyByHost(state['proxy.host'], state['proxy.port'])
+    setGHMirrorHosts(state.gHMirrorHosts)
   },
   async updateLocale(locale: AnyListen.Locale) {
     extensionState.locale = locale
@@ -74,6 +83,9 @@ const extension = {
   },
   updateOnlineExtensionListHost(host: string) {
     extensionState.onlineExtensionHost = host
+  },
+  updateGHMirrorHosts(host: string) {
+    setGHMirrorHosts(host)
   },
   async getOnlineExtensionList(filter: AnyListen.IPCExtension.OnlineListFilterOptions) {
     return getOnlineExtensionList(filter)
@@ -138,7 +150,6 @@ void exposeWorker<
 >(extension).then(({ remote }) => {
   extensionState.remoteFuncs = remote
   // console.log('object', remote.ini())
-  remote.inited()
   extensionEvent.on('extensionEvent', (action: AnyListen.IPCExtension.EventExtension) => {
     void remote.onExtensionEvent(action)
   })
@@ -148,6 +159,9 @@ void exposeWorker<
   extensionEvent.on('stoped', () => {
     updateResourceListDeounce()
   })
+
+  remote.inited()
+  void initOnlineList()
 })
 
 console.log('extension host running')

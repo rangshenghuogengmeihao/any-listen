@@ -8,6 +8,7 @@
   import { extT } from '@/modules/extension/i18n'
   import { downloadAndParseExtension, updateExtension, installExtension } from '@/modules/extension/store/actions'
   import { showNotify } from '@/components/apis/notify'
+  import { tooltip } from '@/components/apis/tooltips'
 
   let { ext }: { ext: OnlineListItem } = $props()
   let version = $derived(`${ext.installed && !ext.latest ? `v${ext.currentVersion} → ` : ''}v${ext.version}`)
@@ -48,7 +49,7 @@
       {#if grants.length}
         <div class="grant">
           {#each grants as grant (grant.id)}
-            <span aria-label={grant.label}><SvgIcon name={grant.icon} /></span>
+            <span aria-label={grant.label} data-ignore-tip use:tooltip><SvgIcon name={grant.icon} /></span>
           {/each}
         </div>
       {/if}

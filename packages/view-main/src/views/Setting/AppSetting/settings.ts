@@ -4,6 +4,7 @@ import { i18n, langList, type Message } from '@/plugins/i18n'
 import { windowSizeList } from '@any-listen/common/constants'
 import type { Component } from 'svelte'
 import About from './About.svelte'
+import ExtensionGHMirrorHosts from './ExtensionGHMirrorHosts.svelte'
 import LoginDevices from './LoginDevices.svelte'
 import Update from './Update.svelte'
 
@@ -184,6 +185,18 @@ export const settings: SettingListSection[] = [
         field: 'playDetail.isZoomActiveLrc',
         name: 'settings.play_detail.zoom_active_lrc',
         type: 'boolean',
+      },
+    ],
+  },
+  {
+    id: 'extension',
+    // t('settings.extension.gh_mirror_hosts')
+    name: 'settings.extension',
+    list: [
+      {
+        name: 'settings.extension.gh_mirror_hosts',
+        type: 'component',
+        component: ExtensionGHMirrorHosts,
       },
     ],
   },

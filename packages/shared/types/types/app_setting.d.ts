@@ -642,6 +642,11 @@ declare global {
        * 扩展仓库地址
        */
       'extension.onlineExtensionHost': string
+
+      /**
+       * github 镜像站点地址列表
+       */
+      'extension.ghMirrorHosts': string
     }
   }
 }

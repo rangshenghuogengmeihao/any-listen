@@ -1,1 +1,7 @@
-export { getOnlineCategories, getOnlineExtensionDetail, getOnlineExtensionList, getOnlineTags } from './onlineList'
+export {
+  getOnlineCategories,
+  getOnlineExtensionDetail,
+  getOnlineExtensionList,
+  getOnlineTags,
+  initOnlineList,
+} from './onlineList'

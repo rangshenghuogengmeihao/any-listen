@@ -129,7 +129,7 @@ export const buildConfig = (mode: string): UserConfig => {
           // manualChunks(id, info) {
           // //   return 'main'
           // },
-          experimentalMinChunkSize: 50_000,
+          // experimentalMinChunkSize: 50_000,
         },
         logLevel: 'warn',
       },

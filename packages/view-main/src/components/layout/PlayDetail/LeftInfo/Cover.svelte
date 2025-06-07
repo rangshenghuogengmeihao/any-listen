@@ -3,6 +3,9 @@
   import { musicInfo, playerPlaying } from '@/modules/player/reactive.svelte'
   import { onVisibilityChange } from '@any-listen/web'
   import { onMount } from 'svelte'
+
+  // let { introend }: { introend: boolean } = $props()
+
   let pic = $derived($musicInfo.pic)
   let visible = $state(true)
 
@@ -35,8 +38,9 @@
     backdrop-filter: blur(4px);
     border-radius: 6px;
     box-shadow: 0 0 6px var(--color-primary-alpha-500);
-    overflow: hidden;
+    contain: strict;
     background-color: var(--color-primary-light-300-alpha-800);
+    aspect-ratio: 1 / 1;
 
     .mixin-dot(@color: var(--color-primary-light-300-alpha-800)) {
       .mixin-after();
@@ -75,7 +79,7 @@
   .cover-cd {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;
+    height: 100%;
     contain: strict;
     border-radius: 50%;
     overflow: hidden;

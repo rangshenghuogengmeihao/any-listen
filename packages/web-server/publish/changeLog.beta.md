@@ -1,10 +1,6 @@
 ### Add
 
-- Added extension store mirror source settings
-
-### Optimize
-
-- Optimize tooltip display position
+- Add medium and full-width playback bar styles for the centered control button
 
 ### Fixes
 
@@ -14,11 +10,7 @@
 
 ### 新增
 
-- 新增扩展商店镜像源设置
-
-### 优化
-
-- 优化工具提示显示位置
+- 添加居中控制按钮中等、全宽的播放栏样式
 
 ### 修复
 

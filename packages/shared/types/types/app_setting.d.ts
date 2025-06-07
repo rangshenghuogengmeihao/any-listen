@@ -60,7 +60,7 @@ declare global {
       /**
        * 播放栏进度条样式
        */
-      'common.playBarProgressStyle': 'mini' | 'full' | 'middle' | 'center'
+      'common.playBarProgressStyle': 'mini' | 'full' | 'middle' | 'centerControl' | 'centerControlMiddle' | 'centerControlFull'
 
       /**
        * 启用透明窗口

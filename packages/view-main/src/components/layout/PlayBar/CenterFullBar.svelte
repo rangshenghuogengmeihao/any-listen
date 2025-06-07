@@ -1,26 +1,28 @@
 <script>
-  import Container from './components/Container.svelte'
   import PlayInfo from './components/PlayInfo.svelte'
   import Pic from './components/Pic.svelte'
-  import PlayBtns from './components/PlayBtns.svelte'
   import ControlBtns from './components/ControlBtns.svelte'
-  import Times from './components/Times.svelte'
   import PlayerProgressBar from '@/components/common/PlayerProgressBar.svelte'
+  import CenterControlLayout from './components/CenterControlLayout.svelte'
+  import Times from './components/Times.svelte'
   // export let params = {}
 
   // console.log(params)
 </script>
 
-<Container padding>
+<CenterControlLayout>
+  {#snippet left()}
+    <Pic />
+    <PlayInfo />
+  {/snippet}
+  {#snippet right()}
+    <Times />
+    <ControlBtns />
+  {/snippet}
   <div class="progress">
     <PlayerProgressBar />
   </div>
-  <Pic />
-  <PlayInfo />
-  <Times />
-  <ControlBtns />
-  <PlayBtns />
-</Container>
+</CenterControlLayout>
 
 <style lang="less">
   .progress {
@@ -37,13 +39,13 @@
       .progress {
         height: 2px;
         border-radius: 0;
-        background-color: var(--color-primary-light-100-alpha-900);
+        background-color: transparent;
       }
       .progressBar2 {
-        background-color: var(--color-primary-light-100-alpha-600);
+        background-color: var(--color-primary-light-100-alpha-800);
       }
       .progressBar3 {
-        background-color: var(--color-primary-light-100-alpha-400);
+        background-color: var(--color-primary-light-100-alpha-600);
       }
     }
   }

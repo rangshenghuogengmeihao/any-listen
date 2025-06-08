@@ -48,7 +48,7 @@ export const buildConfig = (mode: string): UserConfig => {
           entryFileNames: isProd ? '[name].[hash].js' : '[name].js',
           chunkFileNames: '[name].js',
           format: 'esm',
-          experimentalMinChunkSize: 50_000,
+          // experimentalMinChunkSize: 50_000,
         },
         logLevel: 'warn',
       },

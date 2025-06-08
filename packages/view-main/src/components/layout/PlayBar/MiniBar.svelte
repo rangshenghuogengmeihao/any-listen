@@ -10,7 +10,7 @@
   // console.log(params)
 </script>
 
-<Container>
+<Container padding>
   <Pic />
   <PlayInfo />
   <MiniPlayProgress />

@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { type UserConfig, defineConfig } from 'vite'
+import type { UserConfig } from 'vite'
 // import dts from 'vite-plugin-dts'
 
 const isProd = process.env.NODE_ENV == 'production'
@@ -52,7 +52,7 @@ export const buildConfig = (target: Target): UserConfig => {
         output: {
           entryFileNames: '[name].js',
           format: 'iife',
-          experimentalMinChunkSize: 50_000,
+          // experimentalMinChunkSize: 50_000,
         },
         logLevel: 'warn',
       },

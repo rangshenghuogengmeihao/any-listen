@@ -22,6 +22,7 @@
   .container {
     flex: auto;
     min-width: 0;
+    contain: content;
   }
   .name {
     font-size: 14px;

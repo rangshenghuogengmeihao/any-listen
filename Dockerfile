@@ -11,6 +11,10 @@ FROM alpine AS base
 
 FROM base AS builder
 
+ARG IS_CI
+ARG GIT_COMMIT_ID
+ARG GIT_COMMIT_DATE
+
 WORKDIR /source-code
 
 RUN apk add --update --no-cache \
@@ -30,8 +34,13 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN npm install corepack -g && corepack enable pnpm && pnpm fetch
 
 COPY . ./
-RUN pnpm i --offline --frozen-lockfile &&\
-    pnpm build:web
+RUN pnpm i --offline --frozen-lockfile
+
+ENV IS_CI=${IS_CI}
+ENV GIT_COMMIT_ID=${GIT_COMMIT_ID}
+ENV GIT_COMMIT_DATE="${GIT_COMMIT_DATE}"
+
+RUN pnpm build:web
 
 FROM base AS final
 WORKDIR /server

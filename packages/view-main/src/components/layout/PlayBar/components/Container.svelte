@@ -3,14 +3,16 @@
 
   let {
     children,
+    padding,
   }: {
     children: Snippet
+    padding?: boolean
   } = $props()
 </script>
 
 <div class="player">
   <div class="bg"></div>
-  <div class="player-inner">
+  <div class="player-inner" class:padding>
     {@render children()}
   </div>
 </div>
@@ -73,9 +75,11 @@
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
-    padding-right: 10px;
     contain: strict;
     transition: @transition-normal;
     transition-property: opacity;
+    &.padding {
+      padding-right: 10px;
+    }
   }
 </style>

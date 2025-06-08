@@ -162,7 +162,7 @@ export const buildConfig = (target, port = 9200, ipcScript) => {
         output: {
           entryFileNames: '[name][hash].js',
           format: 'cjs',
-          experimentalMinChunkSize: 50_000,
+          // experimentalMinChunkSize: 50_000,
           // manualChunks: {
           //   'iconv-lite': ['iconv-lite'],
           // },
@@ -237,7 +237,7 @@ export const buildConfig = (target, port = 9200, ipcScript) => {
           entryFileNames: '[name][hash].js',
           inlineDynamicImports: true,
           format: 'iife',
-          experimentalMinChunkSize: 50_000,
+          // experimentalMinChunkSize: 50_000,
         },
         logLevel: 'warn',
       },

@@ -10,6 +10,7 @@ packages:
 
 overrides:
   '@types/ws': '8.5.4'
+  # 'vite': 'npm:rolldown-vite@latest'
   'depd': 'latest'
   'node-abi': 'latest'
   'json5': 'latest'

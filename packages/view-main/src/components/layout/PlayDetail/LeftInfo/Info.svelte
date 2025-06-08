@@ -16,7 +16,7 @@
     flex: auto;
     width: var(--content-with);
     margin-top: 15px;
-    padding-bottom: 15px;
+    // padding-bottom: 15px;
     min-height: 0;
     p {
       line-height: 1.5;

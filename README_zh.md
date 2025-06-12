@@ -35,6 +35,7 @@ const config = {
   // ],
   // 'upstreamProxy.enabled': false, // 是否使用代理转发请求
   // 'upstreamProxy.header': '', // 代理转发请求头（如 `x-real-ip`）
+  // 'extension.ghMirrorHosts': [], // 扩展商店 Github 镜像地址
 
   // 允许访问的本地目录
   // allowPublicDir: ['G:', 'E:\\music'], // Windows 示例
@@ -53,16 +54,17 @@ docker run --volume=/home/music:/music --volume=/data:/server/data -p 8080:9500 
 
 环境变量说明
 
-| 变量名                  | 描述                                                                                |
-| ----------------------- | ----------------------------------------------------------------------------------- |
-| `PORT`                  | 绑定端口，默认 `9500`                                                               |
-| `BIND_IP`               | 绑定IP，默认 `127.0.0.1`，设为 `0.0.0.0` 接受所有IPv4请求，设为 `::` 接受所有IP请求 |
-| `UPSTREAM_PROXY_HEADER` | 代理转发请求头（如 `x-real-ip`），设置后自动启用代理                                |
-| `ALLOW_PUBLIC_DIR`      | 允许访问的本地目录，多个目录用英文逗号分隔                                          |
-| `DATA_PATH`             | 数据存储路径，默认 `./data`                                                         |
-| `LOGIN_PWD`             | 登录密码                                                                            |
-| `CONFIG_PATH`           | 配置文件路径，默认 `./data/config.js`                                               |
-| `LOG_PATH`              | 日志存储路径，默认 `./data/logs`                                                    |
+| 变量名                      | 描述                                                                                |
+| --------------------------- | ----------------------------------------------------------------------------------- |
+| `PORT`                      | 绑定端口，默认 `9500`                                                               |
+| `BIND_IP`                   | 绑定IP，默认 `127.0.0.1`，设为 `0.0.0.0` 接受所有IPv4请求，设为 `::` 接受所有IP请求 |
+| `UPSTREAM_PROXY_HEADER`     | 代理转发请求头（如 `x-real-ip`），设置后自动启用代理                                |
+| `ALLOW_PUBLIC_DIR`          | 允许访问的本地目录，多个目录用英文逗号分隔                                          |
+| `DATA_PATH`                 | 数据存储路径，默认 `./data`                                                         |
+| `LOGIN_PWD`                 | 登录密码                                                                            |
+| `CONFIG_PATH`               | 配置文件路径，默认 `./data/config.js`                                               |
+| `LOG_PATH`                  | 日志存储路径，默认 `./data/logs`                                                    |
+| `EXTENSION_GH_MIRROR_HOSTS` | 扩展商店 Github 镜像地址，多个地址使用英文逗号分隔                                  |
 
 ### 源码编译
 

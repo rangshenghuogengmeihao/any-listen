@@ -6,6 +6,7 @@
   import { settingState } from '@/modules/setting/store/state'
   import Btn from '@/components/base/Btn.svelte'
   import defaultSetting from '@any-listen/common/defaultSetting'
+  import { formatExtensionGHMirrorHosts } from '@any-listen/common/tools'
 
   const formatVal = (v: string) => {
     return v.length ? `${v}\n` : v
@@ -14,23 +15,7 @@
   const defVal = defaultSetting['extension.ghMirrorHosts']
 
   const handleSave = () => {
-    let vals = value
-      .trim()
-      .split('\n')
-      .map((v) => {
-        v = v.trim().replace(/\/$/, '') // Remove trailing slashes
-        if (!v) return ''
-        if (v.startsWith('#') || v.includes(' ')) return ''
-        if (v.startsWith('http://') || v.startsWith('https://')) {
-          return v
-        }
-        return ''
-      })
-      .filter((v) => v !== '')
-
-    vals = Array.from(new Set(vals)) // Remove duplicates
-
-    const newVals = vals.join('\n')
+    const newVals = formatExtensionGHMirrorHosts(value.trim().split('\n')).join('\n')
 
     void updateSetting({
       'extension.ghMirrorHosts': newVals,
@@ -49,23 +34,31 @@
           onchange={(val) => {
             value = val
           }}
+          disabled={!import.meta.env.VITE_IS_DESKTOP}
           onblur={handleSave}
         />
       </div>
-      <div class="gap-top">
-        <Btn
-          min
-          disabled={defVal == value.trim()}
-          onclick={() => {
-            value = formatVal(defVal)
-            void updateSetting({
-              'extension.ghMirrorHosts': defVal,
-            })
-          }}
-        >
-          {$t('settings.extension.gh_mirror_hosts_reset')}
-        </Btn>
-      </div>
+      {#if import.meta.env.VITE_IS_DESKTOP}
+        <div class="gap-top">
+          <Btn
+            min
+            disabled={defVal == value.trim()}
+            onclick={() => {
+              value = formatVal(defVal)
+              void updateSetting({
+                'extension.ghMirrorHosts': defVal,
+              })
+            }}
+          >
+            {$t('settings.extension.gh_mirror_hosts_reset')}
+          </Btn>
+        </div>
+      {/if}
+      {#if import.meta.env.VITE_IS_WEB}
+        <div class="gap-top">
+          <p class="small">{$t('settings.extension.gh_mirror_hosts_web_tip')}</p>
+        </div>
+      {/if}
     </div>
   </TitleContent>
 </div>

@@ -35,6 +35,7 @@ const config = {
   // ],
   // 'upstreamProxy.enabled': false, // Whether to use a proxy to forward requests to this server
   // 'upstreamProxy.header': '', // Proxy forwarding request headers, `x-real-ip`
+  // 'extension.ghMirrorHosts': [], // Extension Github mirror hosts
 
   // Local directories that are allowed to be accessed
   // This is usually your music directory
@@ -52,16 +53,17 @@ docker run --volume=/home/music:/music --volume=/data:/server/data -p 8080:9500 
 
 Available environment variables
 
-|      Variable Name      | Description                                                                                                 |
-| :---------------------: | ----------------------------------------------------------------------------------------------------------- |
-|         `PORT`          | Bind port, Default `9500`                                                                                   |
-|        `BIND_IP`        | Bind IP, Default `127.0.0.1`, Use `0.0.0.0` to accept all IPv4 requests, use `::` to accept all IP requests |
-| `UPSTREAM_PROXY_HEADER` | Proxy forwarding request headers, `x-real-ip`, If set, it is automatically enabled                          |
-|   `ALLOW_PUBLIC_DIR`    | Local directories that are allowed to be accessed, Use `,` to separate multiple                             |
-|       `DATA_PATH`       | Data path, Default `./data`                                                                                 |
-|       `LOGIN_PWD`       | Login Password                                                                                              |
-|      `CONFIG_PATH`      | Config file path, Default `./data/config.js`                                                                |
-|       `LOG_PATH`        | Log path, Default `./data/logs`                                                                             |
+|        Variable Name        | Description                                                                                                 |
+| :-------------------------: | ----------------------------------------------------------------------------------------------------------- |
+|           `PORT`            | Bind port, Default `9500`                                                                                   |
+|          `BIND_IP`          | Bind IP, Default `127.0.0.1`, Use `0.0.0.0` to accept all IPv4 requests, use `::` to accept all IP requests |
+|   `UPSTREAM_PROXY_HEADER`   | Proxy forwarding request headers, `x-real-ip`, If set, it is automatically enabled                          |
+|     `ALLOW_PUBLIC_DIR`      | Local directories that are allowed to be accessed, Use `,` to separate multiple                             |
+|         `DATA_PATH`         | Data path, Default `./data`                                                                                 |
+|         `LOGIN_PWD`         | Login Password                                                                                              |
+|        `CONFIG_PATH`        | Config file path, Default `./data/config.js`                                                                |
+|         `LOG_PATH`          | Log path, Default `./data/logs`                                                                             |
+| `EXTENSION_GH_MIRROR_HOSTS` | Extension Github mirror hosts, Use `,` to separate multiple                                                 |
 
 ### Compile from source code
 

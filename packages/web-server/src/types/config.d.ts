@@ -29,12 +29,17 @@ declare namespace AnyListen {
     /**
      * 是否使用代理转发请求到本服务器
      */
-    'proxy.enabled': boolean
+    'upstreamProxy.enabled': boolean
 
     /**
      * 代理转发的请求头
      */
-    'proxy.header': string
+    'upstreamProxy.header': string
+
+    /**
+     * 扩展的 github 镜像站点地址列表
+     */
+    'extension.ghMirrorHosts': string[]
 
     /**
      * 允许选择的系统路径范围

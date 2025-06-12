@@ -37,7 +37,7 @@ const setupExtension = async () => {
     dataDir: joinPath(extensionState.extensionDir, EXTENSION.dataDirName),
     preloadScript: (await readFile(joinPath(__dirname, 'extension-preload.js'))).toString(),
     onlineExtensionHost: appState.appSetting['extension.onlineExtensionHost'],
-    gHMirrorHosts: appState.appSetting['extension.ghMirrorHosts'],
+    gHMirrorHosts: global.anylisten.config['extension.ghMirrorHosts'].join('\n'),
   })
   await workers.extensionService.loadLocalExtensions()
   await workers.extensionService.startExtensions()
@@ -69,11 +69,11 @@ export const initExtension = async () => {
         void workers.extensionService.updateOnlineExtensionListHost(setting['extension.onlineExtensionHost']!)
       } catch {}
     }
-    if (keys.includes('extension.ghMirrorHosts')) {
-      try {
-        void workers.extensionService.updateGHMirrorHosts(setting['extension.ghMirrorHosts']!)
-      } catch {}
-    }
+    // if (keys.includes('extension.ghMirrorHosts')) {
+    //   try {
+    //     void workers.extensionService.updateGHMirrorHosts(setting['extension.ghMirrorHosts']!)
+    //   } catch {}
+    // }
   })
   appEvent.on('proxy_changed', (host, port) => {
     try {

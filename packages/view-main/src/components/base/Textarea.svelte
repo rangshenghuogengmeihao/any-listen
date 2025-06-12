@@ -44,7 +44,7 @@
   }
   const handleContextMenu = async (event: Event) => {
     if (stopcontenteventpropagation) event.stopPropagation()
-    if (!autopaste) return
+    if (!autopaste || disabled) return
     if (domInput.selectionStart === null) return
     let str = await clipboardReadText()
     str = str.trim()

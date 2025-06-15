@@ -46,7 +46,7 @@ const config = {
 
 module.exports = config
 ```
-
+**Note: The following commands are just examples and cannot be used directly!**
 ```bash
 docker run --volume=/home/music:/music --volume=/data:/server/data -p 8080:9500 -d test:latest
 ```

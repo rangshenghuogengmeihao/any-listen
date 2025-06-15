@@ -48,6 +48,7 @@ module.exports = config
 
 2. 运行 Docker 容器
 
+**注意：以下命令只是例子，并不能直接使用！**
 ```bash
 docker run --volume=/home/music:/music --volume=/data:/server/data -p 8080:9500 -d test:latest
 ```

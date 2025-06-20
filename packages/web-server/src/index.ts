@@ -7,6 +7,7 @@ import { DEV_SERVER_PORTS } from '@any-listen/common/constants'
 import { LRUCache } from 'lru-cache'
 import defaultConfig from './shared/defaultConfig'
 
+import { formatExtensionGHMirrorHosts } from '@any-listen/common/tools'
 import { onUpgrade } from './modules/ipc/websocket'
 import { createServerApp } from './server'
 import { initServerData } from './shared/data'
@@ -86,8 +87,8 @@ const p1 = path.join(dataPath, './config.cjs')
 fs.existsSync(p1) && margeConfig(p1)
 envParams.CONFIG_PATH && fs.existsSync(envParams.CONFIG_PATH) && margeConfig(envParams.CONFIG_PATH)
 if (envParams.PROXY_HEADER) {
-  global.anylisten.config['proxy.enabled'] = true
-  global.anylisten.config['proxy.header'] = envParams.PROXY_HEADER
+  global.anylisten.config['upstreamProxy.enabled'] = true
+  global.anylisten.config['upstreamProxy.header'] = envParams.PROXY_HEADER
 }
 if (envParams.LOGIN_PWD) global.anylisten.config.password = envParams.LOGIN_PWD
 if (envParams.ALLOW_PUBLIC_DIR) {
@@ -98,6 +99,13 @@ global.anylisten.config.allowPublicDir = global.anylisten.config.allowPublicDir.
   if (!newP.endsWith(path.sep)) return newP + path.sep
   return newP
 })
+if (envParams.EXTENSION_GH_MIRROR_HOSTS) {
+  global.anylisten.config['extension.ghMirrorHosts'] = envParams.EXTENSION_GH_MIRROR_HOSTS.trim().split(',')
+}
+global.anylisten.config['extension.ghMirrorHosts'] = formatExtensionGHMirrorHosts(
+  global.anylisten.config['extension.ghMirrorHosts']
+)
+
 console.log(`Allowed Public Paths:
   ${global.anylisten.config.allowPublicDir.join('\n  ') || '  No Paths'}
 `)

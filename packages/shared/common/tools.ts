@@ -106,3 +106,26 @@ export const getLatestVersion = (info: AnyListen.UpdateInfo, allowPreRelease = f
   if (!allowPreRelease || !info.beta) return latest
   return info.beta[0]
 }
+
+/**
+ * 格式化扩展商店 github 镜像地址
+ * @param hosts
+ * @returns
+ */
+export const formatExtensionGHMirrorHosts = (hosts: string[]) => {
+  return Array.from(
+    new Set(
+      hosts
+        .map((v) => {
+          v = v.trim().replace(/\/$/, '') // Remove trailing slashes
+          if (!v) return ''
+          if (v.startsWith('#') || v.includes(' ')) return ''
+          if (v.startsWith('http://') || v.startsWith('https://')) {
+            return v
+          }
+          return ''
+        })
+        .filter((v) => v !== '')
+    )
+  )
+}

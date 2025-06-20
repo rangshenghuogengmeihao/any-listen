@@ -37,13 +37,13 @@
       .progress {
         height: 2px;
         border-radius: 0;
-        background-color: var(--color-primary-light-100-alpha-900);
+        background-color: transparent;
       }
       .progressBar2 {
-        background-color: var(--color-primary-light-100-alpha-600);
+        background-color: var(--color-primary-light-100-alpha-800);
       }
       .progressBar3 {
-        background-color: var(--color-primary-light-100-alpha-400);
+        background-color: var(--color-primary-light-100-alpha-600);
       }
     }
   }

@@ -1,3 +1,5 @@
+import defaultSetting from './defaultClientSetting'
+
 const config: AnyListen.Config = {
   port: '9500', // 绑定的端口
   bindIp: '127.0.0.1', // 要绑定的IP， 0.0.0.0 接受所有IP的请求
@@ -12,8 +14,10 @@ const config: AnyListen.Config = {
 
   serverName: '',
 
-  'proxy.enabled': false,
-  'proxy.header': '',
+  'upstreamProxy.enabled': false,
+  'upstreamProxy.header': '',
+
+  'extension.ghMirrorHosts': defaultSetting['extension.ghMirrorHosts'].split('\n'), // 扩展的镜像站点
 
   allowPublicDir: [],
   password: '',

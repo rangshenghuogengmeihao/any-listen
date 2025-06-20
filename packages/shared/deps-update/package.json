@@ -1,0 +1,14 @@
+{
+  "name": "@shared/deps-update",
+  "type": "module",
+  "scripts": {
+    "check": "node index.js"
+  },
+  "devDependencies": {
+    "@any-listen/eslint": "workspace:@shared/eslint@*",
+    "@any-listen/nodejs": "workspace:@shared/nodejs@*",
+    "@any-listen/types": "workspace:@shared/types@*",
+    "npm-check-updates": "^18.0.1",
+    "chalk": "^5.4.1"
+  }
+}

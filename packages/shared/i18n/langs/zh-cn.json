@@ -211,6 +211,7 @@
   "settings.extension.gh_mirror_hosts": "GitHub 镜像地址设置",
   "settings.extension.gh_mirror_hosts_desc": "用于来自 GitHub 的扩展商店数据、扩展包原始地址下载失败时的尝试代理地址，会尝试将原始地址拼接到代理地址之后请求",
   "settings.extension.gh_mirror_hosts_reset": "恢复默认",
+  "settings.extension.gh_mirror_hosts_web_tip": "为了服务的安全，Web 版请到服务配置文件更改该设置",
   "settings.other": "其他设置",
   "settings.play_detail": "播放详情页设置",
   "settings.play_detail.delay_scroll": "延迟歌词滚动",

@@ -1,5 +1,5 @@
+import { constants, createCipheriv, createDecipheriv, privateDecrypt, publicEncrypt } from 'node:crypto'
 import { networkInterfaces } from 'node:os'
-import { createCipheriv, createDecipheriv, publicEncrypt, privateDecrypt, constants } from 'node:crypto'
 // import { join } from 'node:path'
 // import zlib from 'node:zlib'
 import type http from 'node:http'
@@ -33,8 +33,8 @@ export const generateCode = (): string => {
 
 export const getIP = (request: http.IncomingMessage) => {
   let ip: string | undefined
-  if (global.anylisten.config['proxy.enabled']) {
-    const proxyIp = request.headers[global.anylisten.config['proxy.header']]
+  if (global.anylisten.config['upstreamProxy.enabled']) {
+    const proxyIp = request.headers[global.anylisten.config['upstreamProxy.header']]
     if (typeof proxyIp == 'string') ip = proxyIp
   }
   ip ||= request.socket.remoteAddress

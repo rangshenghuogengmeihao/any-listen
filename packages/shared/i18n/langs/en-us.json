@@ -212,6 +212,7 @@
   "settings.extension.gh_mirror_hosts": "GitHub mirror address settings",
   "settings.extension.gh_mirror_hosts_desc": "Used for the extension store data from GitHub and the proxy address when the original address of the extension package fails to be downloaded. It will try to splice the original address to the proxy address and then request it.",
   "settings.extension.gh_mirror_hosts_reset": "Restore default",
+  "settings.extension.gh_mirror_hosts_web_tip": "For the security of the service, please go to the service configuration file to change the settings for the web version",
   "settings.other": "Other settings",
   "settings.play_detail": "Play Details Page Settings",
   "settings.play_detail.delay_scroll": "Delay lyrics scroll",

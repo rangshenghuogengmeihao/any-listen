@@ -8,11 +8,14 @@ import { LRUCache } from 'lru-cache'
 import defaultConfig from './shared/defaultConfig'
 
 import { formatExtensionGHMirrorHosts } from '@any-listen/common/tools'
+import { printLogo } from './app/shared/utils'
 import { onUpgrade } from './modules/ipc/websocket'
 import { createServerApp } from './server'
 import { initServerData } from './shared/data'
 import { initLogger, startupLog } from './shared/log4js'
 import { checkAndCreateDir, exit, nodeProcess } from './shared/utils'
+
+printLogo()
 
 type ENV_PARAMS_Type = typeof ENV_PARAMS
 type ENV_PARAMS_Value_Type = ENV_PARAMS_Type[number]
@@ -100,7 +103,7 @@ global.anylisten.config.allowPublicDir = global.anylisten.config.allowPublicDir.
   return newP
 })
 if (envParams.EXTENSION_GH_MIRROR_HOSTS) {
-  global.anylisten.config['extension.ghMirrorHosts'] = envParams.EXTENSION_GH_MIRROR_HOSTS.trim().split(',')
+  global.anylisten.config['extension.ghMirrorHosts'] = envParams.EXTENSION_GH_MIRROR_HOSTS.split(',')
 }
 global.anylisten.config['extension.ghMirrorHosts'] = formatExtensionGHMirrorHosts(
   global.anylisten.config['extension.ghMirrorHosts']

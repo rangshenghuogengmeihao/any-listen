@@ -14,11 +14,11 @@
   let isActiveTransition = $state(false)
   let dragProgress = $state(0)
 
-  const handleMsDown = (event: MouseEvent) => {
+  const handleDown = (clientX: number, offsetX: number) => {
     msEvent.isMsDown = true
-    msEvent.msDownX = event.clientX
+    msEvent.msDownX = clientX
 
-    let val = event.offsetX / domProgress.clientWidth
+    let val = offsetX / domProgress.clientWidth
     if (val < 0) val = 0
     if (val > 1) val = 1
 
@@ -29,14 +29,36 @@
     msEvent.isMsDown = false
     dragging = false
   }
-  const handleMsMove = (event: MouseEvent) => {
-    if (!msEvent.isMsDown) return
+  const handleMove = (clientX: number) => {
     dragging ||= true
 
-    let progress = msEvent.msDownProgress + (event.clientX - msEvent.msDownX) / domProgress.clientWidth
+    let progress = msEvent.msDownProgress + (clientX - msEvent.msDownX) / domProgress.clientWidth
     if (progress > 1) progress = 1
     else if (progress < 0) progress = 0
     dragProgress = progress
+  }
+  const handleMsMove = (event: MouseEvent) => {
+    if (!msEvent.isMsDown) return
+    handleMove(event.clientX)
+  }
+  const handleTouchMove = (event: TouchEvent) => {
+    if (event.changedTouches.length) {
+      if (!msEvent.isMsDown) return
+      event.preventDefault()
+      const touch = event.changedTouches[0]
+      handleMove(touch.clientX)
+    }
+  }
+  const handleMsDown = (event: MouseEvent) => {
+    handleDown(event.clientX, event.offsetX)
+  }
+  const handleTouchDown = (event: TouchEvent) => {
+    if (event.changedTouches.length) {
+      event.preventDefault()
+      const touch = event.changedTouches[0]
+      let offsetX = touch.clientX - (event.currentTarget as HTMLDivElement).getBoundingClientRect().left
+      handleDown(touch.clientX, offsetX)
+    }
   }
 
   const handleTransitionend = () => {
@@ -45,13 +67,17 @@
 
   onMount(() => {
     document.addEventListener('mousemove', handleMsMove)
+    document.addEventListener('touchmove', handleTouchMove)
     document.addEventListener('mouseup', handleMsUp)
+    document.addEventListener('touchend', handleMsUp)
     const unsub = onActivePlayProgressTransition(() => {
       isActiveTransition = true
     })
     return () => {
       document.removeEventListener('mousemove', handleMsMove)
+      document.removeEventListener('touchmove', handleTouchMove)
       document.removeEventListener('mouseup', handleMsUp)
+      document.removeEventListener('touchend', handleMsUp)
       unsub()
     }
   })
@@ -77,6 +103,7 @@
   bind:this={domProgress}
   class="progressMask"
   onmousedown={handleMsDown}
+  ontouchstart={handleTouchDown}
 ></div>
 
 <style lang="less">

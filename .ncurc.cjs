@@ -1,4 +1,4 @@
-const minor = ['electron', '@types/node']
+const minor = ['electron', '@types/node', 'better-sqlite3']
 const newest = ['electron-builder', 'electron-updater']
 const patch = []
 

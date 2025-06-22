@@ -13,7 +13,7 @@
     "jschardet": "^3.1.4",
     "jsonschema": "^1.5.0",
     "message2call": "^2.0.3",
-    "music-metadata": "^11.2.3",
+    "music-metadata": "^11.3.0",
     "ws": "^8.18.2"
   },
   "devDependencies": {

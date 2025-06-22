@@ -1,9 +1,30 @@
+### Added
 
-### Fix
+- Added the ability to add songs by selecting a folder, which will scan the selected directory and its subdirectories for songs
+- Added extension management
+- Added version checking
+- Added icons to the navigation menu
+- Improved proxy handling
+- Added playback bar style settings
+- Added extension icon display
+- Added online extension store list loading and online extension installation/upgrading
+- Added basic playback details page
+- Added settings for playback details, playback settings for displaying lyric translations and romaji
 
-- Fix flac file lyric read
-- Fix allow public path `/`
-- Fix Safari play bar Music Pic size
+### Improved
+
+- Improved version check popup UI and fixed new version content display issues
+- Improved virtual scrollbar appearance
+- Updated scroll handling for better performance
+
+### Fixed
+
+- Fixed Flac file lyric reading issues
+- Fixed issues when `allowPublicDir` is set to `/`
+- Fixed music cover size issue in playback bar on Safari browser
+- Fixed notification bubbles being covered by popups
+- Fixed playlist synchronization issues
+- Fixed played list update issues
 
 ---
 

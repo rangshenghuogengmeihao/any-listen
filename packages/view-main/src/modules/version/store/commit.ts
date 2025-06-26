@@ -7,9 +7,13 @@ export const initCurrentVersionInfo = ({ ignoreVersion, progress, ...info }: Any
   versionState.ignoreVersion = ignoreVersion
   versionState.progress = progress
   versionState.versionInfo = info
-  versionEvent.updated(versionState.versionInfo)
-  versionEvent.download_progress_updated(progress)
   versionEvent.ignore_version_updated(ignoreVersion)
+  versionEvent.download_progress_updated(progress)
+  versionEvent.updated(versionState.versionInfo)
+
+  if (versionState.versionInfo.status != 'checking' && !versionState.versionInfo.isLatest) {
+    versionEvent.new_version_available(versionState.versionInfo.newVersion, ignoreVersion)
+  }
 }
 
 export const setIgnoreVersion = (version: State['ignoreVersion']) => {

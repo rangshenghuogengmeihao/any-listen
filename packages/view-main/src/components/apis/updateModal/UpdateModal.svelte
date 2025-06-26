@@ -317,6 +317,7 @@
     color: var(--color-font-label);
     font-size: 12px;
     // margin-left: 5px;
+    font-weight: normal;
   }
 
   .info {

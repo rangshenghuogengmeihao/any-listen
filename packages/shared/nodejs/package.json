@@ -4,12 +4,12 @@
     "@any-listen/common": "workspace:@shared/common@*",
     "tar": "^7.4.3",
     "tunnel": "^0.0.6",
-    "undici": "^7.10.0"
+    "undici": "^7.11.0"
   },
   "devDependencies": {
     "@any-listen/eslint": "workspace:@shared/eslint@*",
     "@any-listen/types": "workspace:@shared/types@*",
-    "@types/node": "^22.15.32",
+    "@types/node": "^22.15.34",
     "@types/tunnel": "^0.0.7"
   }
 }

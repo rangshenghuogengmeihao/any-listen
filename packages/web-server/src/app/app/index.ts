@@ -4,7 +4,7 @@ import { socketEvent } from '@/modules/ipc/event'
 import { appLog } from '@/shared/log4js'
 import { checkAndCreateDir, removePath } from '@/shared/utils'
 import { parseEnvParams } from '@any-listen/nodejs/env'
-import { version } from '../../../package.json'
+import { version } from '../../../package.json' with { type: 'json' }
 import { getAppSetting, saveSetting } from './data'
 import { appEvent } from './event'
 import { appState } from './state'

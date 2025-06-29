@@ -124,6 +124,7 @@ const run = async () => {
         packageFile,
         upgrade: true,
         jsonUpgraded: true,
+        dep: ['prod', 'dev', 'optional'],
         ...config,
       })
       if (typeof updated == 'object') {

@@ -1,5 +1,5 @@
 const minor = ['electron', '@types/node', 'better-sqlite3']
-const newest = ['electron-builder', 'electron-updater']
+const newest = ['electron-builder', 'electron-updater', '@sveltejs/vite-plugin-svelte']
 const patch = []
 
 module.exports = [

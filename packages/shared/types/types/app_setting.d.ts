@@ -276,7 +276,7 @@ declare global {
       /**
        * 播放详情页-是否允许通过歌词调整播放进度
        */
-      'playDetail.isShowLyricProgressSetting': boolean
+      // 'playDetail.isShowLyricProgressSetting': boolean
 
       /**
        * 播放详情页-歌词字体大小

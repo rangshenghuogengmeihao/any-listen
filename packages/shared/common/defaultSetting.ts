@@ -11,7 +11,7 @@ const defaultSetting: AnyListen.AppSetting = {
   'common.randomAnimate': true,
   'common.isAgreePact': false,
   'common.controlBtnPosition': 'right',
-  'common.playBarProgressStyle': 'mini',
+  'common.playBarProgressStyle': 'centerControlMiddle',
   'common.transparentWindow': true,
   'common.tryAutoUpdate': true,
   'common.allowPreRelease': false,
@@ -56,11 +56,10 @@ const defaultSetting: AnyListen.AppSetting = {
   'player.soundEffect.pitchShifter.playbackRate': 1,
 
   'playDetail.isZoomActiveLrc': true,
-  'playDetail.isShowLyricProgressSetting': false,
   'playDetail.style.fontSize': 100,
-  'playDetail.style.align': 'center',
+  'playDetail.style.align': 'left',
   'playDetail.isDelayScroll': true,
-  'playDetail.isDynamicBackground': false,
+  'playDetail.isDynamicBackground': true,
 
   'desktopLyric.enable': false,
   'desktopLyric.isLock': false,

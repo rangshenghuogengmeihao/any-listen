@@ -13,15 +13,11 @@
   let isStopScroll = $state(false)
   let timeStr = $state('--/--')
   let winRadio = $state(document.getElementById('root')!.clientWidth / 1020)
-  // const textAlign = useSettingValue('playDetail.style.align')
+  const textAlign = useSettingValue('playDetail.style.align')
   const isZoomActiveLrc = useSettingValue('playDetail.isZoomActiveLrc')
   // const isShowLyricProgressSetting = useSettingValue('playDetail.isShowLyricProgressSetting')
   const fontSize = useSettingValue('playDetail.style.fontSize')
-  const lrcFontSize = $derived.by(() => {
-    let size = (fontSize.val / 100 + 0.8) * winRadio
-    // if (isFullscreen.value) size = size *= 1.4
-    return `${size}rem`
-  })
+  const styles = $derived(`--playDetail-lrc-font-size:${(fontSize.val / 100 + 0.8) * winRadio}rem; text-align:${textAlign.val};`)
 
   const {
     handleLyricMouseDown,
@@ -66,9 +62,12 @@
   bind:this={domLyric}
   class:draging={isMsDown}
   class:lrcActiveZoom={isZoomActiveLrc.val}
+  class:text-left={textAlign.val === 'left'}
+  class:text-center={textAlign.val === 'center'}
+  class:text-right={textAlign.val === 'right'}
   class="lyric"
   role="presentation"
-  style:--playDetail-lrc-font-size={lrcFontSize}
+  style={styles}
   onwheel={handleWheel}
   onmousedown={handleLyricMouseDown}
   ontouchstart={handleLyricTouchStart}
@@ -115,14 +114,13 @@
       .line-content {
         line-height: 1.2;
         padding-left: 1px;
-        padding-right: 12%;
+        padding-right: 8%;
         padding-top: calc(var(--playDetail-lrc-font-size, 16px) / 1.8);
         padding-bottom: calc(var(--playDetail-lrc-font-size, 16px) / 1.8);
         overflow-wrap: break-word;
         color: @unplay-color;
         transition: @transition-slow !important;
         transition-property: padding transform;
-        transform-origin: 0;
         // font-weight: 600;
 
         &.active {
@@ -188,6 +186,31 @@
           // .line {
           //   // font-size: 1.2em;
           // }
+        }
+      }
+    }
+    &.text-left {
+      :global {
+        .line-content {
+          padding-right: 12%;
+          transform-origin: 0%;
+        }
+      }
+    }
+    &.text-center {
+      :global {
+        .line-content {
+          padding-left: 6%;
+          padding-right: 6%;
+          // transform: scale(1.1);
+        }
+      }
+    }
+    &.text-right {
+      :global {
+        .line-content {
+          padding-left: 12%;
+          transform-origin: 100%;
         }
       }
     }

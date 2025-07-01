@@ -2,9 +2,6 @@ import { type MessagePort, parentPort } from 'node:worker_threads'
 import { type TaksName, type Target, build } from './utils'
 
 import { DEV_SERVER_PORTS } from '@any-listen/common/constants'
-import { buildConfig as buildDesktopConfig } from '@any-listen/desktop'
-import { buildConfig as buildExtensionPreloadConfig } from '@any-listen/extension-preload/vite.config'
-import { buildConfig as buildWebConfig, buildPreloadConfig as buildWebPreloadConfig } from '@any-listen/web-server'
 import type { UserConfig } from 'vite'
 import { dynamicImport } from './import-esm.cjs'
 
@@ -39,11 +36,13 @@ parentPort.on('message', async ({ port, taskName, target }: { port?: MessagePort
     return
   }
   const configs = {
-    desktop: buildDesktopConfig,
-    'web-server': buildWebConfig,
-    'web-preload': buildWebPreloadConfig,
+    desktop: async (mode: Target) => import('@any-listen/desktop').then((m) => m.buildConfig(mode)),
+    'web-server': async (mode: Target) => import('@any-listen/web-server').then((m) => m.buildConfig(mode)),
+    'web-preload': async (mode: Target) => import('@any-listen/web-server').then((m) => m.buildPreloadConfig(mode)),
     'view-main': getViewMainConfig,
-    'extension-preload': buildExtensionPreloadConfig,
+    'extension-preload': async (mode: Target) => {
+      return import('@any-listen/extension-preload/vite.config').then((m) => m.buildConfig(mode))
+    },
   } as const
   // assert(port instanceof MessagePort)
   const sendStatus = () => {

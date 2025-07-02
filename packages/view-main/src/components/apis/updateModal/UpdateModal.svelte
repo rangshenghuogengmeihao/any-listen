@@ -17,6 +17,8 @@
   import { i18n, t } from '@/plugins/i18n'
   import { useSettingValue } from '@/modules/setting/reactive.svelte'
   import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar'
+  import { parseMarkdown, parseMarkdowns } from '@/shared/tools'
+  /* eslint svelte/no-at-html-tags: "off" */
 
   let {
     onafterleave,
@@ -76,10 +78,45 @@
         : i18n.t('update_modal.update_handing')
       : ''
   )
+  let parsedDesc = $state.raw(null as string | null)
+  let parsedHistoryDesc = $state.raw(null as Array<string | null> | null)
+
+  $effect(() => {
+    if (!latest) return
+    let unmunted = false
+    void parseMarkdown(latest.desc).then((desc) => {
+      if (unmunted) return
+      parsedDesc = desc
+    })
+    return () => {
+      unmunted = true
+    }
+  })
+  $effect(() => {
+    if (!history.length) return
+    let unmunted = false
+    void parseMarkdowns(history.map((v) => v.desc)).then((descs) => {
+      if (unmunted) return
+      parsedHistoryDesc = descs
+    })
+    return () => {
+      unmunted = true
+    }
+  })
+
   let isIgnored = $derived(ignoreVersion.val == latest?.version)
 
   const handleOpenUrl = (url: string) => {
     void openUrl(url)
+  }
+
+  const handleLogClick = (e: MouseEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
+    const target = e.target as HTMLElement
+    if (target.tagName === 'A' && (target as HTMLLinkElement).href) {
+      handleOpenUrl((target as HTMLLinkElement).href)
+    }
   }
 
   onMount(() => {
@@ -116,15 +153,24 @@
           {$t('update_modal.latest_version')}{latest?.version}{@render releaseTime(latest?.time)}
         </h3>
         <h3>{$t('update_modal.change_log')}</h3>
-        <pre class="desc">{latest?.desc}</pre>
+        {#if parsedDesc}
+          <div class="log" role="presentation" onclick={handleLogClick}>{@html parsedDesc}</div>
+        {:else}
+          <pre class="log">{latest?.desc}</pre>
+        {/if}
       </div>
       {#if history.length}
         <div class="history desc">
           <h3>{$t('update_modal.history_version')}</h3>
-          {#each history as ver (ver.version)}
+          {#each history as ver, index (ver.version)}
+            {@const log = parsedHistoryDesc?.[index]}
             <div class="item">
-              <h4>v{ver.version}{@render releaseTime(latest?.time)}</h4>
-              <pre>{ver.desc}</pre>
+              <h4>v{ver.version}{@render releaseTime(ver?.time)}</h4>
+              {#if log}
+                <div class="log" role="presentation" onclick={handleLogClick}>{@html log}</div>
+              {:else}
+                <pre class="log">{latest?.desc}</pre>
+              {/if}
             </div>
           {/each}
         </div>
@@ -133,7 +179,7 @@
   </div>
 {/snippet}
 
-<Modal teleport="#root" bind:visible maxwidth="60%" {onafterleave} minheight="0">
+<Modal teleport="#root" bind:visible maxwidth="72%" {onafterleave} minheight="0">
   {#if versionInfo.val.isLatest}
     <main class="version-modal-main">
       <h2>{$t('update_modal.latest_title')}</h2>
@@ -329,29 +375,21 @@
     padding: 0 15px;
   }
 
-  .desc {
-    h3,
-    h4 {
-      font-weight: bold;
-    }
-    h3 {
-      padding: 5px 0 3px;
-    }
-    p {
-      font-size: 14px;
-      line-height: 1.5;
-    }
-  }
-
   .history {
     h3 {
       padding-top: 15px;
+      font-size: 1.25em;
+      font-weight: bold;
+      margin: 1em 0 0.5em;
+      line-height: 1.25;
     }
 
     .item {
       padding: 0 15px;
       + .item {
-        padding-top: 15px;
+        h4 {
+          margin-top: 2em;
+        }
       }
       h4 {
         font-weight: 700;
@@ -392,6 +430,83 @@
       margin-top: 10px;
       display: block;
       width: 50%;
+    }
+  }
+
+  .log {
+    margin: 6px 0;
+    :global {
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-weight: bold;
+        margin: 1em 0 0.5em;
+        line-height: 1.25;
+      }
+      h1 {
+        font-size: 1.5em;
+      }
+      h2 {
+        font-size: 1.25em;
+      }
+      h3 {
+        font-size: 1.1em;
+      }
+      p {
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 1em;
+      }
+      code {
+        padding: 0.1em 0.4em;
+        margin: 0;
+        font-size: 85%;
+        white-space: break-spaces;
+        background-color: var(--color-primary-background);
+        border: 1px solid var(--color-primary-background-hover);
+        border-radius: 3px;
+      }
+      .mac code {
+        font-family: 'SF Mono', monaco, menlo, courier, monospace;
+      }
+      .windows code {
+        font-family: consolas, 'Courier New', monospace;
+      }
+      .linux code {
+        font-family: 'Ubuntu Mono', 'Liberation Mono', 'DejaVu Sans Mono', 'Courier New', monospace;
+      }
+
+      ul {
+        padding-left: 2em;
+        list-style: disc;
+        margin-top: 0;
+        margin-bottom: 1em;
+      }
+      ol {
+        padding-left: 2em;
+        list-style: decimal;
+        margin-top: 0;
+        margin-bottom: 1em;
+      }
+      blockquote {
+        margin: 0 0 1em;
+        padding-left: 1em;
+        border-left: 4px solid var(--color-primary-background-hover);
+        color: var(--color-primary-font);
+        font-style: italic;
+      }
+      li {
+        + li {
+          margin-top: 0.25em;
+        }
+      }
+      em {
+        font-style: italic;
+      }
+      strong {
+        font-weight: bold;
+      }
     }
   }
 </style>

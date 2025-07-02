@@ -1,5 +1,5 @@
-import { dateFormat } from '@any-listen/common/utils'
 import { i18n } from '@/plugins/i18n'
+import { dateFormat } from '@any-listen/common/utils'
 
 // export * from '@common/utils/renderer'
 // export * from '@common/utils/nodejs'
@@ -49,9 +49,9 @@ export const parseInterval = (intvStr: string | null) => {
  * 设置标题
  */
 export const setTitle = (title: string | null) => {
-  let dom_title = document.getElementsByTagName('title')[0]
+  let domTitle = document.getElementsByTagName('title')[0]
   title ||= i18n.t('anylisten')
-  dom_title.innerText = title
+  domTitle.innerText = title
 }
 
 // export const getProxyInfo = () => {

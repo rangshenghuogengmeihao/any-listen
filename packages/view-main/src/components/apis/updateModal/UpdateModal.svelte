@@ -507,6 +507,9 @@
       strong {
         font-weight: bold;
       }
+      img {
+        max-width: 100%;
+      }
     }
   }
 </style>

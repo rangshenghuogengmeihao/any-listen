@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 // import { throttle } from '@common/utils'
 
+import { arrPushByPosition, arrShuffle, escapeRegExp, similar, sortInsert } from '@/shared'
 import { SPLIT_CHAR } from '@any-listen/common/constants'
-import { arrPushByPosition, arrShuffle, similar, sortInsert } from '@/shared'
 // import { joinPath, saveStrToFile } from '@common/utils/nodejs'
 // import { createLocalMusicInfo } from '@/shared/music'
 
@@ -307,7 +307,7 @@ export const searchListMusic = (list: AnyListen.Music.MusicInfo[], text: string)
   let rxp = new RegExp(
     `${text
       .split('')
-      .map((s) => s.replace(/[.*+?^${}()|[\]\\]/, '\\$&'))
+      .map((s) => escapeRegExp(s))
       .join('.*')}.*`,
     'i'
   )

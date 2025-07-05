@@ -28,11 +28,6 @@ declare global {
       'common.langId': Langs | null
 
       /**
-       * api id
-       */
-      'common.apiSource': string
-
-      /**
        * 显示的字体
        */
       'common.font': string
@@ -41,11 +36,6 @@ declare global {
        * 是否启用动画
        */
       'common.isShowAnimation': boolean
-
-      /**
-       * 是否启用随机弹窗动画
-       */
-      'common.randomAnimate': boolean
 
       /**
        * 是否同意软件协议

@@ -1,3 +1,19 @@
+### Added
+
+- Added lyric alignment setting on the playback details page
+
+### Optimized
+
+- Adjusted the layout of control buttons on the playback bar
+- Optimized the display effect of the changelog
+
+### Fixed
+
+- Fixed the issue where ambient sound effects failed to load
+
+### Changed
+
+- Updated default values for the playback details page, playback bar, and other default settings
 
 ---
 
@@ -9,6 +25,10 @@
 
 - 调整播放栏控制按钮布局
 - 优化更新日志显示效果
+
+### 修复
+
+- 修复环境音效加载失败的问题
 
 ### 变更
 

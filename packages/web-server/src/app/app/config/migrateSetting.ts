@@ -17,6 +17,8 @@ export const migrateSetting = (setting: Record<string, unknown>): Partial<AnyLis
     setting['player.isPlayAwlrc'] ||= true
     setting['player.isSavePlayTime'] ||= true
   }
+  // TODO
+  // setting['playDetail.isZoomActiveLrc'] ||= true
 
   return setting
 }

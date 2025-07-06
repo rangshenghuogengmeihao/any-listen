@@ -6,6 +6,46 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.3.0](https://github.com/any-listen/any-listen-web-server/compare/v0.2.0...v0.3.0) - 2025-07-06
+
+### Added
+
+- Added lyric alignment setting on the playback details page
+- Added Karaoke lyrics setting
+
+### Optimized
+
+- Adjusted the layout of control buttons on the playback bar
+- Optimized the display effect of the changelog
+
+### Fixed
+
+- Fixed the issue where ambient sound effects failed to load
+
+### Changed
+
+- Updated default values for the playback details page, playback bar, and other default settings
+
+---
+
+### 新增
+
+- 添加设置-播放详情页设置-歌词对齐方式设置
+- 添加设置-播放设置-是否启用卡拉OK歌词设置
+
+### 优化
+
+- 调整播放栏控制按钮布局
+- 优化更新日志显示效果
+
+### 修复
+
+- 修复环境音效加载失败的问题
+
+### 变更
+
+- 更新播放详情页、播放栏等默认设置的默认值
+
 ## [0.2.0](https://github.com/any-listen/any-listen-web-server/compare/v0.1.0...v0.2.0) - 2025-06-22
 
 ### Added

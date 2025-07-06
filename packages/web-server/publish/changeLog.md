@@ -1,6 +1,7 @@
 ### Added
 
 - Added lyric alignment setting on the playback details page
+- Added Karaoke lyrics setting
 
 ### Optimized
 
@@ -19,7 +20,8 @@
 
 ### 新增
 
-- 新增播放详情页歌词对齐方式设置
+- 添加设置-播放详情页设置-歌词对齐方式设置
+- 添加设置-播放设置-是否启用卡拉OK歌词设置
 
 ### 优化
 

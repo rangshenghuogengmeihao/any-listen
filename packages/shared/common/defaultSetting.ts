@@ -1,5 +1,5 @@
 const defaultSetting: AnyListen.AppSetting = {
-  version: '1.0.0',
+  version: '1.0.2',
 
   'common.windowSizeId': 3,
   'common.fontSize': 16,
@@ -28,8 +28,8 @@ const defaultSetting: AnyListen.AppSetting = {
   'player.isShowLyricTranslation': false,
   'player.isShowLyricRoma': false,
   'player.isS2t': false,
-  'player.isPlayAwlrc': false,
-  'player.isSavePlayTime': false,
+  'player.isPlayAwlrc': true,
+  'player.isSavePlayTime': true,
   'player.audioVisualization': false,
   'player.waitPlayEndStop': true,
   'player.waitPlayEndStopTime': '',
@@ -130,8 +130,8 @@ const defaultSetting: AnyListen.AppSetting = {
   'sync.client.host': '',
 
   // 'theme.id': 'blue_plus',
-  'theme.id': 'red',
-  'theme.lightId': 'red',
+  'theme.id': 'green',
+  'theme.lightId': 'green',
   'theme.darkId': 'black',
 
   'odc.isAutoClearSearchInput': false,

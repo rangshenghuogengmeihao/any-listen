@@ -166,6 +166,12 @@ export const settings: SettingListSection[] = [
         name: 'settings.player.lyric_roma',
         type: 'boolean',
       },
+      // t('settings.player.play_awlrc')
+      {
+        field: 'player.isPlayAwlrc',
+        name: 'settings.player.play_awlrc',
+        type: 'boolean',
+      },
     ],
   },
   {

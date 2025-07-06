@@ -223,6 +223,7 @@
   "settings.play_detail.zoom_active_lrc": "缩放当前播放的歌词",
   "settings.player.lyric_roma": "显示歌词罗马音（如果可用）",
   "settings.player.lyric_transition": "显示歌词翻译（如果可用）",
+  "settings.player.play_awlrc": "播放卡拉OK歌词（如果可用）",
   "settings__about": "关于 Any Listen",
   "settings__about_p1": "Any Listen 是一个免费开源的音频播放器，目前支持 Windows、macOS、Linux 和 Web 平台。",
   "settings__about_p2": "我们会让它一直保持纯净，如果它对你有所帮助并且手头宽裕，可以考虑捐赠以支持我们的工作。",

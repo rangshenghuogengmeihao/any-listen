@@ -204,3 +204,18 @@ server.on('upgrade', onUpgrade)
  * Listen on provided port, on all network interfaces.
  */
 server.listen(port, bindIP)
+
+process.on('SIGINT', () => {
+  startupLog.info('Received SIGINT. Shutting down gracefully...')
+  server.close(() => {
+    startupLog.info('Server shut down successfully.')
+    process.exit(0)
+  })
+})
+process.on('SIGTERM', () => {
+  startupLog.info('Received SIGTERM. Shutting down gracefully...')
+  server.close(() => {
+    startupLog.info('Server shut down successfully.')
+    process.exit(0)
+  })
+})

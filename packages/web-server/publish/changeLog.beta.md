@@ -1,17 +1,9 @@
-### Added
+### Fixes
 
-- Added setting in Playback Settings to enable/disable karaoke lyrics
-
-### Changed
-
-- Updated default values for karaoke lyrics and save song playback progress settings
+- Fixed the issue where the ambient sound effects and changelog rendering plugins failed to load.
 
 ---
 
-### 新增
+### 修复
 
-- 添加设置-播放设置-是否启用卡拉OK歌词设置
-
-### 变更
-
-- 更新卡拉OK歌词、保存歌曲播放进度设置的默认值
+- 修复环境音效、更新日志渲染插件加载失败的问题

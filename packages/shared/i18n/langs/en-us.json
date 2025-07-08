@@ -223,6 +223,7 @@
   "settings.play_detail.style_align_right": "On the right",
   "settings.play_detail.zoom_active_lrc": "Zoom the currently played lyrics",
   "settings.player.lyric_roma": "Show lyrics Roman tones (if available)",
+  "settings.player.lyric_trans_roma_swap": "Swap lyric translation and roman",
   "settings.player.lyric_transition": "Show lyrics translation (if available)",
   "settings.player.play_awlrc": "Play karaoke lyrics (if available)",
   "settings__about": "About Any Listen",

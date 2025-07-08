@@ -27,6 +27,7 @@ const defaultSetting: AnyListen.AppSetting = {
   'player.isMediaDeviceRemovedStopPlay': false,
   'player.isShowLyricTranslation': false,
   'player.isShowLyricRoma': false,
+  'player.isSwapLyricTranslationAndRoma': false,
   'player.isS2t': false,
   'player.isPlayAwlrc': true,
   'player.isSavePlayTime': true,

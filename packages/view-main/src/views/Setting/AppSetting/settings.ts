@@ -166,7 +166,12 @@ export const settings: SettingListSection[] = [
         name: 'settings.player.lyric_roma',
         type: 'boolean',
       },
-      // t('settings.player.play_awlrc')
+      {
+        field: 'player.isSwapLyricTranslationAndRoma',
+        name: 'settings.player.lyric_trans_roma_swap',
+        type: 'boolean',
+      },
+      // t('settings.player.lyric_trans_roma_swap')
       {
         field: 'player.isPlayAwlrc',
         name: 'settings.player.play_awlrc',

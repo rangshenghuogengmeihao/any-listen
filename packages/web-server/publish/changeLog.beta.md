@@ -1,11 +1,10 @@
-### Fixes
-
-- Fixed the issue where the ambient sound effects and changelog rendering plugins failed to load.
-- Fixed the issue of hanging when stopping the service.
 
 ---
 
-### 修复
+### 新增
 
-- 修复环境音效、更新日志渲染插件加载失败的问题
-- 修复停止服务时被挂起的问题
+- 添加 设置-播放设置-调换翻译歌词与罗马音歌词位置 设置
+
+### 变更
+
+- 调换 翻译歌词 与 罗马音歌词的位置，若你想要恢复默认的行为，可以开启 调换翻译歌词与罗马音歌词位置 设置

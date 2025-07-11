@@ -24,8 +24,8 @@
   "devDependencies": {
     "@any-listen/eslint": "workspace:@shared/eslint@*",
     "@any-listen/types": "workspace:@shared/types@*",
-    "@sveltejs/vite-plugin-svelte": "^6.0.0-next.3",
-    "@swc/html": "^1.12.9",
+    "@sveltejs/vite-plugin-svelte": "^6.0.0",
+    "@swc/html": "^1.12.11",
     "@types/postcss-pxtorem": "^6.1.0",
     "@types/sortablejs": "^1.15.8",
     "eslint-plugin-svelte": "^3.10.1",
@@ -36,11 +36,11 @@
     "stylelint-config-recess-order": "^7.1.0",
     "stylelint-config-standard-less": "^3.0.1",
     "stylelint-order": "^7.0.0",
-    "svelte": "^5.35.2",
+    "svelte": "^5.35.6",
     "svelte-check": "^4.2.2",
     "svelte-eslint-parser": "^1.2.0",
     "svelte-preprocess": "^6.0.3",
-    "vite": "^7.0.2",
+    "vite": "^7.0.4",
     "vite-plugin-svg-icons": "^2.0.1"
   }
 }

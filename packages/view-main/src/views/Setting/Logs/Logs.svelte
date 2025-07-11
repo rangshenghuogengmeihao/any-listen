@@ -6,12 +6,12 @@
   import { extensionEvent } from '@/modules/extension/store/event'
   import { logFormat } from '@any-listen/common/tools'
   import Header from './Header.svelte'
-  import Content from './Content.svelte'
+  import type TContent from './Content.svelte'
 
   let logs = $state.raw<LogItem[]>([])
   let avtiveLog = $state({ id: '', log: '' })
   let isBottom = $state(true)
-  let cmpContent = $state<ComponentExports<typeof Content>>()
+  let cmpContent = $state<ComponentExports<typeof TContent>>()
 
   onMount(() => {
     let isUnmount = false
@@ -75,7 +75,9 @@
       cmpContent?.toBottom(false)
     }}
   />
-  <Content bind:this={cmpContent} bind:isBottom log={avtiveLog.log} />
+  {#await import('./Content.svelte') then { default: Content }}
+    <Content bind:this={cmpContent} bind:isBottom log={avtiveLog.log} />
+  {/await}
 </div>
 
 <style lang="less">

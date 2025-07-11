@@ -77,14 +77,14 @@
         void playMusicLater(selectInfo.listId, selectInfo.musicInfo, selectInfo.selectedList, selectInfo.onRemoveAllSelected)
         break
       case 'addTo':
-        showMusicAddModal(
+        void showMusicAddModal(
           false,
           selectInfo.listId,
           selectInfo.selectedList.length ? selectInfo.selectedList : [selectInfo.musicInfo]
         )
         break
       case 'moveTo':
-        showMusicAddModal(
+        void showMusicAddModal(
           true,
           selectInfo.listId,
           selectInfo.selectedList.length ? selectInfo.selectedList : [selectInfo.musicInfo]

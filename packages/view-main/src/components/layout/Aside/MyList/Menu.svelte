@@ -81,10 +81,10 @@
   const handleClick = (menu: MenuItem<MenuType>) => {
     switch (menu.action) {
       case 'create':
-        showListEditModal(info?.id)
+        void showListEditModal(info?.id)
         break
       case 'edit':
-        showListEditModal(info!.id, true)
+        void showListEditModal(info!.id, true)
         break
       case 'local_file':
         void importLocalFile(info!)

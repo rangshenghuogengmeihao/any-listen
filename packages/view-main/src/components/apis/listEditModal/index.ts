@@ -1,9 +1,9 @@
 import { mount, tick, unmount } from 'svelte'
 
-import App from './App.svelte'
 import { onDesconnected } from '@/modules/app/shared'
 
-export const showListEditModal = (targetId?: string, isEdit?: boolean) => {
+export const showListEditModal = async (targetId?: string, isEdit?: boolean) => {
+  const App = (await import('./App.svelte')).default
   const app = mount(App, {
     target: document.getElementById('root')!,
     props: {

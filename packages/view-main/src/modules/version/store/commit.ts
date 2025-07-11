@@ -1,4 +1,5 @@
 import { showSimpleModal } from '@/components/apis/dialog'
+import { showNotify } from '@/components/apis/notify'
 import { i18n } from '@/plugins/i18n'
 import { versionEvent } from './event'
 import { type State, versionState } from './state'
@@ -71,6 +72,10 @@ export const setUpdateInfo = (info: AnyListen.IPCCommon.UpdateInfo) => {
         void showSimpleModal(i18n.t('update_failed_tip')).finally(() => {
           localStorage.setItem('update__download_failed_tip', String(Date.now()))
         })
+      } else if (preStatus == 'checking') {
+        showNotify(i18n.t('update.checking_failed', { msg: info.message }))
+      } else if (preStatus == 'idle') {
+        showNotify(i18n.t('update.update_failed', { msg: info.message }))
       }
       break
     }

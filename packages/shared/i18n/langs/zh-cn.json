@@ -340,6 +340,8 @@
   "theme_selector_modal__theme_name": "主题名称",
   "theme_selector_modal__title": "跟随系统主题设置",
   "theme_selector_modal__title_tip": "注：你可以预先设置一个亮色主题及暗色主题，此后将根据系统的亮、暗主题色自动切换为你预先设置的相应主题。",
+  "update.checking_failed": "❌ 检查更新失败：{msg}",
+  "update.update_failed": "❌ 更新失败：{msg}",
   "update_failed_tip": "自动下载新版本失败，你可以尝试重新下载更新或者手动去下载更新。\n新版地址在更新弹窗下面有写，下载新版直接覆盖安装即可，若安装失败则看常见问题解决。\n注意：目前只有 Windows 安装版可以自动更新（Linux 的 AppImage、deb 版似乎也可以，未测试），其他版本请手动下载更新！",
   "update_modal.change_log": "版本变化：",
   "update_modal.check_result_latest": "当前已是最新版本 👏",

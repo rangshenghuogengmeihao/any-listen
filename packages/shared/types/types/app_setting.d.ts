@@ -28,11 +28,6 @@ declare global {
       'common.langId': Langs | null
 
       /**
-       * api id
-       */
-      'common.apiSource': string
-
-      /**
        * 显示的字体
        */
       'common.font': string
@@ -41,11 +36,6 @@ declare global {
        * 是否启用动画
        */
       'common.isShowAnimation': boolean
-
-      /**
-       * 是否启用随机弹窗动画
-       */
-      'common.randomAnimate': boolean
 
       /**
        * 是否同意软件协议
@@ -276,7 +266,7 @@ declare global {
       /**
        * 播放详情页-是否允许通过歌词调整播放进度
        */
-      'playDetail.isShowLyricProgressSetting': boolean
+      // 'playDetail.isShowLyricProgressSetting': boolean
 
       /**
        * 播放详情页-歌词字体大小

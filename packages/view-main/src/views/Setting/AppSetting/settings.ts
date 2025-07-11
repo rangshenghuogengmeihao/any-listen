@@ -166,13 +166,19 @@ export const settings: SettingListSection[] = [
         name: 'settings.player.lyric_roma',
         type: 'boolean',
       },
+      // t('settings.player.play_awlrc')
+      {
+        field: 'player.isPlayAwlrc',
+        name: 'settings.player.play_awlrc',
+        type: 'boolean',
+      },
     ],
   },
   {
     id: 'playDetail',
     name: 'settings.play_detail',
     list: [
-      // t('settings.play_detail.dynamic_background')
+      // t('settings.play_detail.style_align_right')
       {
         field: 'playDetail.isDynamicBackground',
         name: 'settings.play_detail.dynamic_background',
@@ -187,6 +193,16 @@ export const settings: SettingListSection[] = [
         field: 'playDetail.isZoomActiveLrc',
         name: 'settings.play_detail.zoom_active_lrc',
         type: 'boolean',
+      },
+      {
+        field: 'playDetail.style.align',
+        name: 'settings.play_detail.style_align',
+        type: 'radio',
+        enum: [
+          { value: 'left', name: 'settings.play_detail.style_align_left' },
+          { value: 'center', name: 'settings.play_detail.style_align_center' },
+          { value: 'right', name: 'settings.play_detail.style_align_right' },
+        ] satisfies Array<{ value: AnyListen.AppSetting['playDetail.style.align']; name: keyof Message }>,
       },
     ],
   },

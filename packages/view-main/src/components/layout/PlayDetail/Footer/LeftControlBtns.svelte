@@ -10,8 +10,8 @@
   <!-- <PlaylistBtn /> -->
   <!-- <VolumeBtn /> -->
   <!-- <TogglePlayModeBtn /> -->
-  <PlaybackRateBtn />
   <SoundEffectBtn />
+  <PlaybackRateBtn />
 </div>
 
 <style lang="less">

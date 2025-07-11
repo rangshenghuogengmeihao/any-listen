@@ -111,7 +111,7 @@ export const updateVersionFile = async (type, newVersion) => {
   await initVersionFile(type, newVersion)
   const newMDChangeLog = (await readFile(curChangelogPath, 'utf-8')).toString()
   // const newChangeLog = renderChangeLog(newMDChangeLog)
-  const desc = newMDChangeLog.replace(/(?:^|(\n))#{1,6} (.+)\n/g, '$1$2').trim()
+  const desc = newMDChangeLog.trim()
   if (isBeta) {
     if (!versionFile.beta) versionFile.beta = []
     versionFile.beta.unshift({

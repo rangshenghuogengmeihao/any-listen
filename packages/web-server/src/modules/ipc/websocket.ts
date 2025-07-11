@@ -1,13 +1,13 @@
-import type WS from 'ws'
-import type { IncomingMessage } from 'node:http'
-import type { Socket } from 'node:net'
-import { WebSocketServer } from 'ws'
-import { authConnect } from './auth'
-import { decryptMsg, encryptMsg } from './tools'
+import { removeClientInfo } from '@/shared/data'
 import { appLog } from '@/shared/log4js'
 import { IPC_CLOSE_CODE } from '@any-listen/common/constants'
+import type { IncomingMessage } from 'node:http'
+import type { Socket } from 'node:net'
+import type WS from 'ws'
+import { WebSocketServer } from 'ws'
+import { authConnect } from './auth'
 import { socketEvent } from './event'
-import { removeClientInfo } from '@/shared/data'
+import { decryptMsg, encryptMsg } from './tools'
 
 export interface KeyInfo {
   clientId: string
@@ -264,4 +264,8 @@ export const broadcast = (handler: (client: ServerSocket) => void) => {
 
 export const getSockets = () => {
   return Array.from(wss.clients.values())
+}
+
+export const destroySockets = () => {
+  for (const client of wss.clients) client.close(IPC_CLOSE_CODE.normal)
 }

@@ -1,7 +1,7 @@
 import defaultSetting from '@/app/shared/defaultSetting'
 import getStore from '@/app/shared/store'
 import { STORE_NAMES } from '@any-listen/common/constants'
-import migrateSetting from './config/migrateSetting'
+import { migrateSetting } from './config/migrateSetting'
 import { appState } from './state'
 
 const primitiveType = ['string', 'boolean', 'number']

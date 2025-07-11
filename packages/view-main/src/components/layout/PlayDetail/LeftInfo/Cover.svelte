@@ -87,7 +87,7 @@
     background: radial-gradient(circle, transparent 0%, transparent 15%, var(--color-primary-light-100) 15%);
     box-shadow: 0 0 8px var(--color-primary-alpha-200);
     // border: 6px solid var(--color-primary-light-100);
-    animation: spin 50s linear infinite;
+    animation: spin 90s linear infinite;
     animation-play-state: paused; /* 默认暂停 */
     &.playing {
       animation-play-state: running;

@@ -1,17 +1,11 @@
-### Changes
-
-- The GitHub mirror download address for the extension store is now configured in the service configuration file.
-
 ### Fixes
 
-- Fixed an issue where the `upstreamProxy` configuration was not used internally.
+- Fixed the issue where the ambient sound effects and changelog rendering plugins failed to load.
+- Fixed the issue of hanging when stopping the service.
 
 ---
 
-### 变更
-
-- 扩展商店 github 镜像下载地址改成在服务配置文件内配置
-
 ### 修复
 
-- 修复 `upstreamProxy` 配置没有在内部使用的问题
+- 修复环境音效、更新日志渲染插件加载失败的问题
+- 修复停止服务时被挂起的问题

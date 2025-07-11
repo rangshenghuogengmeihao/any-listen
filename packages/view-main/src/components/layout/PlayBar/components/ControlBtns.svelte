@@ -1,7 +1,6 @@
 <script lang="ts">
   import TogglePlayModeBtn from '@/components/common/TogglePlayModeBtn.svelte'
   import VolumeBtn from '@/components/common/VolumeBtn.svelte'
-  import SoundEffectBtn from '@/components/common/SoundEffectBtn/index.svelte'
   import PlaylistBtn from '@/components/common/PlaylistBtn/index.svelte'
   // import PlaybackRateBtn from '@/components/common/PlaybackRateBtn.svelte'
 
@@ -22,11 +21,11 @@
       <use xlink:href="#icon-desktop-lyric-off" />
     </svg>
   </button> -->
+  <PlaylistBtn />
   <VolumeBtn />
   <TogglePlayModeBtn />
-  <PlaylistBtn />
   <!-- <PlaybackRateBtn /> -->
-  <SoundEffectBtn />
+  <!-- <SoundEffectBtn /> -->
   <!-- <common-toggle-play-mode-btn />
   <common-list-add-modal v-model:show="isShowAddMusicTo" :music-info="playMusicInfo.musicInfo" /> -->
 </div>

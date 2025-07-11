@@ -126,6 +126,13 @@ export function debounce<Args extends unknown[]>(fn: (...args: Args) => void | P
 const fileNameRxp = /[\\/:*?#"<>|]/g
 export const filterFileName = (name: string): string => name.replace(fileNameRxp, '')
 
+// https://www.npmjs.com/package/lodash.escaperegexp/v/4.1.2?activeTab=code
+const reRegExpChar = /[\\^$.*+?()[\]{}|]/g
+const reHasRegExpChar = RegExp(reRegExpChar.source)
+export const escapeRegExp = (string: string) => {
+  return string && reHasRegExpChar.test(string) ? string.replace(reRegExpChar, '\\$&') : string
+}
+
 // https://blog.csdn.net/xcxy2015/article/details/77164126#comments
 /**
  *

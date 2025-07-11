@@ -9,7 +9,7 @@ import defaultConfig from './shared/defaultConfig'
 
 import { formatExtensionGHMirrorHosts } from '@any-listen/common/tools'
 import { printLogo } from './app/shared/utils'
-import { onUpgrade } from './modules/ipc/websocket'
+import { destroySockets, onUpgrade } from './modules/ipc/websocket'
 import { createServerApp } from './server'
 import { initServerData } from './shared/data'
 import { initLogger, startupLog } from './shared/log4js'
@@ -204,3 +204,20 @@ server.on('upgrade', onUpgrade)
  * Listen on provided port, on all network interfaces.
  */
 server.listen(port, bindIP)
+
+process.on('SIGINT', () => {
+  startupLog.info('Received SIGINT. Shutting down gracefully...')
+  destroySockets()
+  server.close(() => {
+    startupLog.info('Server shut down successfully.')
+    process.exit(0)
+  })
+})
+process.on('SIGTERM', () => {
+  startupLog.info('Received SIGTERM. Shutting down gracefully...')
+  destroySockets()
+  server.close(() => {
+    startupLog.info('Server shut down successfully.')
+    process.exit(0)
+  })
+})

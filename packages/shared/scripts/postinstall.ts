@@ -1,4 +1,4 @@
-import { execSync } from 'child_process'
+import { execSync } from 'node:child_process'
 
 if (process.env.SKIP_LIB_COPY) process.exit(0)
 

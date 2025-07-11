@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'node:path'
 // import { log } from '@/shared/log'
 import { i18n } from '@/app/i18n'
 import { appLog } from '@/shared/log4js'

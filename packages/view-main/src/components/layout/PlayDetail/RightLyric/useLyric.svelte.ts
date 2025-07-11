@@ -92,7 +92,18 @@ export const useLyric = (options: {
     if (isSkipMouseEnter) return
     if (isStopScroll) return
     let domP = domLines[Math.max(lyricState.line, 0)] as HTMLElement | null
-    cancelScrollFn = handleScroll(options.domLyric, domP ? domP.offsetTop - options.domLyric.clientHeight * 0.38 : 0, duration)
+    if (domP) {
+      let offsetTop = domP.offsetTop
+      let lineHeight = domP.clientHeight / 2
+      if (!settingState.setting['playDetail.isDelayScroll'] && settingState.setting['playDetail.isZoomActiveLrc']) {
+        const preDomP = domLines[Math.max(lyricState.line - 1, 0)] as HTMLElement | null
+        if (preDomP && preDomP !== domP) offsetTop -= (preDomP.clientHeight - preDomP.clientHeight / 1.1) / 2
+        lineHeight *= 1.1
+      }
+      cancelScrollFn = handleScroll(options.domLyric, offsetTop + lineHeight - options.domLyric.clientHeight * 0.46, duration)
+    } else {
+      cancelScrollFn = handleScroll(options.domLyric, 0, duration)
+    }
   }
   const clearLyricScrollTimeout = () => {
     if (!timeout) return

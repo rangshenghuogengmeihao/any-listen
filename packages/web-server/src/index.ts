@@ -212,6 +212,10 @@ process.on('SIGINT', () => {
     startupLog.info('Server shut down successfully.')
     process.exit(0)
   })
+  setTimeout(() => {
+    startupLog.error('Server shutdown timed out. Forcing exit...')
+    process.exit(1)
+  }, 2000)
 })
 process.on('SIGTERM', () => {
   startupLog.info('Received SIGTERM. Shutting down gracefully...')
@@ -220,4 +224,8 @@ process.on('SIGTERM', () => {
     startupLog.info('Server shut down successfully.')
     process.exit(0)
   })
+  setTimeout(() => {
+    startupLog.error('Server shutdown timed out. Forcing exit...')
+    process.exit(1)
+  }, 2000)
 })

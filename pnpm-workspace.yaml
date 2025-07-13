@@ -17,6 +17,7 @@ overrides:
   'semver': 'latest'
   'minimatch': 'latest'
   'micromatch': 'latest'
+  'postcss': 'latest'
   'ws>bufferutil': '-'
   'ws>utf-8-validate': '-'
 

@@ -1,9 +1,9 @@
 ### Added
 
-- Added "Bold lyrics font" setting in Settings -> Playback Settings, enabled by default.
+- Added a **"Bold lyrics font"** option in _Settings > Playback Details_. Enabled by default.
 
 ---
 
 ### 新增
 
-- 添加 设置-播放详情页设置-加粗歌词字体 设置，默认启用
+- 新增 **「加粗歌词字体」** 选项，位于 _设置 > 播放详情页设置_，默认启用

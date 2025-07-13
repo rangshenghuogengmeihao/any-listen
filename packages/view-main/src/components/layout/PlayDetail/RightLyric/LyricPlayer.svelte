@@ -122,8 +122,7 @@
         overflow-wrap: break-word;
         color: @unplay-color;
         transition: @transition-slow !important;
-        transition-property: padding transform;
-        // font-weight: 600;
+        transition-property: padding, transform !important;
 
         &.active {
           // padding: var(--playDetail-lrc-font-size, 16px) 1px;

@@ -1,5 +1,5 @@
 ---
-applyTo: '**/publish/*.md'
+mode: edit
 ---
 
 翻译并格式化更新日志
@@ -16,7 +16,7 @@ applyTo: '**/publish/*.md'
 ```markdown
 ### Added
 
-- Added a **"Bold lyrics font"** option in _Settings > Playback Settings_. Enabled by default.
+- Added a **"Bold lyrics font"** option in _Settings > Play Details Page Settings_. Enabled by default.
 
 ### Improved
 

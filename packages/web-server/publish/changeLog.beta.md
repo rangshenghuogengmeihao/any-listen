@@ -1,6 +1,6 @@
 ### Added
 
-- Added a **"Bold lyrics font"** option in _Settings > Playback Details_. Enabled by default.
+- Added a **"Bold lyrics font"** option in _Settings > Play Details Page Settings_. Enabled by default.
 
 ---
 

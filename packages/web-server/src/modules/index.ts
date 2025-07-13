@@ -1,7 +1,7 @@
-import Router from 'koa-router'
+import Router from '@koa/router'
 // import { registerDevRouter } from './dev'
-import { registerIpcRouter } from './ipc'
 import { API_PREFIX } from '@any-listen/common/constants'
+import { registerIpcRouter } from './ipc'
 
 const router = new Router<unknown, AnyListen.RequestContext>()
 

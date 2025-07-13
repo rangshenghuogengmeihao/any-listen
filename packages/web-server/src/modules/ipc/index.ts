@@ -1,7 +1,7 @@
-import { IPC_CODE } from '@any-listen/common/constants'
-import type Router from 'koa-router'
-import { authCode } from './auth'
 import { getLoginPassword, getServerId } from '@/shared/data'
+import { IPC_CODE } from '@any-listen/common/constants'
+import type Router from '@koa/router'
+import { authCode } from './auth'
 
 export const registerIpcRouter = (router: Router<unknown, AnyListen.RequestContext>) => {
   router.get('/ipc/hello', async (ctx, next) => {

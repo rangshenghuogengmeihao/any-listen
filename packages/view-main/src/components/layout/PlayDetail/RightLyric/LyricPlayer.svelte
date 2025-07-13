@@ -17,6 +17,7 @@
   const isZoomActiveLrc = useSettingValue('playDetail.isZoomActiveLrc')
   // const isShowLyricProgressSetting = useSettingValue('playDetail.isShowLyricProgressSetting')
   const fontSize = useSettingValue('playDetail.style.fontSize')
+  const fontWeight = useSettingValue('playDetail.style.fontWeight')
   const styles = $derived(`--playDetail-lrc-font-size:${(fontSize.val / 100 + 0.8) * winRadio}rem; text-align:${textAlign.val};`)
 
   const {
@@ -62,6 +63,7 @@
   bind:this={domLyric}
   class:draging={isMsDown}
   class:lrcActiveZoom={isZoomActiveLrc.val}
+  class:font-weight={fontWeight.val}
   class:text-left={textAlign.val === 'left'}
   class:text-center={textAlign.val === 'center'}
   class:text-right={textAlign.val === 'right'}
@@ -174,6 +176,13 @@
     //   color: var(--color-primary);
     //   font-size: 1.2em;
     // }
+  }
+  .font-weight {
+    :global {
+      .line-content {
+        font-weight: bold;
+      }
+    }
   }
   .lrcActiveZoom {
     :global {

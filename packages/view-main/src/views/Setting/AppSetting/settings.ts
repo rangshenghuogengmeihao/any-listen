@@ -183,7 +183,7 @@ export const settings: SettingListSection[] = [
     id: 'playDetail',
     name: 'settings.play_detail',
     list: [
-      // t('settings.play_detail.style_align_right')
+      // t('settings.play_detail.style_font_weight')
       {
         field: 'playDetail.isDynamicBackground',
         name: 'settings.play_detail.dynamic_background',
@@ -197,6 +197,11 @@ export const settings: SettingListSection[] = [
       {
         field: 'playDetail.isZoomActiveLrc',
         name: 'settings.play_detail.zoom_active_lrc',
+        type: 'boolean',
+      },
+      {
+        field: 'playDetail.style.fontWeight',
+        name: 'settings.play_detail.style_font_weight',
         type: 'boolean',
       },
       {

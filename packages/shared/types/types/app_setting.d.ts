@@ -284,6 +284,11 @@ declare global {
       'playDetail.style.align': 'center' | 'left' | 'right'
 
       /**
+       * 播放详情页-歌词加粗
+       */
+      'playDetail.style.fontWeight': boolean
+
+      /**
        * 播放详情页-是否延迟桌面歌词滚动
        */
       'playDetail.isDelayScroll': boolean

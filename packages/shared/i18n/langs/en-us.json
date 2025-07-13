@@ -221,6 +221,7 @@
   "settings.play_detail.style_align_center": "Center",
   "settings.play_detail.style_align_left": "On the left",
   "settings.play_detail.style_align_right": "On the right",
+  "settings.play_detail.style_font_weight": "Bold lyrics font",
   "settings.play_detail.zoom_active_lrc": "Zoom the currently played lyrics",
   "settings.player.lyric_roma": "Show lyrics Roman tones (if available)",
   "settings.player.lyric_trans_roma_swap": "Swap lyric translation and roman",

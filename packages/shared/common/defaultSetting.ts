@@ -57,6 +57,7 @@ const defaultSetting: AnyListen.AppSetting = {
   'playDetail.isZoomActiveLrc': true,
   'playDetail.style.fontSize': 100,
   'playDetail.style.align': 'left',
+  'playDetail.style.fontWeight': true,
   'playDetail.isDelayScroll': true,
   'playDetail.isDynamicBackground': true,
 

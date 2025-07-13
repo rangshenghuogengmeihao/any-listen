@@ -18,5 +18,10 @@
   "javascript.preferences.importModuleSpecifier": "non-relative",
   "typescript.tsdk": "packages/shared/eslint/node_modules/typescript/lib",
   "i18n-ally.review.enabled": false,
-  "i18n-ally.review.gutters": false
+  "i18n-ally.review.gutters": false,
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "Describe the change in concise English"
+    }
+  ]
 }

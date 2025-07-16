@@ -81,6 +81,7 @@ export const initApp = () => {
     appEvent.blur()
   })
   keyboardEvent.on('mod+a_down', (evt) => {
+    if (evt.inputing) return
     evt.event?.preventDefault()
   })
   if (import.meta.env.VITE_IS_WEB) {

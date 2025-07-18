@@ -1,9 +1,9 @@
 import { mount, tick, unmount } from 'svelte'
 
-import App from './App.svelte'
 import { onDesconnected } from '@/modules/app/shared'
 
-export const showMusicAddModal = (isMove: boolean, listId: string, musicInfos: AnyListen.Music.MusicInfo[]) => {
+export const showMusicAddModal = async (isMove: boolean, listId: string, musicInfos: AnyListen.Music.MusicInfo[]) => {
+  const App = (await import('./App.svelte')).default
   const app = mount(App, {
     target: document.getElementById('root')!,
     props: {

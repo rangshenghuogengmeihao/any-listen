@@ -1,12 +1,12 @@
-import { createUnsubscriptionSet } from '@/shared'
 import { onRelease } from '@/modules/app/shared'
-import { getCurrentTime as getPlayerCurrentTime } from '@/plugins/player'
 import { playerEvent } from '@/modules/player/store/event'
 import { playerState } from '@/modules/player/store/state'
 import { settingEvent } from '@/modules/setting/store/event'
 import { settingState } from '@/modules/setting/store/state'
-import * as lyric from './lyric'
+import { getCurrentTime as getPlayerCurrentTime } from '@/plugins/player'
+import { createUnsubscriptionSet } from '@/shared'
 import * as desktopLyric from './desktopLyric'
+import * as lyric from './lyric'
 import { lyricState } from './store/state'
 
 const getCurrentTime = () => {
@@ -49,11 +49,14 @@ const setLyric = () => {
   if (!playerState.musicInfo.id) return
   if (playerState.musicInfo.lrc) {
     const extendedLyrics = []
+    if (settingState.setting['player.isShowLyricRoma'] && playerState.musicInfo.rlrc) {
+      extendedLyrics.push(playerState.musicInfo.rlrc)
+    }
     if (settingState.setting['player.isShowLyricTranslation'] && playerState.musicInfo.tlrc) {
       extendedLyrics.push(playerState.musicInfo.tlrc)
     }
-    if (settingState.setting['player.isShowLyricRoma'] && playerState.musicInfo.rlrc) {
-      extendedLyrics.push(playerState.musicInfo.rlrc)
+    if (settingState.setting['player.isSwapLyricTranslationAndRoma']) {
+      extendedLyrics.reverse()
     }
     lyric.setLyric(
       settingState.setting['player.isPlayAwlrc'] && playerState.musicInfo.awlrc
@@ -71,9 +74,12 @@ const setLyric = () => {
 
   if (playerState.playerPlaying) setTimeout(play)
 }
-const watchSettings = ['player.isShowLyricTranslation', 'player.isShowLyricRoma', 'player.isPlayAwlrc'] satisfies Array<
-  keyof AnyListen.AppSetting
->
+const watchSettings = [
+  'player.isShowLyricTranslation',
+  'player.isShowLyricRoma',
+  'player.isSwapLyricTranslationAndRoma',
+  'player.isPlayAwlrc',
+] satisfies Array<keyof AnyListen.AppSetting>
 
 const unregistered = createUnsubscriptionSet()
 export const initLyric = () => {

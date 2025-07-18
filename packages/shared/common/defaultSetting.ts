@@ -27,6 +27,7 @@ const defaultSetting: AnyListen.AppSetting = {
   'player.isMediaDeviceRemovedStopPlay': false,
   'player.isShowLyricTranslation': false,
   'player.isShowLyricRoma': false,
+  'player.isSwapLyricTranslationAndRoma': false,
   'player.isS2t': false,
   'player.isPlayAwlrc': true,
   'player.isSavePlayTime': true,
@@ -56,6 +57,7 @@ const defaultSetting: AnyListen.AppSetting = {
   'playDetail.isZoomActiveLrc': true,
   'playDetail.style.fontSize': 100,
   'playDetail.style.align': 'left',
+  'playDetail.style.fontWeight': true,
   'playDetail.isDelayScroll': true,
   'playDetail.isDynamicBackground': true,
 

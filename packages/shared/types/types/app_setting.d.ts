@@ -134,6 +134,11 @@ declare global {
       'player.isShowLyricRoma': boolean
 
       /**
+       * 是否调换翻译歌词与罗马音歌词位置
+       */
+      'player.isSwapLyricTranslationAndRoma': boolean
+
+      /**
        * 是否将歌词从简体转换为繁体
        */
       'player.isS2t': boolean
@@ -277,6 +282,11 @@ declare global {
        * 播放详情页-歌词对齐方式
        */
       'playDetail.style.align': 'center' | 'left' | 'right'
+
+      /**
+       * 播放详情页-歌词加粗
+       */
+      'playDetail.style.fontWeight': boolean
 
       /**
        * 播放详情页-是否延迟桌面歌词滚动

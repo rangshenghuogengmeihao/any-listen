@@ -33,6 +33,7 @@ declare namespace AnyListen {
       'common.langId': AnyListen.AppSetting['common.langId']
       'player.isShowLyricTranslation': AnyListen.AppSetting['player.isShowLyricTranslation']
       'player.isShowLyricRoma': AnyListen.AppSetting['player.isShowLyricRoma']
+      'player.isSwapLyricTranslationAndRoma': AnyListen.AppSetting['player.isSwapLyricTranslationAndRoma']
       'player.isPlayAwlrc': AnyListen.AppSetting['player.isPlayAwlrc']
       'player.playbackRate': AnyListen.AppSetting['player.playbackRate']
     }

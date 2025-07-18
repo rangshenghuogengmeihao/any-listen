@@ -1,11 +1,9 @@
-### Fixes
+### Added
 
-- Fixed the issue where the ambient sound effects and changelog rendering plugins failed to load.
-- Fixed the issue of hanging when stopping the service.
+- Added a **"Bold lyrics font"** option in _Settings > Play Details Page Settings_. Enabled by default.
 
 ---
 
-### 修复
+### 新增
 
-- 修复环境音效、更新日志渲染插件加载失败的问题
-- 修复停止服务时被挂起的问题
+- 新增 **「加粗歌词字体」** 选项，位于 _设置 > 播放详情页设置_，默认启用

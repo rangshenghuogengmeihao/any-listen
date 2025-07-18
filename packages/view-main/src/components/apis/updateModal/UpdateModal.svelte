@@ -312,6 +312,8 @@
           >
           {#if versionInfo.val.status == 'downloading'}
             <Btn disabled>{$t('update_modal.update_downloading')}</Btn>
+          {:else if versionInfo.val.status == 'checking'}
+            <Btn disabled>{$t('update_modal.update_checking')}</Btn>
           {:else}
             <Btn onclick={downloadUpdate}>{$t('update_modal.download')}</Btn>
           {/if}

@@ -1,37 +1,27 @@
 ### Added
 
-- Added lyric alignment setting on the playback details page
-- Added Karaoke lyrics setting
+- Added a **"Swap translated lyrics and romanized lyrics"** option in _Settings > Playback Settings_.
+- Added a **"Bold lyrics font"** option in _Settings > Playback Details_. Enabled by default.
 
-### Optimized
+### Improved
 
-- Adjusted the layout of control buttons on the playback bar
-- Optimized the display effect of the changelog
-
-### Fixed
-
-- Fixed the issue where ambient sound effects failed to load
+- Improved the update notification mechanism. Now shows error messages when update checks or downloads fail ([#59](https://github.com/any-listen/any-listen/issues/59)).
 
 ### Changed
 
-- Updated default values for the playback details page, playback bar, and other default settings
+- Swapped the positions of **"Translated lyrics"** and **"Romanized lyrics"**. If you want to restore the original order, you can enable the **"Swap translated lyrics and romanized lyrics"** option.
 
 ---
 
 ### 新增
 
-- 添加设置-播放详情页设置-歌词对齐方式设置
-- 添加设置-播放设置-是否启用卡拉OK歌词设置
+- 新增 **「调换翻译歌词与罗马音歌词位置」** 选项，位于 _设置 > 播放设置_
+- 新增 **「加粗歌词字体」** 选项，位于 _设置 > 播放详情页设置_，默认启用
 
 ### 优化
 
-- 调整播放栏控制按钮布局
-- 优化更新日志显示效果
-
-### 修复
-
-- 修复环境音效加载失败的问题
+- 优化版本更新提示机制，增加检查和下载更新失败时的错误信息提示（[#59](https://github.com/any-listen/any-listen/issues/59)）
 
 ### 变更
 
-- 更新播放详情页、播放栏等默认设置的默认值
+- 调换 **「翻译歌词」** 和 **「罗马音歌词」** 的位置，若你想要恢复默认的行为，可以开启 **「调换翻译歌词与罗马音歌词位置」** 选项

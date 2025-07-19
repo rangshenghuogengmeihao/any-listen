@@ -1,16 +1,16 @@
 ### Improved
 
-- Improved the lyrics display on the lyrics details page
+- Improved the lyrics display on the song details page for better readability.
 
 ### Fixed
 
-- Fixed an issue where lyrics from the previous song might still be displayed when switching from a song with lyrics to one without
+- Fixed an issue where lyrics from the previous song might still be displayed when switching from a song with lyrics to one without.
 
 ---
 
 ### 优化
 
-- 优化歌词详情页内歌词显示效果
+- 优化歌曲详情页的歌词显示效果，提升可读性。
 
 ### 修复
 

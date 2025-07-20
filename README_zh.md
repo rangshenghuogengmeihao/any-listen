@@ -1,6 +1,6 @@
 # Any Listen
 
-[English](README.md) | [中文](README_zh.md)
+[English](README.md) | 中文
 
 一个跨平台的私人音乐播放服务。
 
@@ -78,6 +78,19 @@ mkdir data
 # 创建配置文件 config.cjs
 node index.cjs
 ```
+
+## 贡献代码
+
+本项目欢迎 PR，但为了 PR 能顺利合并，需要注意以下几点：
+
+- 对于添加新功能的 PR，建议在提交 PR 前先创建 Issue 进行说明，以确认该功能是否确实需要。
+- 对于修复 bug 的 PR，请提供修复前后的说明及重现方式。
+- 对于其他类型的 PR，则适当附上说明。
+
+贡献代码步骤：
+
+1. 克隆本仓库代码并切换至 `dev` 分支进行开发；
+2. 提交 PR 至 `dev` 分支。
 
 ## 许可证
 

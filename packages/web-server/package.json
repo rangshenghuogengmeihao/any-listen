@@ -19,7 +19,7 @@
     "@koa/cors": "^5.0.0",
     "better-sqlite3": "^11.10.0",
     "jsonwebtoken": "^9.0.2",
-    "koa": "^3.0.0",
+    "koa": "^3.0.1",
     "@koa/router": "^13.1.1",
     "log4js": "6.9.1",
     "lru-cache": "^11.1.0",
@@ -31,10 +31,10 @@
     "@any-listen/eslint": "workspace:@shared/eslint@*",
     "@any-listen/types": "workspace:@shared/types@*",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/koa": "^2.15.0",
+    "@types/koa": "^3.0.0",
     "@types/koa__router": "^12.0.4",
     "@types/koa__cors": "^5.0.0",
     "@types/ws": "8.18.1",
-    "vite": "^7.0.5"
+    "vite": "^7.0.6"
   }
 }

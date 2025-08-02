@@ -1,13 +1,16 @@
-/* eslint-disable no-var */
 import type Koa from 'koa'
 import type { LRUCache } from 'lru-cache'
 
 declare global {
   namespace AnyListen {
-    interface RequestContext extends Koa.Context {
-      userIp: string
-      now: number
-    }
+    type RequestContext<ResponseBodyT = unknown> = Koa.ParameterizedContext<
+      Koa.DefaultState,
+      {
+        userIp: string
+        now: number
+      },
+      ResponseBodyT
+    >
     type Next = Koa.Next
   }
 

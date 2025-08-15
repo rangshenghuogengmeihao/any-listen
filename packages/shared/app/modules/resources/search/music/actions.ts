@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
+import { SINGERS_RXP } from '@any-listen/common/constants'
 import { services } from '../../../resources/shared'
 // import { musicState } from './state'
 
@@ -184,11 +185,12 @@ export const findMusic = async ({
   })
   if (!list) return null
 
-  const singersRxp = /、|&|_|;|；|\/|,|，|\|/
   const sortSingle = (singer: string) =>
-    singersRxp.test(singer)
+    SINGERS_RXP.test(singer)
       ? singer
-          .split(singersRxp)
+          .split(SINGERS_RXP)
+          .map((s) => s.trim())
+          .filter((s) => s)
           .sort((a, b) => a.localeCompare(b))
           .join('、')
       : singer || ''

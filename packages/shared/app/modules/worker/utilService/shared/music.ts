@@ -1,3 +1,4 @@
+import { SINGERS_RXP } from '@any-listen/common/constants'
 import { formatPlayTime, sizeFormate } from '@any-listen/common/utils'
 import { basename, checkFile, checkPath, dirname, extname, getFileStats, joinPath, readFile } from '@any-listen/nodejs'
 import type { IAudioMetadata } from 'music-metadata'
@@ -67,6 +68,17 @@ const bitrateFormat = (formate: IAudioMetadata['format']) => {
   return ''
 }
 
+const singerFormat = (name: string) => {
+  if (!name) return ''
+  return SINGERS_RXP.test(name)
+    ? name
+        .split(SINGERS_RXP)
+        .map((s) => s.trim())
+        .filter((s) => s)
+        .join('、')
+    : name || ''
+}
+
 /**
  * 创建本地音乐信息对象
  * @param path 文件路径
@@ -88,7 +100,7 @@ export const createLocalMusicInfo = async (path: string): Promise<AnyListen.Musi
 
   let ext = extname(path)
   let name = (metadata.common.title || basename(path, ext)).trim()
-  let singer = metadata.common.artists?.length ? metadata.common.artists.map((a) => a.trim()).join('、') : ''
+  let singer = metadata.common.artists?.length ? singerFormat(metadata.common.artists.join(';')) : ''
   let interval = metadata.format.duration ? formatPlayTime(metadata.format.duration) : ''
   let albumName = metadata.common.album?.trim() ?? ''
 

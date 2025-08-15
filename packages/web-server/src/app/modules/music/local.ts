@@ -118,7 +118,12 @@ export const getLyricInfo = async ({
 
     if (fileLyricInfo) {
       return {
-        info: await buildLyricInfo(fileLyricInfo),
+        info: await buildLyricInfo({
+          ...fileLyricInfo,
+          name: musicInfo.name,
+          singer: musicInfo.singer,
+          interval: musicInfo.interval,
+        }),
         isFromCache: true,
       }
     }

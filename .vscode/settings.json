@@ -21,7 +21,13 @@
   "i18n-ally.review.gutters": false,
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {
-      "text": "Describe the change in concise English. Use English description based on changelog (if a changelog exists)"
+      "text": "始终英语描述变更"
+    },
+    {
+      "text": "变更描述尽量简洁明了"
+    },
+    {
+      "text": "如果变更日志已更新，则基于变更日志描述本次提交"
     }
   ]
 }

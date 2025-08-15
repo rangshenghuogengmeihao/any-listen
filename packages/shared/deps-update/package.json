@@ -9,6 +9,6 @@
     "@any-listen/nodejs": "workspace:@shared/nodejs@*",
     "@any-listen/types": "workspace:@shared/types@*",
     "npm-check-updates": "^18.0.2",
-    "chalk": "^5.4.1"
+    "chalk": "^5.5.0"
   }
 }

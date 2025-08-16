@@ -21,13 +21,28 @@
   "i18n-ally.review.gutters": false,
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {
+      "text": "Use conventional commit message format."
+    },
+    {
       "text": "始终英语描述变更"
     },
     {
       "text": "变更描述尽量简洁明了"
     },
     {
+      "text": "例子：`chore: update deps`"
+    },
+    {
       "text": "如果变更日志已更新，则基于变更日志描述本次提交"
+    },
+    {
+      "text": "只描述变更，不要描述意图"
+    },
+    {
+      "text": "好例子：`feat: add SingleEvent class and update event API`"
+    },
+    {
+      "text": "坏例子：`feat: add event handling improvements with SingleEvent class and update API for better event management`"
     }
   ]
 }

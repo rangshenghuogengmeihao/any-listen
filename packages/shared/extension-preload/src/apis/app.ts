@@ -35,7 +35,8 @@ export const app: AnyListen_API.App = {
       signal as AbortSignal | undefined
     )
   },
-  async showInput({ signal, ...options }: AnyListen_API.InputDialogOptions) {
+  // TODO
+  async showFormDialog({ signal, ...options }: AnyListen_API.FormDialogOptions) {
     return buildKey(
       async (key) => {
         return hostContext.hostFuncs.showInputBox(key, options)

@@ -1,32 +1,39 @@
 import { triggerTimeout } from '@/apis/global'
 import { createMessage2Call } from 'message2call'
 import { onResourceAction } from './apis/resource'
-import { extensionAPIEvent } from './event'
+import {
+  configurationEvent,
+  localeEvent,
+  musicListActionEvent,
+  playHistoryListActionEvent,
+  playListActionEvent,
+  playerEvent,
+} from './event'
 import { hostContext } from './host/state'
 import { setMessage } from './i18n'
 
 const exposeObj = {
   updateLocale(locale) {
     hostContext.locale = locale
-    extensionAPIEvent.localeChanged(locale)
+    localeEvent.emit(locale)
   },
   updateI18nMessage(message) {
     setMessage(message)
   },
   musicListAction(action) {
-    extensionAPIEvent.musicListAction(action)
+    musicListActionEvent.emit(action)
   },
   playerEvent(event) {
-    extensionAPIEvent.playerEvent(event)
+    playerEvent.emit(event)
   },
   playListAction(action) {
-    extensionAPIEvent.playListAction(action)
+    playListActionEvent.emit(action)
   },
   playHistoryListAction(action) {
-    extensionAPIEvent.playHistoryListAction(action)
+    playHistoryListActionEvent.emit(action)
   },
   configurationChanged(keys, config) {
-    extensionAPIEvent.configurationChanged(keys, config)
+    configurationEvent.emit(keys, config)
   },
   async resourceAction<T extends keyof AnyListen.IPCExtension.ResourceAction>(
     action: T,

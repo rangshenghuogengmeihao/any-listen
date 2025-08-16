@@ -1,7 +1,4 @@
-// import mitt from 'mitt'
-// import type { Emitter } from 'mitt'
-
-const nextTick = typeof queueMicrotask === 'function' ? queueMicrotask : setTimeout
+import { nextTick } from './SimpleSingleEvent'
 
 export default class Event {
   listeners: Map<string, Array<(...args: unknown[]) => unknown>>
@@ -15,6 +12,17 @@ export default class Event {
     targetListeners.push(listener)
     return () => {
       this.off(eventName, listener)
+    }
+  }
+
+  once(eventName: string, listener: (...args: unknown[]) => unknown) {
+    const onceListener = (...args: unknown[]) => {
+      this.off(eventName, onceListener)
+      listener(...args)
+    }
+    this.on(eventName, onceListener)
+    return () => {
+      this.off(eventName, onceListener)
     }
   }
 
@@ -51,12 +59,15 @@ export default class Event {
 type Gtype<E extends Event> = Omit<E, keyof Event | 'emitEvent'> & { z_: (p: unknown) => void }
 export type EventType<E extends Event> = {
   on: <K extends keyof Gtype<E>>(event: K, listener: E[K]) => () => void
+  once: <K extends keyof Gtype<E>>(event: K, listener: E[K]) => () => void
   off: <K extends keyof Gtype<E>>(event: K, listener: E[K]) => void
 } & Omit<Gtype<E>, 'z_'>
 
 export type EventType2<E extends Event> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   on: <K extends keyof Gtype<E>>(event: K, listener: any) => () => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  once: <K extends keyof Gtype<E>>(event: K, listener: any) => () => void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   off: <K extends keyof Gtype<E>>(event: K, listener: any) => void
 } & Omit<Gtype<E>, 'z_'>

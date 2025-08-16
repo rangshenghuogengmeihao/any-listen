@@ -5,7 +5,6 @@ import { buffer } from './buffer'
 import { configuration } from './configuration'
 import { crypto } from './crypto'
 import { env } from './env'
-import { onEvent } from './event'
 import { iconv } from './iconv'
 import { logcat } from './logcat'
 import { musicList } from './musicList'
@@ -20,7 +19,6 @@ export const getAPI = () => {
     env,
     /** 应用相关 */
     app,
-    onEvent,
     logcat,
     storage,
     configuration,

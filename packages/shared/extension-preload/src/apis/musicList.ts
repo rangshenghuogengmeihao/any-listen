@@ -1,3 +1,4 @@
+import { musicListActionEvent } from '@/event'
 import { hostContext } from '@/host/state'
 
 export const musicList: AnyListen_API.MusicList = {
@@ -10,4 +11,5 @@ export const musicList: AnyListen_API.MusicList = {
   async listAction(action) {
     return hostContext.hostFuncs.listAction(action)
   },
+  onListAction: musicListActionEvent.on.bind(musicListActionEvent),
 }

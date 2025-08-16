@@ -5,7 +5,7 @@ type RequestOptions = AnyListen.IPCExtension.RequestOptions
 type Response<Resp> = AnyListen.IPCExtension.Response<Resp>
 // type RespCallback<Resp> = AnyListen.IPCExtension.RespCallback<Resp>
 
-export const request = async <Resp = unknown>(url: string, options: RequestOptions = {}): Promise<Response<Resp>> => {
+const request = async <Resp = unknown>(url: string, options: RequestOptions = {}): Promise<Response<Resp>> => {
   options = cloneData(options)
   return rawRequest<Resp>(url, {
     method: options.method,
@@ -29,4 +29,12 @@ export const request = async <Resp = unknown>(url: string, options: RequestOptio
       statusCode: resp.statusCode,
     }
   })
+}
+
+export const createRequest = (extension: AnyListen.Extension.Extension) => {
+  const req = {
+    request,
+  } as const
+  if (extension.grant.includes('internet')) return req
+  return {} as unknown as typeof req
 }

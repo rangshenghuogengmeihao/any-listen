@@ -1,7 +1,7 @@
 import { extensionState } from '../../../state'
 import { cloneData } from './shared'
 export const createPlayer = (extension: AnyListen.Extension.Extension) => {
-  return {
+  const player = {
     async getPlayInfo() {
       const data = await extensionState.remoteFuncs.getPlayInfo()
       return cloneData(data)
@@ -16,4 +16,6 @@ export const createPlayer = (extension: AnyListen.Extension.Extension) => {
       await extensionState.remoteFuncs.playerAction(cloneData(action))
     },
   } as const
+  if (!extension.grant.includes('player')) return player
+  return {} as unknown as typeof player
 }

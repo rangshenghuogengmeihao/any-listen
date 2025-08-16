@@ -1,3 +1,4 @@
+import { localeEvent } from '@/event'
 import { hostContext } from '@/host/state'
 
 export const env: AnyListen_API.Env = {
@@ -27,6 +28,7 @@ export const env: AnyListen_API.Env = {
   get extensionVersion() {
     return hostContext.extension.version
   },
+  onLocaleChanged: localeEvent.on.bind(localeEvent),
   // extensionInfo: {
   //   name: '',
   //   description: '',

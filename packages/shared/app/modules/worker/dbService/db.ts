@@ -1,6 +1,6 @@
 import { DB_NAME, LIST_IDS } from '@any-listen/common/constants'
 import Database from 'better-sqlite3'
-import path from 'path'
+import path from 'node:path'
 import migrateData from './migrate'
 import tables, { DB_VERSION } from './tables'
 import verifyDB from './verifyDB'
@@ -67,3 +67,7 @@ export const init = async (dataPath: string, nativeBindingPath: string): Promise
 
 // 获取数据库实例
 export const getDB = (): Database.Database => db
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export const dbPrepare = <T extends {} | unknown[] = [], R = undefined>(sql: string) => {
+  return db.prepare<T, R>(sql)
+}

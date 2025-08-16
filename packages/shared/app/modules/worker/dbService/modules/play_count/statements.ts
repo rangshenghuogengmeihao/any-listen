@@ -1,4 +1,4 @@
-import { getDB } from '../../db'
+import { dbPrepare } from '../../db'
 
 export interface PlayCountKey {
   name: string
@@ -20,8 +20,7 @@ export interface PlayTime extends PlayCountKey {
  * @returns 查询语句
  */
 export const createQueryStatement = () => {
-  const db = getDB()
-  return db.prepare<[PlayCountKey]>(`
+  return dbPrepare<PlayCountKey, { count: number; time: number }>(`
     SELECT "count", "time"
     FROM "main"."play_count"
     WHERE "name"=@name AND "singer"=@singer
@@ -33,8 +32,7 @@ export const createQueryStatement = () => {
  * @returns 插入语句
  */
 export const createInsertStatement = () => {
-  const db = getDB()
-  return db.prepare<[PlayCountAll]>(`
+  return dbPrepare<PlayCountAll>(`
     INSERT INTO "main"."play_count" ("name", "singer", "count", "time")
     VALUES (@name, @singer, @count, @time)`)
 }
@@ -44,8 +42,7 @@ export const createInsertStatement = () => {
  * @returns 清空语句
  */
 export const createClearStatement = () => {
-  const db = getDB()
-  return db.prepare<[]>(`
+  return dbPrepare(`
     DELETE FROM "main"."play_count"
   `)
 }
@@ -55,8 +52,7 @@ export const createClearStatement = () => {
  * @returns 删除语句
  */
 export const createDeleteStatement = () => {
-  const db = getDB()
-  return db.prepare<[PlayCountKey]>(`
+  return dbPrepare<PlayCountKey>(`
     DELETE FROM "main"."play_count"
     WHERE "name"=@name AND "singer"=@singer
   `)
@@ -67,8 +63,7 @@ export const createDeleteStatement = () => {
  * @returns 更新语句
  */
 export const createCountUpdateStatement = () => {
-  const db = getDB()
-  return db.prepare<[PlayCount]>(`
+  return dbPrepare<PlayCount>(`
     UPDATE "main"."play_count"
     SET "count"=@count
     WHERE "name"=@name AND "singer"=@singer`)
@@ -79,8 +74,7 @@ export const createCountUpdateStatement = () => {
  * @returns 更新语句
  */
 export const createTimeUpdateStatement = () => {
-  const db = getDB()
-  return db.prepare<[PlayTime]>(`
+  return dbPrepare<PlayTime>(`
     UPDATE "main"."play_count"
     SET "time"=@time
     WHERE "name"=@name AND "singer"=@singer`)
@@ -91,6 +85,5 @@ export const createTimeUpdateStatement = () => {
  * @returns 统计语句
  */
 export const createCountStatement = () => {
-  const db = getDB()
-  return db.prepare<[]>('SELECT COUNT(*) as count FROM "main"."play_count"')
+  return dbPrepare<[], { count: number }>('SELECT COUNT(*) as count FROM "main"."play_count"')
 }

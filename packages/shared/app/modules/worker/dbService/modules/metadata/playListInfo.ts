@@ -1,4 +1,4 @@
-import { getDB } from '../../db'
+import { dbPrepare } from '../../db'
 
 interface PlayListInfo {
   listId: null | string
@@ -8,16 +8,11 @@ let playListInfo: PlayListInfo
 const initPlayListInfo = () => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (playListInfo !== undefined) return
-  const db = getDB()
-  const result = db
-    .prepare(
-      `
+  const result = dbPrepare<[], { field_value: string }>(`
     SELECT "field_value"
     FROM "main"."metadata"
     WHERE "field_name"='play_list_id'
-  `
-    )
-    .get() as { field_value: string } | null
+  `).get()
   const data = result?.field_value
   if (data) {
     try {
@@ -47,8 +42,7 @@ export const saveMetadataPlayListInfo = (id: string | null, isOnline: boolean) =
   if (playListInfo.listId == id) return
   playListInfo.listId = id
   playListInfo.isOnline = isOnline
-  const db = getDB()
-  db.prepare<[string | null]>(
+  dbPrepare<string>(
     `
     INSERT INTO "main"."metadata" ("field_name", "field_value")
     VALUES ('play_list_id', ?)

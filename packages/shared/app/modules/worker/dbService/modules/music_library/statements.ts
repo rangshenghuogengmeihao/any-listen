@@ -1,5 +1,5 @@
 import { LIST_IDS } from '@any-listen/common/constants'
-import { getDB } from '../../db'
+import { dbPrepare } from '../../db'
 
 export interface MusicInfo {
   id: string
@@ -46,8 +46,7 @@ export interface UserListInfo {
  * @returns 查询语句
  */
 export const createDefaultListQueryStatement = () => {
-  const db = getDB()
-  return db.prepare<[]>(`
+  return dbPrepare<[], UserListInfo>(`
     SELECT "id", "parent_id", "name", "type", "meta", "position"
     FROM "main"."my_list"
     WHERE "type"=='${LIST_IDS.DEFAULT}'
@@ -59,8 +58,7 @@ export const createDefaultListQueryStatement = () => {
  * @returns 查询语句
  */
 export const createAllUserListQueryStatement = () => {
-  const db = getDB()
-  return db.prepare<[]>(`
+  return dbPrepare<[], UserListInfo>(`
     SELECT "id", "parent_id", "name", "type", "meta", "position"
     FROM "main"."my_list"
     WHERE "type"!='${LIST_IDS.DEFAULT}'
@@ -73,8 +71,7 @@ export const createAllUserListQueryStatement = () => {
  * @returns 查询语句
  */
 // export const createListQueryStatement = () => {
-//   const db = getDB()
-//   return db.prepare<[UserListInfo['parent_id']]>(`
+//   return dbPrepare<UserListInfo'parent_id']]>(`
 //     SELECT "id", "parent_id", "name", "type", "meta", "position"
 //     FROM "main"."my_list"
 //     WHERE "id"=?
@@ -86,8 +83,7 @@ export const createAllUserListQueryStatement = () => {
  * @returns 查询语句
  */
 // export const createSubListQueryStatement = () => {
-//   const db = getDB()
-//   return db.prepare<[UserListInfo['parent_id']]>(`
+//   return dbPrepare<UserListInfo'parent_id']]>(`
 //     SELECT "id", "parent_id", "name", "type", "meta", "position"
 //     FROM "main"."my_list"
 //     WHERE "parent_id"=?
@@ -100,8 +96,7 @@ export const createAllUserListQueryStatement = () => {
  * @returns 插入语句
  */
 export const createListInsertStatement = () => {
-  const db = getDB()
-  return db.prepare<[UserListInfo]>(`
+  return dbPrepare<UserListInfo>(`
     INSERT INTO "main"."my_list" ("id", "parent_id", "name", "type", "meta", "position")
     VALUES (@id, @parent_id, @name, @type, @meta, @position)`)
 }
@@ -111,8 +106,7 @@ export const createListInsertStatement = () => {
  * @returns 清空语句
  */
 export const createListClearStatement = () => {
-  const db = getDB()
-  return db.prepare<[UserListInfo['parent_id']]>(`
+  return dbPrepare<NonNullable<UserListInfo['parent_id']>>(`
     DELETE FROM "main"."my_list"
     WHERE "parent_id"=? AND "type"!='${LIST_IDS.DEFAULT}'
   `)
@@ -123,8 +117,7 @@ export const createListClearStatement = () => {
  * @returns 清空语句
  */
 export const createListClearNullStatement = () => {
-  const db = getDB()
-  return db.prepare<[]>(`
+  return dbPrepare(`
     DELETE FROM "main"."my_list"
     WHERE "parent_id" IS NULL AND "type"!='${LIST_IDS.DEFAULT}'
   `)
@@ -135,8 +128,7 @@ export const createListClearNullStatement = () => {
  * @returns 清空语句
  */
 export const createListClearAllStatement = () => {
-  const db = getDB()
-  return db.prepare<[]>(`DELETE FROM "main"."my_list" WHERE "type"!='${LIST_IDS.DEFAULT}'`)
+  return dbPrepare(`DELETE FROM "main"."my_list" WHERE "type"!='${LIST_IDS.DEFAULT}'`)
 }
 
 /**
@@ -144,8 +136,7 @@ export const createListClearAllStatement = () => {
  * @returns 删除语句
  */
 export const createListDeleteStatement = () => {
-  const db = getDB()
-  return db.prepare<[string]>(`DELETE FROM "main"."my_list" WHERE "id"=? AND "type"!='${LIST_IDS.DEFAULT}'`)
+  return dbPrepare<string>(`DELETE FROM "main"."my_list" WHERE "id"=? AND "type"!='${LIST_IDS.DEFAULT}'`)
 }
 
 /**
@@ -153,8 +144,7 @@ export const createListDeleteStatement = () => {
  * @returns 更新语句
  */
 export const createListUpdateStatement = () => {
-  const db = getDB()
-  return db.prepare<[UserListInfo]>(`
+  return dbPrepare<UserListInfo>(`
     UPDATE "main"."my_list"
     SET "name"=@name, "meta"=@meta
     WHERE "id"=@id`)
@@ -165,8 +155,7 @@ export const createListUpdateStatement = () => {
  * @returns 查询语句
  */
 export const createMusicInfoQueryStatement = () => {
-  const db = getDB()
-  return db.prepare<[MusicInfoQuery]>(`
+  return dbPrepare<MusicInfoQuery, MusicInfo>(`
     SELECT mInfo."id", mInfo."name", mInfo."singer", mInfo."is_local", mInfo."interval", mInfo."meta"
     FROM my_list_music_info mInfo
     LEFT JOIN my_list_music_info_order O
@@ -181,8 +170,7 @@ export const createMusicInfoQueryStatement = () => {
  * @returns 插入语句
  */
 export const createMusicInfoInsertStatement = () => {
-  const db = getDB()
-  return db.prepare<[MusicInfo]>(`
+  return dbPrepare<MusicInfo>(`
     INSERT INTO "main"."my_list_music_info" ("id", "list_id", "name", "singer", "is_local", "interval", "meta")
     VALUES (@id, @list_id, @name, @singer, @is_local, @interval, @meta)`)
 }
@@ -192,8 +180,7 @@ export const createMusicInfoInsertStatement = () => {
  * @returns 更新语句
  */
 export const createMusicInfoUpdateStatement = () => {
-  const db = getDB()
-  return db.prepare<[MusicInfo]>(`
+  return dbPrepare<MusicInfo>(`
     UPDATE "main"."my_list_music_info"
     SET "name"=@name, "singer"=@singer, "is_local"=@is_local, "interval"=@interval, "meta"=@meta
     WHERE "id"=@id AND "list_id"=@list_id`)
@@ -204,8 +191,7 @@ export const createMusicInfoUpdateStatement = () => {
  * @returns 删除语句
  */
 export const createMusicInfoClearStatement = () => {
-  const db = getDB()
-  return db.prepare<[]>('DELETE FROM "main"."my_list_music_info"')
+  return dbPrepare('DELETE FROM "main"."my_list_music_info"')
 }
 
 /**
@@ -213,8 +199,7 @@ export const createMusicInfoClearStatement = () => {
  * @returns 删除语句
  */
 export const createMusicInfoDeleteByListIdStatement = () => {
-  const db = getDB()
-  return db.prepare<[string]>('DELETE FROM "main"."my_list_music_info" WHERE "list_id"=?')
+  return dbPrepare<string>('DELETE FROM "main"."my_list_music_info" WHERE "list_id"=?')
 }
 
 /**
@@ -222,8 +207,7 @@ export const createMusicInfoDeleteByListIdStatement = () => {
  * @returns 删除语句
  */
 export const createMusicInfoDeleteStatement = () => {
-  const db = getDB()
-  return db.prepare<[MusicInfoRemove]>('DELETE FROM "main"."my_list_music_info" WHERE "id"=@id AND "list_id"=@list_id')
+  return dbPrepare<MusicInfoRemove>('DELETE FROM "main"."my_list_music_info" WHERE "id"=@id AND "list_id"=@list_id')
 }
 
 /**
@@ -231,8 +215,7 @@ export const createMusicInfoDeleteStatement = () => {
  * @returns 删除语句
  */
 export const createMusicInfoByListAndMusicInfoIdQueryStatement = () => {
-  const db = getDB()
-  return db.prepare<[ListMusicInfoQuery]>(`SELECT "id", "name", "singer", "is_local", "interval", "meta"
+  return dbPrepare<ListMusicInfoQuery, MusicInfo>(`SELECT "id", "name", "singer", "is_local", "interval", "meta"
     FROM "main"."my_list_music_info"
     WHERE "id"=@music_id
     AND "list_id"=@list_id`)
@@ -243,8 +226,7 @@ export const createMusicInfoByListAndMusicInfoIdQueryStatement = () => {
  * @returns 删除语句
  */
 export const createMusicInfoByMusicInfoIdQueryStatement = () => {
-  const db = getDB()
-  return db.prepare<[string]>(`SELECT "id", "name", "singer", "is_local", "interval", "meta", "list_id"
+  return dbPrepare<string, MusicInfo>(`SELECT "id", "name", "singer", "is_local", "interval", "meta", "list_id"
     FROM "main"."my_list_music_info"
     WHERE "id"=?`)
 }
@@ -254,8 +236,7 @@ export const createMusicInfoByMusicInfoIdQueryStatement = () => {
  * @returns 插入语句
  */
 export const createMusicInfoOrderInsertStatement = () => {
-  const db = getDB()
-  return db.prepare<[MusicInfoOrder]>(`
+  return dbPrepare<MusicInfoOrder>(`
     INSERT INTO "main"."my_list_music_info_order" ("list_id", "music_id", "order")
     VALUES (@list_id, @music_id, @order)`)
 }
@@ -265,8 +246,7 @@ export const createMusicInfoOrderInsertStatement = () => {
  * @returns 删除语句
  */
 export const createMusicInfoOrderClearStatement = () => {
-  const db = getDB()
-  return db.prepare<[]>('DELETE FROM "main"."my_list_music_info_order"')
+  return dbPrepare('DELETE FROM "main"."my_list_music_info_order"')
 }
 
 /**
@@ -274,8 +254,7 @@ export const createMusicInfoOrderClearStatement = () => {
  * @returns 删除语句
  */
 export const createMusicInfoOrderDeleteByListIdStatement = () => {
-  const db = getDB()
-  return db.prepare<[string]>('DELETE FROM "main"."my_list_music_info_order" WHERE "list_id"=?')
+  return dbPrepare<string>('DELETE FROM "main"."my_list_music_info_order" WHERE "list_id"=?')
 }
 
 /**
@@ -283,8 +262,5 @@ export const createMusicInfoOrderDeleteByListIdStatement = () => {
  * @returns 删除语句
  */
 export const createMusicInfoOrderDeleteStatement = () => {
-  const db = getDB()
-  return db.prepare<[MusicInfoRemove]>(
-    'DELETE FROM "main"."my_list_music_info_order" WHERE "music_id"=@id AND "list_id"=@list_id'
-  )
+  return dbPrepare<MusicInfoRemove>('DELETE FROM "main"."my_list_music_info_order" WHERE "music_id"=@id AND "list_id"=@list_id')
 }

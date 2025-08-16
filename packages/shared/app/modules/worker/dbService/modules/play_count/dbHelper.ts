@@ -19,7 +19,7 @@ import {
  */
 export const queryPlayCount = (key: PlayCountKey) => {
   const queryStatement = createQueryStatement()
-  return (queryStatement.get(key) as { count: number, time: number } | null)
+  return queryStatement.get(key)
 }
 
 /**
@@ -74,5 +74,5 @@ export const clearPlayCount = () => {
  */
 export const countPlayCount = () => {
   const countStatement = createCountStatement()
-  return (countStatement.get() as { count: number }).count
+  return countStatement.get()!.count
 }

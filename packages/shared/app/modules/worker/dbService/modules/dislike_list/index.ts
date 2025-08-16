@@ -1,12 +1,5 @@
 import { SPLIT_CHAR } from '@any-listen/common/constants'
-import {
-  queryDislikeList,
-  inertDislikeList,
-  overwirteDislikeList,
-  // updateDislikeList,
-  // deleteDislikeList,
-  // clearDislikeList,
-} from './dbHelper'
+import { inertDislikeList, overwirteDislikeList, queryDislikeList } from './dbHelper'
 import type { DislikeInfo } from './statements'
 
 // let dislikeInfo: AnyListen.Dislike.DislikeInfo
@@ -32,6 +25,7 @@ const initDislikeList = (): AnyListen.Dislike.DislikeInfo => {
   }
   const list: string[] = []
   for (const item of queryDislikeList()) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!item) continue
     let [name, singer] = item.content.split(SPLIT_CHAR.DISLIKE_NAME)
     if (name) {

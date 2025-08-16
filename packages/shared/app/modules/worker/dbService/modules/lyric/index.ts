@@ -28,7 +28,7 @@ const toDBLyric = (id: string, type: Lyricnfo['type'], lyricInfo: AnyListen.Musi
   }
 }
 
-const toLyricInfo = (id: string, type: Lyricnfo['type'], info: Lyricnfo | null): AnyListen.Music.LyricInfo => {
+const toLyricInfo = (id: string, type: Lyricnfo['type'], info: Lyricnfo | undefined): AnyListen.Music.LyricInfo => {
   if (!info) {
     return {
       name: '',
@@ -49,6 +49,7 @@ const toLyricInfo = (id: string, type: Lyricnfo['type'], info: Lyricnfo | null):
   for (const lrc of lyrics) {
     const idx = lrc.indexOf(SPLIT_CHAR.LYRIC_TYPE)
     const type = lrc.substring(0, idx) as 'tlyric' | 'rlyric' | 'awlyric'
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!type) continue
     lyricInfo[type] = JSON.parse(lrc.substring(idx + 1))
   }

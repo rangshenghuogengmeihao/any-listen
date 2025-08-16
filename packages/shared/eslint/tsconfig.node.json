@@ -8,7 +8,7 @@
     "skipLibCheck": false,
     "module": "ESNext",
     "moduleResolution": "Node",
-    "composite": true,
+    // "composite": true,
     "outDir": "./dist",
     "baseUrl": "./src" /* Specify the base directory to resolve non-relative module names. */
   }

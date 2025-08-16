@@ -18,7 +18,7 @@ import {
  */
 export const queryList = () => {
   const queryStatement = createQueryStatement()
-  return queryStatement.all() as ListMusicInfo[]
+  return queryStatement.all()
 }
 
 /**

@@ -15,7 +15,7 @@ import {
  */
 export const queryMusicUrl = (id: string) => {
   const queryStatement = createQueryStatement()
-  return (queryStatement.get(id) as { url: string } | null)?.url ?? null
+  return queryStatement.get(id)?.url ?? null
 }
 
 /**
@@ -67,5 +67,5 @@ export const clearMusicUrl = () => {
  */
 export const countMusicUrl = () => {
   const countStatement = createCountStatement()
-  return (countStatement.get() as { count: number }).count
+  return countStatement.get()!.count
 }

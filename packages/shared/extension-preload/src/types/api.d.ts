@@ -591,7 +591,7 @@ interface ListCommonResult<T> {
   // source: string
 }
 interface MusicCommonParams extends CommonParams {
-  musicInfo: AnyListen.Music.MusicInfo
+  musicInfo: AnyListen.Music.MusicInfoOnline
 }
 interface MusicUrlParams extends MusicCommonParams {
   quality?: AnyListen.Music.Quality

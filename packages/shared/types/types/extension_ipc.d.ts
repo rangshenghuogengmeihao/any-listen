@@ -84,7 +84,7 @@ declare namespace AnyListen {
       // source: string
     }
     interface MusicCommonParams extends CommonParams {
-      musicInfo: Music.MusicInfo
+      musicInfo: Music.MusicInfoOnline
     }
     interface MusicUrlParams extends MusicCommonParams {
       quality?: Music.Quality

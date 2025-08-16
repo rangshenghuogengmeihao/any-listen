@@ -33,7 +33,7 @@ export const getMusicPicByExtensionSource = async ({
 }: {
   extensionId: string
   source: string
-  musicInfo: AnyListen.Music.MusicInfo
+  musicInfo: AnyListen.Music.MusicInfoOnline
 }): Promise<string> => {
   return services.extensionSerive
     .resourceAction('musicPic', {

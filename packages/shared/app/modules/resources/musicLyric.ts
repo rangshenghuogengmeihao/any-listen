@@ -39,7 +39,7 @@ export const getMusicLyricByExtensionSource = async ({
 }: {
   extensionId: string
   source: string
-  musicInfo: AnyListen.Music.MusicInfo
+  musicInfo: AnyListen.Music.MusicInfoOnline
 }): Promise<AnyListen.Music.LyricInfo> => {
   return services.extensionSerive
     .resourceAction('musicLyric', {

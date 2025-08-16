@@ -11,7 +11,7 @@ export const getMusicUrlByExtensionSource = async ({
 }: {
   extensionId: string
   source: string
-  musicInfo: AnyListen.Music.MusicInfo
+  musicInfo: AnyListen.Music.MusicInfoOnline
   quality?: AnyListen.Music.Quality
   type?: AnyListen.Music.FileType
 }): Promise<AnyListen.IPCExtension.MusicUrlInfo> => {

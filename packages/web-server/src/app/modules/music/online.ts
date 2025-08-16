@@ -19,7 +19,7 @@ export const getMusicUrlByExtSource = async ({
   extensionId,
   source,
 }: {
-  musicInfo: AnyListen.Music.MusicInfo
+  musicInfo: AnyListen.Music.MusicInfoOnline
   extensionId: string
   source: string
   isRefresh?: boolean
@@ -74,7 +74,7 @@ export const getMusicPicByExtSource = async ({
   extensionId,
   source,
 }: {
-  musicInfo: AnyListen.Music.MusicInfo
+  musicInfo: AnyListen.Music.MusicInfoOnline
   extensionId: string
   source: string
   isRefresh?: boolean
@@ -136,7 +136,7 @@ export const getLyricInfoByExtSource = async ({
   extensionId,
   source,
 }: {
-  musicInfo: AnyListen.Music.MusicInfo
+  musicInfo: AnyListen.Music.MusicInfoOnline
   extensionId: string
   source: string
   isRefresh?: boolean

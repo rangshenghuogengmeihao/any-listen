@@ -1,6 +1,10 @@
+### Added
+
+- Added support for reading and playing Any Listen lyrics tag data.
+
 ### Improved
 
-- Improved the lyrics display on the song details page for better readability.
+- Improved lyrics display on the song details page for better readability.
 
 ---
 

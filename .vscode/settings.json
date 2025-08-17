@@ -27,13 +27,10 @@
       "text": "始终英语描述变更"
     },
     {
-      "text": "变更描述尽量简洁明了"
+      "text": "变更描述尽量简洁明了，例子：`chore: update deps`"
     },
     {
-      "text": "例子：`chore: update deps`"
-    },
-    {
-      "text": "如果变更日志已更新，则基于变更日志描述本次提交"
+      "text": "如果 changeLog 文件已更新，则基于 changeLog 描述本次提交"
     },
     {
       "text": "只描述变更，不要描述意图"

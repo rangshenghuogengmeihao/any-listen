@@ -1,17 +1,9 @@
-### Added
-
-- Added support for reading and playing Any Listen lyrics tag data.
-
 ### Improved
 
-- Improved lyrics display on the song details page for better readability.
+- Reset extension store cache every time the page loads
 
 ---
 
-### 新增
-
-- 新增 Any Listen 歌词标签数据读取与播放
-
 ### 优化
 
-- 优化歌曲详情页的歌词显示效果，提升可读性
+- 每次加载页面时重置扩展商店缓存

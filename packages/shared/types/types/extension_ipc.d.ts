@@ -191,6 +191,7 @@ declare namespace AnyListen {
       getOnlineExtensionDetail: (id: string) => OnlineDetail | null
       getOnlineTags: () => OnlineTagResult
       getOnlineCategories: () => OnlineCategorieResult
+      resetOnlineData: () => void
       downloadAndParseExtension: (url: string, manifest?: Extension.Manifest) => Extension.Extension
       installExtension: (tempExtension: Extension.Extension) => Extension.Extension
       updateExtension: (tempExtension: Extension.Extension) => Extension.Extension

@@ -4,4 +4,5 @@ export {
   getOnlineExtensionList,
   getOnlineTags,
   initOnlineList,
+  resetOnlineData,
 } from './onlineList'

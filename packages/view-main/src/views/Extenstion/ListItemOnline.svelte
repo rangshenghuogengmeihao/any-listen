@@ -11,7 +11,9 @@
   import { tooltip } from '@/components/apis/tooltips'
 
   let { ext }: { ext: OnlineListItem } = $props()
-  let version = $derived(`${ext.installed && !ext.latest ? `v${ext.currentVersion} → ` : ''}v${ext.version}`)
+  let version = $derived(
+    !ext.installed || ext.currentVersion == ext.version ? `v${ext.version}` : `v${ext.currentVersion} → v${ext.version}`
+  )
   let grants = $derived(ext.grant.map((g) => ({ id: g, icon: `ext_grant_${g}`, label: i18n.t(`extension__grant_${g}`) })))
   const handleInstall = async (ext: OnlineListItem, install?: boolean) => {
     // TODO
@@ -62,14 +64,14 @@
     </div>
     <div class="right">
       {#if ext.installed}
-        {#if !ext.latest}
+        {#if ext.currentVersion != ext.version}
           <Btn
             min
             onclick={async () => {
               await handleInstall(ext, true)
             }}
           >
-            {$t('extension__action_update')}
+            {ext.latest ? $t('extension__action_downgrade') : $t('extension__action_update')}
           </Btn>
         {/if}
         <ActionBtnOnline {ext} />

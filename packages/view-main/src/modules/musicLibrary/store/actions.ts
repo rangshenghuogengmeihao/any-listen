@@ -47,16 +47,17 @@ export const getUserLists = async () => {
 }
 
 // TODO create other list
-export const createUserList = async (position: number, type: AnyListen.List.UserListType, name: string) => {
-  switch (type) {
+export const createUserList = async (position: number, info: AnyListen.List.UserListInfo) => {
+  switch (info.type) {
     case 'general':
       await createUserListFromRemote({
         position,
         listInfos: [
           {
             id: generateIdSimple(),
-            type,
-            name,
+            type: info.type,
+            name: info.name,
+            // TODO
             parentId: null,
             meta: {
               createTime: Date.now(),
@@ -76,15 +77,15 @@ export const createUserList = async (position: number, type: AnyListen.List.User
 }
 
 // TODO update other list
-export const updateUserList = async (listId: string, name: string) => {
-  const targetList = musicLibraryState.userLists.find((l) => l.id === listId)
+export const updateUserList = async (info: AnyListen.List.UserListInfo) => {
+  const targetList = musicLibraryState.userLists.find((l) => l.id === info.id)
   if (!targetList) return
   switch (targetList.type) {
     case 'general':
       await updateUserListFromRemote([
         {
           ...targetList,
-          name,
+          name: info.name,
           meta: {
             ...targetList.meta,
             updateTime: Date.now(),

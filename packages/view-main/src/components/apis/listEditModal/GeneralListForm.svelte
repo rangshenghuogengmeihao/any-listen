@@ -1,0 +1,78 @@
+<script lang="ts">
+  import { t } from '@/plugins/i18n'
+  import { createUserList, editUserList } from './shared'
+  import Input from '@/components/base/Input.svelte'
+
+  let {
+    item,
+    targetId,
+  }: {
+    item?: AnyListen.List.UserListInfoType<'general'> | null
+    targetId?: AnyListen.List.ParentId
+  } = $props()
+
+  const initData: AnyListen.List.UserListInfoType<'general'> = {
+    id: '',
+    name: '',
+    parentId: null,
+    type: 'general',
+    meta: {
+      createTime: 0,
+      updateTime: 0,
+      desc: '',
+      playCount: 0,
+      posTime: 0,
+    },
+  }
+  let listInfo = $state<AnyListen.List.UserListInfoType<'general'>>({
+    ...initData,
+    meta: { ...initData.meta },
+  })
+
+  export const verify = () => {
+    const name = listInfo.name.trim()
+    if (!name.length || name.length > 30) {
+      return false
+    }
+    return true
+  }
+  export const reset = () => {
+    listInfo = {
+      ...initData,
+      meta: { ...initData.meta },
+    }
+  }
+  export const submit = async () => {
+    if (!verify()) return
+    if (item) {
+      await editUserList(listInfo)
+    } else {
+      await createUserList({ ...listInfo, parentId: targetId || null })
+    }
+  }
+
+  $effect(() => {
+    if (!item) return
+    listInfo = {
+      ...item,
+      meta: { ...item.meta },
+    }
+  })
+</script>
+
+<main class="main">
+  <Input autofocus placeholder={$t('edit_list_modal__form_list_name')} bind:value={listInfo.name} />
+</main>
+
+<style lang="less">
+  .main {
+    // flex: auto;
+    // padding: 0 15px;
+    // width: 320px;
+    display: flex;
+    flex-flow: column nowrap;
+    // min-height: 0;
+    // max-height: 100%;
+    // overflow: hidden;
+  }
+</style>

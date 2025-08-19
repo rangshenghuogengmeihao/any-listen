@@ -2,22 +2,22 @@ import { createUserList as createUserListRemote, getSubUserLists, updateUserList
 import { musicLibraryState } from '@/modules/musicLibrary/store/state'
 import { LIST_IDS } from '@any-listen/common/constants'
 
-export const createUserList = async (type: AnyListen.List.UserListType, name: string, listId?: string) => {
+export const createUserList = async (listInfo: AnyListen.List.UserListInfo) => {
   const lists = getSubUserLists(null)
   let position: number
-  if (listId) {
-    if (listId == LIST_IDS.LOVE || listId == LIST_IDS.DEFAULT) {
+  if (listInfo.id) {
+    if (listInfo.id == LIST_IDS.LOVE || listInfo.id == LIST_IDS.DEFAULT) {
       position = 0
     } else {
-      position = lists.findIndex((l) => l.id == listId)
+      position = lists.findIndex((l) => l.id == listInfo.id)
       if (position != -1) position = position + 1
     }
   } else {
     position = musicLibraryState.userLists.length
   }
-  await createUserListRemote(position, type, name)
+  await createUserListRemote(position, listInfo)
 }
 
-export const editUserList = async (listId: string, name: string) => {
-  await updateUserList(listId, name)
+export const editUserList = async (listInfo: AnyListen.List.UserListInfo) => {
+  await updateUserList(listInfo)
 }

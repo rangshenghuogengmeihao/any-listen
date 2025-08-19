@@ -9,7 +9,7 @@
     disabled: boolean
   } = $props()
 
-  const listType: AnyListen.List.UserListType[] = ['general']
+  const listType: AnyListen.List.UserListType[] = ['general', 'local', 'online']
 </script>
 
 <div class="container">
@@ -18,7 +18,7 @@
       id={`new_list_type_${type}`}
       value={type}
       name="new_list_type"
-      {disabled}
+      disabled={disabled || type != 'general'}
       label={$t(`edit_list_modal__list_${type}`)}
       checked={value == type}
       onselect={(val) => {
@@ -33,5 +33,7 @@
     display: flex;
     flex-flow: row wrap;
     gap: 15px;
+    font-size: 14px;
+    padding-bottom: 6px;
   }
 </style>

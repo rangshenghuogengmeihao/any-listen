@@ -8,7 +8,6 @@ import {
   createMusicInfoQueryStatement,
 } from './statements'
 
-
 /**
  * 查询歌曲信息
  * @param id 歌曲id
@@ -16,7 +15,7 @@ import {
  */
 export const queryMusicInfo = (id: string) => {
   const musicInfoQueryStatement = createMusicInfoQueryStatement()
-  return musicInfoQueryStatement.all(id) as MusicInfoOtherSource[]
+  return musicInfoQueryStatement.all(id)
 }
 
 /**
@@ -56,5 +55,5 @@ export const clearMusicInfo = () => {
  */
 export const countMusicInfo = () => {
   const countStatement = createCountStatement()
-  return (countStatement.get() as { count: number }).count
+  return countStatement.get()!.count
 }

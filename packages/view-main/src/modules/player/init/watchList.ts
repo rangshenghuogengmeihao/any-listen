@@ -4,7 +4,7 @@ import { dislikeListState } from '@/modules/dislikeList/store/state'
 import { getListMusics } from '@/modules/musicLibrary/store/actions'
 import { musicLibraryEvent } from '@/modules/musicLibrary/store/event'
 import { onSettingChanged } from '@/modules/setting/shared'
-import { arrPush, createUnsubscriptionSet, throttle } from '@/shared'
+import { arrPush, createUnsubscriptionSet, generateId, throttle } from '@/shared'
 import { workers } from '@/worker'
 import { createPlayMusicInfo } from '@any-listen/common/tools'
 import { onPlayerCreated } from '../shared'
@@ -20,7 +20,9 @@ import {
 import { playerEvent } from '../store/event'
 import { playerState } from '../store/state'
 
+let syncId = ''
 const checkLinked = async () => {
+  if (syncId) return playerState.isLinkedList
   const currentMusicList = playerState.playList.filter((m) => !m.playLater)
   const targetMusicList = await getListMusics(playerState.playInfo.listId)
   if (currentMusicList.length !== targetMusicList.length) return false
@@ -37,16 +39,23 @@ const checkLinkedAndApply = () => {
 const changedListIds = new Set<string | null>()
 const throttleListChangeSync = throttle(async () => {
   const targetListId = playerState.playInfo.listId
-  if (!targetListId) return
+  if (!targetListId) {
+    syncId = ''
+    return
+  }
   const isSkip = !changedListIds.has(targetListId)
   changedListIds.clear()
-  if (isSkip || !playerState.isLinkedList) return
+  if (isSkip || !playerState.isLinkedList) {
+    syncId = ''
+    return
+  }
 
   const musicMap = new Map<string, AnyListen.Player.PlayMusicInfo>()
   const newList = playerState.playList.filter((m) => {
     musicMap.set(m.itemId, m)
     return m.playLater
   })
+  const curSyncId = syncId
   const targetMusicList = await getListMusics(targetListId)
   const newTargetList = targetMusicList.map((m) => {
     const newInfo = createPlayMusicInfo({
@@ -64,11 +73,13 @@ const throttleListChangeSync = throttle(async () => {
   // TODO diff update
   console.log('throttleListSync setPlayListMusic')
   await setPlayListMusic({ list: newList, listId: targetListId, isOnline: playerState.playInfo.isOnline, isSync: true })
+  if (curSyncId == syncId) syncId = ''
 }, 500)
 const handleListChangeSync = (listIds: string[]) => {
   for (const id of listIds) {
     changedListIds.add(id)
   }
+  syncId = generateId()
   throttleListChangeSync()
 }
 

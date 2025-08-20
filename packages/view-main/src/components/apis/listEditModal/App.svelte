@@ -3,9 +3,9 @@
   import { t } from '@/plugins/i18n'
   import Btn from '@/components/base/Btn.svelte'
   import ListTypeSelect from './ListTypeSelect.svelte'
-  import { createUserList, editUserList } from './shared'
-  import Input from '@/components/base/Input.svelte'
   import { musicLibraryState } from '@/modules/musicLibrary/store/state'
+  import GeneralListForm from './GeneralListForm.svelte'
+  import type { ComponentExports } from 'svelte'
 
   let {
     onafterleave,
@@ -16,50 +16,26 @@
   let visible = $state(false)
   let isEdit = $state(false)
   let listType = $state<AnyListen.List.UserListType>('general')
-  let listName = $state('')
   let targetId: string | undefined
+  let form = $state<ComponentExports<typeof GeneralListForm>>()
+  let targetInfo = $state<AnyListen.List.UserListInfo | null>(null)
 
   const closeModal = () => {
     visible = false
   }
 
   const handleComfirm = async () => {
-    if (isEdit) {
-      await editUserList(targetId!, listName)
-    } else {
-      await createUserList(listType, listName, targetId)
-    }
+    await form?.submit()
     closeModal()
-  }
-
-  const verify = () => {
-    const name = listName.trim()
-    if (!name.length || name.length > 30) {
-      return false
-    }
-    // switch (listType) {
-    //   case 'general':
-
-    //     break
-
-    //   default:
-    //     break
-    // }
-    return true
-  }
-  let verifyStatus = $derived(verify())
-
-  const resetForm = () => {
-    listName = ''
   }
   export const show = (_targetId?: string, _isEdit = false) => {
     targetId = _targetId
     isEdit = _isEdit
-    resetForm()
+    form?.reset()
     if (_isEdit) {
       const info = musicLibraryState.userLists.find((l) => l.id == _targetId)
       if (!info) return
-      listName = info.name
+      targetInfo = info
     }
     visible = true
   }
@@ -76,11 +52,13 @@
     </div>
     <div class="content">
       <ListTypeSelect bind:value={listType} disabled={isEdit} />
-      <Input autofocus placeholder={$t('edit_list_modal__form_list_name')} bind:value={listName} />
+      {#if listType == 'general'}
+        <GeneralListForm bind:this={form} {targetId} item={targetInfo as AnyListen.List.UserListInfoType<'general'> | null} />
+      {/if}
     </div>
     <div class="footer">
       <!-- <Btn onclick={closeModal}>{$t('btn_cancel')}</Btn> -->
-      <Btn disabled={!verifyStatus} onclick={handleComfirm}>{$t('btn_confirm')}</Btn>
+      <Btn onclick={handleComfirm}>{$t('btn_confirm')}</Btn>
     </div>
   </main>
 </Modal>

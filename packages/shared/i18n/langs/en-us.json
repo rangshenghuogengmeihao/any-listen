@@ -41,6 +41,7 @@
   "extension.install_local_failed.public_key_not_match": "Installation failed, the upcoming extension is inconsistent with the installed signature",
   "extension.install_success": "✔️ Extension [{name}] Installed successfully",
   "extension.select_local_file": "Select the extension installation package",
+  "extension__action_downgrade": "Downgrade",
   "extension__action_disable": "Disable",
   "extension__action_enable": "Enable",
   "extension__action_install": "Install",

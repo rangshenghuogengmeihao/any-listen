@@ -1,4 +1,5 @@
 import { getDB } from '../../db'
+import type { MusicInfo, MusicInfoOrder, UserListInfo } from './statements'
 import {
   createAllUserListQueryStatement,
   createDefaultListQueryStatement,
@@ -23,14 +24,13 @@ import {
   createMusicInfoQueryStatement,
   createMusicInfoUpdateStatement,
 } from './statements'
-import type { MusicInfo, MusicInfoOrder, UserListInfo } from './statements'
 
 /**
  * 获取所有默认用户列表信息
  * @returns
  */
 export const queryDefaultList = () => {
-  const list = createDefaultListQueryStatement().all() as UserListInfo[]
+  const list = createDefaultListQueryStatement().all()
   return list
 }
 
@@ -39,7 +39,7 @@ export const queryDefaultList = () => {
  * @returns
  */
 export const queryAllUserList = () => {
-  const list = createAllUserListQueryStatement().all() as UserListInfo[]
+  const list = createAllUserListQueryStatement().all()
   return list
 }
 
@@ -63,19 +63,20 @@ export const queryAllUserList = () => {
 
 /**
  * 批量插入用户列表
+ * @param parentId 父列表id
  * @param lists 列表
  * @param isClear 是否清空列表
  */
-export const inertUserLists = (parent_id: UserListInfo['parent_id'], lists: UserListInfo[], isClear = false) => {
+export const inertUserLists = (parentId: UserListInfo['parent_id'], lists: UserListInfo[], isClear = false) => {
   const db = getDB()
-  const listClearStatement: unknown = (parent_id == null ? createListClearNullStatement : createListClearStatement)()
+  const listClearStatement: unknown = (parentId == null ? createListClearNullStatement : createListClearStatement)()
   const listInsertStatement = createListInsertStatement()
-  db.transaction((parent_id: UserListInfo['parent_id'], lists: UserListInfo[]) => {
+  db.transaction((parentId: UserListInfo['parent_id'], lists: UserListInfo[]) => {
     if (isClear) {
-      if (parent_id == null) {
+      if (parentId == null) {
         ;(listClearStatement as ReturnType<typeof createListClearNullStatement>).run()
       } else {
-        ;(listClearStatement as ReturnType<typeof createListClearStatement>).run(parent_id)
+        ;(listClearStatement as ReturnType<typeof createListClearStatement>).run(parentId)
       }
     }
     for (const list of lists) {
@@ -88,25 +89,25 @@ export const inertUserLists = (parent_id: UserListInfo['parent_id'], lists: User
         position: list.position,
       })
     }
-  })(parent_id, lists)
+  })(parentId, lists)
 }
 
 /**
  * 批量删除用户列表及列表内歌曲
- * @param list_ids 列表id
+ * @param listIds 列表id
  */
-export const deleteUserLists = (list_ids: string[]) => {
+export const deleteUserLists = (listIds: string[]) => {
   const db = getDB()
   const listDeleteStatement = createListDeleteStatement()
   const musicInfoDeleteByListIdStatement = createMusicInfoDeleteByListIdStatement()
   const musicInfoOrderDeleteByListIdStatement = createMusicInfoOrderDeleteByListIdStatement()
-  db.transaction((list_ids: string[]) => {
-    for (const id of list_ids) {
+  db.transaction((listIds: string[]) => {
+    for (const id of listIds) {
       listDeleteStatement.run(id)
       musicInfoDeleteByListIdStatement.run(id)
       musicInfoOrderDeleteByListIdStatement.run(id)
     }
-  })(list_ids)
+  })(listIds)
 }
 
 /**
@@ -144,17 +145,17 @@ export const insertMusicInfoList = (list: MusicInfo[]) => {
 /**
  * 批量添加歌曲并刷新排序
  * @param list 新增歌曲
- * @param list_id 列表Id
+ * @param listId 列表Id
  * @param listAll 原始列表歌曲，列表去重后
  */
-export const insertMusicInfoListAndRefreshOrder = (list: MusicInfo[], list_id: string, listAll: MusicInfo[]) => {
+export const insertMusicInfoListAndRefreshOrder = (list: MusicInfo[], listId: string, listAll: MusicInfo[]) => {
   const musicInfoInsertStatement = createMusicInfoInsertStatement()
   const musicInfoOrderInsertStatement = createMusicInfoOrderInsertStatement()
   const musicInfoOrderDeleteByListIdStatement = createMusicInfoOrderDeleteByListIdStatement()
 
   const db = getDB()
-  db.transaction((list: MusicInfo[], list_id: string, listAll: MusicInfo[]) => {
-    musicInfoOrderDeleteByListIdStatement.run(list_id)
+  db.transaction((list: MusicInfo[], listId: string, listAll: MusicInfo[]) => {
+    musicInfoOrderDeleteByListIdStatement.run(listId)
     for (const music of list) {
       musicInfoInsertStatement.run(music)
       musicInfoOrderInsertStatement.run({
@@ -170,7 +171,7 @@ export const insertMusicInfoListAndRefreshOrder = (list: MusicInfo[], list_id: s
         order: music.order,
       })
     }
-  })(list, list_id, listAll)
+  })(list, listId, listAll)
 }
 
 /**
@@ -189,12 +190,12 @@ export const updateMusicInfos = (list: MusicInfo[]) => {
 
 /**
  * 获取列表内的歌曲
- * @param list_id 列表Id
+ * @param listId 列表Id
  * @returns 列表歌曲
  */
-export const queryMusicInfoByListId = (list_id: string) => {
+export const queryMusicInfoByListId = (listId: string) => {
   const musicInfoQueryStatement = createMusicInfoQueryStatement()
-  return musicInfoQueryStatement.all({ list_id }) as MusicInfo[]
+  return musicInfoQueryStatement.all({ list_id: listId })
 }
 
 /**
@@ -275,19 +276,19 @@ export const moveMusicInfoAndRefreshOrder = (
 
 /**
  * 批量移除列表内音乐
- * @param list_id 列表id
+ * @param listId 列表id
  * @param ids 音乐id
  */
-export const removeMusicInfos = (list_id: string, ids: string[]) => {
+export const removeMusicInfos = (listId: string, ids: string[]) => {
   const musicInfoDeleteStatement = createMusicInfoDeleteStatement()
   const musicInfoOrderDeleteStatement = createMusicInfoOrderDeleteStatement()
   const db = getDB()
-  db.transaction((list_id: string, ids: string[]) => {
+  db.transaction((listId: string, ids: string[]) => {
     for (const id of ids) {
-      musicInfoDeleteStatement.run({ list_id, id })
-      musicInfoOrderDeleteStatement.run({ list_id, id })
+      musicInfoDeleteStatement.run({ list_id: listId, id })
+      musicInfoOrderDeleteStatement.run({ list_id: listId, id })
     }
-  })(list_id, ids)
+  })(listId, ids)
 }
 
 /**
@@ -308,13 +309,13 @@ export const removeMusicInfoByListId = (ids: string[]) => {
 
 /**
  * 创建根据列表Id与音乐id查询音乐信息
- * @param list_id 列表id
- * @param music_id 音乐id
+ * @param listId 列表id
+ * @param musicId 音乐id
  * @returns
  */
-export const queryMusicInfoByListIdAndMusicInfoId = (list_id: string, music_id: string) => {
+export const queryMusicInfoByListIdAndMusicInfoId = (listId: string, musicId: string) => {
   const musicInfoByListAndMusicInfoIdQueryStatement = createMusicInfoByListAndMusicInfoIdQueryStatement()
-  return musicInfoByListAndMusicInfoIdQueryStatement.get({ list_id, music_id }) as MusicInfo | null
+  return musicInfoByListAndMusicInfoIdQueryStatement.get({ list_id: listId, music_id: musicId })
 }
 
 /**
@@ -324,38 +325,38 @@ export const queryMusicInfoByListIdAndMusicInfoId = (list_id: string, music_id: 
  */
 export const queryMusicInfoByMusicInfoId = (id: string) => {
   const musicInfoByMusicInfoIdQueryStatement = createMusicInfoByMusicInfoIdQueryStatement()
-  return musicInfoByMusicInfoIdQueryStatement.all(id) as MusicInfo[]
+  return musicInfoByMusicInfoIdQueryStatement.all(id)
 }
 
 /**
  * 批量更新歌曲位置
- * @param list_id 列表id
+ * @param listId 列表id
  * @param musicInfoOrders 音乐顺序
  */
-export const updateMusicInfoOrder = (list_id: string, musicInfoOrders: MusicInfoOrder[]) => {
+export const updateMusicInfoOrder = (listId: string, musicInfoOrders: MusicInfoOrder[]) => {
   const db = getDB()
   const musicInfoOrderInsertStatement = createMusicInfoOrderInsertStatement()
   const musicInfoOrderDeleteByListIdStatement = createMusicInfoOrderDeleteByListIdStatement()
-  db.transaction((list_id: string, musicInfoOrders: MusicInfoOrder[]) => {
-    musicInfoOrderDeleteByListIdStatement.run(list_id)
+  db.transaction((listId: string, musicInfoOrders: MusicInfoOrder[]) => {
+    musicInfoOrderDeleteByListIdStatement.run(listId)
     for (const orderInfo of musicInfoOrders) musicInfoOrderInsertStatement.run(orderInfo)
-  })(list_id, musicInfoOrders)
+  })(listId, musicInfoOrders)
 }
 
 /**
  * 覆盖列表内的歌曲
- * @param list_id 列表id
+ * @param listId 列表id
  * @param musicInfos 歌曲列表
  */
-export const overwriteMusicInfo = (list_id: string, musicInfos: MusicInfo[]) => {
+export const overwriteMusicInfo = (listId: string, musicInfos: MusicInfo[]) => {
   const db = getDB()
   const musicInfoDeleteByListIdStatement = createMusicInfoDeleteByListIdStatement()
   const musicInfoOrderDeleteByListIdStatement = createMusicInfoOrderDeleteByListIdStatement()
   const musicInfoInsertStatement = createMusicInfoInsertStatement()
   const musicInfoOrderInsertStatement = createMusicInfoOrderInsertStatement()
-  db.transaction((list_id: string, musicInfos: MusicInfo[]) => {
-    musicInfoDeleteByListIdStatement.run(list_id)
-    musicInfoOrderDeleteByListIdStatement.run(list_id)
+  db.transaction((listId: string, musicInfos: MusicInfo[]) => {
+    musicInfoDeleteByListIdStatement.run(listId)
+    musicInfoOrderDeleteByListIdStatement.run(listId)
     for (const musicInfo of musicInfos) {
       musicInfoInsertStatement.run(musicInfo)
       musicInfoOrderInsertStatement.run({
@@ -364,7 +365,7 @@ export const overwriteMusicInfo = (list_id: string, musicInfos: MusicInfo[]) => 
         order: musicInfo.order,
       })
     }
-  })(list_id, musicInfos)
+  })(listId, musicInfos)
 }
 
 /**

@@ -1,4 +1,4 @@
-import { getDB } from '../../db'
+import { dbPrepare } from '../../db'
 
 export interface MusicInfoOtherSource {
   source_id: string
@@ -16,8 +16,7 @@ export interface MusicInfoOtherSource {
  * @returns 查询语句
  */
 export const createMusicInfoQueryStatement = () => {
-  const db = getDB()
-  return db.prepare<[string]>(`
+  return dbPrepare<string, MusicInfoOtherSource>(`
     SELECT "id", "name", "singer", "interval", "source", "meta", "time"
     FROM "main"."music_info_other_source"
     WHERE source_id=?
@@ -30,8 +29,7 @@ export const createMusicInfoQueryStatement = () => {
  * @returns 插入语句
  */
 export const createMusicInfoInsertStatement = () => {
-  const db = getDB()
-  return db.prepare<[MusicInfoOtherSource]>(`
+  return dbPrepare<MusicInfoOtherSource>(`
     INSERT INTO "main"."music_info_other_source" ("id", "name", "singer", "interval", "source", "meta", "source_id", "time", "order")
     VALUES (@id, @name, @singer, @interval, @source, @meta, @source_id, @time, @order)
   `)
@@ -42,8 +40,7 @@ export const createMusicInfoInsertStatement = () => {
  * @returns 清空语句
  */
 export const createMusicInfoClearStatement = () => {
-  const db = getDB()
-  return db.prepare<[]>(`
+  return dbPrepare(`
     DELETE FROM "main"."music_info_other_source"
   `)
 }
@@ -53,8 +50,7 @@ export const createMusicInfoClearStatement = () => {
  * @returns 删除语句
  */
 export const createMusicInfoDeleteStatement = () => {
-  const db = getDB()
-  return db.prepare<[string]>(`
+  return dbPrepare<string>(`
     DELETE FROM "main"."music_info_other_source"
     WHERE "source_id"=?
   `)
@@ -65,6 +61,5 @@ export const createMusicInfoDeleteStatement = () => {
  * @returns 统计语句
  */
 export const createCountStatement = () => {
-  const db = getDB()
-  return db.prepare<[]>('SELECT COUNT(*) as count FROM "main"."music_info_other_source"')
+  return dbPrepare<[], { count: number }>('SELECT COUNT(*) as count FROM "main"."music_info_other_source"')
 }

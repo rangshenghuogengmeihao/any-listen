@@ -1,5 +1,3 @@
-import type { ExtensionAPIEventType } from '@/event'
-
 declare namespace AnyListen {
   interface IPCActionBase<A> {
     action: A
@@ -151,7 +149,7 @@ declare namespace AnyListen {
       awlyric?: string | null
       name: string
       singer: string
-      interval: string
+      interval: string | null
 
       rawlrcInfo?: {
         // 歌曲歌词
@@ -463,12 +461,14 @@ declare namespace AnyListen {
     interface PlayerActionSet {
       listId: string | null
       list: Player.PlayMusicInfo[]
+      isOnline: boolean
+      isSync?: boolean
     }
     interface PlayerActionAdd {
       musics: Player.PlayMusicInfo[]
       pos: number
     }
-    type PlayerActionUpdate = Player.PlayMusicInfo
+    type PlayerActionUpdate = Player.PlayMusicInfo[]
     type PlayerActionRemove = string[]
     type PlayerActionPlayed = string[]
     type PlayerActionUnplayed = string[]
@@ -591,7 +591,7 @@ interface ListCommonResult<T> {
   // source: string
 }
 interface MusicCommonParams extends CommonParams {
-  musicInfo: AnyListen.Music.MusicInfo
+  musicInfo: AnyListen.Music.MusicInfoOnline
 }
 interface MusicUrlParams extends MusicCommonParams {
   quality?: AnyListen.Music.Quality
@@ -840,6 +840,8 @@ declare global {
       readonly publicKey: string
       /** 扩展版本号 */
       readonly extensionVersion: string
+
+      readonly onLocaleChanged: (callback: (locale: Locale) => void) => () => void
     }
     /** 应用相关 */
     interface App {
@@ -855,6 +857,7 @@ declare global {
       getAllUserLists: () => Promise<AnyListen.List.MyAllList>
       getListMusics: (listId: string) => Promise<AnyListen.Music.MusicInfo[]>
       listAction: (action: AnyListen.IPCList.ActionList) => Promise<void>
+      onListAction: (handler: (action: AnyListen.IPCList.ActionList) => unknown) => () => void
     }
     interface PlayInfo {
       info: {
@@ -901,6 +904,9 @@ declare global {
       playListAction: (action: AnyListen.IPCPlayer.PlayListAction) => Promise<void>
       playerAction: (action: AnyListen.IPCPlayer.ActionPlayer) => Promise<void>
       playHistoryListAction: (action: AnyListen.IPCPlayer.PlayHistoryListAction) => Promise<void>
+      onPlayerEvent: (callback: (event: AnyListen.IPCPlayer.PlayerEvent) => unknown) => () => void
+      onPlayListEvent: (callback: (action: AnyListen.IPCPlayer.PlayListAction) => unknown) => () => void
+      onPlayHistoryEvent: (callback: (action: AnyListen.IPCPlayer.PlayHistoryListAction) => unknown) => () => void
     }
     interface MusicUrlInfo {
       url: string
@@ -966,14 +972,13 @@ declare global {
     interface Configuration {
       getConfigs: (key: string[]) => Promise<string[]>
       setConfigs: (datas: Array<[string, string]>) => Promise<void>
+      onConfigChanged: (callback: (keys: string[], configuration: Record<string, unknown>) => void) => () => void
     }
     interface API {
       env: Env
       app: App
       musicList: MusicList
       player: Player
-      /** 事件 */
-      onEvent: ExtensionAPIEventType['on']
       /** http 请求 */
       request: <Resp = unknown>(url: string, options?: RequestOptions) => Promise<Response<Resp>>
       t: (key: string, data?: Record<string, string | number | null | undefined>) => string
@@ -982,9 +987,10 @@ declare global {
       configuration: Configuration
       registerResourceAction: (actions: Partial<ResourceAction>) => void
       // TODO
-      runBackup: (opts: { backupData?: Array<'list' | 'dislike'> }) => Promise<void>
-      // TODO
-      registerBackupDataAction: (actions: BackupDataAction) => void
+      backup: {
+        runBackup: (opts: { backupData?: Array<'list' | 'dislike'> }) => Promise<void>
+        registerDataAction: (actions: BackupDataAction) => void
+      }
       utils: {
         buffer: Buffer
         crypto: Crypto
@@ -993,3 +999,5 @@ declare global {
     }
   }
 }
+
+export {}

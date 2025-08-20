@@ -204,3 +204,6 @@ export const windowSizeList: WindowSize[] = [
 ] as const
 
 export const API_PREFIX = '/api'
+
+/** singer name sep */
+export const SINGERS_RXP = /[、&_;；/,，|]/

@@ -6,22 +6,17 @@
   import Empty from '@/components/material/Empty.svelte'
   import { playerState } from '@/modules/player/store/state'
   import { musicClick } from '@/components/common/MusicList/List/action'
-  import { type ComponentExports, onMount } from 'svelte'
 
   let listItemHeight = useListItemHeight(3.2)
   let picstyle = $derived(`height:${listItemHeight.val * 0.8}px; width:${listItemHeight.val * 0.8}px;`)
-  let vl = $state<ComponentExports<typeof VirtualizedList<AnyListen.Player.PlayMusicInfo>> | null>(null)
-
-  onMount(() => {
-    vl?.scrollToIndex(playerState.playInfo.index, -100, false)
-  })
 </script>
 
 <div class="container">
   {#if $playList.length}
     <VirtualizedList
       list={$playList}
-      bind:this={vl}
+      initialscrollindex={playerState.playInfo.index}
+      initialscrollindexoffset={-100}
       keyname="itemId"
       containerclass="list"
       itemheight={listItemHeight.val}

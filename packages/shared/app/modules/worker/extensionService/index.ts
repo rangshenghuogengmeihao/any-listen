@@ -22,6 +22,7 @@ import {
   getOnlineExtensionList,
   getOnlineTags,
   initOnlineList,
+  resetOnlineData,
 } from './onlineExtension'
 import { resetI18n } from './onlineExtension/i18n'
 import { buildExtensionSettings, getExtensionLastLogs, updateExtensionSettings, updateResourceListDeounce } from './shared'
@@ -98,6 +99,9 @@ const extension = {
   },
   async getOnlineExtensionDetail(id: string) {
     return getOnlineExtensionDetail(id)
+  },
+  async resetOnlineData() {
+    resetOnlineData()
   },
   getLocalExtensionList() {
     return extensionState.extensions

@@ -21,7 +21,25 @@
   "i18n-ally.review.gutters": false,
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {
-      "text": "Describe the change in concise English. Use English description based on changelog (if a changelog exists)"
+      "text": "Use conventional commit message format."
+    },
+    {
+      "text": "始终英语描述变更"
+    },
+    {
+      "text": "变更描述尽量简洁明了，例子：`chore: update deps`"
+    },
+    {
+      "text": "如果 changeLog 文件已更新，则基于 changeLog 描述本次提交"
+    },
+    {
+      "text": "只描述变更，不要描述意图"
+    },
+    {
+      "text": "好例子：`feat: add SingleEvent class and update event API`"
+    },
+    {
+      "text": "坏例子：`feat: add event handling improvements with SingleEvent class and update API for better event management`"
     }
   ]
 }

@@ -1,5 +1,5 @@
 import mime from 'mime'
-import fs from 'fs'
+import fs from 'node:fs'
 
 interface Range {
   start: number

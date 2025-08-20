@@ -3,6 +3,7 @@ import createCors from './middleware/cors'
 import logHttp from './middleware/log-http'
 import reqInit from './middleware/req-init'
 import staticFile from './middleware/static-file'
+import streamBody from './middleware/stream-body'
 import router from './modules'
 
 export const createServerApp = (config: AnyListen.Config) => {
@@ -16,6 +17,7 @@ export const createServerApp = (config: AnyListen.Config) => {
   // 跨域
   if (config['cors.enabled']) app.use(createCors())
 
+  app.use(streamBody)
   app.use(staticFile)
 
   // 路由

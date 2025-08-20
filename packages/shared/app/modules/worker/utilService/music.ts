@@ -1,4 +1,4 @@
-import { isValidLyric } from '@any-listen/common/tools'
+import { parseLyrics } from './shared/lrcTool'
 import { createLocalMusicInfo, getLocalMusicFileLyric, getLocalMusicFilePic } from './shared/music'
 
 interface PicBuffer {
@@ -17,13 +17,12 @@ export const getMusicFilePic = async (filePath: string): Promise<string | PicBuf
   }
 }
 
-export const getMusicFileLyric = async (filePath: string): Promise<AnyListen.Music.LyricInfo | null> => {
+export const getMusicFileLyric = async (
+  filePath: string
+): Promise<Pick<AnyListen.Music.LyricInfo, 'awlyric' | 'lyric' | 'rlyric' | 'tlyric'> | null> => {
   const lyric = await getLocalMusicFileLyric(filePath)
-  if (!isValidLyric(lyric)) return null
-  // TODO: lyric awlyric
-  return {
-    lyric,
-  }
+  if (!lyric) return null
+  return parseLyrics(lyric)
 }
 
 /**

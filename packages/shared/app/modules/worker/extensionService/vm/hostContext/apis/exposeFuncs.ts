@@ -1,15 +1,15 @@
 import { createCommon } from './common'
+import { createConfigurationStore } from './configuration'
 import { createMusicList } from './musicList'
 import { createPlayer } from './player'
-import { request } from './request'
+import { createRequest } from './request'
 import { createStore } from './storage'
-import { createConfigurationStore } from './configuration'
 // import { extensionState } from '../../../state'
 
 export const createExposeObject = (extension: AnyListen.Extension.Extension) => {
   return {
     ...createCommon(extension),
-    request,
+    ...createRequest(extension),
     ...createStore(extension.dataDirectory),
     ...createConfigurationStore(extension),
     ...createMusicList(extension),

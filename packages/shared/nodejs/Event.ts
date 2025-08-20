@@ -13,6 +13,17 @@ export default class Event {
     }
   }
 
+  once(eventName: string, listener: (...args: unknown[]) => unknown) {
+    const onceListener = (...args: unknown[]) => {
+      this.off(eventName, onceListener)
+      listener(...args)
+    }
+    this.on(eventName, onceListener)
+    return () => {
+      this.off(eventName, onceListener)
+    }
+  }
+
   off(eventName: string, listener: (...args: unknown[]) => unknown) {
     let targetListeners = this.listeners.get(eventName)
     if (!targetListeners) return
@@ -46,12 +57,15 @@ export default class Event {
 type Gtype<E extends Event> = Omit<E, keyof Event | 'emitEvent'> & { z_: (p: unknown) => void }
 export type EventType<E extends Event> = {
   on: <K extends keyof Gtype<E>>(event: K, listener: E[K]) => () => void
+  once: <K extends keyof Gtype<E>>(event: K, listener: E[K]) => () => void
   off: <K extends keyof Gtype<E>>(event: K, listener: E[K]) => void
 } & Omit<Gtype<E>, 'z_'>
 
 export type EventType2<E extends Event> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   on: <K extends keyof Gtype<E>>(event: K, listener: any) => () => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  once: <K extends keyof Gtype<E>>(event: K, listener: any) => () => void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   off: <K extends keyof Gtype<E>>(event: K, listener: any) => void
 } & Omit<Gtype<E>, 'z_'>

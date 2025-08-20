@@ -1,4 +1,5 @@
 import { getDB } from '../../db'
+import type { Lyricnfo } from './statements'
 import {
   createEditedLyricClearStatement,
   createEditedLyricCountStatement,
@@ -14,9 +15,6 @@ import {
   createRawLyricQueryStatement,
   createRawLyricUpdateStatement,
 } from './statements'
-import type {
-  Lyricnfo,
-} from './statements'
 
 /**
  * 查询原始歌词
@@ -25,7 +23,7 @@ import type {
  */
 export const queryLyric = (id: string) => {
   const lyricQueryStatement = createLyricQueryStatement()
-  return lyricQueryStatement.all(id) as Lyricnfo[]
+  return lyricQueryStatement.all(id)
 }
 
 /**
@@ -35,7 +33,7 @@ export const queryLyric = (id: string) => {
  */
 export const queryRawLyric = (id: string) => {
   const rawLyricQueryStatement = createRawLyricQueryStatement()
-  return rawLyricQueryStatement.get(id) as Lyricnfo | null
+  return rawLyricQueryStatement.get(id)
 }
 
 /**
@@ -89,9 +87,8 @@ export const clearRawLyric = () => {
  */
 export const countRawLyric = () => {
   const countStatement = createRawLyricCountStatement()
-  return (countStatement.get() as { count: number }).count
+  return countStatement.get()!.count
 }
-
 
 /**
  * 查询已编辑歌词
@@ -100,7 +97,7 @@ export const countRawLyric = () => {
  */
 export const queryEditedLyric = (id: string) => {
   const rawLyricQueryStatement = createEditedLyricQueryStatement()
-  return rawLyricQueryStatement.get(id) as Lyricnfo | null
+  return rawLyricQueryStatement.get(id)
 }
 
 /**
@@ -149,11 +146,10 @@ export const clearEditedLyric = () => {
   rawLyricClearStatement.run()
 }
 
-
 /**
  * 统计已编辑歌词数量
  */
 export const countEditedLyric = () => {
   const countStatement = createEditedLyricCountStatement()
-  return (countStatement.get() as { count: number }).count
+  return countStatement.get()!.count
 }

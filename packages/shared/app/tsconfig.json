@@ -8,6 +8,7 @@
     // "paths": {
     //   "@/*": ["./modules/*"],
     // },
+    "declaration": false,
     "types": ["@any-listen/types", "../scripts/node_modules/vite/client"]
   }
 }

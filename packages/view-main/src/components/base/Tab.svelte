@@ -5,6 +5,7 @@
     list,
     tagname = 'button',
     align = 'left',
+    disabled,
     itemkey,
     itemlabel,
     value = $bindable(),
@@ -14,6 +15,7 @@
     list: readonly T[]
     tagname?: 'a' | 'button'
     align?: 'left' | 'center' | 'right'
+    disabled?: boolean
     itemkey: keyof T
     itemlabel: keyof T
     value: T[keyof T]
@@ -28,7 +30,7 @@
   }
 </script>
 
-<div class={['list', align]} role="tablist">
+<div class={['list', align]} class:disabled role="tablist">
   {#if tagname == 'a' && href}
     {#each list as item (item[itemkey])}
       <a
@@ -41,7 +43,7 @@
         aria-label={item[itemlabel] as string}
         data-ignore-tip
         aria-selected={value == item[itemkey]}
-        onclick={() => {
+        onclick={(evt) => {
           handleToggle(item[itemkey])
         }}
       >
@@ -84,6 +86,11 @@
     }
     &:global(.right) {
       justify-content: flex-end;
+    }
+
+    &.disabled {
+      opacity: 0.5;
+      pointer-events: none;
     }
   }
   .listItem {

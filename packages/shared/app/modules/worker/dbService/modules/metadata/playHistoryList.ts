@@ -1,27 +1,20 @@
 import { arrPush } from '@any-listen/common/utils'
-import { getDB } from '../../db'
+import { dbPrepare } from '../../db'
 
 let playHistoryList: AnyListen.IPCPlayer.PlayHistoryListItem[] | undefined
 const initPlayHistoryList = () => {
   if (playHistoryList) return
-  const db = getDB()
-  const result = db
-    .prepare(
-      `
+  const result = dbPrepare<[], { field_value: string }>(`
     SELECT "field_value"
     FROM "main"."metadata"
     WHERE "field_name"='play_history_list'
-  `
-    )
-    .get() as { field_value: string } | null
+  `).get() as { field_value: string } | null
 
   if (!result) {
-    db.prepare(
-      `
+    dbPrepare(`
       INSERT INTO "main"."metadata" ("field_name", "field_value")
       VALUES ('play_history_list', '[]')
-    `
-    ).run()
+    `).run()
     playHistoryList = []
     return
   }
@@ -32,14 +25,11 @@ const initPlayHistoryList = () => {
   }
 }
 const savePlayHistoryList = () => {
-  const db = getDB()
-  db.prepare<[string]>(
-    `
+  dbPrepare<string>(`
     UPDATE "main"."metadata"
     SET "field_value"=?
     WHERE "field_name"='play_history_list'
-  `
-  ).run(JSON.stringify(playHistoryList))
+  `).run(JSON.stringify(playHistoryList))
 }
 /**
  * 获取播放历史列表

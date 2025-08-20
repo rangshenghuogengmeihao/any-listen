@@ -14,6 +14,7 @@ export {
   getOnlineExtensionList,
   getResourceList,
   installExtension,
+  resetOnlineData,
   resourceAction,
   restartExtension,
   restartExtensionHost,

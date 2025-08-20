@@ -41,6 +41,7 @@
   "extension.install_local_failed.public_key_not_match": "安装失败，即将安装的扩展与已安装的签名不一致",
   "extension.install_success": "✔️ 扩展 [{name}] 安装成功",
   "extension.select_local_file": "选择扩展安装包",
+  "extension__action_downgrade": "降级",
   "extension__action_disable": "禁用",
   "extension__action_enable": "启用",
   "extension__action_install": "安装",

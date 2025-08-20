@@ -1,5 +1,5 @@
 <script lang="ts" generics="T extends object">
-  import { type Snippet, tick } from 'svelte'
+  import { onMount, type Snippet, tick } from 'svelte'
   import { debounce, handleScroll } from './utils'
   import type { MouseEventHandler } from 'svelte/elements'
   import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar'
@@ -18,6 +18,8 @@
     scrollbarwidth = '0.5rem',
     contain = 'strict',
     onscroll: _onscroll,
+    initialscrollindex,
+    initialscrollindexoffset,
     oncontextmenu,
   }: {
     row: Snippet<[T, number]>
@@ -30,6 +32,8 @@
     scrollbarwidth?: string
     contain?: string
     itemheight: number
+    initialscrollindex?: number
+    initialscrollindexoffset?: number
     keyname: string
     list: T[]
     onscroll?: (pos: number) => void
@@ -183,9 +187,13 @@
     cachedList = Array(list.length)
     startIndex = -1
     endIndex = -1
-    void tick().then(() => {
-      updateView()
-    })
+    if (cachedList.length) {
+      void tick().then(() => {
+        updateView()
+      })
+    } else {
+      views = []
+    }
   }
   const handleItemHeightChange = (...tracking: unknown[]) => {
     handleReset(list)
@@ -202,7 +210,7 @@
       updateView()
     }, 50)
   }
-  $effect(() => {
+  onMount(() => {
     domScrollContainer.addEventListener('scroll', onScroll, {
       capture: false,
       passive: true,
@@ -210,7 +218,16 @@
     cachedList = Array(list.length)
     startIndex = -1
     endIndex = -1
-    updateView()
+    if (initialscrollindex != null) {
+      void tick().then(() => {
+        scrollToIndex(initialscrollindex, initialscrollindexoffset || 0, false)
+      })
+    }
+    if (cachedList.length) {
+      void tick().then(() => {
+        updateView()
+      })
+    }
     window.addEventListener('resize', handleResize)
     return () => {
       domScrollContainer.removeEventListener('scroll', onScroll)

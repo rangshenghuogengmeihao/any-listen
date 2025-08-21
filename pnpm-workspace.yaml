@@ -20,6 +20,7 @@ overrides:
   'postcss': 'latest'
   'ws>bufferutil': '-'
   'ws>utf-8-validate': '-'
+  'tmp@<=0.2.3': '>=0.2.4'
 
 # https://github.com/pnpm/pnpm/issues/8378
 publicHoistPattern:

@@ -9,11 +9,11 @@
     "@any-listen/theme": "workspace:@shared/theme@*",
     "@any-listen/web": "workspace:@shared/web@*",
     "better-sqlite3": "^11.10.0",
-    "iconv-lite": "^0.6.3",
+    "iconv-lite": "^0.7.0",
     "jschardet": "^3.1.4",
     "jsonschema": "^1.5.0",
     "message2call": "^2.0.3",
-    "music-metadata": "^11.8.2",
+    "music-metadata": "^11.8.3",
     "ws": "^8.18.3"
   },
   "devDependencies": {
@@ -21,6 +21,6 @@
     "@any-listen/types": "workspace:@shared/types@*",
     "@types/better-sqlite3": "^7.6.13",
     "@types/tar": "^6.1.13",
-    "vite": "^7.1.2"
+    "vite": "^7.1.3"
   }
 }

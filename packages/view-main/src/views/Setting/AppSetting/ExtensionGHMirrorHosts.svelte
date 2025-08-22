@@ -69,11 +69,11 @@
 
     :global {
       textarea {
-        margin-top: 5px;
-        max-width: 500px;
         width: 100%;
-        min-height: 160px;
         min-width: 200px;
+        max-width: 500px;
+        min-height: 160px;
+        margin-top: 5px;
       }
     }
   }

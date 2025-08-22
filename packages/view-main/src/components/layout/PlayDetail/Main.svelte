@@ -12,11 +12,11 @@
 
 <style lang="less">
   .player-detail-main {
+    // margin: 0 20px;
+    position: relative;
+    display: flex;
     flex: auto;
     min-height: 0;
     overflow: hidden;
-    display: flex;
-    // margin: 0 20px;
-    position: relative;
   }
 </style>

@@ -65,12 +65,12 @@
 
 <style lang="less">
   .main {
-    flex: auto;
-    padding: 0 15px;
-    width: 320px;
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
+    width: 320px;
     min-height: 0;
+    padding: 0 15px;
     // max-height: 100%;
     // overflow: hidden;
   }
@@ -85,8 +85,8 @@
   }
 
   .content {
-    flex: auto;
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
     gap: 10px;
     // font-size: 14px;
@@ -95,11 +95,11 @@
   }
 
   .footer {
-    flex: none;
-    margin: 20px 0 15px auto;
     display: flex;
+    flex: none;
     flex-direction: row;
     gap: 10px;
+    margin: 20px 0 15px auto;
 
     :global(.btn) {
       min-width: 70px;

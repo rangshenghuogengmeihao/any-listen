@@ -65,9 +65,9 @@
 
 <style lang="less">
   .header {
-    flex: none;
     // height: 46px;
     display: flex;
+    flex: none;
     flex-flow: row nowrap;
     justify-content: space-between;
     // align-items: center;
@@ -92,8 +92,8 @@
   //   // }
   // }
   .btns {
-    flex: none;
     display: flex;
+    flex: none;
     flex-flow: row nowrap;
     gap: 10px;
   }

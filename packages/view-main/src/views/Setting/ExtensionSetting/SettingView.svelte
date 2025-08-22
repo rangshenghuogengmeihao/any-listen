@@ -24,18 +24,17 @@
 
 <style lang="less">
   .settings-list-container {
+    display: flex;
     flex: auto;
+    flex-flow: column nowrap;
     min-width: 0;
     overflow: hidden;
-    display: flex;
-    flex-flow: column nowrap;
-    flex: auto;
   }
   .settings-list {
-    flex: auto;
-    min-height: 0;
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
+    min-height: 0;
     margin: 0 10px;
     // gap: 8px;
   }

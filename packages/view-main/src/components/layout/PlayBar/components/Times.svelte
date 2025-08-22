@@ -11,8 +11,8 @@
 <style lang="less">
   .times {
     flex: none;
-    color: var(--color-550);
-    font-size: 13px;
     padding-left: 10px;
+    font-size: 13px;
+    color: var(--color-550);
   }
 </style>

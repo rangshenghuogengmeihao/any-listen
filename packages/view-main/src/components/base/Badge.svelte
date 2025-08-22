@@ -3,7 +3,7 @@
     label,
     type = 'primary',
     opacity = 1,
-  }: { label: string, type?: 'primary' | 'secondary' | 'tertiary', opacity?: number } = $props()
+  }: { label: string; type?: 'primary' | 'secondary' | 'tertiary'; opacity?: number } = $props()
 </script>
 
 {#if type == 'primary'}
@@ -21,10 +21,10 @@
     font-size: 0.7em;
     // font-weight: 700;
     line-height: 1.2;
-    text-align: center;
-    white-space: nowrap;
     // vertical-align: baseline;
     vertical-align: text-top;
+    text-align: center;
+    white-space: nowrap;
     // border-radius: 2px;
     &.primary {
       color: var(--color-badge-primary);

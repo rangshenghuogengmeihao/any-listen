@@ -27,13 +27,13 @@
 
 <style lang="less">
   .side {
-    height: 100%;
-    flex: 1;
+    position: relative;
     display: flex;
+    flex: 1;
     flex-flow: row nowrap;
     align-items: center;
-    position: relative;
     min-width: 0;
+    height: 100%;
   }
 
   .right {

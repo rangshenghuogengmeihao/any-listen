@@ -112,9 +112,9 @@
 
 <style lang="less">
   .container {
-    flex: auto;
     position: relative;
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
   }
 </style>

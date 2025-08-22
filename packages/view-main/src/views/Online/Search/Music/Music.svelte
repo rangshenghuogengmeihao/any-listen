@@ -6,8 +6,8 @@
   import List from './List.svelte'
 
   let { sourceList }: { sourceList: NonNullable<ResourceListType['musicSearch']> } = $props()
-  let list = $derived(sourceList.map(s => ({ ...s, sId: getSourceId(s) })))
-  let activeSource = $derived($query.source ? list.find(s => s.sId == $query.source) : list[0])
+  let list = $derived(sourceList.map((s) => ({ ...s, sId: getSourceId(s) })))
+  let activeSource = $derived($query.source ? list.find((s) => s.sId == $query.source) : list[0])
 </script>
 
 <div class="online-search-music">
@@ -15,8 +15,14 @@
     <Source
       {list}
       active={activeSource?.sId}
-      onchange={source => {
-        void replace('/online', { type: $query.type, searchType: $query.searchType, source: source.sId, text: $query.text, page: 1 })
+      onchange={(source) => {
+        void replace('/online', {
+          type: $query.type,
+          searchType: $query.searchType,
+          source: source.sId,
+          text: $query.text,
+          page: 1,
+        })
       }}
     />
   {/if}
@@ -27,9 +33,9 @@
 
 <style lang="less">
   .online-search-music {
-    height: 100%;
     display: flex;
     flex-flow: row nowrap;
+    height: 100%;
     padding-top: 10px;
   }
 </style>

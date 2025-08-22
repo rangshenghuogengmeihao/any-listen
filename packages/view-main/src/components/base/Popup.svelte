@@ -143,57 +143,57 @@
 <style lang="less">
   .popup {
     position: absolute;
+    z-index: 10;
+    display: flex;
     // top: -100%;
     // width: 645px;
     // left: 8px;
     // margin-top: 12px;
     max-width: 98%;
-    border-radius: 4px;
+    max-height: 250px;
+    pointer-events: none;
     background-color: var(--color-content-background);
+    border-radius: 4px;
     opacity: 0;
+    filter: drop-shadow(0 0 3px rgb(0 0 0 / 12%));
     transform: scale(0.8);
     transform-origin: 50% 0 0;
     transition: 0.16s ease;
     transition-property: transform, opacity;
-    max-height: 250px;
-    z-index: 10;
-    pointer-events: none;
-    filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.12));
-    display: flex;
 
-    &:before {
-      content: ' ';
+    &::before {
       position: absolute;
       top: -6px;
       left: var(--arrow-left);
       width: 0;
       height: 0;
-      border-left: 8px solid transparent;
+      content: ' ';
       border-right: 8px solid transparent;
       border-bottom: 8px solid var(--color-content-background);
+      border-left: 8px solid transparent;
     }
 
     &.active {
+      pointer-events: initial;
       opacity: 1;
       transform: scale(1);
-      pointer-events: initial;
     }
 
     &.top {
-      filter: drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.12));
+      filter: drop-shadow(0 1px 3px rgb(0 0 0 / 12%));
       transform-origin: 50% 100% 0;
 
-      &:before {
+      &::before {
         top: 100%;
-        border-bottom: none;
         border-top: 8px solid var(--color-content-background);
+        border-bottom: none;
       }
     }
   }
   .popup-content {
+    min-height: 0;
     padding: 10px;
     outline: none;
-    min-height: 0;
     // box-shadow: 0 0 4px rgba(0, 0, 0, .2);
   }
 </style>

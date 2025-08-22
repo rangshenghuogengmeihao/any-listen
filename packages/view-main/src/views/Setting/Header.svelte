@@ -32,11 +32,11 @@
 
 <style lang="less">
   .header {
-    flex: none;
     display: flex;
+    flex: none;
     flex-flow: row nowrap;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     padding: 0 15px;
     // padding: 8px 0;
     // background-color: var(--color-primary-light-400-alpha-800);

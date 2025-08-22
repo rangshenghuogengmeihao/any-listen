@@ -126,7 +126,7 @@
   // }
 </script>
 
-<div style="opacity: 0.2; pointer-events: none; display: flex; width: 100%;">
+<div style="display: flex; width: 100%; pointer-events: none; opacity: 0.2;">
   <SearchInput
     --width="45%"
     bind:this={searchInput}

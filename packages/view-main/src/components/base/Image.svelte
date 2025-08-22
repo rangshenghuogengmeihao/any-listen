@@ -46,28 +46,27 @@
 
 <style lang="less">
   .img {
+    aspect-ratio: 1;
     // width: 100%;
     // height: 100%;
     object-fit: cover;
-    box-shadow: 0 0 2px var(--color-primary-dark-200-alpha-800);
     border-radius: @radius-border;
-    aspect-ratio: 1;
+    box-shadow: 0 0 2px var(--color-primary-dark-200-alpha-800);
   }
   .empty-pic {
-    background-color: var(--color-primary-light-200-alpha-900);
-    border-radius: @radius-border;
-    box-shadow: 0 0 2px var(--color-primary-dark-200-alpha-800);
     // width: 100%;
     // height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    // letter-spacing: 3px;
+    aspect-ratio: 1;
     color: var(--color-primary-light-400-alpha-400);
     user-select: none;
+    background-color: var(--color-primary-light-200-alpha-900);
     // font-size: 20px;
     // font-family: Consolas, 'Courier New', monospace;
     border-radius: @radius-border;
-    // letter-spacing: 3px;
-    aspect-ratio: 1;
+    box-shadow: 0 0 2px var(--color-primary-dark-200-alpha-800);
   }
 </style>

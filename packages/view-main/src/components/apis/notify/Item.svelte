@@ -101,30 +101,29 @@
 <style lang="less">
   .notify-content {
     position: absolute;
-    max-width: 100%;
-    left: 50%;
     bottom: 0;
-    transform: translateX(-50%);
-    // transform: scale(1);
-    line-height: 1.2;
-    word-wrap: break-word;
-    font-size: 14px;
-    color: var(--color-font);
-    padding: 8px 8px 8px 14px;
-    border-radius: @radius-border;
-    background: var(--color-content-background);
-    overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    white-space: pre-wrap;
+    left: 50%;
     box-sizing: border-box;
-    overflow: hidden;
-    transition: transform @transition-normal;
     display: flex;
     flex-flow: row nowrap;
+    gap: 5px;
     align-items: center;
     justify-content: space-between;
-    gap: 5px;
     min-width: 100px;
+    max-width: 100%;
+    padding: 8px 8px 8px 14px;
+    overflow: hidden;
+    font-size: 14px;
+    // transform: scale(1);
+    line-height: 1.2;
+    color: var(--color-font);
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    background: var(--color-content-background);
+    border-radius: @radius-border;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 20%);
+    transform: translateX(-50%);
+    transition: transform @transition-normal;
 
     .content {
       flex: auto;
@@ -143,9 +142,9 @@
     }
 
     span {
+      margin-right: 5px;
       font-size: 12px;
       color: var(--color-primary-dark-500-alpha-300);
-      margin-right: 5px;
     }
   }
 

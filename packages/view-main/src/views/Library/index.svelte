@@ -95,14 +95,14 @@
 
 <style lang="less">
   .container {
-    flex: auto;
     position: relative;
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
     // border-right: 1px solid var(--color-border);
     // background: #fff;
     // overflow: hidden;
-    :global(.sliderContent) {
+    :global(.slider-content) {
       width: 200px;
     }
   }

@@ -108,15 +108,15 @@
   }
 
   .main {
-    flex: auto;
-    min-height: 0;
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
+    min-height: 0;
     // min-height: 300px;
 
     :global(.list) {
-      min-height: 200px;
       min-width: 460px;
+      min-height: 200px;
       font-size: 13px;
       transition-property: height;
     }

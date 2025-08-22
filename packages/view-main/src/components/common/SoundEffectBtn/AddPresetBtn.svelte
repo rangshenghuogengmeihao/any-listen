@@ -5,7 +5,7 @@
   import { t } from '@/plugins/i18n'
   import SvgIcon from '@/components/base/SvgIcon.svelte'
 
-  let { onsave, disabled = false }: { onsave: (name: string) => void, disabled?: boolean } = $props()
+  let { onsave, disabled = false }: { onsave: (name: string) => void; disabled?: boolean } = $props()
 
   let isEditing = $state(false)
   let input: Input | null = $state(null)
@@ -29,21 +29,16 @@
   }
 </script>
 
-<span class="newPreset" class:editing={isEditing}>
-  <Btn
-    min
-    {disabled}
-    aria-label={$t('player__sound_effect_biquad_filter_save_input')}
-    onclick={handleEditing}
-  >
+<span class="new-preset" class:editing={isEditing}>
+  <Btn min {disabled} aria-label={$t('player__sound_effect_biquad_filter_save_input')} onclick={handleEditing}>
     <SvgIcon name="plus" />
     <Input
       bind:this={input}
       placeholder={$t('player__sound_effect_biquad_filter_save_input')}
-      onkeydown={event => {
+      onkeydown={(event) => {
         if (event.key == 'Enter') handleSave(event.target as HTMLInputElement)
       }}
-      onblur={event => {
+      onblur={(event) => {
         handleSave(event.target as HTMLInputElement)
       }}
     />
@@ -51,13 +46,13 @@
 </span>
 
 <style lang="less">
-  .newPreset {
+  .new-preset {
     display: flex;
     &.editing {
       :global {
         .btn {
-          opacity: 1;
           width: 90px;
+          opacity: 1;
         }
 
         svg {
@@ -71,11 +66,11 @@
     :global {
       .btn {
         position: relative;
-        border: 1px dashed var(--color-primary-font-hover);
+        height: 22px;
         // background-color: var(--color-main-background);
         color: var(--color-primary-font-hover);
+        border: 1px dashed var(--color-primary-font-hover);
         opacity: 0.7;
-        height: 22px;
       }
 
       .svg-icon {
@@ -83,19 +78,19 @@
       }
       .input {
         position: absolute;
-        left: 0;
         top: 0;
+        left: 0;
+        box-sizing: border-box;
+        display: none;
         width: 100%;
         height: 100%;
-        // line-height: 16px;
-        background: none !important;
+        padding: 0 3px;
+        font-family: inherit;
         font-size: 12px;
         text-align: center;
-        font-family: inherit;
-        box-sizing: border-box;
-        padding: 0 3px;
+        // line-height: 16px;
+        background: none !important;
         border-radius: 0;
-        display: none;
         &::placeholder {
           font-size: 12px;
         }

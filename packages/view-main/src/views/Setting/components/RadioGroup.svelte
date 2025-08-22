@@ -23,12 +23,11 @@
 
 <style lang="less">
   .settings-item-radio-group {
-    margin-top: 5px;
     display: flex;
     flex-flow: row wrap;
     gap: 8px;
-    margin-left: 16px;
-
+    margin-top: 5px;
     margin-bottom: 5px;
+    margin-left: 16px;
   }
 </style>

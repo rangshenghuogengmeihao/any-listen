@@ -15,17 +15,17 @@
   .info {
     flex: auto;
     width: var(--content-with);
-    margin-top: 15px;
     // padding-bottom: 15px;
     min-height: 0;
+    margin-top: 15px;
     p {
-      line-height: 1.5;
       font-size: 16px;
+      line-height: 1.5;
       overflow-wrap: break-word;
 
       span {
-        color: var(--color-font-label);
         font-size: 14px;
+        color: var(--color-font-label);
       }
     }
   }

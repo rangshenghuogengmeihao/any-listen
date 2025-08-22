@@ -29,7 +29,7 @@
 </script>
 
 <div class="container">
-  <div class="header player__sound_effect_title">
+  <div class="header player-sound-effect-title">
     <h3>
       {$t('player__sound_effect_panner')}
     </h3>
@@ -56,19 +56,20 @@
 
 <style lang="less">
   .container {
-    padding-top: 15px;
     position: relative;
     display: flex;
+    flex: none;
     flex-flow: column nowrap;
     gap: 8px;
     min-height: 0;
-    flex: none;
-    &:before {
+    padding-top: 15px;
+    &::before {
       .mixin-after();
+
       position: absolute;
       top: 0;
-      height: 1px;
       width: 100%;
+      height: 1px;
       border-top: 1px dashed var(--color-primary-light-100-alpha-700);
     }
 
@@ -77,16 +78,16 @@
         flex: auto;
       }
       .checkbox {
-        font-size: 13px;
         margin-right: 5px;
+        font-size: 13px;
       }
     }
   }
   .header {
     display: flex;
     flex-flow: row nowrap;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     padding-bottom: 5px;
   }
   .contnet {

@@ -14,16 +14,13 @@
 
 <style lang="less">
   .right-lyric {
-    flex: auto;
     position: relative;
+    flex: auto;
     contain: strict;
   }
   .right-lyric-content {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     // margin-right: 20px;
   }
 </style>

@@ -112,19 +112,19 @@
 <style lang="less">
   .input {
     display: inline-block;
-    border: none;
-    border-radius: @form-radius;
     padding: 7px 8px;
+    font-size: 14px;
     color: var(--color-button-font);
     outline: none;
-    transition: background-color 0.2s ease;
     background-color: var(--color-primary-background);
-    font-size: 14px;
+    border: none;
+    border-radius: @form-radius;
+    transition: background-color 0.2s ease;
 
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
-      -webkit-appearance: none;
       margin: 0;
+      appearance: none;
     }
 
     &[disabled] {

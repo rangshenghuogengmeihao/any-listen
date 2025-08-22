@@ -40,18 +40,18 @@
 <style lang="less">
   .container {
     position: relative;
-    margin-top: 15px;
-    flex: auto;
-    min-height: 0;
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
+    min-height: 0;
+    margin-top: 15px;
   }
   .list {
     display: flex;
     flex-flow: row wrap;
     gap: 16px;
     min-height: 0;
-    overflow: hidden;
     padding: 0 16px 16px;
+    overflow: hidden;
   }
 </style>

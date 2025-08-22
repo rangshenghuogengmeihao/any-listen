@@ -19,7 +19,10 @@
 
 <style lang="less">
   .aside {
+    // background-color: var(--color-primary-light-900-alpha-900);
+    display: flex;
     flex: none;
+    flex-flow: column nowrap;
     width: 20%;
     max-width: 320px;
     // box-shadow: 0 0 5px rgba(0, 0, 0, .3);
@@ -31,9 +34,6 @@
     // -webkit-app-region: drag;
     // -webkit-user-select: none;
     background-color: var(--color-app-background);
-    // background-color: var(--color-primary-light-900-alpha-900);
-    display: flex;
-    flex-flow: column nowrap;
 
     // &.fullscreen {
     //   // -webkit-app-region: no-drag;

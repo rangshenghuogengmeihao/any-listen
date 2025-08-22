@@ -35,13 +35,13 @@
 <style lang="less">
   .toolbar {
     position: relative;
-    flex: none;
+    z-index: 2;
     display: flex;
-    height: @height-toolbar;
+    flex: none;
     align-items: center;
     justify-content: space-between;
+    height: @height-toolbar;
     -webkit-app-region: drag;
-    z-index: 2;
     // background-color: var(--background-color);
     // border-bottom: 1px solid var(--color-border);
 
@@ -65,21 +65,20 @@
   }
 
   .left {
-    flex: auto;
     display: flex;
+    flex: auto;
     flex-flow: row nowrap;
-    height: 100%;
     // gap: 25px;
     align-items: center;
-
+    height: 100%;
     margin-left: 12px;
-    :global(.searchInput) {
+    :global(.search-input) {
       -webkit-app-region: no-drag;
       // background-color: transparent;
       // border-bottom: 2px solid var(--color-primary-background);
       &::placeholder {
-        color: var(--color-button-font);
         font-size: 0.98em;
+        color: var(--color-button-font);
       }
     }
   }

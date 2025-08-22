@@ -66,10 +66,10 @@
 
 <style lang="less">
   .main {
+    display: flex;
     // flex: auto;
     // padding: 0 15px;
     // width: 320px;
-    display: flex;
     flex-flow: column nowrap;
     // min-height: 0;
     // max-height: 100%;

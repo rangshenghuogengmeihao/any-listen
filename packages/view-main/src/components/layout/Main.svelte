@@ -9,15 +9,15 @@
 
 <style lang="less">
   .view {
-    flex: auto;
     position: relative;
     z-index: 1;
+    flex: auto;
     > :global(.view-container) {
       position: absolute !important;
-      left: 0;
       top: 0;
-      height: 100%;
+      left: 0;
       width: 100%;
+      height: 100%;
     }
     // background: #fff;
     // overflow: hidden;

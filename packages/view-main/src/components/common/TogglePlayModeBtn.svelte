@@ -87,21 +87,21 @@
 <style lang="less">
   .btn {
     position: relative;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
     // color: var(--color-button-font);
     justify-content: center;
-    align-items: center;
-    transition: color @transition-normal;
+    width: 24px;
+    padding: 0;
     cursor: pointer;
     background-color: transparent;
     border: none;
-    width: 24px;
-    display: flex;
-    flex-flow: column nowrap;
-    padding: 0;
+    transition: color @transition-normal;
 
     svg {
-      transition: opacity @transition-fast;
       opacity: 0.5;
+      transition: opacity @transition-fast;
       // filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.2));
     }
     &:hover {
@@ -119,7 +119,7 @@
   .setting {
     display: flex;
     flex-flow: row nowrap;
-    font-size: 14px;
     gap: 10px;
+    font-size: 14px;
   }
 </style>

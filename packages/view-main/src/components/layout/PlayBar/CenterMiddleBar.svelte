@@ -24,9 +24,9 @@
 
 <style lang="less">
   .progress {
-    padding-left: 10px;
-    flex: auto;
     display: flex;
+    flex: auto;
+    padding-left: 10px;
     contain: layout;
 
     :global(> .middle-play-progress) {

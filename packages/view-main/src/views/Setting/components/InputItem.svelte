@@ -36,16 +36,16 @@
 
     :global {
       input {
+        width: 100%;
         // margin-top: 5px;
         max-width: 500px;
-        width: 100%;
       }
       textarea {
-        margin-top: 5px;
-        max-width: 500px;
         width: 100%;
-        min-height: 50px;
         min-width: 200px;
+        max-width: 500px;
+        min-height: 50px;
+        margin-top: 5px;
       }
     }
   }

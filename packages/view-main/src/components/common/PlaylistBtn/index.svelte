@@ -45,20 +45,20 @@
 
   .icon {
     position: relative;
-    // color: var(--color-button-font);
-    justify-content: center;
-    align-items: center;
-    transition: color @transition-normal;
-    cursor: pointer;
-    width: 24px;
     display: flex;
     flex-flow: column nowrap;
+    align-items: center;
+    // color: var(--color-button-font);
+    justify-content: center;
+    width: 24px;
     padding: 0;
+    cursor: pointer;
+    transition: color @transition-normal;
 
     svg {
+      opacity: 0.5;
       transition: @transition-fast;
       transition-property: opacity, color;
-      opacity: 0.5;
       // filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.2));
     }
     &:hover {
@@ -76,9 +76,9 @@
   .container {
     display: flex;
     flex-flow: column nowrap;
+    gap: 10px;
     width: 500px;
     min-height: 300px;
     max-height: 100%;
-    gap: 10px;
   }
 </style>

@@ -52,8 +52,8 @@
 
 <style lang="less">
   .header-actions {
-    flex: none;
     display: flex;
+    flex: none;
     flex-flow: row nowrap;
     align-items: center;
   }

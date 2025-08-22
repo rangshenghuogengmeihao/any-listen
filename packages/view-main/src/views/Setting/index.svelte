@@ -39,11 +39,11 @@
         }
       }
       .settings-title {
-        border-left: 5px solid var(--color-primary-alpha-700);
         padding: 3px 7px;
-        margin-bottom: 15px;
         margin-top: 6px;
+        margin-bottom: 15px;
         font-size: 15px;
+        border-left: 5px solid var(--color-primary-alpha-700);
       }
 
       .p {

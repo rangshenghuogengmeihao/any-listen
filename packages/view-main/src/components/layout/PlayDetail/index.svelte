@@ -61,21 +61,21 @@
 <style lang="less">
   .play-detail {
     position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
     display: flex;
     flex-flow: column nowrap;
     width: 100%;
     height: 100%;
-    top: 0;
-    left: 0;
+    contain: strict;
+    color: var(--color-font);
     background-color: var(--color-content-background);
-    z-index: 10;
     // -webkit-app-region: drag;
     // overflow: hidden;
     border-radius: @radius-border;
-    color: var(--color-font);
     // border-left: 12px solid var(--color-primary-alpha-900);
     -webkit-app-region: no-drag;
-    contain: strict;
     // will-change: transform;
 
     &.dybg {
@@ -100,11 +100,11 @@
       }
       .bg {
         background-size: 125% 125%;
-        &:before {
+        &::before {
           background-color: var(--color-content-background);
           opacity: 0.7;
         }
-        &:after {
+        &::after {
           background-color: transparent;
           backdrop-filter: blur(30px);
         }
@@ -113,31 +113,31 @@
   }
   .bg {
     position: absolute;
-    width: 100%;
-    height: 100%;
     top: 0;
     left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
     background: var(--background-image) var(--background-image-position) no-repeat;
     background-size: var(--background-image-size);
     // background-size: 110% 110%;
     // filter: blur(60px);
     opacity: 0.7;
-    z-index: -1;
-    &:before {
-      content: '';
+    &::before {
       display: block;
       width: 100%;
       height: 100%;
+      content: '';
       background-color: var(--color-app-background);
     }
-    &:after {
+    &::after {
       position: absolute;
-      left: 0;
       top: 0;
-      content: '';
+      left: 0;
       display: block;
       width: 100%;
       height: 100%;
+      content: '';
       background-color: var(--color-main-background);
     }
   }

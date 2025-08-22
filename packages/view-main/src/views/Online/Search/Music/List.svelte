@@ -93,11 +93,11 @@
 
 <style lang="less">
   .music-list {
+    display: flex;
     flex: auto;
+    flex-flow: column nowrap;
     min-width: 0;
     overflow: hidden;
-    display: flex;
-    flex-flow: column nowrap;
   }
   .pagination {
     display: flex;

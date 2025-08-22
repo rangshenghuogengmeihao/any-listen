@@ -63,21 +63,21 @@
 <style lang="less">
   .btn {
     display: inline-flex;
-    border: none;
-    border-radius: @form-radius;
-    cursor: pointer;
-    padding: 8px 15px;
-    color: var(--color-button-font);
     align-items: center;
     justify-content: center;
+    padding: 8px 15px;
+    font-size: 14px;
+    color: var(--color-button-font);
+    cursor: pointer;
+    background-color: var(--color-button-background);
+    border: none;
+    border-radius: @form-radius;
     // outline: none;
     transition: @transition-normal;
     transition-property: background-color, opacity;
-    background-color: var(--color-button-background);
-    font-size: 14px;
     &[disabled] {
-      opacity: 0.4;
       cursor: default;
+      opacity: 0.4;
     }
 
     &.outline,
@@ -105,10 +105,10 @@
     }
 
     &.icon {
-      padding: 5px;
       flex: none;
       width: var(--size, 2rem);
       height: var(--size, 2rem);
+      padding: 5px;
 
       :global(svg) {
         width: 100%;

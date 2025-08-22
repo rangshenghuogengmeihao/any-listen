@@ -15,7 +15,7 @@
     actions.exec('player.setPlaybackRate', Math.round(val) / 100)
   }
   const handleWheel: WheelEventHandler<HTMLButtonElement> = (event) => {
-    actions.exec('player.setPlaybackRate', Math.round(playbackRate.val * 100 + (-event.deltaY / 100)) / 100)
+    actions.exec('player.setPlaybackRate', Math.round(playbackRate.val * 100 + -event.deltaY / 100) / 100)
   }
 
   const updatePreservesPitch = (enabled: boolean) => {
@@ -26,13 +26,13 @@
 <PopupBtn onwheel={handleWheel} aria-label={$t('player__playback_rate', { rate: playbackRate.val })}>
   <div class="icon" class:active={playbackRate.val != 1}>
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24">
-      <use xlink:href='#icon-speed' />
+      <use xlink:href="#icon-speed" />
     </svg>
   </div>
   {#snippet content()}
     <div class="setting">
       <div class="info">
-        <span>{ playbackRate.val.toFixed(2) }x</span>
+        <span>{playbackRate.val.toFixed(2)}x</span>
         <Checkbox
           id="player__playback_preserves_pitch"
           checked={preservesPitch.val}
@@ -45,71 +45,68 @@
   {/snippet}
 </PopupBtn>
 
-
 <style lang="less">
-// .container {
-//   flex: none;
-//   height: 100%;
-// }
+  // .container {
+  //   flex: none;
+  //   height: 100%;
+  // }
 
-.icon {
-  position: relative;
-  // color: var(--color-button-font);
-  justify-content: center;
-  align-items: center;
-  transition: color @transition-normal;
-  cursor: pointer;
-  width: 24px;
-  display: flex;
-  flex-flow: column nowrap;
-  padding: 0;
+  .icon {
+    position: relative;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    // color: var(--color-button-font);
+    justify-content: center;
+    width: 24px;
+    padding: 0;
+    cursor: pointer;
+    transition: color @transition-normal;
 
-  svg {
-    transition: @transition-fast;
-    transition-property: opacity, color;
-    opacity: .5;
-    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.2));
-  }
-  &:hover {
     svg {
-      opacity: .9;
+      opacity: 0.5;
+      filter: drop-shadow(0 0 1px rgb(0 0 0 / 20%));
+      transition: @transition-fast;
+      transition-property: opacity, color;
+    }
+    &:hover {
+      svg {
+        opacity: 0.9;
+      }
+    }
+    &:active {
+      svg {
+        opacity: 1;
+      }
+    }
+    &.active {
+      svg {
+        color: var(--color-primary);
+        opacity: 0.8;
+      }
     }
   }
-  &:active {
-    svg {
-      opacity: 1;
+
+  .setting {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 8px;
+    width: 300px;
+    padding: 2px 3px;
+
+    :global(.slider) {
+      width: 100%;
     }
   }
-  &.active {
-    svg {
-      color: var(--color-primary);
-      opacity: .8;
+
+  .info {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    span {
+      line-height: 1.2;
     }
   }
-}
-
-.setting {
-  display: flex;
-  flex-flow: column nowrap;
-  padding: 2px 3px;
-  gap: 8px;
-  width: 300px;
-
-  :global(.slider) {
-    width: 100%;
-  }
-}
-
-.info {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 13px;
-  span {
-    line-height: 1.2;
-  }
-}
-
-
 </style>

@@ -12,13 +12,14 @@
     position: absolute;
     bottom: 3px;
     left: 0;
-    width: 100%;
-    text-align: center;
     box-sizing: content-box;
+    width: 100%;
     height: 16px;
     font-size: 12px;
-    .mixin-ellipsis-1();
-    pointer-events: none;
     color: var(--color-font-label);
+    text-align: center;
+    pointer-events: none;
+
+    .mixin-ellipsis-1();
   }
 </style>

@@ -4,13 +4,13 @@
 
 <style lang="less">
   .contaoner {
-    width: 100%;
-    height: 100%;
-    flex: auto;
     position: relative;
     display: flex;
-    justify-content: center;
+    flex: auto;
     align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
     p {
       font-size: 24px;
     }

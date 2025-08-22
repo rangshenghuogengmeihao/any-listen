@@ -28,23 +28,23 @@
   .progress {
     position: absolute;
     top: 0;
-    left: 0;
     right: 0;
+    left: 0;
+    z-index: 1;
+    box-sizing: border-box;
     padding-bottom: 6px;
     margin: 0 10px;
-    box-sizing: border-box;
-    z-index: 1;
     // height: 15px;
     :global {
       .progress {
         height: 2px;
-        border-radius: 0;
         background-color: transparent;
+        border-radius: 0;
       }
-      .progressBar2 {
+      .progress-bar2 {
         background-color: var(--color-primary-light-100-alpha-800);
       }
-      .progressBar3 {
+      .progress-bar3 {
         background-color: var(--color-primary-light-100-alpha-600);
       }
     }

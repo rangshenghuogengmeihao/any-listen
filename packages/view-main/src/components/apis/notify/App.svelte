@@ -70,12 +70,12 @@
 <style lang="less">
   .notify {
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
     bottom: @height-player + 20px;
+    left: 50%;
     z-index: 200;
     width: 100%;
     max-width: 80%;
+    transform: translateX(-50%);
     // pointer-events: none;
   }
 

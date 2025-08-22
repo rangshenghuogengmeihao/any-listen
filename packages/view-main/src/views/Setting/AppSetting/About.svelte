@@ -38,12 +38,12 @@
 
 <style lang="less">
   p {
-    font-size: 14px;
     margin-bottom: 6px;
+    font-size: 14px;
 
     :global(button.link) {
-      text-decoration: underline;
       color: inherit;
+      text-decoration: underline;
     }
   }
 </style>

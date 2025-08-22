@@ -63,13 +63,13 @@
 </script>
 
 <div class="contnet">
-  <div class="player__sound_effect_title header">
+  <div class="player-sound-effect-title header">
     <h3>{$t('player__sound_effect_biquad_filter')}</h3>
     <Btn min onclick={handleReset}>{$t('player__sound_effect_reset_btn')}</Btn>
   </div>
-  <div class="eqList">
+  <div class="eq-list">
     {#each freqs as v, i (v)}
-      <div class="eqItem">
+      <div class="eq-item">
         <span class="label">{labels[i]}</span>
         <SliderBar
           value={settings[v].val}
@@ -84,7 +84,7 @@
       </div>
     {/each}
   </div>
-  <div class="saveList">
+  <div class="save-list">
     {#each freqsPreset as item (item.name)}
       <Btn
         min
@@ -134,10 +134,10 @@
 <style lang="less">
   .contnet {
     display: flex;
+    flex: none;
     flex-flow: column nowrap;
     gap: 8px;
     min-height: 0;
-    flex: none;
 
     :global {
       .slider {
@@ -148,31 +148,32 @@
   .header {
     display: flex;
     flex-flow: row nowrap;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     padding-bottom: 5px;
   }
-  .eqList {
+  .eq-list {
+    position: relative;
     display: flex;
     flex-flow: row wrap;
+    justify-content: space-between;
     // gap: 15px;
     width: 100%;
-    justify-content: space-between;
-    position: relative;
 
-    &:before {
+    &::before {
       .mixin-after();
+
       position: absolute;
       left: 50%;
       height: 100%;
       border-left: 1px dashed var(--color-primary-light-100-alpha-700);
     }
   }
-  .eqItem {
+  .eq-item {
     display: flex;
     flex-flow: row nowrap;
-    width: 50%;
     gap: 8px;
+    width: 50%;
     margin-bottom: 15px;
     &:nth-child(odd) {
       padding-right: 10px;
@@ -209,10 +210,10 @@
   //   }
   // }
 
-  .saveList {
+  .save-list {
     display: flex;
     flex-flow: row wrap;
-    margin-top: 10px;
     gap: 10px;
+    margin-top: 10px;
   }
 </style>

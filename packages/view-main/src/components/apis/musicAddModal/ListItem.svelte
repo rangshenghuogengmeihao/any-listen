@@ -48,42 +48,42 @@
 
 <style lang="less">
   .container {
+    position: relative;
     display: flex;
     flex-flow: row nowrap;
+    gap: 10px;
     align-items: center;
     height: 100%;
     padding: 5px 2px;
-    gap: 10px;
-    position: relative;
-    transition: 0.3s ease;
-    transition-property: color, background-color, opacity;
     background-color: transparent;
     border-radius: @radius-border;
+    transition: 0.3s ease;
+    transition-property: color, background-color, opacity;
     &:not(.disabled) {
       &:hover {
-        background-color: var(--color-primary-background-hover);
         cursor: pointer;
+        background-color: var(--color-primary-background-hover);
       }
     }
   }
   .disabled {
-    opacity: 0.5;
     cursor: default !important;
+    opacity: 0.5;
   }
 
   .left {
-    // background-color: var(--color-primary-light-200-alpha-900);
-    border-radius: @radius-border;
     // width: 100%;
     // height: 80%;
     display: flex;
-    align-items: center;
-    justify-content: center;
     // color: var(--color-primary-light-400-alpha-200);
     // user-select: none;
     // font-size: 18px;
     // font-family: Consolas, 'Courier New', monospace;
     flex: none;
+    align-items: center;
+    justify-content: center;
+    // background-color: var(--color-primary-light-200-alpha-900);
+    border-radius: @radius-border;
 
     // span {
     //   padding-left: 2px;
@@ -91,12 +91,12 @@
   }
 
   .right {
-    flex: auto;
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
-    font-size: 14px;
     gap: 2px;
     min-width: 0;
+    font-size: 14px;
     span {
       .mixin-ellipsis-1();
     }

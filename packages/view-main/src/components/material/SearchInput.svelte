@@ -197,18 +197,18 @@
   }
   .content {
     position: absolute;
+    display: flex;
+    flex-flow: column nowrap;
     width: 100%;
+    background-color: var(--color-primary-light-300-alpha-700);
     border-radius: @form-radius;
     transition:
       box-shadow 0.4s ease,
       background-color @transition-normal;
-    display: flex;
-    flex-flow: column nowrap;
-    background-color: var(--color-primary-light-300-alpha-700);
 
     &.active {
       background-color: var(--color-primary-light-600-alpha-100);
-      box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+      box-shadow: 0 1px 5px 0 rgb(0 0 0 / 20%);
       .form {
         input {
           border-bottom-left-radius: 0;
@@ -219,41 +219,40 @@
       }
     }
     .form {
+      position: relative;
       display: flex;
       height: @height-toolbar * 0.52;
-      position: relative;
       input {
         flex: auto;
-        // border: 1px solid;
-        border-top-left-radius: 3px;
-        border-bottom-left-radius: 3px;
-        background-color: transparent;
-        // border-bottom: 2px solid var(--color-primary);
-        // border-color: var(--color-primary);
-        border: none;
-
-        outline: none;
         // height: @height-toolbar * .7;
         padding: 0 5px;
         overflow: hidden;
         font-size: 13.5px;
         line-height: @height-toolbar * 0.52 + 5px;
+        outline: none;
+        background-color: transparent;
+        // border-bottom: 2px solid var(--color-primary);
+        // border-color: var(--color-primary);
+        border: none;
+        // border: 1px solid;
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
         &::placeholder {
-          color: var(--color-button-font);
           font-size: 0.98em;
+          color: var(--color-button-font);
         }
       }
       button {
         display: flex;
         flex: none;
-        border: none;
-        // background-color: @color-search-form-background;
-        background-color: transparent;
-        outline: none;
-        cursor: pointer;
         height: 100%;
         padding: 6px 7px;
         color: var(--color-button-font);
+        cursor: pointer;
+        outline: none;
+        // background-color: @color-search-form-background;
+        background-color: transparent;
+        border: none;
         transition: background-color 0.2s ease;
 
         &:last-child {
@@ -270,17 +269,17 @@
       }
     }
     .list-content {
+      height: 0;
+      overflow: hidden;
       // background-color: @color-search-form-background;
       font-size: 13px;
       transition: 0.3s ease;
-      height: 0;
       transition-property: height;
-      overflow: hidden;
       .list-item {
-        cursor: pointer;
         padding: 8px 5px;
-        transition: background-color 0.2s ease;
         line-height: 1.3;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
         span {
           .mixin-ellipsis-2();
         }
@@ -289,8 +288,8 @@
           background-color: var(--color-primary-dark-100-alpha-700);
         }
         &:last-child {
-          border-bottom-left-radius: 3px;
           border-bottom-right-radius: 3px;
+          border-bottom-left-radius: 3px;
         }
       }
     }

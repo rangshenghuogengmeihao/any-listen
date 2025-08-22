@@ -95,11 +95,11 @@
 <style lang="less">
   .main {
     flex: auto;
+    // max-width: 320px;
+    min-width: 320px;
     min-height: 40px;
     padding: 15px 15px 0;
     font-size: 14px;
-    // max-width: 320px;
-    min-width: 320px;
     line-height: 1.5;
     white-space: pre-line;
     &.select {
@@ -108,12 +108,12 @@
   }
 
   .footer {
-    flex: none;
-    padding: 15px;
     display: flex;
+    flex: none;
     flex-flow: row nowrap;
-    justify-content: flex-end;
     gap: 15px;
+    justify-content: flex-end;
+    padding: 15px;
 
     :global(.btn) {
       min-width: 70px;

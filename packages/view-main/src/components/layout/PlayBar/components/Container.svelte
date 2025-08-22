@@ -20,14 +20,14 @@
 <style lang="less">
   .player {
     position: relative;
+    // padding: 6px;
+    z-index: 2;
     height: @height-player;
     // border-top: 3px solid var(--color-border);
     // display: flex;
     // flex-flow: row nowrap;
     // align-items: center;
     contain: size layout style;
-    // padding: 6px;
-    z-index: 2;
     // box-shadow: 0 0 6px rgba(0, 0, 0, 0.12);
     // border-top-left-radius: 8px;
     // border-top-right-radius: 8px;
@@ -56,25 +56,25 @@
   .bg {
     width: 100%;
     height: 100%;
-    box-shadow: 0 0 6px var(--color-primary-dark-200-alpha-800);
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+    box-shadow: 0 0 6px var(--color-primary-dark-200-alpha-800);
+    opacity: 0.8;
     // border-top: 1px solid var(--color-primary-light-300-alpha-800);
     // z-index: -1;
     backdrop-filter: blur(4px);
     transition: @transition-normal;
     transition-property: opacity;
-    opacity: 0.8;
   }
   .player-inner {
     position: absolute;
-    left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
+    left: 0;
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
+    width: 100%;
+    height: 100%;
     contain: strict;
     transition: @transition-normal;
     transition-property: opacity;

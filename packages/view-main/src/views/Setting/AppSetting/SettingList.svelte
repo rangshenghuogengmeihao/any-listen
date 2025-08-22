@@ -46,11 +46,11 @@
 <style lang="less">
   .settings-app-list {
     flex: none;
-    overflow: hidden;
     width: 18%;
     max-width: 200px;
-    margin-left: 12px;
     margin-bottom: 12px;
+    margin-left: 12px;
+    overflow: hidden;
     // border-right: 1px solid var(--color-border);
     background-color: var(--color-primary-light-300-alpha-900);
     border-radius: @radius-border;
@@ -63,19 +63,19 @@
     }
     .list-item {
       position: relative;
-      transition: 0.3s ease;
-      transition-property: color, background-color;
-      background-color: transparent;
       display: block;
       padding: 0 10px;
       font-size: 13px;
       line-height: 36px;
-      .mixin-ellipsis-1();
+      background-color: transparent;
       border-radius: @radius-border;
+      transition: 0.3s ease;
+      transition-property: color, background-color;
+      .mixin-ellipsis-1();
 
       &:hover:not(.active) {
-        background-color: var(--color-primary-background-hover);
         cursor: pointer;
+        background-color: var(--color-primary-background-hover);
       }
       &.active {
         // background-color:
@@ -83,8 +83,8 @@
       }
 
       & > :global(svg) {
-        height: 0.9em;
         width: 0.9em;
+        height: 0.9em;
         margin-left: -0.45em;
         vertical-align: -0.05em;
       }

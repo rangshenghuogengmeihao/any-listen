@@ -112,18 +112,18 @@
 
 <style lang="less">
   .container {
+    position: relative;
     display: flex;
     flex-flow: row nowrap;
+    gap: 10px;
     align-items: center;
     height: 100%;
     padding: 5px;
-    gap: 10px;
-    position: relative;
-    transition: 0.3s ease;
-    background-color: transparent;
-    border-radius: @radius-border;
     font-size: 13px;
+    background-color: transparent;
     border: 1px dashed transparent;
+    border-radius: @radius-border;
+    transition: 0.3s ease;
     transition-property: background-color, opacity;
     // &:hover {
     //   .num {
@@ -160,8 +160,8 @@
   // }
 
   .pic {
-    flex: none;
     position: relative;
+    flex: none;
     // background-color: var(--color-primary-light-200-alpha-900);
     // display: flex;
     // align-items: center;
@@ -203,12 +203,12 @@
   // }
   .play-icon {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    left: 0;
-    top: 0;
-    color: var(--color-button-font);
     padding: 6px;
+    color: var(--color-button-font);
 
     + :global(.pic) {
       opacity: 0.1;
@@ -233,8 +233,8 @@
     .name {
       display: flex;
       flex-flow: row nowrap;
-      align-items: center;
       gap: 5px;
+      align-items: center;
       .auto-hidden();
     }
     h4 {
@@ -243,17 +243,17 @@
     .singer {
       display: flex;
       flex-flow: row nowrap;
-      color: var(--color-font-label);
       font-size: 12px;
+      color: var(--color-font-label);
 
       span {
         .auto-hidden();
         + span {
           &::before {
             display: inline-block;
-            content: '•';
             padding: 0 3px;
             color: var(--color-primary-font);
+            content: '•';
             opacity: 0.4;
           }
         }

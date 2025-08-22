@@ -55,9 +55,9 @@
 </script>
 
 <div class="contnet">
-  <h3 class="player__sound_effect_title">{$t('player__sound_effect_convolution')}</h3>
+  <h3 class="player-sound-effect-title">{$t('player__sound_effect_convolution')}</h3>
   <div class="convolution">
-    <div class="convolutionList">
+    <div class="convolution-list">
       {#each convolutions as item (item.name)}
         <Checkbox
           id={`player__convolution_${item.name}`}
@@ -69,8 +69,8 @@
         />
       {/each}
     </div>
-    <div class="sliderList" class:disabled={disabledConvolution}>
-      <div class="sliderItem">
+    <div class="slider-list" class:disabled={disabledConvolution}>
+      <div class="slider-item">
         <span class="label">{$t('player__sound_effect_convolution_main_gain')}</span>
         <SliderBar
           value={mainGain.val}
@@ -82,7 +82,7 @@
         />
         <span class="value">{mainGain.val * 10}%</span>
       </div>
-      <div class="sliderItem">
+      <div class="slider-item">
         <span class="label">{$t('player__sound_effect_convolution_send_gain')}</span>
         <SliderBar
           value={sendGain.val}
@@ -96,7 +96,7 @@
       </div>
     </div>
   </div>
-  <div class="saveList">
+  <div class="save-list">
     {#each userPresetList.val as item (item.id)}
       <Btn
         min
@@ -131,10 +131,10 @@
 <style lang="less">
   .contnet {
     display: flex;
+    flex: none;
     flex-flow: column nowrap;
     gap: 3px;
     min-height: 0;
-    flex: none;
 
     :global {
       .checkbox {
@@ -155,14 +155,14 @@
     gap: 15px;
     width: 100%;
   }
-  .convolutionList {
+  .convolution-list {
     display: flex;
     flex-flow: row wrap;
     gap: 8px;
     width: 100%;
   }
 
-  .sliderList {
+  .slider-list {
     display: flex;
     flex-flow: column nowrap;
     gap: 15px;
@@ -172,7 +172,7 @@
       opacity: 0.4;
     }
   }
-  .sliderItem {
+  .slider-item {
     display: flex;
     flex-flow: row nowrap;
     gap: 8px;
@@ -192,10 +192,10 @@
     //   color: var(--color-primary-font);
     // }
   }
-  .saveList {
+  .save-list {
     display: flex;
     flex-flow: row wrap;
-    margin-top: 10px;
     gap: 10px;
+    margin-top: 10px;
   }
 </style>

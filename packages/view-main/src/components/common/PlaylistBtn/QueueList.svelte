@@ -43,11 +43,11 @@
 
 <style lang="less">
   .container {
+    display: flex;
     flex: auto;
+    flex-direction: column;
     min-height: 0;
     max-height: 100%;
-    display: flex;
-    flex-direction: column;
     overflow: hidden;
   }
 </style>

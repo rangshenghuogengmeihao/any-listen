@@ -33,7 +33,7 @@
     display: flex;
     flex-flow: row wrap;
     gap: 15px;
-    font-size: 14px;
     padding-bottom: 6px;
+    font-size: 14px;
   }
 </style>

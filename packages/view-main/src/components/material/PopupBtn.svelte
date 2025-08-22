@@ -110,9 +110,8 @@
   .container {
     position: relative;
     display: inline-block;
-
+    padding: 0;
     background-color: transparent;
     border: none;
-    padding: 0;
   }
 </style>

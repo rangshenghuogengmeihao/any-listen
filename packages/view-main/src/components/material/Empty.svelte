@@ -3,24 +3,24 @@
   let { label }: { label?: string } = $props()
 </script>
 
-<div class="noItem">
+<div class="no-item">
   <p>{label || $t('no_item')}</p>
 </div>
 
 <style lang="less">
-  .noItem {
-    flex: auto;
-    height: 100%;
+  .no-item {
     position: relative;
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    height: 100%;
 
     p {
+      margin-top: -10%;
       font-size: var(--font-size, 1.5rem);
       color: var(--color-font-label);
-      margin-top: -10%;
     }
   }
 </style>

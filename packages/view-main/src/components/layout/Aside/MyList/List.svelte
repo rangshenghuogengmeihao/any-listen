@@ -99,10 +99,10 @@
     height: 100%;
   }
   .list-container {
-    // outline: none;
-    height: 100%;
     position: relative;
     display: block;
+    // outline: none;
+    height: 100%;
     contain: strict;
   }
   .list-item {

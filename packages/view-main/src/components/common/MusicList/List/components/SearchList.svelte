@@ -271,7 +271,7 @@
                   {buildMusicName(settingState.setting['download.fileName'], item.name, item.singer)}
                 </h3>
                 {#if item.meta.albumName}
-                  <h3 class="text albumName">{item.meta.albumName}</h3>
+                  <h3 class="text album-name">{item.meta.albumName}</h3>
                 {/if}
               </div>
               <div class="source">{buildSourceLabel(item)}</div>
@@ -286,25 +286,25 @@
 <style lang="less">
   .search {
     position: absolute;
-    width: 60%;
-    left: 2%;
     top: 2%;
+    left: 2%;
+    display: flex;
+    flex-flow: column nowrap;
+    width: 60%;
+    // contain: strict;
+    background-color: var(--color-primary-light-600-alpha-100);
     // transform: translateX(-50%);
     border-radius: 4px;
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 7%),
+      0 2px 4px rgb(0 0 0 / 7%),
+      0 4px 8px rgb(0 0 0 / 7%),
+      0 8px 16px rgb(0 0 0 / 7%),
+      0 16px 32px rgb(0 0 0 / 7%),
+      0 32px 64px rgb(0 0 0 / 7%);
     transition:
       box-shadow 0.4s ease,
       background-color @transition-normal;
-    display: flex;
-    flex-flow: column nowrap;
-    // contain: strict;
-    background-color: var(--color-primary-light-600-alpha-100);
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.07),
-      0 2px 4px rgba(0, 0, 0, 0.07),
-      0 4px 8px rgba(0, 0, 0, 0.07),
-      0 8px 16px rgba(0, 0, 0, 0.07),
-      0 16px 32px rgba(0, 0, 0, 0.07),
-      0 32px 64px rgba(0, 0, 0, 0.07);
 
     // &.active {
     //   .form {
@@ -317,47 +317,46 @@
     //   }
     // }
     .form {
+      position: relative;
       display: flex;
       height: @height-toolbar * 0.52;
-      position: relative;
       input {
         flex: auto;
-        // border: 1px solid;
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-        background-color: transparent;
-        // border-bottom: 2px solid var(--color-primary);
-        // border-color: var(--color-primary);
-        border: none;
-
-        outline: none;
         // height: @height-toolbar * .7;
         padding: 0 5px;
         overflow: hidden;
         font-size: 13.5px;
         line-height: @height-toolbar * 0.52 + 5px;
+        outline: none;
+        background-color: transparent;
+        // border-bottom: 2px solid var(--color-primary);
+        // border-color: var(--color-primary);
+        border: none;
+        // border: 1px solid;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
         &::placeholder {
-          color: var(--color-button-font);
           font-size: 0.98em;
+          color: var(--color-button-font);
         }
       }
       button {
         display: flex;
+        flex: none;
         align-items: center;
         justify-content: center;
-        flex: none;
-        border: none;
-        // background-color: @color-search-form-background;
-        background-color: transparent;
-        outline: none;
-        border-top-right-radius: 4px;
-        border-bottom-right-radius: 4px;
-        cursor: pointer;
         height: 100%;
         padding: 6px 9px;
         color: var(--color-button-font);
-        transition: background-color 0.2s ease;
+        cursor: pointer;
+        outline: none;
+        // background-color: @color-search-form-background;
+        background-color: transparent;
+        border: none;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
         opacity: 0.8;
+        transition: background-color 0.2s ease;
 
         &:hover {
           background-color: var(--color-button-background-hover);
@@ -374,26 +373,26 @@
       transition-property: height;
     }
     .list {
-      // background-color: @color-search-form-background;
-      font-size: 13px;
       position: relative;
       max-height: 100%;
+      // background-color: @color-search-form-background;
+      font-size: 13px;
       // max-height: 70%;
     }
     .list-item {
       position: relative;
-      cursor: pointer;
-      padding: 8px 5px;
-      transition: background-color 0.2s ease;
-      line-height: 1.3;
       // overflow: hidden;
       display: flex;
       flex-flow: row nowrap;
+      padding: 8px 5px;
+      line-height: 1.3;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.2s ease;
 
       &.select {
         background-color: var(--color-primary-dark-100-alpha-700);
       }
-      border-radius: 4px;
       // &:last-child {
       //   border-bottom-left-radius: 4px;
       //   border-bottom-right-radius: 4px;
@@ -408,18 +407,18 @@
     flex: auto;
     .mixin-ellipsis-1();
   }
-  .albumName {
+  .album-name {
     font-size: 12px;
     opacity: 0.6;
     .mixin-ellipsis-1();
   }
   .source {
+    display: flex;
     flex: none;
+    align-items: center;
+    padding: 0 5px;
     font-size: 12px;
     opacity: 0.5;
-    padding: 0 5px;
-    display: flex;
-    align-items: center;
     // transform: rotate(45deg);
     // background-color:
   }

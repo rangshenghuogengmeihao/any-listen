@@ -14,26 +14,26 @@
 
 <style lang="less">
   .middle-play-progress {
-    width: 30%;
-    // position: relative;
-    flex: none;
-    color: var(--color-550);
-    font-size: 13px;
     // padding-left: 10px;
     display: flex;
+    // position: relative;
+    flex: none;
     flex-flow: row nowrap;
     align-items: center;
+    width: 30%;
+    font-size: 13px;
+    color: var(--color-550);
   }
   .progress {
+    // width: 160px;
+    position: relative;
     // position: absolute;
     // top: 0;
     // left: 0;
     // width: 100%;
     flex: auto;
-    // width: 160px;
-    position: relative;
+    padding: 8px 0;
     // padding-bottom: 6px;
     margin: 0 8px;
-    padding: 8px 0;
   }
 </style>

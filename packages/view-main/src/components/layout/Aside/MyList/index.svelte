@@ -11,10 +11,10 @@
 
 <style lang="less">
   .container {
-    margin-top: 10px;
-    flex: auto;
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
+    margin-top: 10px;
     overflow: hidden;
   }
 </style>

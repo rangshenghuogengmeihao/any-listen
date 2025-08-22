@@ -43,27 +43,27 @@
 
 <style lang="less">
   .container {
-    flex: none;
-    height: 100%;
     display: flex;
+    flex: none;
     flex-flow: row nowrap;
-    align-items: center;
-    padding-left: 30px;
-    padding-right: 30px;
     gap: 18px;
+    align-items: center;
+    height: 100%;
+    padding-right: 30px;
+    padding-left: 30px;
   }
   .btn {
+    display: flex;
     flex: none;
-    transition: @transition-fast;
-    transition-property: color, opacity;
+    // padding: 5px;
+    padding: 0;
     color: var(--color-button-font);
-    opacity: 1;
     cursor: pointer;
     background-color: transparent;
     border: none;
-    // padding: 5px;
-    padding: 0;
-    display: flex;
+    opacity: 1;
+    transition: @transition-fast;
+    transition-property: color, opacity;
     &:hover {
       opacity: 0.8;
     }

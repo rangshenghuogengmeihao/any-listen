@@ -52,14 +52,14 @@
 </script>
 
 <button class="content" onclick={handleShowPopup} onmouseenter={handlMsEnter} onmouseleave={handlMsLeave}>
-  <div bind:this={domBtn} class="timeContent">
+  <div bind:this={domBtn} class="time-content">
     <span>{$progress.nowPlayTimeStr}</span>
     <span class="dv">/</span>
     <span>{$duration.label}</span>
     <div class="progress">
       <div
-        class="progressBar"
-        class:barTransition={isActiveTransition}
+        class="progress-bar"
+        class:bar-transition={isActiveTransition}
         style={`transform: scaleX(${$progress.progress || 0})`}
         ontransitionend={() => {
           isActiveTransition = false
@@ -67,7 +67,7 @@
       ></div>
     </div>
     <Popup {visible} btnel={domBtn} onmouseenter={handlMsEnter} onmouseleave={handlMsLeave} ontransitionend={handleTranEnd}>
-      <div class="popupProgress">
+      <div class="popup-progress">
         {#if visibleProgress}
           <PlayerProgressBar />
         {/if}
@@ -78,8 +78,8 @@
 
 <style lang="less">
   .content {
-    flex: none;
     position: relative;
+    flex: none;
     padding: 15px 0;
     background-color: transparent;
     border: none;
@@ -89,17 +89,17 @@
       }
     }
   }
-  .timeContent {
+  .time-content {
     // width: 30%;
     position: relative;
-    // flex: none;
-    color: var(--color-550);
-    font-size: 13px;
     // padding-left: 10px;
     // display: flex;
     // flex-flow: column nowrap;
     // align-items: center;
     padding-bottom: 3px;
+    font-size: 13px;
+    // flex: none;
+    color: var(--color-550);
   }
 
   .progress {
@@ -107,23 +107,23 @@
     top: 100%;
     left: 0;
     width: 100%;
-    // flex: auto;
-    margin-top: 2px;
-    contain: strict;
     // width: 160px;
     // position: relative;
     // padding-bottom: 6px;
     // margin: 0 8px;
     height: 2px;
-    opacity: 0.24;
+    // flex: auto;
+    margin-top: 2px;
+    contain: strict;
     overflow: hidden;
+    background-color: var(--color-primary-light-100-alpha-800);
+    opacity: 0.24;
     transition: @transition-normal;
     transition-property: background-color, opacity;
-    background-color: var(--color-primary-light-100-alpha-800);
 
-    .progressBar {
-      height: 100%;
+    .progress-bar {
       width: 100%;
+      height: 100%;
       // position: absolute;
       background-color: var(--color-primary-light-100-alpha-400);
       // left: 0;
@@ -132,14 +132,14 @@
       will-change: transform;
     }
 
-    .barTransition {
-      transition-property: transform;
+    .bar-transition {
       transition-timing-function: ease-out;
       transition-duration: 0.2s;
+      transition-property: transform;
     }
   }
 
-  .popupProgress {
+  .popup-progress {
     position: relative;
     width: 300px;
     height: 15px;

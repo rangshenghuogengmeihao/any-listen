@@ -72,7 +72,7 @@
       {#each menus as item, idx (item?.action ?? idx)}
         {#if item}
           <button
-            class="menuItem"
+            class="menu-item"
             disabled={item.disabled}
             tabindex="0"
             aria-label={item.label}
@@ -93,21 +93,21 @@
 
 <style lang="less">
   .menu {
-    font-size: 12px;
     position: absolute;
+    z-index: 10;
+    display: flex;
+    flex-flow: column nowrap;
+    overflow: hidden;
+    font-size: 12px;
+    outline: none;
+    background-color: var(--color-content-background);
+    border-radius: @radius-border;
+    box-shadow: @shadow-popup;
     opacity: 0;
     transform: scale(0);
     transform-origin: 0 0 0;
     transition: 0.14s ease;
     transition-property: transform, opacity;
-    border-radius: @radius-border;
-    background-color: var(--color-content-background);
-    box-shadow: @shadow-popup;
-    z-index: 10;
-    overflow: hidden;
-    display: flex;
-    flex-flow: column nowrap;
-    outline: none;
     // padding: 3px 0;
     // will-change: transform;
     // border: 1px solid rgba(0, 0, 0, 0.1);
@@ -122,20 +122,20 @@
     //   opacity: 0.7;
     // }
   }
-  .menuItem {
-    cursor: pointer;
+  .menu-item {
     display: block;
     min-width: 140px;
-    line-height: 34px;
     // color: var(--color-button-font);
     padding: 0 15px;
+    line-height: 34px;
     text-align: left;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
     // outline: none;
     transition: @transition-normal;
     transition-property: background-color, opacity;
     .mixin-ellipsis-1();
-    background-color: transparent;
-    border: none;
 
     &:hover {
       background-color: var(--color-primary-background-hover);

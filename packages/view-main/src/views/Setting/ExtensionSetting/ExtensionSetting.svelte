@@ -71,10 +71,10 @@
 
 <style lang="less">
   .settings-extension-container {
-    height: 100%;
     display: flex;
     flex-flow: row nowrap;
-    padding-top: 10px;
+    height: 100%;
     min-height: 0;
+    padding-top: 10px;
   }
 </style>

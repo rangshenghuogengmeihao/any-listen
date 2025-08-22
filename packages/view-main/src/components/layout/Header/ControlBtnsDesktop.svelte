@@ -81,25 +81,25 @@
 
 <style lang="less">
   .control {
-    flex: none;
     display: flex;
+    flex: none;
     align-self: flex-start;
-    -webkit-app-region: no-drag;
     height: 30px;
+    -webkit-app-region: no-drag;
 
     .btn {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
       width: 46px;
       height: 30px;
-      background: none;
-      border: none;
       // outline: none;
       padding: 1px;
-      cursor: pointer;
       color: var(--color-font-label);
+      cursor: pointer;
+      background: none;
+      border: none;
       transition: background-color 0.2s ease-in-out;
       // &.active {
       //   background-color: var(--color-button-background-hover);

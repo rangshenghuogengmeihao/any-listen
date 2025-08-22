@@ -18,7 +18,7 @@
   // const isShowLyricProgressSetting = useSettingValue('playDetail.isShowLyricProgressSetting')
   const fontSize = useSettingValue('playDetail.style.fontSize')
   const fontWeight = useSettingValue('playDetail.style.fontWeight')
-  const styles = $derived(`--playDetail-lrc-font-size:${(fontSize.val / 100 + 0.8) * winRadio}rem; text-align:${textAlign.val};`)
+  const styles = $derived(`--play-detail-lrc-font-size:${(fontSize.val / 100 + 0.8) * winRadio}rem; text-align:${textAlign.val};`)
 
   const {
     handleLyricMouseDown,
@@ -62,7 +62,7 @@
 <div
   bind:this={domLyric}
   class:draging={isMsDown}
-  class:lrcActiveZoom={isZoomActiveLrc.val}
+  class:lrc-active-zoom={isZoomActiveLrc.val}
   class:font-weight={fontWeight.val}
   class:text-left={textAlign.val === 'left'}
   class:text-center={textAlign.val === 'center'}
@@ -78,9 +78,9 @@
     // handleShowLyricMenu(event)
   }}
 >
-  <div class="pre lyricSpace"></div>
+  <div class="pre lyric-space"></div>
   <div bind:this={domLyricText}></div>
-  <div class="lyricSpace"></div>
+  <div class="lyric-space"></div>
 </div>
 {#if isStopScroll}
   <div transition:fade={{ duration: 150, delay: 5 }} class="skip">
@@ -104,9 +104,9 @@
     position: relative;
     height: 100%;
     overflow: hidden;
-    font-size: var(--playDetail-lrc-font-size, 16px);
-    mask-image: linear-gradient(transparent 0%, #fff 20%, #fff 80%, transparent 100%);
+    font-size: var(--play-detail-lrc-font-size, 16px);
     cursor: grab;
+    mask-image: linear-gradient(transparent 0%, #fff 20%, #fff 80%, transparent 100%);
     &.draging {
       cursor: grabbing;
     }
@@ -115,29 +115,26 @@
         color: @unplay-color;
       }
       .line-content {
+        padding: calc(var(--play-detail-lrc-font-size, 16px) / 1.8) 8% calc(var(--play-detail-lrc-font-size, 16px) / 1.8) 1px;
         line-height: 1.2;
-        padding-left: 1px;
-        padding-right: 8%;
-        padding-top: calc(var(--playDetail-lrc-font-size, 16px) / 1.8);
-        padding-bottom: calc(var(--playDetail-lrc-font-size, 16px) / 1.8);
-        overflow-wrap: break-word;
         color: @unplay-color;
-        transition: @transition-slow !important;
-        transition-property: padding, transform !important;
+        overflow-wrap: break-word;
         text-shadow:
           0 0 2px var(--color-primary-light-100-alpha-900),
           0 0 3px var(--color-primary-light-100-alpha-900),
           0 0 4px var(--color-primary-dark-700-alpha-900);
+        transition: @transition-slow !important;
+        transition-property: padding, transform !important;
 
         &.active {
-          // padding: var(--playDetail-lrc-font-size, 16px) 1px;
-          padding-top: calc(var(--playDetail-lrc-font-size, 16px) * 1.2);
-          padding-bottom: calc(var(--playDetail-lrc-font-size, 16px) * 1.2);
+          // padding: var(--play-detail-lrc-font-size, 16px) 1px;
+          padding-top: calc(var(--play-detail-lrc-font-size, 16px) * 1.2);
+          padding-bottom: calc(var(--play-detail-lrc-font-size, 16px) * 1.2);
         }
 
         .extended {
-          font-size: 0.8em;
           margin-top: 5px;
+          font-size: 0.8em;
         }
         &.line-mode {
           .font-lrc {
@@ -159,15 +156,15 @@
 
         &.font-mode > .line > .font-lrc {
           > span {
-            transition: @transition-normal;
-            transition-property: font-size;
             font-size: 1em;
-            background-repeat: no-repeat;
             background-color: @unplay-font-color;
-            background-image: -webkit-linear-gradient(top, @played-color, @played-color);
-            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to bottom, @played-color, @played-color);
+            background-repeat: no-repeat;
             background-clip: text;
             background-size: 0 100%;
+            transition: @transition-normal;
+            transition-property: font-size;
+            -webkit-text-fill-color: transparent;
           }
         }
       }
@@ -191,7 +188,7 @@
       }
     }
   }
-  .lrcActiveZoom {
+  .lrc-active-zoom {
     :global {
       .line-content {
         &.active {
@@ -216,8 +213,8 @@
     &.text-center {
       :global {
         .line-content {
-          padding-left: 6%;
           padding-right: 6%;
+          padding-left: 6%;
           // transform: scale(1.1);
         }
       }
@@ -234,43 +231,43 @@
 
   .skip {
     position: absolute;
-    top: calc(38% + var(--playDetail-lrc-font-size, 16px) + 4px);
+    top: calc(38% + var(--play-detail-lrc-font-size, 16px) + 4px);
     left: 0;
     // height: 6px;
     width: 100%;
     pointer-events: none;
     // opacity: .5;
     .line {
+      margin-right: 8%;
       border-top: 2px dotted var(--color-primary-dark-100);
       opacity: 0.15;
-      margin-right: 8%;
       mask-image: linear-gradient(90deg, transparent 0%, transparent 15%, #fff 100%);
     }
     .label {
       position: absolute;
-      right: 8%;
       top: -16px;
-      line-height: 1.2;
+      right: 8%;
       font-size: 13px;
+      line-height: 1.2;
       color: var(--color-primary-dark-100);
       opacity: 0.7;
     }
     :global(button) {
       position: absolute;
-      right: -2%;
       top: 0;
-      transform: translateY(-50%);
-      width: 12%;
-      aspect-ratio: 1 / 1;
-      padding: 0;
+      right: -2%;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: none !important;
+      width: 12%;
+      aspect-ratio: 1 / 1;
+      padding: 0;
       pointer-events: initial;
+      background: none !important;
+      opacity: 0.8;
+      transform: translateY(-50%);
       transition: @transition-normal;
       transition-property: opacity;
-      opacity: 0.8;
       &:hover {
         opacity: 0.6;
       }
@@ -283,12 +280,12 @@
   //   // text-align: center;
   //   height: 100%;
   //   width: 100%;
-  //   font-size: var(--playDetail-lrc-font-size, 16px);
+  //   font-size: var(--play-detail-lrc-font-size, 16px);
   //   z-index: 10;
   //   color: var(--color-400);
 
   //   .lyricSelectline {
-  //     padding: calc(var(--playDetail-lrc-font-size, 16px) / 2) 1px;
+  //     padding: calc(var(--play-detail-lrc-font-size, 16px) / 2) 1px;
   //     overflow-wrap: break-word;
   //     transition: @transition-normal !important;
   //     transition-property: color, font-size;
@@ -302,7 +299,7 @@
   //   }
   // }
 
-  .lyricSpace {
+  .lyric-space {
     height: 60%;
   }
 </style>

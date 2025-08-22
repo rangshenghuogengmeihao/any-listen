@@ -89,7 +89,7 @@
     &:checked {
       + .content {
         .container {
-          &:after {
+          &::after {
             border-color: var(--color-primary-font);
           }
         }
@@ -107,39 +107,36 @@
     transition-property: opacity;
   }
   .container {
-    flex: none;
     position: relative;
+    display: flex;
+    flex: none;
     width: 1em;
     height: 1em;
-    cursor: pointer;
-    display: flex;
     color: var(--color-primary);
+    cursor: pointer;
     // border: 1px solid #ccc;
-    &:after {
+    &::after {
       position: absolute;
+      inset: 0;
       content: ' ';
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
       border: 1px solid var(--color-font-label);
-      transition: border-color 0.2s ease;
       border-radius: 2px;
+      transition: border-color 0.2s ease;
     }
   }
   .icon {
+    border-radius: 2px;
+    transform: scale(0);
     transition: 0.3s ease;
     transition-property: transform;
-    transform: scale(0);
-    border-radius: 2px;
     // opacity: 0;
   }
 
   .label {
     flex: auto;
     margin-left: 6px;
+    font-size: 14px;
     line-height: 1.5;
     cursor: pointer;
-    font-size: 14px;
   }
 </style>

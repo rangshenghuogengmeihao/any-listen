@@ -39,11 +39,11 @@
 
 <style lang="less">
   .log-header {
-    flex: none;
-    min-width: 0;
     display: flex;
+    flex: none;
     flex-flow: row nowrap;
     align-items: center;
+    min-width: 0;
     padding: 10px 2px;
   }
   .log-header-title {
@@ -52,7 +52,7 @@
   .log-header-action {
     display: flex;
     flex-flow: row nowrap;
-    align-items: center;
     gap: 6px;
+    align-items: center;
   }
 </style>

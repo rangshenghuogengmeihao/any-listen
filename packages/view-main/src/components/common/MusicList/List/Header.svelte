@@ -41,13 +41,13 @@
 
 <style lang="less">
   .header {
-    flex: none;
-    height: 36px;
     display: flex;
+    flex: none;
     flex-flow: row nowrap;
-    align-items: center;
-    padding: 0 12px;
     gap: 10px;
+    align-items: center;
+    height: 36px;
+    padding: 0 12px;
     // border-bottom: 1px solid var(--color-border);
     font-size: 12px;
     color: var(--color-font-label);
@@ -59,6 +59,7 @@
   .num {
     .nobreak();
     .center();
+
     display: flex;
     align-items: center;
     justify-content: center;

@@ -50,16 +50,16 @@
 
 <style lang="less">
   .list-item {
+    display: flex;
     flex: 1;
+    flex-flow: column nowrap;
+    gap: 6px;
     min-width: 300px;
     max-width: 440px;
     height: 100px;
-    display: flex;
-    flex-flow: column nowrap;
     padding: 10px;
-    border-radius: @radius-border;
-    gap: 6px;
     background-color: var(--color-primary-light-200-alpha-900);
+    border-radius: @radius-border;
     transition: opacity @transition-normal;
 
     &.disabled {
@@ -71,25 +71,25 @@
     }
   }
   .top {
-    flex: auto;
-    min-height: 0;
     display: flex;
+    flex: auto;
     flex-flow: row nowrap;
-    align-items: center;
     gap: 10px;
+    align-items: center;
+    min-height: 0;
 
     .left {
+      flex: none;
       height: 100%;
       aspect-ratio: 1;
-      flex: none;
     }
     .right {
-      flex: auto;
-      height: 100%;
-      min-width: 0;
       display: flex;
+      flex: auto;
       flex-flow: column nowrap;
       gap: 2px;
+      min-width: 0;
+      height: 100%;
       // justify-content: space-between;
       // .title {
       //   display: flex;
@@ -99,6 +99,7 @@
       //   justify-content: space-between;
       h3 {
         .auto-hidden();
+
         font-size: 14px;
       }
       //   p {
@@ -106,52 +107,52 @@
       //   }
       // }
       .label {
+        font-size: 12px;
         color: var(--color-font-label);
         .mixin-ellipsis-2();
-        font-size: 12px;
       }
     }
   }
   .footer {
-    flex: none;
     display: flex;
-    gap: 10px;
+    flex: none;
     flex-flow: row nowrap;
+    gap: 10px;
     justify-content: space-between;
     .left {
       display: flex;
       flex-flow: row nowrap;
-      align-items: center;
       gap: 10px;
+      align-items: center;
       min-width: 0;
       .grant {
-        flex: none;
         display: flex;
+        flex: none;
         flex-flow: row nowrap;
-        color: var(--color-primary-alpha-600);
         gap: 8px;
+        color: var(--color-primary-alpha-600);
       }
       .author {
-        color: var(--color-font-label);
         font-size: 12px;
+        color: var(--color-font-label);
         .auto-hidden();
       }
       .label {
         flex: none;
         max-width: 120px;
-        color: var(--color-font-label);
         font-size: 12px;
+        color: var(--color-font-label);
         .auto-hidden();
       }
       .load-time {
         flex: none;
-        color: var(--color-font-label);
         font-size: 12px;
+        color: var(--color-font-label);
       }
     }
     .right {
-      flex: none;
       display: flex;
+      flex: none;
       flex-flow: row nowrap;
       font-size: 16px;
     }

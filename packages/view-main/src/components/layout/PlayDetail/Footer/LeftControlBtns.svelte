@@ -16,8 +16,8 @@
 
 <style lang="less">
   .container {
-    flex: none;
     display: flex;
+    flex: none;
     flex-flow: row nowrap;
     gap: 15px;
   }

@@ -37,9 +37,9 @@
   //   font-size: 15px;
   // }
   .settings-item-desc {
-    font-size: 12px;
     margin-top: -3px;
     margin-bottom: 6px;
+    font-size: 12px;
     opacity: 0.7;
   }
 </style>

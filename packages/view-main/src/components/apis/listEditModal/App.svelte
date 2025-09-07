@@ -16,7 +16,7 @@
   let visible = $state(false)
   let isEdit = $state(false)
   let listType = $state<AnyListen.List.UserListType>('general')
-  let targetId: string | undefined
+  let targetId = $state<string | undefined>()
   let form = $state<ComponentExports<typeof GeneralListForm>>()
   let targetInfo = $state<AnyListen.List.UserListInfo | null>(null)
 

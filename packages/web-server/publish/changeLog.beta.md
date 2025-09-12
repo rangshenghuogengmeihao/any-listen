@@ -1,17 +1,9 @@
 ### Improved
 
-- Reset extension store cache every time the page loads
-
-### Fixed
-
-- Fixed potential playlist synchronization issues
+- Improved the lyric scrolling speed when lyric scrolling is not delayed.
 
 ---
 
 ### 优化
 
-- 每次加载页面时重置扩展商店缓存
-
-### 修复
-
-- 修复潜在播放列表同步问题
+- 优化不延迟歌词滚动时的歌词滚动速度

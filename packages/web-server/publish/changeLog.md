@@ -8,6 +8,7 @@
 
 - Improved the update notification mechanism. Now shows error messages when update checks or downloads fail ([#59](https://github.com/any-listen/any-listen/issues/59)).
 - Improved lyrics display on the song details page for better readability.
+- Improved the lyric scrolling speed when lyric scrolling is not delayed.
 - Reset extension store cache on each page load.
 
 ### Fixed
@@ -31,6 +32,7 @@
 
 - 优化版本更新提示机制，增加检查和下载更新失败时的错误信息提示（[#59](https://github.com/any-listen/any-listen/issues/59)）
 - 优化歌曲详情页的歌词显示效果，提升可读性
+- 优化不延迟歌词滚动时的歌词滚动速度
 - 每次加载页面时重置扩展商店缓存
 
 ### 修复

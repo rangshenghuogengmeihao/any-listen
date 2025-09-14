@@ -297,6 +297,16 @@ if (import.meta.env.VITE_IS_DESKTOP) {
         description: 'settings.common.transparent_window_desc',
         type: 'boolean',
       },
+      {
+        field: 'tray.themeId',
+        name: 'settings.tray.theme_id',
+        type: 'radio',
+        enum: [
+          { value: 0, name: 'settings.tray.theme_id_light' },
+          { value: 2, name: 'settings.tray.theme_id_dark' },
+          { value: 1, name: 'settings.tray.theme_id_origin' },
+        ] satisfies Array<{ value: AnyListen.AppSetting['tray.themeId']; name: keyof Message }>,
+      },
     ],
   })
 }

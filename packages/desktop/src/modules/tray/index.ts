@@ -25,7 +25,7 @@ const watchConfigKeys = [
 const themeList = [
   {
     id: 0,
-    fileName: 'trayTemplate',
+    fileName: 'tray_white',
     isNative: true,
   },
   {
@@ -40,15 +40,19 @@ const themeList = [
   },
 ]
 
+const getTrayImage = (themeId: number) => {
+  let theme = themeList.find((item) => item.id === themeId) ?? themeList[0]
+  const iconPath = path.join(appState.staticPath, 'images/tray', theme.fileName + (isWin ? '.ico' : '.png'))
+  return nativeImage.createFromPath(iconPath)
+}
+
 export const createTray = () => {
   if ((tray && !tray.isDestroyed()) || !appState.appSetting['tray.enable']) return
 
   themeId = appState.appSetting['tray.themeId']
-  let theme = themeList.find((item) => item.id === themeId) ?? themeList[0]
-  const iconPath = path.join(appState.staticPath, 'images/tray', `${theme.fileName}.png`)
 
   // 托盘
-  tray = new Tray(nativeImage.createFromPath(iconPath))
+  tray = new Tray(getTrayImage(themeId))
 
   tray.setToolTip(i18n.t('app_name'))
   createMenu()
@@ -141,17 +145,10 @@ export const createMenu = () => {
   tray.setContextMenu(contextMenu)
 }
 
-export const setTrayImage = (themeId: number) => {
-  if (!tray) return
-  let theme = themeList.find((item) => item.id === themeId) ?? themeList[0]
-  const iconPath = path.join(appState.staticPath, 'images/tray', `${theme.fileName}.png`)
-  tray.setImage(nativeImage.createFromPath(iconPath))
-}
-
 const init = () => {
   if (themeId != appState.appSetting['tray.themeId']) {
     themeId = appState.appSetting['tray.themeId']
-    setTrayImage(themeId)
+    tray?.setImage(getTrayImage(themeId))
   }
   if (isEnableTray !== appState.appSetting['tray.enable']) {
     isEnableTray = appState.appSetting['tray.enable']

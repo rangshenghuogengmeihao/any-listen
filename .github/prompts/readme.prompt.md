@@ -2,7 +2,7 @@
 mode: agent
 ---
 
-将 ${workspaceFolder} 目录下的 README_zh.md 翻译到同目录下的 README.md 和其他 README\_\*.md 文件，主要规则如下：
+将 ${workspaceFolder}/docs 目录下的 README_zh.md 翻译到同目录下其他 README\_\*.md 文件，同时翻译到 ${workspaceFolder} 目录下的 README.md，主要规则如下：
 
 - 翻译内容使用 markdown 语法编写
 - README.md 为英文版本，其他语言的 README 文件命名为 README\_\*.md，其中 \* 为对应语言的缩写，如简体中文为`zh`

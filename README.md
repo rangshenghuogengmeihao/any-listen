@@ -1,10 +1,11 @@
-# Any Listen
+<p align="center"><a href="https://github.com/any-listen/any-listen"><img height="120" src="./docs/images/header-logo.svg" alt="any-listen logo"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/any-listen/any-listen"><img height="100" src="./docs/images/header-name.svg" alt="any-listen name"></a></p>
 
-English | [中文](README_zh.md)
+<p align="center">A cross-platform private music playback service
+<br />
+This project is under active development. Currently, only the web version is available. You can deploy it directly to your server or use Docker.
+</p>
 
-A cross-platform private music playback service.
-
-Note: This project is under active development and currently only provides a web version. You can deploy it directly to your server or use Docker for deployment.
+English | [简体中文](./docs/README_zh.md) | [繁體中文](./docs/README_zh-tw.md)
 
 ## Usage
 

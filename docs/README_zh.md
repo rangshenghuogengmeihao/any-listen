@@ -1,10 +1,11 @@
-# Any Listen
+<p align="center"><a href="https://github.com/any-listen/any-listen"><img height="120" src="./images/header-logo.svg" alt="any-listen logo"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/any-listen/any-listen"><img height="100" src="./images/header-name.svg" alt="any-listen name"></a></p>
 
-[English](README.md) | 中文
+<p align="center">一个跨平台的私人音乐播放服务
+<br />
+该项目仍在积极开发中，目前暂仅提供网页版服务。你可以直接部署到服务器，或使用 Docker 部署
+</p>
 
-一个跨平台的私人音乐播放服务。
-
-注意：项目仍在积极开发中，目前仅提供网页版服务。你可以直接部署到服务器，或使用 Docker 部署。
+[English](../README.md) | 简体中文 | [繁體中文](README_zh-tw.md)
 
 ## 使用方法
 

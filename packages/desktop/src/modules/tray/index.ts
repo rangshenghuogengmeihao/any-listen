@@ -25,7 +25,7 @@ const watchConfigKeys = [
 const themeList = [
   {
     id: 0,
-    fileName: 'tray_white',
+    fileName: 'trayTemplate',
     isNative: true,
   },
   {

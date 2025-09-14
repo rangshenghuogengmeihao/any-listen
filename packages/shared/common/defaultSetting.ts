@@ -123,7 +123,7 @@ const defaultSetting: AnyListen.AppSetting = {
 
   'tray.enable': false,
   // 'tray.isToTray': false,
-  'tray.themeId': 0,
+  'tray.themeId': 1,
 
   'sync.mode': 'server',
   'sync.enable': false,

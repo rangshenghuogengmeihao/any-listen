@@ -117,7 +117,7 @@
     display: flex;
     flex: none;
     flex-flow: column nowrap;
-    padding: 20px 12px 0;
+    padding: 0 12px;
   }
   .nav-item {
     position: relative;
@@ -125,7 +125,7 @@
   .link {
     display: flex;
     align-items: center;
-    padding: 10px 15px 10px 5px;
+    padding: 8px 15px 8px 5px;
     color: var(--color-primary-font);
     text-decoration: none;
     cursor: pointer;

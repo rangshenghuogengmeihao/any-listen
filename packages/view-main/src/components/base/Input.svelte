@@ -18,6 +18,7 @@
     onkeydown = () => {},
     onblur = () => {},
     autofocus = false,
+    class: className,
   }: {
     id?: string
     class?: string
@@ -91,7 +92,7 @@
 
 <input
   bind:this={domInput}
-  class={['input', { min }]}
+  class={['input', className, { min }]}
   {id}
   {type}
   {placeholder}

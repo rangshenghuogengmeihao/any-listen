@@ -14,6 +14,7 @@
     onchange = () => {},
     onblur = () => {},
     autofocus = false,
+    class: className,
   }: {
     id?: string
     class?: string
@@ -75,8 +76,7 @@
 
 <textarea
   bind:this={domInput}
-  class="textarea"
-  class:min
+  class={['textarea', className, { min }]}
   {id}
   {placeholder}
   {value}

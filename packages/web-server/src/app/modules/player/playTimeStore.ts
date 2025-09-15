@@ -1,7 +1,7 @@
-import path from 'node:path'
 import { appState } from '@/app/app'
-import AsyncFS from '@any-listen/nodejs/AsyncFS'
 import { STORE_NAMES } from '@any-listen/common/constants'
+import AsyncFS from '@any-listen/nodejs/AsyncFS'
+import path from 'node:path'
 
 let time = 0
 let asyncFS: AsyncFS
@@ -10,7 +10,7 @@ let initState = 0
 const init = async () => {
   if (initState != 0) return
   initState = 1
-  asyncFS = new AsyncFS(path.join(appState.dataPath, STORE_NAMES.PLAY_TIME))
+  asyncFS = new AsyncFS(path.join(appState.dataPath, STORE_NAMES.PLAY_TIME), { safeWrite: false })
   const data = await asyncFS.readFile()
   if (data) {
     time = parseInt(data.toString())

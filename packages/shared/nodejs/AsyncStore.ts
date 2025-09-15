@@ -33,7 +33,7 @@ export default class Store {
 
   constructor(filePath: string, clearInvalidConfig = false, batch = false) {
     this.clearInvalidConfig = clearInvalidConfig
-    this.asyncFS = new AsyncFS(filePath, batch)
+    this.asyncFS = new AsyncFS(filePath, { batch, safeWrite: true })
   }
 
   async get<V>(key: string): Promise<V | null> {

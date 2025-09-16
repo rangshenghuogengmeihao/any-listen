@@ -132,8 +132,8 @@ const defaultSetting: AnyListen.AppSetting = {
   'sync.client.host': '',
 
   // 'theme.id': 'blue_plus',
-  'theme.id': 'green',
-  'theme.lightId': 'green',
+  'theme.id': 'blue2',
+  'theme.lightId': 'blue2',
   'theme.darkId': 'black',
 
   'odc.isAutoClearSearchInput': false,

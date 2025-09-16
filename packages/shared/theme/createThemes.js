@@ -232,7 +232,7 @@ const defaultThemes = [
 
       '--color-badge-primary': 'var(--color-primary)',
       '--color-badge-secondary': '#b080db',
-      '--color-badge-tertiary': '#b080db',
+      '--color-badge-tertiary': '#db80c4',
     },
   },
   {

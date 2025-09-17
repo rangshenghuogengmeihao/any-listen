@@ -14,15 +14,24 @@ declare namespace AnyListen {
       path: string
     }
     interface UserListInfoByOnlineMeta extends UserListInfoBaseMeta {
+      extensionId: string
       source: string
       syncId: string
       syncTime: number
+      picUrl: string | null
+    }
+    interface UserListInfoByRemoteMeta extends UserListInfoBaseMeta {
+      extensionId: string
+      source: string
+      syncTime: number
+      [key: string]: unknown
     }
 
     interface UserListInfoMetas {
       general: UserListInfoByGeneralMeta
       local: UserListInfoByLocalMeta
       online: UserListInfoByOnlineMeta
+      remote: UserListInfoByRemoteMeta
     }
     interface UserListInfoType<Type extends keyof UserListInfoMetas> {
       id: string
@@ -34,21 +43,25 @@ declare namespace AnyListen {
 
     type UserListType = keyof UserListInfoMetas
 
-    type UserListInfo = UserListInfoType<'general'> | UserListInfoType<'local'> | UserListInfoType<'online'>
+    type GeneralListInfo = UserListInfoType<'general'>
+    type LocalListInfo = UserListInfoType<'local'>
+    type OnlineListInfo = UserListInfoType<'online'>
+    type RemoteListInfo = UserListInfoType<'remote'>
+    type UserListInfo = GeneralListInfo | LocalListInfo | OnlineListInfo | RemoteListInfo
 
-    interface MyDefaultListInfo extends Omit<UserListInfoType<'general'>, 'type'> {
+    interface MyDefaultListInfo extends Omit<GeneralListInfo, 'type'> {
       id: 'default'
       name: 'default'
       type: 'default'
     }
 
-    interface MyLoveListInfo extends Omit<UserListInfoType<'general'>, 'type'> {
+    interface MyLoveListInfo extends Omit<GeneralListInfo, 'type'> {
       id: 'love'
       name: 'love'
       type: 'default'
     }
 
-    interface MyLastPlayListInfo extends Omit<UserListInfoType<'general'>, 'type'> {
+    interface MyLastPlayListInfo extends Omit<GeneralListInfo, 'type'> {
       id: 'last_played'
       name: 'last_played'
       type: 'default'

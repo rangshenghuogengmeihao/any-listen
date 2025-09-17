@@ -20,7 +20,7 @@ export const queryMetadataPlayCount = () => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     else if (field_name == 'play_time') info.time = parseInt(field_value)
   }
-  console.log(info)
+  // console.log(info)
   return info
 }
 /**

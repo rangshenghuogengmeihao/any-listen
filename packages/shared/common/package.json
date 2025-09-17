@@ -3,5 +3,9 @@
   "devDependencies": {
     "@any-listen/eslint": "workspace:@shared/eslint@*",
     "@any-listen/types": "workspace:@shared/types@*"
+  },
+  "dependencies": {
+    "lru-cache": "^11.2.1",
+    "mime": "^4.1.0"
   }
 }

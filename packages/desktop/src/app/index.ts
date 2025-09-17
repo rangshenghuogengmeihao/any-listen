@@ -6,12 +6,14 @@ import { appEvent } from './event'
 import { appState } from './state'
 // import { navigationUrlWhiteList } from '@common/config'
 import { parseEnvParams } from '@any-listen/nodejs/env'
-import { isMac } from '@any-listen/nodejs/index'
+import { checkAndCreateDir, isMac } from '@any-listen/nodejs/index'
 
 import { buildElectronProxyConfig } from '@/shared/electron'
 import { log } from '@/shared/log'
 import { setProxyByHost } from '@/shared/request'
 import { startCheckUpdateTimeout, update } from '@/shared/update'
+import { initCommon } from '@any-listen/app/common'
+import { isUrl } from '@any-listen/common/utils'
 import { version } from '../../package.json'
 import { setSkipTrayQuit } from './actions'
 import { getAppSetting, saveSetting } from './data'
@@ -78,7 +80,7 @@ export const applyElectronEnvParams = () => {
   }
 }
 
-export const setUserDataPath = () => {
+export const setUserDataPath = async () => {
   // windows平台下如果应用目录下存在 portable 文件夹则将数据存在此文件下
   if (process.platform == 'win32') {
     const portablePath = path.join(path.dirname(app.getPath('exe')), '/portable')
@@ -92,7 +94,12 @@ export const setUserDataPath = () => {
 
   const userDataPath = app.getPath('userData')
   appState.dataPath = path.join(userDataPath, 'AnyListenDatas')
-  if (!existsSync(appState.dataPath)) mkdirSync(appState.dataPath)
+
+  appState.cacheDataPath = `${appState.dataPath}/cache`
+  appState.tempDataPath = `${appState.dataPath}/temp`
+  await checkAndCreateDir(appState.dataPath)
+  await checkAndCreateDir(appState.cacheDataPath)
+  await checkAndCreateDir(appState.tempDataPath)
 }
 
 export const registerDeeplink = () => {
@@ -132,7 +139,7 @@ export const listenerElectronEvent = () => {
       console.log('navigation to url:', navigationUrl)
     })
     contents.setWindowOpenHandler(({ url }) => {
-      if (!url.startsWith('devtools') && /^https?:\/\//.test(url)) {
+      if (!url.startsWith('devtools') && isUrl(url)) {
         void shell.openExternal(url)
       }
       console.log(url)
@@ -216,14 +223,14 @@ const listenerAppEvent = () => {
     }
   })
   appEvent.on('inited', () => {
-    app.setProxy(buildElectronProxyConfig(appState.proxy.host, appState.proxy.port))
+    void app.setProxy(buildElectronProxyConfig(appState.proxy.host, appState.proxy.port))
     handleProxyChange()
     void startCheckUpdateTimeout()
   })
   appEvent.on('proxy_changed', (host, port) => {
     setProxyByHost(host, port)
     const proxy = buildElectronProxyConfig(host, port)
-    app.setProxy(proxy)
+    void app.setProxy(proxy)
     for (const wc of webContents.getAllWebContents()) {
       void wc.session.setProxy(proxy)
     }
@@ -270,13 +277,16 @@ export const initAppEnv = async () => {
   initState()
   initSingleInstanceHandle()
   applyElectronEnvParams()
-  setUserDataPath()
+  await setUserDataPath()
   registerDeeplink()
   listenerElectronEvent()
   appState.appSetting = (await getAppSetting()).setting
   appState.envParams.cmdParams.dt ??= !appState.appSetting['common.transparentWindow']
 
   listenerAppEvent()
+  initCommon({
+    getSettings: () => appState.appSetting,
+  })
 }
 
 /**

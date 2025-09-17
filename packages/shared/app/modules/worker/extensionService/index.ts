@@ -3,6 +3,8 @@ import { setProxyByHost } from '@any-listen/nodejs/request'
 import { exposeWorker } from '../utils/worker'
 import { registerErrorHandler } from './errorHandler'
 import { extensionEvent } from './event'
+import { initI18n } from './i18n'
+import { internalExtensionContextState } from './internalExtension/state'
 import {
   disableExtension,
   downloadAndParseExtension,
@@ -27,7 +29,7 @@ import {
 import { resetI18n } from './onlineExtension/i18n'
 import { buildExtensionSettings, getExtensionLastLogs, updateExtensionSettings, updateResourceListDeounce } from './shared'
 import { extensionState } from './state'
-import { resourceAction, updateI18nMessage, updateLocale } from './vm'
+import { listProviderAction, resourceAction, updateI18nMessage, updateLocale } from './vm'
 
 registerErrorHandler()
 
@@ -68,6 +70,7 @@ const extension = {
 
     setProxyByHost(state['proxy.host'], state['proxy.port'])
     setGHMirrorHosts(state.gHMirrorHosts)
+    initI18n()
   },
   async updateLocale(locale: AnyListen.Locale) {
     extensionState.locale = locale
@@ -76,6 +79,7 @@ const extension = {
     updateI18nMessage()
     updateLocale(locale)
     resetI18n()
+    extensionEvent.localeChanged(locale)
   },
   updateProxy(host: string, port: string) {
     extensionState.proxy.host = host
@@ -137,7 +141,17 @@ const extension = {
     action: T,
     params: Parameters<AnyListen.IPCExtension.ResourceAction[T]>[0]
   ): Promise<Awaited<ReturnType<AnyListen.IPCExtension.ResourceAction[T]>>> {
+    const context = internalExtensionContextState.contexts.get(params.extensionId)
+    if (context) return context.context.resourceAction!(action, params)
     return resourceAction(action, params)
+  },
+  async listProviderAction<T extends keyof AnyListen.IPCExtension.ListProviderAction>(
+    action: T,
+    params: Parameters<AnyListen.IPCExtension.ListProviderAction[T]>[0]
+  ): Promise<Awaited<ReturnType<AnyListen.IPCExtension.ListProviderAction[T]>>> {
+    const context = internalExtensionContextState.contexts.get(params.extensionId)
+    if (context) return context.context.listProviderAction!(action, params)
+    return listProviderAction(action, params)
   },
   // clientConnected(id: string) {
   //   extensionEvent.clientConnected(id)
@@ -162,6 +176,18 @@ void exposeWorker<
   })
   extensionEvent.on('stoped', () => {
     updateResourceListDeounce()
+  })
+  extensionEvent.on('listAdd', () => {
+    extensionState.extensionSettings = null
+  })
+  extensionEvent.on('listRemove', () => {
+    extensionState.extensionSettings = null
+  })
+  extensionEvent.on('listSet', () => {
+    extensionState.extensionSettings = null
+  })
+  extensionEvent.on('listUpdate', () => {
+    extensionState.extensionSettings = null
   })
 
   remote.inited()

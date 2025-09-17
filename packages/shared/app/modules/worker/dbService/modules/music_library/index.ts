@@ -503,6 +503,40 @@ export const musicsUpdate = (musicInfos: AnyListen.IPCList.ListActionMusicUpdate
 }
 
 /**
+ * 更新歌曲图片
+ * @param musicInfos 歌曲&列表信息
+ */
+export const musicPicUpdate = (listId: string, musicId: string, picUrl: string) => {
+  let targetList = musicLists.get(listId)
+  if (!targetList) {
+    targetList = getListMusics(listId)
+    musicLists.set(listId, targetList)
+  }
+  const musicInfo = targetList.find((item) => item.id == musicId)
+  if (!musicInfo) return
+  musicInfo.meta.picUrl = picUrl
+  musicsUpdate([{ id: listId, musicInfo }])
+  return musicInfo
+}
+
+/**
+ * 更新歌曲基本信息
+ * @param musicInfos 歌曲&列表信息
+ */
+export const musicBaseInfoUpdate = (listId: string, musicInfo: AnyListen.Music.MusicInfo) => {
+  let targetList = musicLists.get(listId)
+  if (!targetList) {
+    targetList = getListMusics(listId)
+    musicLists.set(listId, targetList)
+  }
+  const targetInfo = targetList.find((item) => item.id == musicInfo.id)
+  if (!targetInfo) return
+  musicInfo.meta.picUrl = targetInfo.meta.picUrl
+  musicsUpdate([{ id: listId, musicInfo }])
+  return musicInfo
+}
+
+/**
  * 清空列表内的歌曲
  * @param listId 列表Id
  */

@@ -66,6 +66,7 @@ const assertStopCallback = (element: HTMLElement) => {
 
 const handleKeyDown = (event: KeyboardEvent) => {
   // if (assertStopCallback(event.target)) return
+  if (!event.code) return
   // event.preventDefault()
   let keys = eventModifiers(event)
   switch (event.key) {
@@ -86,6 +87,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
 
 const handleKeyUp = (event: KeyboardEvent) => {
   // if (assertStopCallback(event.target)) return
+  if (!event.code) return
   event.preventDefault()
   let keys = eventModifiers(event)
   switch (event.key) {

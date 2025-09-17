@@ -11,21 +11,22 @@
   import Singer from './Singer/Singer.svelte'
   import { getSourceId } from './shared'
 
-
   const searchTypeMap = {
     musicSearch: 'music',
     songlistSearch: 'songlist',
     albumSearch: 'album',
     singerSearch: 'singer',
   } as const
-  let activeType = $derived<typeof searchTypeMap[keyof typeof searchTypeMap]>(Object.values(searchTypeMap).find(t => t == $query.searchType) ?? 'music')
+  let activeType = $derived<(typeof searchTypeMap)[keyof typeof searchTypeMap]>(
+    Object.values(searchTypeMap).find((t) => t == $query.searchType) ?? 'music'
+  )
 
   let searchResource = $derived.by(() => {
-    const searchRes: Partial<Record<typeof viewResourceMap['search'][number], ResourceListType[keyof ResourceListType]>> = {}
+    const searchRes: Partial<Record<(typeof viewResourceMap)['search'][number], ResourceListType[keyof ResourceListType]>> = {}
     for (const r of viewResourceMap.search) {
       searchRes[r] = []
     }
-    const resourceListEntries = Object.entries($resourceList) as EntriesObject<ResourceListType>
+    const resourceListEntries = Object.entries($resourceList.resources) as EntriesObject<ResourceListType>
     for (const [key, source] of resourceListEntries) {
       if (key in searchRes) {
         searchRes[key as keyof typeof searchRes] = source
@@ -46,7 +47,7 @@
       let activeSource = $query.source
       list.push({
         id: sType,
-        href: `/online?type=search&searchType=${sType}&source=${source!.some(s => getSourceId(s) == activeSource) ? activeSource : getSourceId(source![0])}&text=${$query.text ?? ''}&page=1`,
+        href: `/online?type=search&searchType=${sType}&source=${source!.some((s) => getSourceId(s) == activeSource) ? activeSource : getSourceId(source![0])}&text=${$query.text ?? ''}&page=1`,
         label: i18n.t(`online__search_type_${sType}`),
       })
     }
@@ -55,12 +56,11 @@
 
   $effect(() => {
     if (!typeList.length) return
-    if (typeList.some(s => s.id == activeType)) return
+    if (typeList.some((s) => s.id == activeType)) return
     void replace(`/online?type=search&searchType=${typeList[0].id}`)
   })
   // $inspect(searchResource)
   // $inspect(activeType)
-
 </script>
 
 <Portal to="#online-header-right">

@@ -68,7 +68,20 @@ const CONTENT_TYPE = {
 }
 type ParamsData = Record<string, string | number | null | undefined | boolean>
 export interface Options {
-  method?: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH'
+  method?:
+    | 'GET'
+    | 'HEAD'
+    | 'POST'
+    | 'PUT'
+    | 'DELETE'
+    | 'OPTIONS'
+    | 'PATCH'
+    | 'PROPFIND'
+    | 'COPY'
+    | 'MOVE'
+    | 'MKCOL'
+    | 'PROPPATCH'
+    | 'QUOTA'
   query?: ParamsData
   headers?: Record<string, string | string[]>
   timeout?: number
@@ -80,6 +93,7 @@ export interface Options {
   text?: string
   formdata?: Record<string, string | Buffer | Uint8Array>
   xml?: string
+  needBody?: boolean
   needRaw?: boolean
   retryNum?: number
 }
@@ -230,6 +244,13 @@ export const request = async <T = unknown>(url: string, options: Options = {}): 
     signal: options.signal,
     dispatcher: buildRequestDispatcher(options),
   }).then(async (response) => {
+    if (options.needBody) {
+      return {
+        headers: response.headers,
+        statusCode: response.statusCode,
+        body: response.body as unknown as T,
+      } satisfies Omit<Response<T>, 'raw'> as Response<T>
+    }
     if (options.needRaw) {
       return {
         headers: response.headers,

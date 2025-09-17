@@ -13,13 +13,37 @@ export { getMusicLyric } from '@/shared/ipc/music'
 const picCache = new Map<string, AnyListen.IPCMusic.MusicPicInfo>()
 const picCacheQueue: string[] = []
 
+const checkUrl = async (url: string) => {
+  return new Promise<boolean>((resolve) => {
+    const img = new Image()
+    img.src = url
+    img.onload = () => {
+      resolve(true)
+    }
+    img.onerror = () => {
+      resolve(false)
+    }
+  })
+}
+const handleGetMusicPicFromRemote = async (info: AnyListen.IPCMusic.GetMusicPicInfo) => {
+  const urlInfo = await getMusicPicFromRemote(info)
+  if (urlInfo.isFromCache) {
+    const isValid = await checkUrl(urlInfo.url)
+    if (!isValid && !info.isRefresh) {
+      return handleGetMusicPicFromRemote({ ...info, isRefresh: true })
+    }
+  }
+
+  return urlInfo
+}
+
 export const getMusicPic = async (info: AnyListen.IPCMusic.GetMusicPicInfo) => {
   if (picCache.has(info.musicInfo.id)) {
     picCacheQueue.splice(picCacheQueue.indexOf(info.musicInfo.id), 1)
     picCacheQueue.push(info.musicInfo.id)
     return picCache.get(info.musicInfo.id)!
   }
-  const urlInfo = await getMusicPicFromRemote(info)
+  const urlInfo = await handleGetMusicPicFromRemote(info)
   picCache.set(info.musicInfo.id, urlInfo)
   picCacheQueue.push(info.musicInfo.id)
   if (picCacheQueue.length > 100) {
@@ -36,7 +60,7 @@ export const getMusicPicDelay = (info: AnyListen.IPCMusic.GetMusicPicInfo, onUrl
   let isCanceled = false
   let timeout: number | null = setTimeout(() => {
     timeout = null
-    void getMusicPicFromRemote(info).then((urlInfo) => {
+    void handleGetMusicPicFromRemote(info).then((urlInfo) => {
       picCache.set(info.musicInfo.id, urlInfo)
       picCacheQueue.push(info.musicInfo.id)
       if (picCacheQueue.length > 100) {

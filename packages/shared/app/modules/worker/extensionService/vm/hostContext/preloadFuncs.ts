@@ -51,6 +51,15 @@ export const resourceAction = async <T extends keyof AnyListen.IPCExtension.Reso
   return vmContext.preloadFuncs.resourceAction(action, params)
 }
 
+export const listProviderAction = async <T extends keyof AnyListen.IPCExtension.ListProviderAction>(
+  action: T,
+  params: Parameters<AnyListen.IPCExtension.ListProviderAction[T]>[0]
+): Promise<Awaited<ReturnType<AnyListen.IPCExtension.ListProviderAction[T]>>> => {
+  const vmContext = contextState.vmContexts.get(params.extensionId)
+  if (!vmContext) throw new Error('extension not found')
+  return vmContext.preloadFuncs.listProviderAction(action, params)
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const sendConfigUpdatedEvent = (extId: string, keys: string[], config: Record<string, any>) => {
   const targetContext = contextState.vmContexts.get(extId)

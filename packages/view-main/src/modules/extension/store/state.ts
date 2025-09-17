@@ -18,5 +18,8 @@ export const extensionState: InitState = {
   onlineExtensionList: [],
   status: 'IDLE',
   crashMessage: null,
-  resourceList: {},
+  resourceList: {
+    resources: {},
+    listProvider: [],
+  },
 }

@@ -25,3 +25,21 @@ overrides:
 # https://github.com/pnpm/pnpm/issues/8378
 publicHoistPattern:
   - '*eslint*'
+
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - typescript
+  - undici
+  - message2call
+  - better-sqlite3
+  - '@types/node'
+  - svelte
+  - svelte-check
+  - svelte-eslint-parser
+  - svelte-preprocess
+  - '@sveltejs/vite-plugin-svelte'
+  - eslint-plugin-svelte
+  - electron
+  - electron-builder
+  - electron-updater
+  - electron-to-chromium

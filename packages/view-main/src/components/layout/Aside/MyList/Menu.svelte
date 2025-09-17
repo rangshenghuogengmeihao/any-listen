@@ -3,7 +3,7 @@
   import { t } from '@/plugins/i18n'
   import Menu, { type MenuItem, type MenuList } from '@/components/base/Menu.svelte'
   import { LIST_IDS } from '@any-listen/common/constants'
-  import { importLocalFile, importLocalFileFolder, removeUserList } from './action'
+  import { importLocalFile, importLocalFileFolder, removeUserList, syncUserList } from './action'
   import { showListEditModal } from '@/components/apis/listEditModal'
   import { musicLibraryEvent } from '@/modules/musicLibrary/store/event'
 
@@ -91,6 +91,9 @@
         break
       case 'local_file_folder':
         void importLocalFileFolder(info!)
+        break
+      case 'update':
+        void syncUserList(info!.id)
         break
       case 'remove':
         void removeUserList(info!.id)

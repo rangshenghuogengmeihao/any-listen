@@ -5,10 +5,10 @@ let extensionSerive: ExtensionSeriveTypes
 
 export const initService = async (_extensionSerive: ExtensionSeriveTypes) => {
   extensionSerive = _extensionSerive
-  resourceState.resources = await extensionSerive.getResourceList()
+  resourceState.resources = (await extensionSerive.getResourceList()).resources
   extensionEvent.on('extensionEvent', (event) => {
     if (event.action != 'resourceUpdated') return
-    resourceState.resources = event.data
+    resourceState.resources = event.data.resources
   })
 }
 

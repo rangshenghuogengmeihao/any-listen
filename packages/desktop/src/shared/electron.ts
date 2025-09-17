@@ -1,4 +1,5 @@
 import { app, clipboard, shell } from 'electron'
+import { isUrl } from './utils'
 
 /**
  * 在资源管理器中打开目录
@@ -13,7 +14,7 @@ export const openDirInExplorer = (dir: string) => {
  * @param {*} url
  */
 export const openUrl = async (url: string) => {
-  if (!/^https?:\/\//.test(url)) return
+  if (!isUrl(url)) return
   await shell.openExternal(url)
 }
 

@@ -32,6 +32,7 @@
   const activeExt = $derived(Object.values(settings).find((e) => e.id == $query.id) ?? settings[0])
 
   onMount(() => {
+    // TODO reload setting when list updated
     void getAllExtensionSettings().then((settings) => {
       extSettings = settings
     })

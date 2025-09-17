@@ -84,6 +84,18 @@ export const resourceAction = async <T extends keyof RA>(
   return ipc.resourceAction(action, params)
 }
 
+type LPA = AnyListen.IPCExtension.ListProviderAction
+export const listProviderAction = async <T extends keyof LPA>(
+  action: T,
+  params: Parameters<LPA[T]>[0]
+): Promise<Awaited<ReturnType<LPA[T]>>> => {
+  return ipc.listProviderAction(action, params)
+}
+
+export const syncUserList: AnyListen.IPC.ServerIPC['syncUserList'] = async (id) => {
+  return ipc.syncUserList(id)
+}
+
 export const getExtensionLastLogs: AnyListen.IPC.ServerIPC['getExtensionLastLogs'] = async (extId) => {
   return ipc.getExtensionLastLogs(extId)
 }

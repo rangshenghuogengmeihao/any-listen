@@ -4,6 +4,8 @@ export const appState: {
   envParams: AnyListen.EnvParams
   staticPath: string
   dataPath: string
+  cacheDataPath: string
+  tempDataPath: string
   appSetting: AnyListen.AppSetting
   isSkipTrayQuit: boolean
   version: AnyListen.CurrentVersionInfo
@@ -26,6 +28,8 @@ export const appState: {
   },
   staticPath: '',
   dataPath: '',
+  cacheDataPath: '',
+  tempDataPath: '',
   version: {
     version: '',
     commit: '',

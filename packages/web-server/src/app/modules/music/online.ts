@@ -1,6 +1,6 @@
 import { appState } from '@/app/app'
 import { workers } from '@/app/worker'
-import { sendMusicListAction } from '@any-listen/app/modules/musicList'
+import { updateMusicPic } from '@any-listen/app/modules/musicList'
 import { buildMusicCacheId, getFileType } from '@any-listen/common/tools'
 import {
   getMusicLyricByExtensionSource,
@@ -114,15 +114,7 @@ export const getMusicPicUrl = async ({
   const url = await getMusicPicResource({ musicInfo })
   if (listId) {
     musicInfo.meta.picUrl = url
-    void sendMusicListAction({
-      action: 'list_music_update',
-      data: [
-        {
-          id: listId,
-          musicInfo,
-        },
-      ],
-    })
+    void updateMusicPic(listId, musicInfo)
   }
   return {
     url,

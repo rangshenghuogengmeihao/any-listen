@@ -26,13 +26,13 @@ declare namespace AnyListen {
     interface GetMusicUrlInfo {
       musicInfo: Music.MusicInfo
       isRefresh?: boolean
-      quality?: Music.Quality
+      quality?: string
       // toggleSource?: boolean
     }
     interface MusicUrlInfo {
       url: string
       // toggleSource: boolean
-      quality: Music.Quality
+      quality: string
       isFromCache: boolean
     }
 

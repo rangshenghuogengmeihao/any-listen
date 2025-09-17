@@ -14,7 +14,7 @@ enum TIMEOUT_TYPE {
 
 const timeouts = new Map<number, [string, TIMEOUT_TYPE, NodeJS.Timeout]>()
 export const set_timeout = (extId: string, id: number, ms: number) => {
-  console.log('set_timeout', extId, id, ms)
+  // console.log('set_timeout', extId, id, ms)
   timeouts.set(id, [
     extId,
     TIMEOUT_TYPE.timeout,

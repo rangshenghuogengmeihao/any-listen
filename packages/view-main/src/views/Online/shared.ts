@@ -10,5 +10,5 @@ export const viewResourceMap = {
   singer: ['singer'],
 } as const
 
-export type ResourceListType = StoresValues<typeof resourceList>
+export type ResourceListType = StoresValues<typeof resourceList>['resources']
 export type ResourceType = NonNullable<ResourceListType[keyof ResourceListType]>[number]

@@ -4,10 +4,10 @@ declare global {
       interface Extension {
         id: string
         name: string
-        description: string
+        description?: string
         version: string
-        author: string
-        homepage: string
+        author?: string
+        homepage?: string
         grant: Extension.Grant[]
         publicKey: string
       }

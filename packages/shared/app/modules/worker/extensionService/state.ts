@@ -1,6 +1,6 @@
 const empty = {}
 export const extensionState = {
-  varsion: '1.0.0',
+  version: '1.0.0',
   clientType: '' as AnyListen.ClientType,
   locale: 'zh-cn' as AnyListen.Locale,
   onlineExtensionHost: '',

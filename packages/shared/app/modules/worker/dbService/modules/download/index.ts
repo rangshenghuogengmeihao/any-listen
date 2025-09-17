@@ -1,12 +1,9 @@
 import { arrPush, arrUnshift } from '@any-listen/common/utils'
-import { queryDownloadList, inertDownloadList, updateDownloadList, deleteDownloadList, clearDownloadList } from './dbHelper'
+import { clearDownloadList, deleteDownloadList, inertDownloadList, queryDownloadList, updateDownloadList } from './dbHelper'
 
 let list: AnyListen.Download.ListItem[]
 
-const toDBDownloadInfo = (
-  musicInfos: AnyListen.Download.ListItem[],
-  offset: number = 0
-): AnyListen.DBService.DownloadMusicInfo[] => {
+const toDBDownloadInfo = (musicInfos: AnyListen.Download.ListItem[], offset = 0): AnyListen.DBService.DownloadMusicInfo[] => {
   return musicInfos.map((info, index) => {
     return {
       id: info.id,
@@ -56,6 +53,7 @@ const initDownloadList = () => {
  * @returns 下载列表
  */
 export const getDownloadList = (): AnyListen.Download.ListItem[] => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!list) initDownloadList()
   return list
 }
@@ -68,6 +66,7 @@ export const downloadInfoSave = (
   downloadInfos: AnyListen.Download.ListItem[],
   addMusicLocationType: AnyListen.AddMusicLocationType
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!list) initDownloadList()
   if (addMusicLocationType == 'top') {
     let newList = [...list]
@@ -91,6 +90,7 @@ export const downloadInfoSave = (
  */
 export const downloadInfoUpdate = (lists: AnyListen.Download.ListItem[]) => {
   updateDownloadList(toDBDownloadInfo(lists))
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (list) {
     for (const item of lists) {
       const index = list.findIndex((info) => info.id === item.id)
@@ -106,6 +106,7 @@ export const downloadInfoUpdate = (lists: AnyListen.Download.ListItem[]) => {
  */
 export const downloadInfoRemove = (ids: string[]) => {
   deleteDownloadList(ids)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (list) {
     const idSet = new Set<string>(ids)
     list = list.filter((task) => !idSet.has(task.id))

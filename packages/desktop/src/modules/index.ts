@@ -4,15 +4,16 @@ import { initAppMenu } from './appMenu'
 import { initHotKey } from './hotKey'
 import { initPlayer } from './player'
 // import { initMusicList } from './musicList'
+import { workers } from '@/worker'
+import { initMusicList } from '@any-listen/app/modules/musicList'
 import { initTheme } from './theme'
 import { initTray } from './tray'
-import { initMusicList } from '@any-listen/app/modules/musicList'
-import { workers } from '@/worker'
 // import { initUserApi } from './userApi'
 
 import getStore from '@/shared/store'
 import { STORE_NAMES } from '@any-listen/common/constants'
 import { initExtension } from './extension'
+import { initProxyServer } from './proxyServer'
 import { initResources } from './resources'
 
 export const initModules = async () => {
@@ -33,6 +34,9 @@ export const initModules = async () => {
   initTray()
   void initExtension()
   void initResources()
+  // TODO
+  void initProxyServer()
+
   // initMusicList()
   // initDielikeList()
   // initUserApi()

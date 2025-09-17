@@ -4,6 +4,7 @@
   import { extensionList } from '@/modules/extension/reactive.svelte'
   import { extI18n } from '@/modules/extension/i18n'
   import { openUrl } from '@/shared/ipc/app'
+  import { isUrl } from '@/shared'
 
   let {
     onafterleave,
@@ -28,7 +29,7 @@
   }
 
   const handleComfirm = (btn: AnyListen.IPCCommon.MessageButton) => {
-    if (btn.link && /^https?:\/\//.test(btn.link)) {
+    if (btn.link && isUrl(btn.link)) {
       void openUrl(btn.link)
     }
     promise?.[0](buttons.indexOf(btn))

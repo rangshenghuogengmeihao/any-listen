@@ -58,7 +58,7 @@ export const setupVmContext = async (vmState: VMState) => {
       platform: process.platform,
       arch: process.arch,
       locale: extensionState.locale,
-      version: extensionState.varsion,
+      version: extensionState.version,
       i18nMessages: vmState.extension.i18nMessages,
     } satisfies Env)})`,
     vmState.vmContext,
@@ -107,7 +107,7 @@ export const runExtension = async (vmContext: AnyListen.ExtensionVM.VMContext, e
   vm.runInContext(code, vmContext, {
     breakOnSigint: true,
     filename: extension.enter,
-    timeout: 10_000,
+    timeout: 5_000,
   })
   return Math.round(performance.now() - runStartTime)
 }
@@ -129,4 +129,4 @@ export const runExtension = async (vmContext: AnyListen.ExtensionVM.VMContext, e
 // }
 
 export { destroyContext } from './hostContext'
-export { resourceAction, updateI18nMessage, updateLocale } from './hostContext/preloadFuncs'
+export { listProviderAction, resourceAction, updateI18nMessage, updateLocale } from './hostContext/preloadFuncs'

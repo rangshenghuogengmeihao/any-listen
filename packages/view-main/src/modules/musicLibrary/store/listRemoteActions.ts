@@ -183,6 +183,7 @@ export const registerListAction = () => {
   }
 
   return onListAction((action): void => {
+    // console.log('receive list action', action.action, action)
     switch (action.action) {
       case 'list_data_overwrite':
         list_data_overwrite(action.data)

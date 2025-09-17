@@ -4,9 +4,9 @@ import path from 'node:path'
 
 import { ENV_PARAMS } from '@/shared/constants'
 import { DEV_SERVER_PORTS } from '@any-listen/common/constants'
-import { LRUCache } from 'lru-cache'
 import defaultConfig from './shared/defaultConfig'
 
+import { createCache } from '@any-listen/common/cache'
 import { formatExtensionGHMirrorHosts } from '@any-listen/common/tools'
 import { printLogo } from './app/shared/utils'
 import { destroySockets, onUpgrade } from './modules/ipc/websocket'
@@ -39,7 +39,7 @@ const logPath = envParams.LOG_PATH ?? path.join(dataPath, 'logs')
 global.anylisten = {
   dataPath,
   config: defaultConfig,
-  publicStaticPaths: new LRUCache({
+  publicStaticPaths: createCache({
     max: 1000,
     ttl: 1000 * 60 * 60 * 24 * 2,
     updateAgeOnGet: true,

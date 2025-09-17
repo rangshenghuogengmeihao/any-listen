@@ -1,3 +1,4 @@
+import { SINGERS_RXP } from './constants'
 import { dateFormat, generateIdByPerf } from './utils'
 
 export const getMusicInfo = (musicInfo: AnyListen.Download.ListItem | AnyListen.Music.MusicInfo) => {
@@ -128,4 +129,20 @@ export const formatExtensionGHMirrorHosts = (hosts: string[]) => {
         .filter((v) => v !== '')
     )
   )
+}
+
+/**
+ * 歌手名称格式化
+ * @param name 歌手名称，可能包含多个歌手，用 / ; , 等分隔
+ * @returns
+ */
+export const singerFormat = (name: string) => {
+  if (!name) return ''
+  return SINGERS_RXP.test(name)
+    ? name
+        .split(SINGERS_RXP)
+        .map((s) => s.trim())
+        .filter((s) => s)
+        .join('、')
+    : name || ''
 }

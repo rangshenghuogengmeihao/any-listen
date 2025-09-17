@@ -70,6 +70,7 @@ export const triggerTimeout = (id: number) => {
 
 export const console = {
   log() {
-    console.log()
+    // TODO
+    // console.log()
   },
 }

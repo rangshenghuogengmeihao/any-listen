@@ -79,6 +79,14 @@ export const sendMusicListAction = async (action: AnyListen.IPCList.ActionList) 
   }
 }
 
+export const updateMusicPic = async (listId: string, musicInfo: AnyListen.Music.MusicInfo) => {
+  await musicListEvent.list_music_update_pic(listId, musicInfo)
+}
+
+export const updateMusicBaseInfo = async (listId: string, musicInfo: AnyListen.Music.MusicInfo) => {
+  await musicListEvent.list_music_base_info_update(listId, musicInfo)
+}
+
 export const onMusicListAction = (listAction: (action: AnyListen.IPCList.ActionList) => Promise<void>): (() => void) => {
   musicListEvent.on('listAction', listAction)
   return () => {

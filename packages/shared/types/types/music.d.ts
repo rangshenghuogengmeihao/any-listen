@@ -8,7 +8,7 @@ declare namespace AnyListen {
       Record<
         Quality,
         {
-          size: string | null
+          sizeStr: string | null
           [key: string]: string | null
         }
       >
@@ -26,14 +26,19 @@ declare namespace AnyListen {
 
     interface MusicInfoMeta_online extends MusicInfoMetaBase {
       source: Source // 源
-      qualitys: MusicQualityType
+      qualitys?: MusicQualityType
+      filePath?: string
+      ext?: string
+      bitrateLabel?: string | null
+      sizeStr?: string
+      [key: string]: string | number | boolean | null | undefined | object
     }
 
     interface MusicInfoMeta_local extends MusicInfoMetaBase {
       filePath: string
       ext: string
       bitrateLabel: string | null
-      size: string
+      sizeStr: string
     }
 
     interface MusicInfoBase<IsLocal extends boolean> {

@@ -10,6 +10,7 @@ import {
   createListClearStatement,
   createListDeleteStatement,
   createListInsertStatement,
+  createListMusicInfoQueryStatement,
   createListUpdateStatement,
   createMusicInfoByListAndMusicInfoIdQueryStatement,
   createMusicInfoByMusicInfoIdQueryStatement,
@@ -196,6 +197,11 @@ export const updateMusicInfos = (list: MusicInfo[]) => {
 export const queryMusicInfoByListId = (listId: string) => {
   const musicInfoQueryStatement = createMusicInfoQueryStatement()
   return musicInfoQueryStatement.all({ list_id: listId })
+}
+
+export const queryListMusicInfo = (listId: string, musicId: string) => {
+  const musicInfoQueryStatement = createListMusicInfoQueryStatement()
+  return musicInfoQueryStatement.get({ list_id: listId, music_id: musicId })
 }
 
 /**

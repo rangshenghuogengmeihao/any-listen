@@ -1,4 +1,4 @@
-import { parseLyrics } from './shared/lrcTool'
+import { parseLyrics } from '@any-listen/nodejs/lrcTool'
 import { createLocalMusicInfo, getLocalMusicFileLyric, getLocalMusicFilePic } from './shared/music'
 
 interface PicBuffer {

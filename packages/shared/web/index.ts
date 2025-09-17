@@ -3,7 +3,7 @@ export const onDomSizeChanged = (dom: HTMLElement, onChanged: (width: number, he
   const resizeObserver = new ResizeObserver((entries) => {
     for (let entry of entries) {
       const { width, height } = entry.contentRect
-      // console.log(dom.offsetLeft, dom.offsetTop, left, top, width, height)
+      // console.log(dom, width, height)
       onChanged(Math.trunc(width), Math.trunc(height))
     }
   })

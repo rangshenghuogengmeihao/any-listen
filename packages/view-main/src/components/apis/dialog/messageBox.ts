@@ -1,9 +1,9 @@
 import { mount, tick, unmount } from 'svelte'
 
-import App from './App.svelte'
-import { i18n } from '@/plugins/i18n'
-import { onCloseMessageBox } from '@/shared/ipc/app'
 import { onDesconnected } from '@/modules/app/shared'
+import { i18n } from '@/plugins/i18n'
+import { closeMessageBoxEvent } from '@/shared/ipc/app/event'
+import App from './App.svelte'
 
 const buildDefaultButtons = () => {
   const buttons = [i18n.t('btn_ok')] as const
@@ -29,7 +29,7 @@ export const showMessageBox = async (
     unsub2()
   }
   const unsub = onDesconnected(release)
-  const unsub2 = onCloseMessageBox((_key) => {
+  const unsub2 = closeMessageBoxEvent.on((_key) => {
     if (key != _key) return
     release()
   })

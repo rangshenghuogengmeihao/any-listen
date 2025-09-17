@@ -1,73 +1,36 @@
-import { ipcPreloadEvent } from '@any-listen/app/modules/ipcPreloadEvent'
 import type { IPCSocket } from '@/preload/ws'
-import type { ExposeFunctions } from '.'
-
-const handleShowBox = async <T>(key: string) => {
-  return new Promise<T>((resolve, reject) => {
-    let release = () => {
-      // if (timeout) {
-      //   clearTimeout(timeout)
-      //   timeout = null
-      // }
-      ipcPreloadEvent.off('messageBoxConfirm', handleConfirm)
-      ipcPreloadEvent.off('closeMessageBox', handleClose)
-    }
-    // let timeout: number | null = setTimeout(
-    //   () => {
-    //     timeout = null
-    //     ipcPreloadEvent.closeMessageBox(key, 'timeout')
-    //   },
-    //   60 * 1000 * 60
-    // )
-    const handleConfirm = (_key: string, result: T) => {
-      if (_key != key) return
-      release()
-      resolve(result)
-    }
-    const handleClose = (_key: string, message?: string) => {
-      if (_key != key) return
-      release()
-      reject(new Error(message ?? 'canceled'))
-    }
-    ipcPreloadEvent.on('messageBoxConfirm', handleConfirm)
-    ipcPreloadEvent.on('closeMessageBox', handleClose)
-  })
-}
+import type { ClientCall, ExposeFunctions } from '.'
 
 // 暴露给后端的方法
-export const createExposeApp = () => {
+export const createExposeApp = (client: ClientCall) => {
   return {
     async settingChanged(socket, keys, setting) {
-      ipcPreloadEvent.settingChanged(keys, setting)
+      return client.settingChanged(keys, setting)
     },
     async deeplink(event, deeplink) {
-      ipcPreloadEvent.deeplinkAction(deeplink)
+      return client.deeplink(deeplink)
     },
     async createDesktopLyricProcess(event) {
       // TODO
-      // ipcPreloadEvent.createDesktopLyricProcess(event.ports)
+      // return client.createDesktopLyricProcess(event.ports)
     },
     async showMessageBox(event, extId, key, options) {
-      ipcPreloadEvent.showMessageBox(extId, key, options)
-      return handleShowBox<number>(key)
+      return client.showMessageBox(extId, key, options)
     },
     async showInputBox(event, extId, key, options) {
-      ipcPreloadEvent.showInputBox(extId, key, options)
-      return handleShowBox<string | undefined>(key)
+      return client.showInputBox(extId, key, options)
     },
     async showOpenBox(event, extId, key, options) {
-      ipcPreloadEvent.showOpenBox(extId, key, options)
-      return handleShowBox<string | string[] | undefined>(key)
+      return client.showOpenBox(extId, key, options)
     },
     async showSaveBox(event, extId, key, options) {
-      ipcPreloadEvent.showSaveBox(extId, key, options)
-      return handleShowBox<string | undefined>(key)
+      return client.showSaveBox(extId, key, options)
     },
     async closeMessageBox(event, key) {
-      ipcPreloadEvent.closeMessageBox(key)
+      return client.closeMessageBox(key)
     },
     async updateInfo(event, info) {
-      ipcPreloadEvent.updateInfo(info)
+      return client.updateInfo(info)
     },
   } satisfies Partial<ExposeFunctions>
 }
@@ -81,18 +44,6 @@ export const createClientApp = (ipcSocket: IPCSocket) => {
     async setSetting(setting) {
       return ipcSocket.remote.setSetting(setting)
     },
-    onSettingChanged(listener) {
-      ipcPreloadEvent.on('settingChanged', listener)
-      return () => {
-        ipcPreloadEvent.off('settingChanged', listener)
-      }
-    },
-    onDeeplink(listener) {
-      ipcPreloadEvent.on('deeplinkAction', listener)
-      return () => {
-        ipcPreloadEvent.off('deeplinkAction', listener)
-      }
-    },
     async inited() {
       return ipcSocket.remote.inited()
     },
@@ -104,14 +55,6 @@ export const createClientApp = (ipcSocket: IPCSocket) => {
       if (isForce) window.close()
       // return ipcSocket.remote.closeWindow(isForce)
     },
-    onCreateDesktopLyricProcess(listener) {
-      // TODO
-      // ipcPreloadEvent.on('createDesktopLyricProcess', listener)
-      return () => {
-        // ipcPreloadEvent.off('createDesktopLyricProcess', listener)
-      }
-    },
-
     // async showOpenDialog(opts) {
     //   // return main.showOpenDialog(opts)
     // },
@@ -142,39 +85,6 @@ export const createClientApp = (ipcSocket: IPCSocket) => {
     async openUrl(url) {
       window.open(url)
     },
-    async messageBoxConfirm(key, result) {
-      ipcPreloadEvent.messageBoxConfirm(key, result)
-    },
-    onShowMessageBox(listener) {
-      ipcPreloadEvent.on('showMessageBox', listener)
-      return () => {
-        ipcPreloadEvent.off('showMessageBox', listener)
-      }
-    },
-    onShowInputBox(listener) {
-      ipcPreloadEvent.on('showInputBox', listener)
-      return () => {
-        ipcPreloadEvent.off('showInputBox', listener)
-      }
-    },
-    onShowOpenBox(listener) {
-      ipcPreloadEvent.on('showOpenBox', listener)
-      return () => {
-        ipcPreloadEvent.off('showOpenBox', listener)
-      }
-    },
-    onShowSaveBox(listener) {
-      ipcPreloadEvent.on('showSaveBox', listener)
-      return () => {
-        ipcPreloadEvent.off('showSaveBox', listener)
-      }
-    },
-    onCloseMessageBox(listener) {
-      ipcPreloadEvent.on('closeMessageBox', listener)
-      return () => {
-        ipcPreloadEvent.off('closeMessageBox', listener)
-      }
-    },
     async getCurrentVersionInfo() {
       return ipcSocket.remote.getCurrentVersionInfo()
     },
@@ -186,12 +96,6 @@ export const createClientApp = (ipcSocket: IPCSocket) => {
     },
     async restartUpdate() {
       return ipcSocket.remote.restartUpdate()
-    },
-    onUpdateInfo(listener) {
-      ipcPreloadEvent.on('updateInfo', listener)
-      return () => {
-        ipcPreloadEvent.off('updateInfo', listener)
-      }
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

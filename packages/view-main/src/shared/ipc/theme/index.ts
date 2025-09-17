@@ -1,4 +1,4 @@
-import { ipc } from './ipc'
+import { ipc } from '../ipc'
 
 /** 获取主题配置 */
 export const getThemeSetting = async () => {
@@ -15,13 +15,4 @@ export const saveTheme = async (theme: AnyListen.Theme) => {
 /** 移除主题 */
 export const removeTheme = async (id: string) => {
   return ipc.removeTheme(id)
-}
-
-/** 主题设置更新 */
-export const onThemeChanged: AnyListen.IPC.ServerIPC['onThemeChanged'] = (listener) => {
-  return ipc.onThemeChanged(listener)
-}
-/** 主题列表更新 */
-export const onThemeListChanged: AnyListen.IPC.ServerIPC['onThemeListChanged'] = (listener) => {
-  return ipc.onThemeListChanged(listener)
 }

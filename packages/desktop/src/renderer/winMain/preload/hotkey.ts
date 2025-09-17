@@ -1,16 +1,13 @@
-import { ipcPreloadEvent } from '@any-listen/app/modules/ipcPreloadEvent'
-import type { ExposeFunctions, MainCall } from '.'
-import type { HOTKEY_Type } from '@any-listen/common/hotKey'
+import type { ClientCall, ExposeFunctions, MainCall } from '.'
 
 // 暴露给后端的方法
-export const createExposeHotkey = () => {
+export const createExposeHotkey = (client: ClientCall) => {
   return {
     async hotKeyDown(event, info) {
-      ipcPreloadEvent.hotKeyDown(info)
-      // ipcPreloadEvent.on()
+      return client.hotKeyDown(info)
     },
     async hotKeyConfigUpdated(event, config) {
-      ipcPreloadEvent.hotKeyConfigUpdated(config as AnyListen.HotKey.HotKeyConfigAll<HOTKEY_Type>)
+      return client.hotKeyConfigUpdated(config)
     },
   } satisfies Partial<ExposeFunctions>
 }
@@ -26,18 +23,6 @@ export const createClientHotkey = (main: MainCall) => {
     },
     async hotkeyConfigAction(action) {
       return main.hotkeyConfigAction(action)
-    },
-    onHotKeyDown(listener) {
-      ipcPreloadEvent.on('hotKeyDown', listener)
-      return () => {
-        ipcPreloadEvent.off('hotKeyDown', listener)
-      }
-    },
-    onHotKeyConfigUpdated(listener) {
-      ipcPreloadEvent.on('hotKeyConfigUpdated', listener)
-      return () => {
-        ipcPreloadEvent.off('hotKeyConfigUpdated', listener)
-      }
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

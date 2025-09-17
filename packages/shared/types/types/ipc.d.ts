@@ -1,11 +1,11 @@
-import type { ServerCommonActions as _ServerCommonActions } from './ipc_server_common_actions'
-import type { ClientCommonActions as _ClientCommonActions } from './ipc_client_common_actions'
-import './theme_ipc'
-import './player_ipc'
-import './list_ipc'
 import './dislike_list_ipc'
 import './extension_ipc'
+import type { ClientCommonActions as _ClientCommonActions } from './ipc_client_common_actions'
+import type { ServerCommonActions as _ServerCommonActions } from './ipc_server_common_actions'
+import './list_ipc'
+import './player_ipc'
 import './sound_effect_ipc'
+import './theme_ipc'
 
 // type ExcludeSendActions<Actions extends Record<string, any>> = Pick<Actions, {
 //   [K in keyof Actions]: K extends `send${string}` ? never : K
@@ -13,10 +13,11 @@ import './sound_effect_ipc'
 // type PickSendActions<Actions extends Record<string, any>> = Pick<Actions, {
 //   [K in keyof Actions]: K extends `send${string}` ? K : never
 // }[keyof Actions]>
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type WarpOnActions<Actions extends Record<string, (...args: any[]) => any>> = {
-  [K in keyof Actions as `on${Capitalize<string & K>}`]: (handler: (...args: Parameters<Actions[K]>) => void) => () => void
-}
+
+// type WarpOnActions<Actions extends Record<string, (...args: any[]) => any>> = {
+//   [K in keyof Actions as `on${Capitalize<string & K>}`]: (handler: (...args: Parameters<Actions[K]>) => void) => () => void
+// }
+
 // type RenameSend2On<T> = {
 //   [K in keyof T as K extends `send${infer R}` ? `on${R}` : K]: T[K];
 // }
@@ -47,13 +48,14 @@ declare global {
           : (...args: [Socket, ...Parameters<Actions[K]>]) => ReturnType<Actions[K]>
       }
 
-      type ConnectIPCSrivice = (
-        onConnected: (ipc: ServerIPC) => void,
-        onDisconnected: () => void,
-        onFailed: (message: string) => void,
-        onLogout: () => void,
+      type ConnectIPCSrivice = (options: {
+        onConnected: (ipc: ServerIPC) => void
+        onDisconnected: () => void
+        onFailed: (message: string) => void
+        onLogout: () => void
         pwd: string
-      ) => void
+        clientCall: ClientIPC
+      }) => void
       type WinType = 'main'
       type ServerCommonActions = _ServerCommonActions & IPCMusic.ServerActions & IPCSoundEffect.ServerActions
       type ClientCommonActions = _ClientCommonActions
@@ -65,7 +67,7 @@ declare global {
       type ServerIPCActions<Socket = undefined> = WarpIPCHandlerActions<Socket, ServerAllActions>
 
       type ClientIPC = ClientAllActions
-      type ServerIPC = ServerAllActions & WarpOnActions<ClientAllActions>
+      type ServerIPC = ServerAllActions
     }
   }
 }

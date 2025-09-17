@@ -1,4 +1,3 @@
-import { soundEffectState } from './state'
 import {
   getUserSoundEffectConvolutionPresetList,
   getUserEQPresetList as getUserSoundEffectEQPresetList,
@@ -6,10 +5,10 @@ import {
   saveUserSoundEffectEQPresetList,
 } from '@/shared/ipc/soundEffect'
 import * as commit from './commit'
+import { soundEffectState } from './state'
 
 export const initUserEQPresetList = async () => {
   if (soundEffectState.userEqPresetList == null) {
-    // eslint-disable-next-line require-atomic-updates
     commit.setUserEqPresetList(await getUserSoundEffectEQPresetList())
   }
 }
@@ -20,17 +19,16 @@ export const initUserEQPresetList = async () => {
 export const saveUserEQPreset = async (preset: AnyListen.SoundEffect.EQPreset) => {
   await initUserEQPresetList()
   commit.updateUserEqPresetList(preset)
-  saveUserSoundEffectEQPresetList(soundEffectState.userEqPresetList!)
+  void saveUserSoundEffectEQPresetList(soundEffectState.userEqPresetList!)
 }
 export const removeUserEQPreset = async (id: string) => {
   await initUserEQPresetList()
   commit.removeUserEqPresetList(id)
-  saveUserSoundEffectEQPresetList(soundEffectState.userEqPresetList!)
+  void saveUserSoundEffectEQPresetList(soundEffectState.userEqPresetList!)
 }
 
 export const initUserConvolutionPresetList = async () => {
   if (soundEffectState.userConvolutionPresetList == null) {
-    // eslint-disable-next-line require-atomic-updates
     commit.setUserConvolutionPresetList(await getUserSoundEffectConvolutionPresetList())
   }
 }
@@ -41,10 +39,10 @@ export const initUserConvolutionPresetList = async () => {
 export const saveUserConvolutionPreset = async (preset: AnyListen.SoundEffect.ConvolutionPreset) => {
   await initUserConvolutionPresetList()
   commit.updateUserConvolutionPresetList(preset)
-  saveUserSoundEffectConvolutionPresetList(soundEffectState.userConvolutionPresetList!)
+  void saveUserSoundEffectConvolutionPresetList(soundEffectState.userConvolutionPresetList!)
 }
 export const removeUserConvolutionPreset = async (id: string) => {
   await initUserConvolutionPresetList()
   commit.removeUserConvolutionPresetList(id)
-  saveUserSoundEffectConvolutionPresetList(soundEffectState.userConvolutionPresetList!)
+  void saveUserSoundEffectConvolutionPresetList(soundEffectState.userConvolutionPresetList!)
 }

@@ -76,10 +76,10 @@ export const logFormat = (log: AnyListen.LogInfo) => {
   return `${dateFormat(log.timestamp)} ${log.type.toUpperCase()} ${log.message}`
 }
 
-export const buildMusicCacheId = (musicInfo: AnyListen.Music.MusicInfo, quality: AnyListen.Music.Quality) => {
+export const buildMusicCacheId = (musicInfo: AnyListen.Music.MusicInfo, quality: string) => {
   return `${musicInfo.id}_${quality}`
 }
-export const getFileType = (quality: AnyListen.Music.Quality): AnyListen.Music.FileType => {
+export const getFileType = (quality: string): AnyListen.Music.FileType => {
   switch (quality) {
     case '128k':
     case '192k':
@@ -93,6 +93,7 @@ export const getFileType = (quality: AnyListen.Music.Quality): AnyListen.Music.F
     case 'master':
       return 'flac'
   }
+  return 'mp3'
 }
 
 const existTimeExp = /\[\d{1,2}:.*\d{1,4}\]/

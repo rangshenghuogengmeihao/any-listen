@@ -1,95 +1,102 @@
-// 前端 preload 事件处理层
-import Event, { type EventType2 } from '@any-listen/web/Event'
-import type { HOTKEY_Type } from '@any-listen/common/hotKey'
-import type { MessagePort } from 'worker_threads'
+// // 前端 preload 事件处理层
+// import type { HOTKEY_Type } from '@any-listen/common/hotKey'
+// // import SingleEvent from '@any-listen/web/SimpleSingleEvent'
+// import type { MessagePort } from 'node:worker_threads'
 
-class IPCEvent extends Event {
-  emitEvent<K extends keyof EventMethods>(eventName: K, ...args: unknown[]) {
-    this.emit(eventName, ...args)
-  }
+// // export const localeEvent = new SingleEvent<[AnyListen_API.Locale]>()
+// // export const configurationEvent = new SingleEvent<[keys: string[], configuration: Record<string, unknown>]>()
+// // export const musicListActionEvent = new SingleEvent<[AnyListen.IPCList.ActionList]>()
+// // export const playerEvent = new SingleEvent<[AnyListen.IPCPlayer.PlayerEvent]>()
+// // export const playListActionEvent = new SingleEvent<[AnyListen.IPCPlayer.PlayListAction]>()
+// // export const playHistoryListActionEvent = new SingleEvent<[AnyListen.IPCPlayer.PlayHistoryListAction]>()
 
-  settingChanged(keys: Array<keyof AnyListen.AppSetting>, setting: Partial<AnyListen.AppSetting>) {
-    this.emitEvent('settingChanged', keys, setting)
-  }
+// class IPCEvent extends Event {
+//   emitEvent<K extends keyof EventMethods>(eventName: K, ...args: unknown[]) {
+//     this.emit(eventName, ...args)
+//   }
 
-  deeplinkAction(deeplink: string) {
-    this.emitEvent('deeplinkAction', deeplink)
-  }
+//   settingChanged(keys: Array<keyof AnyListen.AppSetting>, setting: Partial<AnyListen.AppSetting>) {
+//     this.emitEvent('settingChanged', keys, setting)
+//   }
 
-  playerAction(action: AnyListen.IPCPlayer.ActionPlayer) {
-    this.emitEvent('playerAction', action)
-  }
+//   deeplinkAction(deeplink: string) {
+//     this.emitEvent('deeplinkAction', deeplink)
+//   }
 
-  playListAction(action: AnyListen.IPCPlayer.PlayListAction) {
-    this.emitEvent('playListAction', action)
-  }
+//   playerAction(action: AnyListen.IPCPlayer.ActionPlayer) {
+//     this.emitEvent('playerAction', action)
+//   }
 
-  playHistoryListAction(action: AnyListen.IPCPlayer.PlayHistoryListAction) {
-    this.emitEvent('playHistoryListAction', action)
-  }
+//   playListAction(action: AnyListen.IPCPlayer.PlayListAction) {
+//     this.emitEvent('playListAction', action)
+//   }
 
-  themeChanged(setting: AnyListen.ThemeSetting) {
-    this.emitEvent('themeChanged', setting)
-  }
+//   playHistoryListAction(action: AnyListen.IPCPlayer.PlayHistoryListAction) {
+//     this.emitEvent('playHistoryListAction', action)
+//   }
 
-  themeListChanged(list: AnyListen.ThemeList) {
-    this.emitEvent('themeListChanged', list)
-  }
+//   themeChanged(setting: AnyListen.ThemeSetting) {
+//     this.emitEvent('themeChanged', setting)
+//   }
 
-  hotKeyDown(config: AnyListen.HotKey.HotKeyDownInfo) {
-    this.emitEvent('hotKeyDown', config)
-  }
+//   themeListChanged(list: AnyListen.ThemeList) {
+//     this.emitEvent('themeListChanged', list)
+//   }
 
-  hotKeyConfigUpdated(config: AnyListen.HotKey.HotKeyConfigAll<HOTKEY_Type>) {
-    this.emitEvent('hotKeyConfigUpdated', config)
-  }
+//   hotKeyDown(config: AnyListen.HotKey.HotKeyDownInfo) {
+//     this.emitEvent('hotKeyDown', config)
+//   }
 
-  createDesktopLyricProcess(ports: MessagePort[]) {
-    this.emitEvent('createDesktopLyricProcess', ports)
-  }
+//   hotKeyConfigUpdated(config: AnyListen.HotKey.HotKeyConfigAll<HOTKEY_Type>) {
+//     this.emitEvent('hotKeyConfigUpdated', config)
+//   }
 
-  listAction(action: AnyListen.IPCList.ActionList) {
-    this.emitEvent('listAction', action)
-  }
+//   createDesktopLyricProcess(ports: MessagePort[]) {
+//     this.emitEvent('createDesktopLyricProcess', ports)
+//   }
 
-  dislikeAction(action: AnyListen.IPCDislikeList.ActionList) {
-    this.emitEvent('dislikeAction', action)
-  }
+//   listAction(action: AnyListen.IPCList.ActionList) {
+//     this.emitEvent('listAction', action)
+//   }
 
-  extensionEvent(action: AnyListen.IPCExtension.EventExtension) {
-    this.emitEvent('extensionEvent', action)
-  }
+//   dislikeAction(action: AnyListen.IPCDislikeList.ActionList) {
+//     this.emitEvent('dislikeAction', action)
+//   }
 
-  showMessageBox(extId: string, key: string, options: AnyListen.IPCCommon.MessageDialogOptions) {
-    this.emitEvent('showMessageBox', extId, key, options)
-  }
+//   extensionEvent(action: AnyListen.IPCExtension.EventExtension) {
+//     this.emitEvent('extensionEvent', action)
+//   }
 
-  showInputBox(extId: string, key: string, options: AnyListen.IPCCommon.InputDialogOptions) {
-    this.emitEvent('showInputBox', extId, key, options)
-  }
+//   showMessageBox(extId: string, key: string, options: AnyListen.IPCCommon.MessageDialogOptions) {
+//     this.emitEvent('showMessageBox', extId, key, options)
+//   }
 
-  showOpenBox(extId: string, key: string, options: AnyListen.IPCCommon.OpenDialogOptions) {
-    this.emitEvent('showOpenBox', extId, key, options)
-  }
+//   showInputBox(extId: string, key: string, options: AnyListen.IPCCommon.InputDialogOptions) {
+//     this.emitEvent('showInputBox', extId, key, options)
+//   }
 
-  showSaveBox(extId: string, key: string, options: AnyListen.IPCCommon.SaveDialogOptions) {
-    this.emitEvent('showSaveBox', extId, key, options)
-  }
+//   showOpenBox(extId: string, key: string, options: AnyListen.IPCCommon.OpenDialogOptions) {
+//     this.emitEvent('showOpenBox', extId, key, options)
+//   }
 
-  closeMessageBox(key: string, message?: string) {
-    this.emitEvent('closeMessageBox', key, message)
-  }
+//   showSaveBox(extId: string, key: string, options: AnyListen.IPCCommon.SaveDialogOptions) {
+//     this.emitEvent('showSaveBox', extId, key, options)
+//   }
 
-  messageBoxConfirm(key: string, result: unknown) {
-    this.emitEvent('messageBoxConfirm', key, result)
-  }
+//   closeMessageBox(key: string, message?: string) {
+//     this.emitEvent('closeMessageBox', key, message)
+//   }
 
-  updateInfo(info: AnyListen.IPCCommon.UpdateInfo) {
-    this.emitEvent('updateInfo', info)
-  }
-}
+//   messageBoxConfirm(key: string, result: unknown) {
+//     this.emitEvent('messageBoxConfirm', key, result)
+//   }
 
-type EventMethods = Omit<IPCEvent, keyof Event | 'emitEvent'>
+//   updateInfo(info: AnyListen.IPCCommon.UpdateInfo) {
+//     this.emitEvent('updateInfo', info)
+//   }
+// }
 
-export const ipcPreloadEvent = new IPCEvent() as EventType2<IPCEvent>
-// export const ipcPreloadEvent = new IPCEvent()
+// type EventMethods = Omit<IPCEvent, keyof Event | 'emitEvent'>
+
+// export const ipcPreloadEvent = new IPCEvent() as EventType2<IPCEvent>
+// // export const ipcPreloadEvent = new IPCEvent()

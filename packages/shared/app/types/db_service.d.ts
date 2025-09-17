@@ -3,13 +3,13 @@ declare namespace AnyListen {
     interface DownloadMusicInfo {
       id: string
       isComplate: 0 | 1
-      status: AnyListen.Download.DownloadTaskStatus
+      status: Download.DownloadTaskStatus
       statusText: string
       progress_downloaded: number
       progress_total: number
       url: string | null
-      quality: AnyListen.Music.Quality
-      ext: AnyListen.Download.FileExt
+      quality: string
+      ext: Download.FileExt
       fileName: string
       filePath: string
       musicInfo: string

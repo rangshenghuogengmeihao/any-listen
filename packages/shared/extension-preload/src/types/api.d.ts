@@ -863,7 +863,7 @@ declare global {
     }
     /** 应用相关 */
     interface App {
-      showMessage: (message: string, options?: MessageDialogOptions) => Promise<number | undefined>
+      showMessage: (message: string, options?: MessageDialogOptions) => Promise<number>
       // TODO
       showFormDialog: (options: FormDialogOptions) => Promise<string | undefined>
       // showInput: (options: InputDialogOptions) => Promise<string | undefined>

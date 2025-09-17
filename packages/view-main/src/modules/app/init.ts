@@ -1,64 +1,16 @@
-import { showMessageBox } from '@/components/apis/dialog/messageBox'
-import { showNotifyBox } from '@/components/apis/notify'
-import { createUnsubscriptionSet } from '@/shared'
-import {
-  messageBoxConfirm,
-  onShowInputBox,
-  onShowMessageBox,
-  onShowOpenBox,
-  onShowSaveBox,
-  sendInitedEvent,
-} from '@/shared/ipc/app'
+// import { createUnsubscriptionSet } from '@/shared'
+import { sendInitedEvent } from '@/shared/ipc/app'
 import { keyboardEvent } from '../hotkey/keyboard'
 import { settingEvent } from '../setting/store/event'
 import { onRelease } from './shared'
 import { setWorkerInitPromise } from './store/action'
 import { appEvent } from './store/event'
 
-let unregistereds = createUnsubscriptionSet()
+// let unregistereds = createUnsubscriptionSet()
 export const initApp = () => {
-  onRelease(unregistereds.clear.bind(unregistereds))
+  // onRelease(unregistereds.clear.bind(unregistereds))
   settingEvent.on('inited', () => {
-    unregistereds.register((subscriptions) => {
-      subscriptions.add(
-        onShowMessageBox((extId, key, options) => {
-          if (options.modal) {
-            void showMessageBox(extId, key, options)
-              .then((result) => {
-                void messageBoxConfirm(key, result)
-              })
-              .catch((error: Error) => {
-                console.log(error)
-                void messageBoxConfirm(key, undefined)
-              })
-          } else {
-            void showNotifyBox(extId, key, options).finally(() => {
-              void messageBoxConfirm(key, 0)
-            })
-          }
-        })
-      )
-      subscriptions.add(
-        onShowInputBox((key, options) => {
-          // TODO
-          void messageBoxConfirm(key, undefined)
-        })
-      )
-      if (import.meta.env.VITE_IS_WEB) {
-        subscriptions.add(
-          onShowOpenBox((key, options) => {
-            // TODO
-            void messageBoxConfirm(key, undefined)
-          })
-        )
-        subscriptions.add(
-          onShowSaveBox((key, options) => {
-            // TODO
-            void messageBoxConfirm(key, undefined)
-          })
-        )
-      }
-    })
+    // unregistereds.register((subscriptions) => {})
     void sendInitedEvent()
   })
   let mainWorkerResolve: () => void

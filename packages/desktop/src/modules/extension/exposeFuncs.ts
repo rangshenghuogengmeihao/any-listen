@@ -62,14 +62,16 @@ export const exposedFuncs: AnyListen.IPCExtension.MainIPCActions = {
     })
   },
   async showOpenBox(extId, key, options) {
-    return boxTools.showBox(key, async () => {
-      return rendererIPC.showOpenBox(extId, key, options)
-    })
+    // TODO
+    // return boxTools.showBox(key, async () => {
+    //   return rendererIPC.showOpenBox(extId, key, options)
+    // })
   },
   async showSaveBox(extId, key, options) {
-    return boxTools.showBox(key, async () => {
-      return rendererIPC.showSaveBox(extId, key, options)
-    })
+    // TODO
+    // return boxTools.showBox(key, async () => {
+    //   return rendererIPC.showSaveBox(extId, key, options)
+    // })
   },
   async closeMessageBox(key) {
     boxTools.closeBox(key)

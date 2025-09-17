@@ -3,18 +3,18 @@
 // import type { ProgressInfo, UpdateDownloadedEvent, UpdateInfo } from 'electron-updater'
 // import * as hotKeys from '@any-listen/common/hotKey'
 // import { APP_EVENT_NAMES, DATA_KEYS, DEFAULT_SETTING } from '@any-listen/common/constants'
+import { IPC_NAMES } from '@/shared/ipc/names'
 import { createMainCall } from '@/shared/ipc/renderer'
 import { createClientApp, createExposeApp } from './app'
-import { createClientPlayer, createExposePlayer } from './player'
 import { createClientData } from './data'
+import { createClientDislike, createExposeDislike } from './dislike'
+import { createClientExtension, createExposeExtension } from './extension'
 import { createClientHotkey, createExposeHotkey } from './hotkey'
 import { createClientList, createExposeList } from './list'
 import { createClientMusic } from './music'
-import { createClientDislike, createExposeDislike } from './dislike'
-import { createClientTheme, createExposeTheme } from './theme'
-import { createClientExtension, createExposeExtension } from './extension'
+import { createClientPlayer, createExposePlayer } from './player'
 import { createClientSoundEffect } from './soundEffect'
-import { IPC_NAMES } from '@/shared/ipc/names'
+import { createClientTheme, createExposeTheme } from './theme'
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
 
@@ -23,23 +23,24 @@ export type ExposeServerFunctions = Omit<
   AnyListen.IPC.ServerIPC,
   'fileSystemAction' | 'getLoginDevices' | 'removeLoginDevice' | 'logout'
 >
-export type MainCall = typeof mainCall
+export type MainCall = AnyListen.IPC.ServerIPC
+export type ClientCall = AnyListen.IPC.ClientIPC
 
-const exposeObj: ExposeFunctions = {
-  ...createExposeApp(),
-  ...createExposePlayer(),
-  ...createExposeHotkey(),
-  ...createExposeList(),
-  ...createExposeDislike(),
-  ...createExposeTheme(),
-  ...createExposeExtension(),
-}
-
-const mainCallUtil = createMainCall<AnyListen.IPC.ServerIPC>(IPC_NAMES.VIEW_MAIN, exposeObj)
-const mainCall = mainCallUtil.remote
 console.log('preload')
 
-const connectIPCService: AnyListen.IPC.ConnectIPCSrivice = (onConnected) => {
+const connectIPCService: AnyListen.IPC.ConnectIPCSrivice = ({ onConnected, clientCall }) => {
+  const exposeObj: ExposeFunctions = {
+    ...createExposeApp(clientCall),
+    ...createExposePlayer(clientCall),
+    ...createExposeHotkey(clientCall),
+    ...createExposeList(clientCall),
+    ...createExposeDislike(clientCall),
+    ...createExposeTheme(clientCall),
+    ...createExposeExtension(clientCall),
+  }
+  const mainCallUtil = createMainCall<AnyListen.IPC.ServerIPC>(IPC_NAMES.VIEW_MAIN, exposeObj)
+  const mainCall = mainCallUtil.remote
+
   const ipc: ExposeServerFunctions = {
     ...createClientApp(mainCall),
     ...createClientPlayer(mainCall),

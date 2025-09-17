@@ -1,5 +1,14 @@
+import app from './app/remote'
+import dislike from './dislike/remote'
+import extension from './extension/remote'
+import hotkey from './hotkey/remote'
+import list from './list/remote'
+import player from './player/remote'
+import theme from './theme/remote'
+
 let connectIPCService: AnyListen.IPC.ConnectIPCSrivice | null
 let ipc: AnyListen.IPC.ServerIPC
+
 export const connectIPC = (
   onConnected: () => void,
   onDisconnected: () => void,
@@ -12,8 +21,18 @@ export const connectIPC = (
     connectIPCService = window.__anylisten_ipc_init__
     delete window.__anylisten_ipc_init__
   }
-  connectIPCService(
-    (_ipc) => {
+  const exposeFuncs: AnyListen.IPC.ClientIPC = {
+    ...app,
+    ...dislike,
+    ...extension,
+    ...hotkey,
+    ...list,
+    ...player,
+    ...theme,
+  }
+  connectIPCService({
+    clientCall: exposeFuncs,
+    onConnected: (_ipc) => {
       ipc = _ipc
       window.testData = ipc
       onConnected()
@@ -21,8 +40,8 @@ export const connectIPC = (
     onDisconnected,
     onFailed,
     onLogout,
-    pwd
-  )
+    pwd,
+  })
 }
 
 const _ipc = new Proxy(

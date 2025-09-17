@@ -12,7 +12,7 @@ export const getMusicUrlByExtensionSource = async ({
   extensionId: string
   source: string
   musicInfo: AnyListen.Music.MusicInfoOnline
-  quality?: AnyListen.Music.Quality
+  quality?: string
   type?: AnyListen.Music.FileType
 }): Promise<AnyListen.IPCExtension.MusicUrlInfo> => {
   return services.extensionSerive
@@ -38,7 +38,7 @@ const handleGetMusicUrl = async (
     type,
   }: {
     musicInfo: AnyListen.Music.MusicInfoOnline
-    quality?: AnyListen.Music.Quality
+    quality?: string
     type?: AnyListen.Music.FileType
   },
   excludeList: string[] = []
@@ -60,7 +60,7 @@ const handleGetMusicUrl = async (
 
 export const getMusicUrl = async (data: {
   musicInfo: AnyListen.Music.MusicInfo
-  quality?: AnyListen.Music.Quality
+  quality?: string
   type?: AnyListen.Music.FileType
 }): Promise<AnyListen.IPCExtension.MusicUrlInfo> => {
   if (data.musicInfo.isLocal) {

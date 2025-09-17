@@ -1,5 +1,5 @@
 import { dateFormat } from '@/shared'
-import { onExtensionEvent } from '@/shared/ipc/extension'
+import { extensionEvent as extensionEventRemote } from '@/shared/ipc/extension/event'
 import { extI18n } from '../i18n'
 import * as commit from './commit'
 import { extensionEvent } from './event'
@@ -33,7 +33,7 @@ export const registerRemoteExtensionEvent = () => {
   const stopExt = (id: string) => {
     // commit.setExtensionRuning(id, loadTimestamp)
   }
-  return onExtensionEvent((action): void => {
+  return extensionEventRemote.on((action): void => {
     console.log('onExtensionEvent', action)
     switch (action.action) {
       case 'listSet':

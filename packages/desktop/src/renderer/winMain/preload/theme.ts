@@ -1,14 +1,13 @@
-import type { ExposeFunctions, MainCall } from '.'
-import { ipcPreloadEvent } from '@any-listen/app/modules/ipcPreloadEvent'
+import type { ClientCall, ExposeFunctions, MainCall } from '.'
 
 // 暴露给后端的方法
-export const createExposeTheme = () => {
+export const createExposeTheme = (client: ClientCall) => {
   return {
     async themeChanged(event, setting) {
-      ipcPreloadEvent.themeChanged(setting)
+      return client.themeChanged(setting)
     },
     async themeListChanged(event, list) {
-      ipcPreloadEvent.themeListChanged(list)
+      return client.themeListChanged(list)
     },
   } as const satisfies Partial<ExposeFunctions>
 }
@@ -27,18 +26,6 @@ export const createClientTheme = (main: MainCall) => {
     },
     async removeTheme(id) {
       return main.removeTheme(id)
-    },
-    onThemeChanged(listener) {
-      ipcPreloadEvent.on('themeChanged', listener)
-      return () => {
-        ipcPreloadEvent.off('themeChanged', listener)
-      }
-    },
-    onThemeListChanged(listener) {
-      ipcPreloadEvent.on('themeListChanged', listener)
-      return () => {
-        ipcPreloadEvent.off('themeListChanged', listener)
-      }
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

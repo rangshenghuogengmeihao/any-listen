@@ -23,7 +23,7 @@ export const getMusicUrlByExtSource = async ({
   extensionId: string
   source: string
   isRefresh?: boolean
-  quality?: AnyListen.Music.Quality
+  quality?: string
 }): Promise<AnyListen.IPCMusic.MusicUrlInfo> => {
   const targetQuality = quality ?? appState.appSetting['player.playQuality']
   const cachedUrl = await workers.dbService.getMusicUrl(buildMusicCacheId(musicInfo, targetQuality))
@@ -49,7 +49,7 @@ export const getMusicUrl = async ({
 }: {
   musicInfo: AnyListen.Music.MusicInfo
   isRefresh?: boolean
-  quality?: AnyListen.Music.Quality
+  quality?: string
 }): Promise<AnyListen.IPCMusic.MusicUrlInfo> => {
   const targetQuality = quality ?? appState.appSetting['player.playQuality']
   const id = buildMusicCacheId(musicInfo, targetQuality)
@@ -78,7 +78,7 @@ export const getMusicPicByExtSource = async ({
   extensionId: string
   source: string
   isRefresh?: boolean
-  quality?: AnyListen.Music.Quality
+  quality?: string
 }): Promise<AnyListen.IPCMusic.MusicPicInfo> => {
   if (musicInfo.meta.picUrl && !isRefresh) {
     return {
@@ -132,7 +132,7 @@ export const getLyricInfoByExtSource = async ({
   extensionId: string
   source: string
   isRefresh?: boolean
-  quality?: AnyListen.Music.Quality
+  quality?: string
 }): Promise<AnyListen.IPCMusic.MusicLyricInfo> => {
   if (!isRefresh) {
     const lyricInfo = await getCachedLyricInfo(musicInfo)

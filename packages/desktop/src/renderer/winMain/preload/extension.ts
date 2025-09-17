@@ -1,11 +1,10 @@
-import { ipcPreloadEvent } from '@any-listen/app/modules/ipcPreloadEvent'
-import type { ExposeFunctions, MainCall } from '.'
+import type { ClientCall, ExposeFunctions, MainCall } from '.'
 
 // 暴露给后端的方法
-export const createExposeExtension = () => {
+export const createExposeExtension = (client: ClientCall) => {
   return {
     async extensionEvent(event, action) {
-      ipcPreloadEvent.extensionEvent(action)
+      return client.extensionEvent(action)
     },
   } satisfies Partial<ExposeFunctions>
 }
@@ -87,12 +86,6 @@ export const createClientExtension = (main: MainCall) => {
       params: Parameters<AnyListen.IPCExtension.ListProviderAction[T]>[0]
     ): Promise<Awaited<ReturnType<AnyListen.IPCExtension.ListProviderAction[T]>>> {
       return main.listProviderAction(action, params)
-    },
-    onExtensionEvent(listener) {
-      ipcPreloadEvent.on('extensionEvent', listener)
-      return () => {
-        ipcPreloadEvent.off('extensionEvent', listener)
-      }
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

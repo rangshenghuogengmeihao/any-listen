@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { onListAction, sendListAction } from '@/shared/ipc/list'
+import { sendListAction } from '@/shared/ipc/list'
 // import { PLAYER_EVENT_NAME } from '@/shared/ipcNames'
 import { settingState } from '@/modules/setting/store/state'
+import { listActionEvent } from '@/shared/ipc/list/event'
 import {
   listDataOverwrite,
   listMusicAdd,
@@ -182,7 +183,7 @@ export const registerListAction = () => {
     listMusicClear(ids)
   }
 
-  return onListAction((action): void => {
+  return listActionEvent.on((action): void => {
     // console.log('receive list action', action.action, action)
     switch (action.action) {
       case 'list_data_overwrite':

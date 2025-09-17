@@ -1,4 +1,4 @@
-import { ipc } from './ipc'
+import { ipc } from '../ipc'
 
 export const getAllList: AnyListen.IPC.ServerIPC['getAllUserLists'] = async () => {
   return ipc.getAllUserLists()
@@ -15,9 +15,6 @@ export const getMusicExistListIds: AnyListen.IPC.ServerIPC['getMusicExistListIds
 
 export const sendListAction: AnyListen.IPC.ServerIPC['listAction'] = async (action) => {
   return ipc.listAction(action)
-}
-export const onListAction: AnyListen.IPC.ServerIPC['onListAction'] = (handler) => {
-  return ipc.onListAction(handler)
 }
 
 export const getListPrevSelectId: AnyListen.IPC.ServerIPC['getListPrevSelectId'] = async () => {

@@ -1,7 +1,7 @@
-import { getAnalyser } from '@/plugins/player'
 import { playerState } from '@/modules/player/store/state'
+import { getAnalyser } from '@/plugins/player'
+import { createDesktopLyricProcessEvent } from '@/shared/ipc/app/event'
 import { lyricState } from './store/state'
-import { onCreateDesktopLyricProcess } from '@/shared/ipc/app'
 
 let desktopLyricPort: MessagePort | null = null
 const analyserTools: {
@@ -100,8 +100,6 @@ const handleDesktopLyricMessage = (action: AnyListen.DesktopLyric.ViewMainAction
     case 'get_analyser_data_array':
       analyserTools.sendDataArray()
       break
-    default:
-      break
   }
 }
 
@@ -126,7 +124,7 @@ export const sendMusicInfo = (time: number) => {
 }
 
 export const initDesktopLyric = () => {
-  return onCreateDesktopLyricProcess((ports) => {
+  return createDesktopLyricProcessEvent.on((ports) => {
     console.log('onNewDesktopLyricProcess')
     const [port] = ports
     desktopLyricPort = port

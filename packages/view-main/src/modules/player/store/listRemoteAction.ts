@@ -1,4 +1,5 @@
-import { onPlayListAction, sendPlayListAction } from '@/shared/ipc/player'
+import { sendPlayListAction } from '@/shared/ipc/player'
+import { playListActionEvent } from '@/shared/ipc/player/event'
 import * as commit from './commit'
 
 /**
@@ -94,7 +95,7 @@ export const registerRemoteListAction = () => {
   const unplayedAll = () => {
     commit.updatePlayListMusicPlayedAll(false)
   }
-  return onPlayListAction((action): void => {
+  return playListActionEvent.on((action): void => {
     switch (action.action) {
       case 'set':
         set(action.data)

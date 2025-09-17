@@ -1,5 +1,5 @@
-import { onSettingChanged } from '@/shared/ipc/app'
 import { setSetting } from '@/modules/app/store/action'
+import { settingChangedEvent } from '@/shared/ipc/app/event'
 import * as commit from './commit'
 
 export const updateSetting = async (setting: Partial<AnyListen.AppSetting>) => {
@@ -8,7 +8,7 @@ export const updateSetting = async (setting: Partial<AnyListen.AppSetting>) => {
 }
 
 export const registerRemoteSettingAction = () => {
-  return onSettingChanged((keys, setting) => {
+  return settingChangedEvent.on((keys, setting) => {
     commit.updateSetting(keys, setting)
   })
 }

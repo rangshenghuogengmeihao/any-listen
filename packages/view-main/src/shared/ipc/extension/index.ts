@@ -1,4 +1,4 @@
-import { ipc } from './ipc'
+import { ipc } from '../ipc'
 
 export const getExtensionErrorMessage = async () => {
   return ipc.getExtensionErrorMessage()
@@ -58,10 +58,6 @@ export const uninstallExtension: AnyListen.IPC.ServerIPC['uninstallExtension'] =
 
 export const restartExtensionHost: AnyListen.IPC.ServerIPC['restartExtensionHost'] = async () => {
   return ipc.restartExtensionHost()
-}
-
-export const onExtensionEvent: AnyListen.IPC.ServerIPC['onExtensionEvent'] = (handler) => {
-  return ipc.onExtensionEvent(handler)
 }
 
 export const getResourceList: AnyListen.IPC.ServerIPC['getResourceList'] = async () => {

@@ -228,7 +228,7 @@
   "settings.basic.play_bar_style_mini": "迷你进度条",
   "settings.common.transparent_window": "主窗口使用软件内置的圆角及阴影",
   "settings.common.transparent_window_desc": "关闭后将使用系统窗口圆角及阴影样式，重启软件后生效",
-  "settings.extension": "扩展设置",
+  "settings.extension": "扩展服务设置",
   "settings.extension.gh_mirror_hosts": "GitHub 镜像地址设置",
   "settings.extension.gh_mirror_hosts_desc": "用于来自 GitHub 的扩展商店数据、扩展包原始地址下载失败时的尝试代理地址，会尝试将原始地址拼接到代理地址之后请求",
   "settings.extension.gh_mirror_hosts_reset": "恢复默认",

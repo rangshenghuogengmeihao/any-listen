@@ -218,7 +218,7 @@ export const settings: SettingListSection[] = [
   },
   {
     id: 'extension',
-    // t('settings.extension.gh_mirror_hosts')
+    // t('settings.extension')
     name: 'settings.extension',
     list: [
       {

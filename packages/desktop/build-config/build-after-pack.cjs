@@ -2,16 +2,16 @@ const fs = require('fs').promises
 
 const macLanguagesInfoPlistStrings = {
   en: {
-    CFBundleDisplayName: 'LX Music',
-    CFBundleName: 'LX Music',
+    CFBundleDisplayName: 'Any Listen',
+    CFBundleName: 'Any Listen',
   },
   zh_CN: {
-    CFBundleDisplayName: 'LX Music',
-    CFBundleName: 'LX Music',
+    CFBundleDisplayName: 'Any Listen',
+    CFBundleName: 'Any Listen',
   },
   zh_TW: {
-    CFBundleDisplayName: 'LX Music',
-    CFBundleName: 'LX Music',
+    CFBundleDisplayName: 'Any Listen',
+    CFBundleName: 'Any Listen',
   },
 }
 

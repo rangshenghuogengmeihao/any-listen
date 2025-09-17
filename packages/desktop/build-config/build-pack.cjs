@@ -12,7 +12,7 @@ const rootPath = path.join(__dirname, '../../..')
  * @see https://www.electron.build/configuration/configuration
  */
 const options = {
-  appId: 'cn.toside.music.desktop.v3',
+  appId: 'cn.toside.anylisten.desktop',
   productName: 'Any Listen',
   extraMetadata: {
     name: 'Any Listen',
@@ -89,14 +89,14 @@ const linuxOptions = {
         'Name[zh_CN]': 'Any Listen',
         'Name[zh_TW]': 'Any Listen',
         Encoding: 'UTF-8',
-        MimeType: 'x-scheme-handler/lxmusic',
+        MimeType: 'x-scheme-handler/anylisten',
         StartupNotify: 'false',
       },
       // Name: 'Any Listen',
       // 'Name[zh_CN]': 'Any Listen',
       // 'Name[zh_TW]': 'Any Listen',
       // Encoding: 'UTF-8',
-      // MimeType: 'x-scheme-handler/lxmusic',
+      // MimeType: 'x-scheme-handler/anylisten',
       // StartupNotify: 'false',
     },
   },
@@ -267,7 +267,7 @@ const createTarget = {
  * @param {'win' | 'mac' | 'linux' | 'dir'} target 构建目标平台
  * @param {'x86_64' | 'x64' | 'x86' | 'arm64' | 'armv7l'} arch 包架构
  * @param {*} packageType 包类型
- * @param {'onTagOrDraft' | 'always' | 'never'} publishType 发布类型
+ * @param {'onTag' | 'onTagOrDraft' | 'always' | 'never'} publishType 发布类型
  */
 const build = async (target, arch, packageType, publishType) => {
   if (target == 'dir') {

@@ -8,7 +8,7 @@
     "build:theme": "pnpm -F @shared/theme build:theme",
     "build": "pnpm build:desktop",
     "build:dir": "pnpm -F @shared/scripts build:desktop:dir",
-    "build:desktop": "pnpm -F @shared/scripts build:desktop",
+    "build:desktop": "pnpm -F @shared/scripts build:desktop:win",
     "build:web": "pnpm -F @shared/scripts build:web",
     "ckdep": "pnpm -F @shared/deps-update check",
     "pub:web": "pnpm -F @shared/publish pub web-server",

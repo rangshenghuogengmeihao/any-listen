@@ -51,7 +51,10 @@
     "dev:desktop": "ts-node dev-desktop.ts",
     "dev:web": "ts-node dev-web.ts",
     "build:desktop:dir": "ts-node pack-desktop.ts && pnpm -F desktop pack:dir",
-    "build:desktop": "ts-node pack-desktop.ts && pnpm -F desktop pack:win:setup:x64",
+    "build:desktop:win": "ts-node pack-desktop.ts && pnpm -F desktop pack:win:setup:x64",
+    "build:desktop:mac": "ts-node pack-desktop.ts && pnpm -F desktop pack:mac:dmg:arm64",
+    "build:desktop:linux": "ts-node pack-desktop.ts && pnpm -F desktop pack:linux:deb:amd64",
+    "build:desktop": "ts-node pack-desktop.ts",
     "build:web": "ts-node pack-web.ts",
     "build": "ts-node pack.ts",
     "postinstall": "ts-node ./postinstall.ts"

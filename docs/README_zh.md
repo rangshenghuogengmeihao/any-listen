@@ -99,4 +99,4 @@ node index.cjs
 本项目基于 Affero 通用公共许可证（AGPL）v3.0 授权，并附加以下条款：
 
 - 严禁商业用途，除非已获得原作者的书面许可。
-- 有关完整细则，请参阅 [LICENSE 文件](LICENSE)。
+- 有关完整细则，请参阅 [LICENSE 文件](../LICENSE)。

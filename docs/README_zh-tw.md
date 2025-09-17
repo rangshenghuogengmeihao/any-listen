@@ -1,11 +1,12 @@
-<p align="center"><a href="https://github.com/any-listen/any-listen"><img height="120" src="./images/header-logo.svg" alt="any-listen logo"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/any-listen/any-listen"><img height="100" src="./images/header-name.svg" alt="any-listen name"></a></p>
+<p align="center"><a href="https://github.com/any-listen/any-listen"><img height="110" src="./images/header-logo.svg" alt="any-listen logo"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/any-listen/any-listen"><img height="86" src="./images/header-name.svg" alt="any-listen name"></a></p>
 
-<p align="center">一個跨平台的私人音樂播放服務
+<p align="center">一個跨平台的私人音樂播放服務</p>
+
 <br />
-本專案仍在積極開發中，目前僅提供網頁版服務。你可以直接部署到伺服器，或使用 Docker 部署。
-</p>
 
 [English](../README.md) | [简体中文](README_zh.md) | 繁體中文
+
+本專案仍在積極開發中，目前僅提供網頁版服務。你可以直接部署到伺服器，或使用 Docker 部署。
 
 ## 使用方法
 

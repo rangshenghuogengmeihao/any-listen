@@ -1,11 +1,13 @@
-<p align="center"><a href="https://github.com/any-listen/any-listen"><img height="120" src="./docs/images/header-logo.svg" alt="any-listen logo"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/any-listen/any-listen"><img height="100" src="./docs/images/header-name.svg" alt="any-listen name"></a></p>
 
-<p align="center">A cross-platform private music playback service
+<p align="center"><a href="https://github.com/any-listen/any-listen"><img height="110" src="./docs/images/header-logo.svg" alt="any-listen logo"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/any-listen/any-listen"><img height="86" src="./docs/images/header-name.svg" alt="any-listen name"></a></p>
+
+<p align="center">A cross-platform private music streaming service</p>
+
 <br />
-This project is under active development. Currently, only the web version is available. You can deploy it directly to your server or use Docker.
-</p>
 
-English | [简体中文](./docs/README_zh.md) | [繁體中文](./docs/README_zh-tw.md)
+English | [简体中文](docs/README_zh.md) | [繁體中文](docs/README_zh-tw.md)
+
+This project is under active development and currently only provides a web version. You can deploy it directly to your server or use Docker for deployment.
 
 ## Usage
 
@@ -80,22 +82,24 @@ mkdir data
 node index.cjs
 ```
 
+
 ## Contributing
 
-Contributions are welcome! To help your PR get merged smoothly, please note the following:
+We welcome PRs! To help your PR get merged smoothly, please note the following:
 
-- For new features, it is recommended to create an Issue first to confirm necessity.
-- For bug fixes, please provide details and reproduction steps.
-- For other types of PRs, include appropriate explanations.
+- For new features, it's recommended to create an Issue first to discuss whether the feature is needed.
+- For bug fixes, please provide a description of the issue and how it was fixed.
+- For other types of PRs, please include appropriate explanations.
 
 Steps to contribute:
 
 1. Clone the repository and switch to the `dev` branch for development.
 2. Submit your PR to the `dev` branch.
 
+
 ## License
 
 This project is licensed under the Affero General Public License (AGPL) v3.0 with the following additional terms:
 
-- Commercial use is strictly prohibited unless prior written permission is obtained from the original author.
-- See the [LICENSE file](LICENSE) for full details.
+- Commercial use is strictly prohibited unless written permission is obtained from the original author.
+- For full details, please refer to the [LICENSE file](LICENSE).

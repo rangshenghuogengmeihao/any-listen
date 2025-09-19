@@ -10,6 +10,7 @@ if (isWin) {
   if (isMac) {
     defaultSetting['common.controlBtnPosition'] = 'right'
     defaultSetting['tray.themeId'] = 0
+    defaultSetting['common.transparentWindow'] = false
   }
 }
 

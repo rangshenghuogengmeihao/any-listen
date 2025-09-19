@@ -1,9 +1,9 @@
-### Improved
+### Fixed
 
-- Improved song information matching and song tag information reading.
+- Fixed an issue where WebDAV song covers could not be read.
 
 ---
 
-### 优化
+### 修复
 
-- 优化歌曲信息匹配及歌曲标签信息读取
+- 修复 WebDAV 歌曲封面读取

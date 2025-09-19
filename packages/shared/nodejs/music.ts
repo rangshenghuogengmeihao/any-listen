@@ -48,7 +48,7 @@ const getMetadataLyric = (metadata: IAudioMetadata | null) => {
  */
 export const parseBufferMetadata = async (buffer: Buffer, mimeType: string) => {
   const { parseBuffer, selectCover } = await import('music-metadata')
-  const metadata = await parseBuffer(buffer, mimeType, { skipCovers: true, skipPostHeaders: true, duration: false })
+  const metadata = await parseBuffer(buffer, mimeType, { skipPostHeaders: true, duration: false })
   // console.log(metadata)
   let name = (metadata.common.title || '').trim()
   const isLikelyNameGarbage = isLikelyGarbage(name)

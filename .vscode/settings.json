@@ -24,22 +24,22 @@
       "text": "Use conventional commit message format."
     },
     {
-      "text": "始终英语描述变更"
+      "text": "Always describe changes in English."
     },
     {
-      "text": "变更描述尽量简洁明了，例子：`chore: update deps`"
+      "text": "Keep change descriptions concise and clear. Example: `chore: update deps`"
     },
     {
-      "text": "如果 changeLog 文件已更新，则基于 changeLog 描述本次提交"
+      "text": "If the changeLog file is updated, base the commit message on the changeLog description."
     },
     {
-      "text": "只描述变更，不要描述意图"
+      "text": "Only describe what changed, do not explain the intent."
     },
     {
-      "text": "好例子：`feat: add SingleEvent class and update event API`"
+      "text": "Good example: `feat: add SingleEvent class and update event API`"
     },
     {
-      "text": "坏例子：`feat: add event handling improvements with SingleEvent class and update API for better event management`"
+      "text": "Bad example: `feat: add event handling improvements with SingleEvent class and update API for better event management`"
     }
   ]
 }

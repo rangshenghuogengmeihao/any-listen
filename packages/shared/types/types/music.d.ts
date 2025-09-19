@@ -27,7 +27,7 @@ declare namespace AnyListen {
     interface MusicInfoMeta_online extends MusicInfoMetaBase {
       source: Source // 源
       qualitys?: MusicQualityType
-      filePath?: string
+      fileName?: string
       ext?: string
       bitrateLabel?: string | null
       sizeStr?: string

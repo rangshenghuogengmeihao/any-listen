@@ -1,5 +1,5 @@
 import { services } from '../resources/shared'
-import { findMusic, findMusicByLocal } from './tools'
+import { findMusicByLocal, findMusicByOnline } from './tools'
 import { allowedUrl, buildExtSourceId, getExtSource } from './utils'
 
 export const searchMusicPic = async ({
@@ -81,17 +81,9 @@ export const getMusicPic = async (data: { musicInfo: AnyListen.Music.MusicInfo }
       musicInfo: data.musicInfo,
     })
   } catch {}
-  return findMusic(
-    {
-      name: data.musicInfo.name,
-      singer: data.musicInfo.singer,
-      albumName: data.musicInfo.meta.albumName,
-      interval: data.musicInfo.interval,
-    },
-    async (info) => {
-      return handleGetMusicPic({
-        musicInfo: info,
-      })
-    }
-  )
+  return findMusicByOnline(data.musicInfo, async (info) => {
+    return handleGetMusicPic({
+      musicInfo: info,
+    })
+  })
 }

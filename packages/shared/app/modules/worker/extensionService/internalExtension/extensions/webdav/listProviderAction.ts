@@ -32,7 +32,7 @@ export const listProviderActions: AnyListen.IPCExtension.ListProviderAction = {
     const extId = data.meta.extensionId
     const source = data.meta.source
     return (list.filter((item) => !item.isDir && item.size > 0 && isMusicFile(item.name)) as WebDAVFileItem[]).map((item) => {
-      const path = `${extId}_${source}_${options.url}/${item.path}`
+      const path = `${extId}_${source}_${options.url}${item.path}`
       map.set(path, item)
       return path
     })
@@ -49,7 +49,7 @@ export const listProviderActions: AnyListen.IPCExtension.ListProviderAction = {
         data.list.id,
         new Map(
           (list.filter((item) => !item.isDir && item.size > 0 && isMusicFile(item.name)) as WebDAVFileItem[]).map((item) => [
-            `${extId}_${source}_${options.url}/${item.path}`,
+            `${extId}_${source}_${options.url}${item.path}`,
             item,
           ])
         )
@@ -62,7 +62,7 @@ export const listProviderActions: AnyListen.IPCExtension.ListProviderAction = {
           if (!item) return null
           return {
             id,
-            name: item.name,
+            name: item.name.substring(0, item.name.lastIndexOf('.')) || item.name,
             singer: '',
             isLocal: false,
             interval: null,
@@ -72,6 +72,7 @@ export const listProviderActions: AnyListen.IPCExtension.ListProviderAction = {
               albumName: '',
               posTime: 0,
               source: 'webdav',
+              fileName: item.name,
               size: item.size,
               sizeStr: sizeFormate(item.size),
               updateTime: 0,
@@ -90,7 +91,7 @@ export const listProviderActions: AnyListen.IPCExtension.ListProviderAction = {
     if (!url || typeof url !== 'string' || !musicInfo.meta.path || typeof musicInfo.meta.path !== 'string') return musicInfo
     const options = await getWebDAVOptionsByMusicInfo(musicInfo)
     const meta = await parseMusicMetadata(options, options.path, (musicInfo.meta.size as number) || 0)
-    if (!meta) return musicInfo
+    if (!meta) throw new Error('No metadata found')
     return {
       ...musicInfo,
       name: meta.name || musicInfo.name,

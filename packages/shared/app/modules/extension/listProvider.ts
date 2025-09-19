@@ -101,6 +101,9 @@ export const syncList = async (list: AnyListen.List.RemoteListInfo) => {
             // console.log('Parsed music metadata:', newInfo.name, newInfo.singer, newInfo.meta)
             await updateMusicBaseInfo(list.id, newInfo)
           })
+          .catch(() => {
+            // console.error('Parse music metadata error:', err)
+          })
       }
     }
   }

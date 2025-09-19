@@ -1,5 +1,5 @@
 import { singerFormat } from '@any-listen/common/tools'
-import { formatPlayTime, sizeFormate } from '@any-listen/common/utils'
+import { formatPlayTime, isLikelyGarbage, sizeFormate } from '@any-listen/common/utils'
 import type { IAudioMetadata } from 'music-metadata'
 import type { IComment } from 'music-metadata/lib/type'
 import { basename, checkPath, extname, getFileStats } from './index'
@@ -48,12 +48,14 @@ const getMetadataLyric = (metadata: IAudioMetadata | null) => {
  */
 export const parseBufferMetadata = async (buffer: Buffer, mimeType: string) => {
   const { parseBuffer, selectCover } = await import('music-metadata')
-  const metadata = await parseBuffer(buffer, mimeType, { duration: false })
+  const metadata = await parseBuffer(buffer, mimeType, { skipCovers: true, skipPostHeaders: true, duration: false })
   // console.log(metadata)
   let name = (metadata.common.title || '').trim()
-  let singer = metadata.common.artists?.length ? singerFormat(metadata.common.artists.join(';')) : ''
-  let albumName = metadata.common.album?.trim() ?? ''
-  let interval = metadata.format.duration ? formatPlayTime(metadata.format.duration) : ''
+  const isLikelyNameGarbage = isLikelyGarbage(name)
+  if (isLikelyNameGarbage) name = ''
+  let singer = isLikelyNameGarbage ? '' : metadata.common.artists?.length ? singerFormat(metadata.common.artists.join(';')) : ''
+  let albumName = isLikelyNameGarbage ? '' : (metadata.common.album?.trim() ?? '')
+  let interval = metadata.format.duration && metadata.format.duration > 2 ? formatPlayTime(metadata.format.duration) : null
 
   return {
     name,
@@ -76,16 +78,19 @@ export const parseFileMetadata = async (path: string) => {
     metadata = await parseFile(path, {
       skipCovers: true,
     })
-  } catch (err) {
-    console.log(err)
+  } catch {
+    // console.log(err)
     return null
   }
 
   let ext = extname(path)
-  let name = (metadata.common.title || basename(path, ext)).trim()
-  let singer = metadata.common.artists?.length ? singerFormat(metadata.common.artists.join(';')) : ''
-  let interval = metadata.format.duration ? formatPlayTime(metadata.format.duration) : ''
-  let albumName = metadata.common.album?.trim() ?? ''
+  let name = (metadata.common.title || '').trim()
+  const isLikelyNameGarbage = isLikelyGarbage(name)
+  if (isLikelyNameGarbage) name = ''
+  name ||= basename(path, ext)
+  let singer = isLikelyNameGarbage ? '' : metadata.common.artists?.length ? singerFormat(metadata.common.artists.join(';')) : ''
+  let interval = metadata.format.duration && metadata.format.duration > 2 ? formatPlayTime(metadata.format.duration) : null
+  let albumName = isLikelyNameGarbage ? '' : (metadata.common.album?.trim() ?? '')
 
   let sizeStr = sizeFormate((await getFileStats(path))?.size ?? 0)
 
@@ -115,8 +120,8 @@ const getFileMetadata = async (path: string) => {
     return isExist
       ? import('music-metadata')
           .then(async ({ parseFile }) => parseFile(path))
-          .catch((err) => {
-            console.log(err)
+          .catch(() => {
+            // console.log(err)
             return null
           })
       : null
@@ -134,5 +139,7 @@ export const getFilePic = async (path: string) => {
 
 export const getFileLyric = async (path: string) => {
   const metadata = await getFileMetadata(path)
-  return getMetadataLyric(metadata)
+  const lyric = getMetadataLyric(metadata)
+  if (lyric && isLikelyGarbage(lyric)) return null
+  return lyric
 }

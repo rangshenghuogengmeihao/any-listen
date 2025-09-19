@@ -1,5 +1,6 @@
 import { createCache } from '@any-listen/common/cache'
 import { getMimeType } from '@any-listen/common/mime'
+import { isLikelyGarbage } from '@any-listen/common/utils'
 import { basename, extname } from '@any-listen/nodejs'
 import { decodeString } from '@any-listen/nodejs/char'
 import { parseBufferMetadata } from '@any-listen/nodejs/music'
@@ -81,8 +82,8 @@ const requestParseMetadata = async (
   let nextLength = nextLenMap[preLength]
   if (!nextLength) return null
   data = Buffer.concat([data, await webDAVClient.getPartial(path, preLength, nextLength)]) // first 8k
-  const metaHead = await parseBufferMetadata(data, mimeType).catch((err) => {
-    logcat.error('parseBufferMetadata error', err)
+  const metaHead = await parseBufferMetadata(data, mimeType).catch(() => {
+    // logcat.error('parseBufferMetadata error', err)
     return null
   })
   if (!metaHead) return null
@@ -119,8 +120,8 @@ export const parseMusicMetadata = async (options: WebDAVClientOptions, path: str
     }
   }
   const data = await webDAVClient.getPartial(path, fileSize - 32 * 1024, fileSize - 1) // last 32k
-  const metaTail = await parseBufferMetadata(data, mimeType).catch((err) => {
-    logcat.error('parseBufferMetadata error', err)
+  const metaTail = await parseBufferMetadata(data, mimeType).catch(() => {
+    // logcat.error('parseBufferMetadata error', err)
     return null
   })
   // logcat.info('metaTail', metaTail)
@@ -196,7 +197,7 @@ export const getMusicLyric = async (options: WebDAVClientOptions, path: string) 
     })
     if (data) {
       const lrc = await decodeString(data)
-      if (lrc) return lrc
+      if (lrc && !isLikelyGarbage(lrc)) return lrc
     }
   }
 

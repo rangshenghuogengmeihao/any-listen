@@ -1,3 +1,4 @@
+import { isLikelyGarbage } from '@any-listen/common/utils'
 import { checkFile, checkPath, dirname, extname, getFileStats, joinPath, readFile } from '@any-listen/nodejs'
 import { decodeString } from '@any-listen/nodejs/char'
 import { getFileLyric, getFilePic, parseFileMetadata } from '@any-listen/nodejs/music'
@@ -167,7 +168,7 @@ export const getLocalMusicFileLyric = async (path: string): Promise<string | nul
   if (stats && stats.size < 1024 * 1024 * 10) {
     const lrcBuf = await readFile(lrcPath)
     const lrc = await decodeString(lrcBuf)
-    if (lrc) return lrc
+    if (lrc && !isLikelyGarbage(lrc)) return lrc
   }
 
   // 尝试读取文件内歌词

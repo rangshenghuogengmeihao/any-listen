@@ -12,6 +12,7 @@
 - Improved lyrics display on the song details page for better readability.
 - Improved the lyric scrolling speed when lyric scrolling is not delayed.
 - Reset extension store cache on each page load.
+- Improved song information matching and song tag information reading.
 
 ### Fixed
 
@@ -38,6 +39,7 @@
 - 优化歌曲详情页的歌词显示效果，提升可读性
 - 优化不延迟歌词滚动时的歌词滚动速度
 - 每次加载页面时重置扩展商店缓存
+- 优化歌曲信息匹配及歌曲标签信息读取
 
 ### 修复
 

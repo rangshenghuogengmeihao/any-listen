@@ -13,27 +13,27 @@ export const setPlayInfo = (index: number, listId: string) => {
   playerState.playInfo.index = index
   playerState.playInfo.listId = listId
 
-  playerEvent.playInfoChanged({ ...playerState.playInfo })
+  playerEvent.playInfoChanged({ index, listId })
 }
 
 export const updatePlayIndex = (index: number, historyIndex?: number) => {
   playerState.playInfo.index = index
   if (historyIndex != null) playerState.playInfo.historyIndex = historyIndex
 
-  playerEvent.playInfoChanged({ ...playerState.playInfo })
+  playerEvent.playInfoChanged(historyIndex == null ? { index } : { index, historyIndex })
 }
 
 export const updatePlayHistoryIndex = (historyIndex: number) => {
   playerState.playInfo.historyIndex = historyIndex
 
-  playerEvent.playInfoChanged({ ...playerState.playInfo })
+  playerEvent.playInfoChanged({ historyIndex })
 }
 
 export const setPlayListId = (listId: string | null, isOnline: boolean) => {
   playerState.playInfo.listId = listId
   playerState.playInfo.isOnline = isOnline
 
-  playerEvent.playInfoChanged({ ...playerState.playInfo })
+  playerEvent.playInfoChanged({ listId, isOnline })
 }
 
 export const setPlayMusicInfo = (info: AnyListen.Player.PlayMusicInfo | null) => {
@@ -56,15 +56,19 @@ export const setMusicInfo = (_musicInfo: Partial<AnyListen.Player.MusicInfo> | n
     album: '',
     collect: false,
   }
+  let changedInfo: Partial<AnyListen.Player.MusicInfo> = {}
   for (const key of musicInfoKeys) {
     const val = _musicInfo[key]
     if (val !== undefined) {
       // @ts-expect-error
       playerState.musicInfo[key] = val
+      // @ts-expect-error
+      changedInfo[key] = val
     }
   }
 
-  playerEvent.musicInfoChanged({ ...playerState.musicInfo })
+  if (Object.keys(changedInfo).length == 0) return
+  playerEvent.musicInfoChanged(changedInfo)
 }
 
 export const setPlaying = (playing: boolean) => {
@@ -97,7 +101,7 @@ export const setNowPlayTime = (time: number) => {
 export const setMaxPlayTime = (time: number) => {
   playerState.playInfo.duration = time
 
-  playerEvent.playInfoChanged({ ...playerState.playInfo })
+  playerEvent.playInfoChanged({ duration: time })
 
   playerState.progress.maxPlayTime = time
   playerState.progress.maxPlayTimeStr = formatPlayTime2(time)
@@ -119,7 +123,7 @@ export const setProgress = (currentTime: number, totalTime: number) => {
 
   playerState.playInfo.duration = totalTime
 
-  playerEvent.playInfoChanged({ ...playerState.playInfo })
+  playerEvent.playInfoChanged({ duration: totalTime })
 
   playerState.progress.nowPlayTime = currentTime
   playerState.progress.nowPlayTimeStr = formatPlayTime2(currentTime)

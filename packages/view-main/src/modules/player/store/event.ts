@@ -47,10 +47,11 @@ class Event extends _Event {
   }
 
   musicChanged(index: number, historyListIndex: number) {
+    // console.warn('musicChanged', index, historyListIndex)
     this.emitEvent('musicChanged', index, historyListIndex)
   }
 
-  musicInfoChanged(musicInfo: InitState['musicInfo']) {
+  musicInfoChanged(musicInfo: Partial<InitState['musicInfo']>) {
     this.emitEvent('musicInfoChanged', musicInfo)
   }
 
@@ -70,7 +71,8 @@ class Event extends _Event {
     this.emitEvent('playMusicInfoChanged', playMusicInfo)
   }
 
-  playInfoChanged(playInfo: InitState['playInfo']) {
+  playInfoChanged(playInfo: Partial<InitState['playInfo']>) {
+    // console.warn('playInfoChanged', playInfo)
     this.emitEvent('playInfoChanged', playInfo)
   }
 

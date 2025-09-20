@@ -1,5 +1,5 @@
-import { workers } from '@/app/worker'
 import { throttle } from '@any-listen/common/utils'
+import { workers } from '../worker'
 import { getPlayTime, savePlayTime } from './playTimeStore'
 
 let playInfo: AnyListen.Player.SavedPlayInfo
@@ -23,12 +23,14 @@ const savePlayTimeThrottle = throttle(() => {
 
 export const setPlayTime = async (time: number) => {
   await initPlayInfo()
+  if (playInfo.time === time) return
   playInfo.time = time
   savePlayTimeThrottle()
 }
 
 export const setPlayMusic = async (index: number, historyIndex: number) => {
   await initPlayInfo()
+  if (playInfo.index === index && playInfo.historyIndex === historyIndex) return
   playInfo = {
     index,
     time: 0,
@@ -39,10 +41,22 @@ export const setPlayMusic = async (index: number, historyIndex: number) => {
   savePlayTimeThrottle()
 }
 
-export const setPlayInfo = async (duration: number, index: number) => {
+export const setPlayInfo = async (duration?: number, index?: number) => {
   await initPlayInfo()
-  playInfo.maxTime = duration
-  playInfo.index = index
+  let updated = false
+  if (duration != null) {
+    duration = Math.round(duration)
+    if (playInfo.maxTime !== duration) {
+      playInfo.maxTime = duration
+      updated ||= true
+    }
+  }
+  if (index != null && playInfo.index !== index) {
+    playInfo.index = index
+    updated ||= true
+  }
+  if (!updated) return
+  // console.log('setPlayInfo', duration, index)
   savePlayInfoThrottle()
 }
 

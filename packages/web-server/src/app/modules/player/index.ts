@@ -1,9 +1,15 @@
 import { appEvent, appState } from '@/app/app'
 import { workers } from '@/app/worker'
 import { musicListEvent, sendMusicListAction } from '@any-listen/app/modules/musicList'
-import { initPlayer as initPlayerModule, playerEvent } from '@any-listen/app/modules/player'
+import {
+  getPlayInfo as getPlayInfoRaw,
+  initPlayer as initPlayerModule,
+  playerEvent,
+  setPlayInfo,
+  setPlayMusic,
+  setPlayTime,
+} from '@any-listen/app/modules/player'
 import { LIST_IDS } from '@any-listen/common/constants'
-import { getPlayInfo as getPlayInfoRaw, setPlayInfo, setPlayMusic, setPlayTime } from './playInfo'
 
 const registerProgressSave = () => {
   const handler = async (progress: AnyListen.IPCPlayer.Progress) => {
@@ -65,7 +71,7 @@ const checkCollect = async (minfo: AnyListen.Player.PlayMusicInfo) => {
   return minfo.listId == LIST_IDS.LOVE ? true : workers.dbService.checkListExistMusic(LIST_IDS.LOVE, minfo.musicInfo.id)
 }
 export const initPlayer = async () => {
-  initPlayerModule(workers.dbService)
+  initPlayerModule(workers.dbService, appState.dataPath)
   let prevCollectStatus = false
   playerEvent.on('musicChanged', async (index, historyIndex) => {
     void setPlayMusic(index, historyIndex)

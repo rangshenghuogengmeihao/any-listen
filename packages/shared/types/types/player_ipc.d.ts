@@ -65,8 +65,8 @@ declare namespace AnyListen {
     type Status = [PlayerStatus, boolean]
     type PlayerEvent =
       | IPCAction<'musicChanged', { index: number; historyIndex: number }>
-      | IPCAction<'musicInfoUpdated', Player.MusicInfo>
-      | IPCAction<'playInfoUpdated', Player.PlayInfo>
+      | IPCAction<'musicInfoUpdated', Partial<Player.MusicInfo>>
+      | IPCAction<'playInfoUpdated', Partial<Player.PlayInfo>>
       | IPCAction<'progress', Progress>
       | IPCAction<'playbackRate', number>
       | IPCAction<'status', Status>

@@ -20,30 +20,8 @@
   const lists = $derived([...$defaultLists, ...userLists.val])
   let activeIndex = $state(-1)
 
-  const showMenu = (item: (typeof lists)[number] | null, position: Position) => {
+  const showMenu = (item: AnyListen.List.MyListInfo | null, position: Position) => {
     menu.show(item, position)
-  }
-
-  // const handleCreate: ComponentProps<Menu>['oncreate'] = info => {
-  //   let position = lists.length
-  //   if (info) {
-  //     let index = lists.findIndex(l => l.id == info.id)
-  //     if (index != -1) position = index + 1
-  //   }
-  //   console.log(position)
-  // }
-  // const handleRename: ComponentProps<Menu>['onrename'] = info => {}
-
-  // const onchange = (...args: any[]) => {
-  //   console.log(args, 2)
-  // }
-  let t: 'a' | 'b' = Math.random() > 0.5 ? 'a' : 'b'
-  switch (t) {
-    case 'a':
-      break
-
-    default:
-      break
   }
 </script>
 

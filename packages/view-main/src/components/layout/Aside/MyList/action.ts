@@ -85,3 +85,5 @@ export const syncUserList = async (id: string) => {
 export const removeUserList = async (id: string) => {
   await removeUserListRemote([id])
 }
+
+export { updateUserListPosition } from '@/modules/musicLibrary/store/actions'

@@ -167,6 +167,10 @@ const initUserList = (force = false) => {
 const filterUserLists = (parentId: UserListInfo['parent_id']) => {
   return userLists.filter((l) => l.parentId === parentId)
 }
+const overwriteUserList = (parentId: UserListInfo['parent_id'], lists: AnyListen.List.UserListInfo[]) => {
+  const newList = userLists.filter((l) => l.parentId !== parentId)
+  userLists = [...newList, ...lists]
+}
 
 /**
  * 获取所有用户列表
@@ -318,7 +322,8 @@ export const updateUserListsPosition = (position: number, ids: string[]) => {
   position = Math.min(targetList.length, position)
 
   arrPushByPosition(targetList, updateLists, position)
-  inertUserLists(id, toDBListInfo(targetList), true)
+  inertUserLists(targetInfo.parentId, toDBListInfo(targetList), true)
+  overwriteUserList(targetInfo.parentId, targetList)
 }
 
 /**

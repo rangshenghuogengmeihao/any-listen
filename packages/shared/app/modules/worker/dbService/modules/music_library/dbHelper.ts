@@ -72,7 +72,7 @@ export const inertUserLists = (parentId: UserListInfo['parent_id'], lists: UserL
   const db = getDB()
   const listClearStatement: unknown = (parentId == null ? createListClearNullStatement : createListClearStatement)()
   const listInsertStatement = createListInsertStatement()
-  db.transaction((parentId: UserListInfo['parent_id'], lists: UserListInfo[]) => {
+  db.transaction((parentId: UserListInfo['parent_id'], lists: UserListInfo[], isClear: boolean) => {
     if (isClear) {
       if (parentId == null) {
         ;(listClearStatement as ReturnType<typeof createListClearNullStatement>).run()
@@ -90,7 +90,7 @@ export const inertUserLists = (parentId: UserListInfo['parent_id'], lists: UserL
         position: list.position,
       })
     }
-  })(parentId, lists)
+  })(parentId, lists, isClear)
 }
 
 /**

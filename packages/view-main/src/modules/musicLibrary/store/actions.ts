@@ -18,6 +18,7 @@ import {
   saveListScrollPosition as saveListScrollPositionRemote,
   updateListMusics as updateListMusicsFromRemote,
   updateUserList as updateUserListFromRemote,
+  updateUserListPosition as updateUserListPositionFromRemote,
 } from './listRemoteActions'
 
 export { getSubUserLists, setFetchingListStatus, setUserListInited, userListExist } from './commit'
@@ -129,6 +130,10 @@ export const updateUserList = async (info: AnyListen.List.UserListInfo) => {
     default:
       break
   }
+}
+
+export const updateUserListPosition = async (id: string, position: number) => {
+  return updateUserListPositionFromRemote({ ids: [id], position })
 }
 
 export const addListMusics = async (id: string, musicInfos: AnyListen.Music.MusicInfo[]) => {

@@ -17,6 +17,11 @@ const options = {
   extraMetadata: {
     name: 'any-listen',
     main: 'dist/electron/main.js',
+    description: 'A cross-platform private music playback service',
+    author: {
+      name: 'lyswhut',
+      email: 'lyswhut@qq.com',
+    },
   },
   beforePack,
   // afterPack,

@@ -1,6 +1,6 @@
 const builder = require('electron-builder')
 const beforePack = require('./build-before-pack.cjs')
-const afterPack = require('./build-after-pack.cjs')
+// const afterPack = require('./build-after-pack.cjs')
 const fs = require('node:fs')
 const path = require('node:path')
 const { rmSourceModule } = require('./native-module.cjs')
@@ -13,13 +13,13 @@ const rootPath = path.join(__dirname, '../../..')
  */
 const options = {
   appId: 'cn.toside.anylisten.desktop',
-  productName: 'Any Listen',
+  productName: 'any-listen',
   extraMetadata: {
     name: 'Any Listen',
     main: 'dist/electron/main.js',
   },
   beforePack,
-  afterPack,
+  // afterPack,
   protocols: {
     name: 'anylisten-protocol',
     schemes: ['anylisten'],
@@ -114,6 +114,10 @@ const macOptions = {
     icon: './resources/icons/icon.icns',
     category: 'public.app-category.music',
     // artifactName: '${productName}-${version}.${ext}',
+    extendInfo: {
+      CFBundleDisplayName: 'Any Listen',
+      CFBundleName: 'Any Listen',
+    },
   },
   dmg: {
     window: {

@@ -15,7 +15,7 @@ const options = {
   appId: 'cn.toside.anylisten.desktop',
   productName: 'any-listen',
   extraMetadata: {
-    name: 'Any Listen',
+    name: 'any-listen',
     main: 'dist/electron/main.js',
   },
   beforePack,

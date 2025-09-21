@@ -1,13 +1,12 @@
 <script lang="ts">
-  import { useSettingValue } from '@/modules/setting/reactive.svelte'
-  import LeftControl from './LeftControl.svelte'
+  // import { useSettingValue } from '@/modules/setting/reactive.svelte'
+  // import LeftControl from './LeftControl.svelte'
   import RightControl from './RightControl.svelte'
-  let controlBtnPosition = useSettingValue('common.controlBtnPosition')
+  // let controlBtnPosition = useSettingValue('common.controlBtnPosition')
 </script>
 
-
-{#if controlBtnPosition.val == 'left'}
+<!-- {#if controlBtnPosition.val == 'left'}
   <LeftControl />
-{:else}
-  <RightControl />
-{/if}
+{:else} -->
+<RightControl />
+<!-- {/if} -->

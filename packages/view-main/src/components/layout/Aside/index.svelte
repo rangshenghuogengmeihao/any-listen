@@ -2,17 +2,17 @@
   import Logo from './Logo.svelte'
   import Nav from './Nav.svelte'
   import MyList from './MyList/index.svelte'
-  import { useSettingValue } from '@/modules/setting/reactive.svelte'
-  let controlBtnPosition = useSettingValue('common.controlBtnPosition')
+  // import { useSettingValue } from '@/modules/setting/reactive.svelte'
+  // let controlBtnPosition = useSettingValue('common.controlBtnPosition')
   // export let params = {}
 
   // console.log(params)
 </script>
 
 <div class="aside">
-  {#if controlBtnPosition.val == 'right'}
-    <Logo />
-  {/if}
+  <!-- {#if controlBtnPosition.val == 'right'} -->
+  <Logo />
+  <!-- {/if} -->
   <Nav />
   <MyList />
 </div>

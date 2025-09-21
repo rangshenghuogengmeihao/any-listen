@@ -1,3 +1,4 @@
+
 <p align="center"><a href="https://github.com/any-listen/any-listen"><img height="110" src="./images/header-logo.svg" alt="any-listen logo"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/any-listen/any-listen"><img height="86" src="./images/header-name.svg" alt="any-listen name"></a></p>
 
 <p align="center">一個跨平台的私人音樂播放服務</p>
@@ -6,13 +7,19 @@
 
 [English](../README.md) | [简体中文](README_zh.md) | 繁體中文
 
-本專案仍在積極開發中，目前僅提供網頁版服務。你可以直接部署到伺服器，或使用 Docker 部署。
+本專案仍在積極開發中，目前提供 **「桌面版」** 及 **「網頁版服務」**。
 
-## 使用方法
+## 桌面版
+
+下載最新版本安裝檔：[https://github.com/any-listen/any-listen-desktop/releases](https://github.com/any-listen/any-listen-desktop/releases)
+
+## 網頁版
+
+你可以直接部署到伺服器，或使用 Docker 部署。
 
 ### Docker 部署
 
-[https://hub.docker.com/r/lyswhut/any-listen-web-server](https://hub.docker.com/r/lyswhut/any-listen-web-server)
+映像檔發佈地址：[https://hub.docker.com/r/lyswhut/any-listen-web-server](https://hub.docker.com/r/lyswhut/any-listen-web-server)
 
 ### 直接部署
 

@@ -6,13 +6,19 @@
 
 [English](../README.md) | 简体中文 | [繁體中文](README_zh-tw.md)
 
-该项目仍在积极开发中，目前暂仅提供网页版服务。你可以直接部署到服务器，或使用 Docker 部署。
+该项目仍在积极开发中，目前提供 **「桌面版」** 及 **「网页版服务」** 。
 
-## 使用方法
+## 桌面版
+
+下载最新版本安装即可：[https://github.com/any-listen/any-listen-desktop/releases](https://github.com/any-listen/any-listen-desktop/releases)
+
+## 网页版
+
+你可以直接部署到服务器，或使用 Docker 部署。
 
 ### Docker 部署
 
-[https://hub.docker.com/r/lyswhut/any-listen-web-server](https://hub.docker.com/r/lyswhut/any-listen-web-server)
+镜像发布地址： [https://hub.docker.com/r/lyswhut/any-listen-web-server](https://hub.docker.com/r/lyswhut/any-listen-web-server)
 
 ### 直接部署
 

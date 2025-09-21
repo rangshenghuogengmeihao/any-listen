@@ -5,15 +5,21 @@
 
 <br />
 
-English | [简体中文](docs/README_zh.md) | [繁體中文](docs/README_zh-tw.md)
+English | [简体中文](./docs/README_zh.md) | [繁體中文](./docs/README_zh-tw.md)
 
-This project is under active development and currently only provides a web version. You can deploy it directly to your server or use Docker for deployment.
+This project is under active development and currently provides both a **Desktop version** and a **Web version**.
 
-## Usage
+## Desktop Version
+
+Download the latest installer: [https://github.com/any-listen/any-listen-desktop/releases](https://github.com/any-listen/any-listen-desktop/releases)
+
+## Web Version
+
+You can deploy it directly to your server or use Docker for deployment.
 
 ### Docker Deployment
 
-[https://hub.docker.com/r/lyswhut/any-listen-web-server](https://hub.docker.com/r/lyswhut/any-listen-web-server)
+Image: [https://hub.docker.com/r/lyswhut/any-listen-web-server](https://hub.docker.com/r/lyswhut/any-listen-web-server)
 
 ### Direct Deployment
 
@@ -82,7 +88,6 @@ mkdir data
 node index.cjs
 ```
 
-
 ## Contributing
 
 We welcome PRs! To help your PR get merged smoothly, please note the following:
@@ -95,7 +100,6 @@ Steps to contribute:
 
 1. Clone the repository and switch to the `dev` branch for development.
 2. Submit your PR to the `dev` branch.
-
 
 ## License
 

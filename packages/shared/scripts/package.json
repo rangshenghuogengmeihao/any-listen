@@ -69,11 +69,11 @@
     "@any-listen/view-main": "workspace:view-main@*",
     "@any-listen/web-server": "workspace:web-server@*",
     "@types/spinnies": "^0.5.3",
-    "del": "^8.0.0",
+    "del": "^8.0.1",
     "picocolors": "^1.1.1",
     "spinnies": "github:lyswhut/spinnies.git#233305c58694aa3b053e3ab9af9049993f918b9d",
     "tree-kill": "^1.2.2",
     "ts-node": "^10.9.2",
-    "vite": "^7.1.6"
+    "vite": "^7.1.7"
   }
 }

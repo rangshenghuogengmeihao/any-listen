@@ -63,7 +63,7 @@ const winOptions = {
   win: {
     icon: './resources/icons/icon.ico',
     legalTrademarks: 'lyswhut',
-    // artifactName: '${productName}-v${version}-${env.ARCH}-${env.TARGET}.${ext}',
+    // artifactName: '${productName}-${version}-${env.ARCH}-${env.TARGET}.${ext}',
   },
   nsis: {
     oneClick: false,
@@ -143,9 +143,9 @@ const macOptions = {
 
 // win: {
 // tagret: {
-//   setup: ['nsis', '${productName}-v${version}-${env.ARCH}-Setup.${ext}'],
-//   green: ['7z', '${productName}-v${version}-${env.ARCH}-green.${ext}'],
-//   portable: ['portable', '${productName}-v${version}-${env.ARCH}-portable.${ext}'],
+//   setup: ['nsis', '${productName}-${version}-${env.ARCH}-Setup.${ext}'],
+//   green: ['7z', '${productName}-${version}-${env.ARCH}-green.${ext}'],
+//   portable: ['portable', '${productName}-${version}-${env.ARCH}-portable.${ext}'],
 // },
 // },
 // linux: {
@@ -183,25 +183,25 @@ const createTarget = {
   win(arch, packageType) {
     switch (packageType) {
       case 'setup':
-        winOptions.artifactName = `\${productName}-v\${version}-${arch}-Setup.\${ext}`
+        winOptions.artifactName = `\${productName}-\${version}-${arch}-Setup.\${ext}`
         return {
           buildOptions: { win: ['nsis'] },
           options: winOptions,
         }
       case 'green':
-        winOptions.artifactName = `\${productName}-v\${version}-win_${arch}-green.\${ext}`
+        winOptions.artifactName = `\${productName}-\${version}-win_${arch}-green.\${ext}`
         return {
           buildOptions: { win: ['7z'] },
           options: winOptions,
         }
       case 'win7_green':
-        winOptions.artifactName = `\${productName}-v\${version}-win7_${arch}-green.\${ext}`
+        winOptions.artifactName = `\${productName}-\${version}-win7_${arch}-green.\${ext}`
         return {
           buildOptions: { win: ['7z'] },
           options: winOptions,
         }
       case 'portable':
-        winOptions.artifactName = `\${productName}-v\${version}-${arch}-portable.\${ext}`
+        winOptions.artifactName = `\${productName}-\${version}-${arch}-portable.\${ext}`
         return {
           buildOptions: { win: ['portable'] },
           options: winOptions,

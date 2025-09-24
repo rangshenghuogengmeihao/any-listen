@@ -1,12 +1,22 @@
 import { sizeFormate } from '@any-listen/common/utils'
 import { logcat } from './shared'
 import { getWebDAVOptionsByListInfo, getWebDAVOptionsByMusicInfo } from './utils'
-import { createWebDAVClient, parseMusicMetadata, testDir, type WebDAVFileItem } from './webdav'
+import {
+  createWebDAVClient,
+  parseMusicMetadata,
+  testDir,
+  type WebDAVClientOptions,
+  type WebDAVFileItem,
+  type WebDAVItem,
+} from './webdav'
 
 const listCache = new Map<string, Map<string, WebDAVFileItem>>()
 
 const isMusicFile = (name: string) => {
   return /\.(mp3|flac|wav|m4a|aac|ogg)$/i.test(name)
+}
+const generateId = (extId: string, source: string, options: WebDAVClientOptions, item: WebDAVItem) => {
+  return `${extId}_${source}_${options.username}_${options.url}_${item.path}`
 }
 export const listProviderActions: AnyListen.IPCExtension.ListProviderAction = {
   async createList(params) {
@@ -32,7 +42,7 @@ export const listProviderActions: AnyListen.IPCExtension.ListProviderAction = {
     const extId = data.meta.extensionId
     const source = data.meta.source
     return (list.filter((item) => !item.isDir && item.size > 0 && isMusicFile(item.name)) as WebDAVFileItem[]).map((item) => {
-      const path = `${extId}_${source}_${options.url}${item.path}`
+      const path = generateId(extId, source, options, item)
       map.set(path, item)
       return path
     })
@@ -49,7 +59,7 @@ export const listProviderActions: AnyListen.IPCExtension.ListProviderAction = {
         data.list.id,
         new Map(
           (list.filter((item) => !item.isDir && item.size > 0 && isMusicFile(item.name)) as WebDAVFileItem[]).map((item) => [
-            `${extId}_${source}_${options.url}${item.path}`,
+            generateId(extId, source, options, item),
             item,
           ])
         )

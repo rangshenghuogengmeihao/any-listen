@@ -92,23 +92,27 @@ export const getUpdateInfo = async (index = 0): Promise<AnyListen.UpdateInfo> =>
 }
 
 class Update extends UpdateEvent {
+  private info: AnyListen.UpdateInfo | null = null
+  async checkUpdateStatus(isAutoUpdate: boolean) {
+    if (!this.info) return false
+    const latest = getLatestVersion(this.info, appState.appSetting['common.allowPreRelease'])
+    if (compareVersions(appState.version.version, latest.version) < 0) {
+      this.emit('update_available', this.info)
+      if (isAutoUpdate) void this.downloadUpdate()
+      return true
+    }
+    this.emit('update_not_available', this.info)
+    return false
+  }
   async checkForUpdates(isAutoUpdate: boolean) {
     this.emit('checking_for_update')
-    let info: AnyListen.UpdateInfo
     try {
-      info = await getUpdateInfo()
+      this.info = await getUpdateInfo()
     } catch (err) {
       this.emit('error', err as Error)
       return false
     }
-    const latest = getLatestVersion(info, appState.appSetting['common.allowPreRelease'])
-    if (compareVersions(appState.version.version, latest.version) < 0) {
-      this.emit('update_available', info)
-      if (isAutoUpdate) void this.downloadUpdate()
-      return true
-    }
-    this.emit('update_not_available', info)
-    return false
+    return this.checkUpdateStatus(isAutoUpdate)
   }
   // TODO update
   async downloadUpdate() {

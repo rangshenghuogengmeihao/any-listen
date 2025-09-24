@@ -223,13 +223,11 @@ export const settings: SettingListSection[] = [
     id: 'update',
     name: 'settings__update',
     list: [
-      import.meta.env.VITE_IS_DESKTOP
-        ? {
-            field: 'common.tryAutoUpdate',
-            name: 'settings__update_try_auto_update',
-            type: 'boolean',
-          }
-        : null,
+      {
+        field: 'common.tryAutoUpdate',
+        name: 'settings__update_try_auto_update',
+        type: 'boolean',
+      },
       {
         field: 'common.allowPreRelease',
         name: 'settings__update_allow_pre_release',

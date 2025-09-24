@@ -61,6 +61,11 @@ export const initUpdate = () => {
   appEvent.on('inited', () => {
     updateIgnoreVersion(getStore(STORE_NAMES.DATA).get(DATA_KEYS.ignoreVersion))
   })
+  appEvent.on('updated_config', (keys, settings) => {
+    if (keys.includes('common.allowPreRelease')) {
+      void update.checkUpdateStatus(appState.appSetting['common.tryAutoUpdate'])
+    }
+  })
 }
 
 export const updateIgnoreVersion = (version: string | null) => {

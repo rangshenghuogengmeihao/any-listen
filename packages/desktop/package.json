@@ -1,5 +1,5 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.1-beta.0",
   "name": "desktop",
   "main": "build-config/vite.config.ts",
   "scripts": {

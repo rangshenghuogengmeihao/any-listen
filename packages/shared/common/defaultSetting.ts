@@ -8,7 +8,6 @@ const defaultSetting: AnyListen.AppSetting = {
   'common.font': '',
   'common.isShowAnimation': true,
   'common.isAgreePact': false,
-  'common.controlBtnPosition': 'right',
   'common.playBarProgressStyle': 'centerControl',
   'common.transparentWindow': true,
   'common.tryAutoUpdate': true,

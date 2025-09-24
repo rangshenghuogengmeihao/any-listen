@@ -139,6 +139,7 @@ export const runBuildWorker = async (taskName: TaksName, onUpdated: () => void) 
   new Promise<{ status: boolean; reload: () => void }>((resolve) => {
     const worker = new Worker(path.resolve(__dirname, './worker.ts'), {
       execArgv: ['--require', 'ts-node/register'],
+      env: process.env,
     })
     const subChannel = new MessageChannel()
     const result = {

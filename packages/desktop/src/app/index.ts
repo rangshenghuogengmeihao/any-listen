@@ -281,7 +281,11 @@ export const initAppEnv = async () => {
   registerDeeplink()
   listenerElectronEvent()
   appState.appSetting = (await getAppSetting()).setting
-  appState.envParams.cmdParams.dt ??= !appState.appSetting['common.transparentWindow']
+  if (import.meta.env.VITE_IS_MAC) {
+    appState.envParams.cmdParams.dt = true
+  } else {
+    appState.envParams.cmdParams.dt ??= !appState.appSetting['common.transparentWindow']
+  }
 
   listenerAppEvent()
   initCommon({

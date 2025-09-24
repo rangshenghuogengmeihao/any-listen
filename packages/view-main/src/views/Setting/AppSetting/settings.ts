@@ -115,15 +115,6 @@ export const settings: SettingListSection[] = [
         type: 'radio',
         enum: langList.map((l) => ({ value: l.locale, name: l.name as keyof Message })),
       },
-      // {
-      //   field: 'common.controlBtnPosition',
-      //   name: 'settings__basic_control_btn_position',
-      //   type: 'radio',
-      //   enum: [
-      //     { value: 'left', name: 'settings__basic_control_btn_position_left' },
-      //     { value: 'right', name: 'settings__basic_control_btn_position_right' },
-      //   ],
-      // },
       // t('settings.basic.play_bar_style_center_control_full_btn')
       {
         field: 'common.playBarProgressStyle',
@@ -291,12 +282,14 @@ if (import.meta.env.VITE_IS_DESKTOP) {
     id: 'other',
     name: 'settings.other',
     list: [
-      {
-        field: 'common.transparentWindow',
-        name: 'settings.common.transparent_window',
-        description: 'settings.common.transparent_window_desc',
-        type: 'boolean',
-      },
+      import.meta.env.VITE_IS_MAC
+        ? null
+        : {
+            field: 'common.transparentWindow',
+            name: 'settings.common.transparent_window',
+            description: 'settings.common.transparent_window_desc',
+            type: 'boolean',
+          },
       {
         field: 'tray.themeId',
         name: 'settings.tray.theme_id',

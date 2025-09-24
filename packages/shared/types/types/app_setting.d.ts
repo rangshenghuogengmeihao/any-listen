@@ -43,11 +43,6 @@ declare global {
       'common.isAgreePact': boolean
 
       /**
-       * 控制按钮位置，左边、右边
-       */
-      'common.controlBtnPosition': 'left' | 'right'
-
-      /**
        * 播放栏进度条样式
        */
       'common.playBarProgressStyle': 'mini' | 'full' | 'middle' | 'centerControl' | 'centerControlMiddle' | 'centerControlFull'

@@ -3,16 +3,15 @@
   import Nav from './Nav.svelte'
   import MyList from './MyList/index.svelte'
   // import { useSettingValue } from '@/modules/setting/reactive.svelte'
-  // let controlBtnPosition = useSettingValue('common.controlBtnPosition')
   // export let params = {}
 
   // console.log(params)
 </script>
 
 <div class="aside">
-  <!-- {#if controlBtnPosition.val == 'right'} -->
-  <Logo />
-  <!-- {/if} -->
+  {#if !import.meta.env.VITE_IS_MAC}
+    <Logo />
+  {/if}
   <Nav />
   <MyList />
 </div>
@@ -45,6 +44,10 @@
     // :global(.aside-logo + .aside-nav) {
     //   padding-top: 20px;
     // }
+  }
+
+  :global(html.mac .aside) {
+    padding-top: calc(env(titlebar-area-height, 30px) + 4px);
   }
 
   // :global(html.mac .aside-nav) {

@@ -1,6 +1,6 @@
 const builder = require('electron-builder')
 const beforePack = require('./build-before-pack.cjs')
-// const afterPack = require('./build-after-pack.cjs')
+const afterPack = require('./build-after-pack.cjs')
 const fs = require('node:fs')
 const path = require('node:path')
 const { rmSourceModule } = require('./native-module.cjs')
@@ -24,7 +24,7 @@ const options = {
     },
   },
   beforePack,
-  // afterPack,
+  afterPack,
   protocols: {
     name: 'anylisten-protocol',
     schemes: ['anylisten'],
@@ -119,25 +119,20 @@ const macOptions = {
     icon: './resources/icons/icon.icns',
     category: 'public.app-category.music',
     // artifactName: '${productName}-${version}.${ext}',
-    extendInfo: {
-      CFBundleDisplayName: 'Any Listen',
-      CFBundleName: 'Any Listen',
-    },
   },
   dmg: {
-    window: {
-      width: 600,
-      height: 400,
-    },
+    // window: {
+    //   width: 540,
+    //   height: 100,
+    // },
     contents: [
       {
-        x: 106,
-        y: 252,
-        name: 'Any Listen',
+        x: 130,
+        y: 190,
       },
       {
-        x: 490,
-        y: 252,
+        x: 410,
+        y: 190,
         type: 'link',
         path: '/Applications',
       },

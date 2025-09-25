@@ -19,25 +19,6 @@ export interface WebDAVClientOptions {
 export type { WebDAVFileItem, WebDAVItem } from '@any-listen/nodejs/webdav-client'
 
 export const createWebDAVClient = (options: WebDAVClientOptions) => {
-  // const webDAVClient = new WebDAVClient({
-  //   baseUrl: 'https://dav.jianguoyun.com/dav/',
-  //   username: 'lyswhut@qq.com',
-  //   password: 'ajiqvk2qcumvygzd',
-  // })
-  // void webDAVClient.getHead('/musics/test/1314公里 - 魏佳艺、R7[DJ].mp3').then((res) => {
-  //   logcat.error('WebDAV root directory contents:', res)
-  // })
-  // void webDAVClient.ls('/musics/test/1314公里 - 魏佳艺、R7[DJ].lrc').then((res) => {
-  //   logcat.error('WebDAV root directory contents:', res)
-  // })
-  // void webDAVClient.get('/musics/test/1314公里 - 魏佳艺、R7[DJ].lrc').then((res) => {
-  //   logcat.error('WebDAV file contents:', res.toString())
-  // })
-  // void webDAVClient
-  //   .put('/musics/test/彩云之南 - 徐千雅.mp3', 'E:\\桌面文件\\新建文件夹 (2)\\彩云之南 - 徐千雅.mp3')
-  //   .then((res) => {
-  //     logcat.error('WebDAV result contents:', res)
-  //   })
   return new WebDAVClient({
     baseUrl: options.url,
     username: options.username,

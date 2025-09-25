@@ -1,8 +1,3 @@
-// import { rendererSend, rendererInvoke, rendererOn, rendererOff } from '@/shared/rendererIpc'
-// import { HOTKEY_RENDERER_EVENT_NAME, VIEW_MAIN_RENDERER_EVENT_NAME, CMMON_EVENT_NAME, THEME_RENDERER_EVENT_NAME } from '@/shared/ipcNames'
-// import type { ProgressInfo, UpdateDownloadedEvent, UpdateInfo } from 'electron-updater'
-// import * as hotKeys from '@any-listen/common/hotKey'
-// import { APP_EVENT_NAMES, DATA_KEYS, DEFAULT_SETTING } from '@any-listen/common/constants'
 import { IPC_NAMES } from '@/shared/ipc/names'
 import { createMainCall } from '@/shared/ipc/renderer'
 import { createClientApp, createExposeApp } from './app'

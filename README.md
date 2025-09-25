@@ -1,16 +1,25 @@
-# Any Listen
 
-English | [中文](README_zh.md)
+<p align="center"><a href="https://github.com/any-listen/any-listen"><img height="110" src="./docs/images/header-logo.svg" alt="any-listen logo"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/any-listen/any-listen"><img height="86" src="./docs/images/header-name.svg" alt="any-listen name"></a></p>
 
-A cross-platform private music playback service.
+<p align="center">A cross-platform private music streaming service</p>
 
-Note: This project is under active development and currently only provides a web version. You can deploy it directly to your server or use Docker for deployment.
+<br />
 
-## Usage
+English | [简体中文](./docs/README_zh.md) | [繁體中文](./docs/README_zh-tw.md)
+
+This project is under active development and currently provides both a **Desktop version** and a **Web version**.
+
+## Desktop Version
+
+Download the latest installer: [https://github.com/any-listen/any-listen-desktop/releases](https://github.com/any-listen/any-listen-desktop/releases)
+
+## Web Version
+
+You can deploy it directly to your server or use Docker for deployment.
 
 ### Docker Deployment
 
-[https://hub.docker.com/r/lyswhut/any-listen-web-server](https://hub.docker.com/r/lyswhut/any-listen-web-server)
+Image: [https://hub.docker.com/r/lyswhut/any-listen-web-server](https://hub.docker.com/r/lyswhut/any-listen-web-server)
 
 ### Direct Deployment
 
@@ -81,11 +90,11 @@ node index.cjs
 
 ## Contributing
 
-Contributions are welcome! To help your PR get merged smoothly, please note the following:
+We welcome PRs! To help your PR get merged smoothly, please note the following:
 
-- For new features, it is recommended to create an Issue first to confirm necessity.
-- For bug fixes, please provide details and reproduction steps.
-- For other types of PRs, include appropriate explanations.
+- For new features, it's recommended to create an Issue first to discuss whether the feature is needed.
+- For bug fixes, please provide a description of the issue and how it was fixed.
+- For other types of PRs, please include appropriate explanations.
 
 Steps to contribute:
 
@@ -96,5 +105,5 @@ Steps to contribute:
 
 This project is licensed under the Affero General Public License (AGPL) v3.0 with the following additional terms:
 
-- Commercial use is strictly prohibited unless prior written permission is obtained from the original author.
-- See the [LICENSE file](LICENSE) for full details.
+- Commercial use is strictly prohibited unless written permission is obtained from the original author.
+- For full details, please refer to the [LICENSE file](LICENSE).

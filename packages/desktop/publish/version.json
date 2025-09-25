@@ -1,6 +1,1 @@
-{
-  "version": "0.0.0",
-  "desc": "First version 🎉",
-  "time": "2023-10-01",
-  "history": []
-}
+{"version":"0.1.0","desc":"First version 🎉","time":"2025-09-21T01:24:51.422Z","history":[],"beta":[{"version":"0.1.1-beta.0","desc":"### Improved\n\n- Improved the display logic of control buttons on **MacOS**.\n\n### Fixed\n\n- Fixed abnormal issues with the **MacOS installer package**.\n\n---\n\n### 优化\n\n- 优化 MacOS 下的控制按钮显示逻辑\n\n### 修复\n\n- 修复 MacOS 安装包异常的问题","time":"2025-09-24T12:41:53.597Z"}]}

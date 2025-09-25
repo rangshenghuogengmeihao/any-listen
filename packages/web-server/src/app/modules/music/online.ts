@@ -1,6 +1,6 @@
 import { appState } from '@/app/app'
 import { workers } from '@/app/worker'
-import { sendMusicListAction } from '@any-listen/app/modules/musicList'
+import { updateMusicPic } from '@any-listen/app/modules/musicList'
 import { buildMusicCacheId, getFileType } from '@any-listen/common/tools'
 import {
   getMusicLyricByExtensionSource,
@@ -23,7 +23,7 @@ export const getMusicUrlByExtSource = async ({
   extensionId: string
   source: string
   isRefresh?: boolean
-  quality?: AnyListen.Music.Quality
+  quality?: string
 }): Promise<AnyListen.IPCMusic.MusicUrlInfo> => {
   const targetQuality = quality ?? appState.appSetting['player.playQuality']
   const cachedUrl = await workers.dbService.getMusicUrl(buildMusicCacheId(musicInfo, targetQuality))
@@ -49,7 +49,7 @@ export const getMusicUrl = async ({
 }: {
   musicInfo: AnyListen.Music.MusicInfo
   isRefresh?: boolean
-  quality?: AnyListen.Music.Quality
+  quality?: string
 }): Promise<AnyListen.IPCMusic.MusicUrlInfo> => {
   const targetQuality = quality ?? appState.appSetting['player.playQuality']
   const id = buildMusicCacheId(musicInfo, targetQuality)
@@ -78,7 +78,7 @@ export const getMusicPicByExtSource = async ({
   extensionId: string
   source: string
   isRefresh?: boolean
-  quality?: AnyListen.Music.Quality
+  quality?: string
 }): Promise<AnyListen.IPCMusic.MusicPicInfo> => {
   if (musicInfo.meta.picUrl && !isRefresh) {
     return {
@@ -114,15 +114,7 @@ export const getMusicPicUrl = async ({
   const url = await getMusicPicResource({ musicInfo })
   if (listId) {
     musicInfo.meta.picUrl = url
-    void sendMusicListAction({
-      action: 'list_music_update',
-      data: [
-        {
-          id: listId,
-          musicInfo,
-        },
-      ],
-    })
+    void updateMusicPic(listId, musicInfo)
   }
   return {
     url,
@@ -140,7 +132,7 @@ export const getLyricInfoByExtSource = async ({
   extensionId: string
   source: string
   isRefresh?: boolean
-  quality?: AnyListen.Music.Quality
+  quality?: string
 }): Promise<AnyListen.IPCMusic.MusicLyricInfo> => {
   if (!isRefresh) {
     const lyricInfo = await getCachedLyricInfo(musicInfo)

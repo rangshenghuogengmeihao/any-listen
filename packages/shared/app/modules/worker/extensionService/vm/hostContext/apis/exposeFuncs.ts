@@ -1,9 +1,10 @@
-import { createCommon } from './common'
-import { createConfigurationStore } from './configuration'
-import { createMusicList } from './musicList'
-import { createPlayer } from './player'
-import { createRequest } from './request'
-import { createStore } from './storage'
+import { createCommon } from '../../../extensionApis/common'
+import { createConfigurationStore } from '../../../extensionApis/configuration'
+import { createMusicList } from '../../../extensionApis/musicList'
+import { createMusicUtils } from '../../../extensionApis/musicUtils'
+import { createPlayer } from '../../../extensionApis/player'
+import { createRequest } from '../../../extensionApis/request'
+import { createStore } from '../../../extensionApis/storage'
 // import { extensionState } from '../../../state'
 
 export const createExposeObject = (extension: AnyListen.Extension.Extension) => {
@@ -14,6 +15,7 @@ export const createExposeObject = (extension: AnyListen.Extension.Extension) => 
     ...createConfigurationStore(extension),
     ...createMusicList(extension),
     ...createPlayer(extension),
+    ...createMusicUtils(extension),
     // async getConnectedClients() {
     //   return extensionState.remoteFuncs.getConnectedClients()
     // },

@@ -49,21 +49,21 @@
 <style lang="less">
   .icon {
     position: relative;
-    // color: var(--color-button-font);
-    justify-content: center;
-    align-items: center;
-    transition: color @transition-normal;
-    cursor: pointer;
-    width: 20px;
     display: flex;
     flex-flow: column nowrap;
+    align-items: center;
+    // color: var(--color-button-font);
+    justify-content: center;
+    width: 20px;
     padding: 0;
+    cursor: pointer;
+    transition: color @transition-normal;
 
     svg {
+      opacity: 0.5;
+      filter: drop-shadow(0 0 1px rgb(0 0 0 / 20%));
       transition: @transition-fast;
       transition-property: opacity, color;
-      opacity: 0.5;
-      filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.2));
     }
     &:hover {
       svg {

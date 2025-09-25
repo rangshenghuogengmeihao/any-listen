@@ -1,24 +1,33 @@
+import { appEvent } from '@/modules/app/store/event'
 import Sortable, { AutoScroll } from 'sortablejs'
 import type { Action } from 'svelte/action'
 
-
 Sortable.mount(new AutoScroll())
 
-export type OnUpdate = (parentId: string | undefined, id: string | undefined, toTargetId: string | undefined, position: number) => void
+export type OnUpdate = (
+  parentId: string | undefined,
+  id: string | undefined,
+  toTargetId: string | undefined,
+  position: number
+) => void
 
 export const sortable: Action<HTMLElement, OnUpdate | undefined> = (dom: HTMLElement, onupdate) => {
   if (!onupdate) return
   console.log(dom)
   let sortable: Sortable | null = Sortable.create(dom, {
     animation: 150,
-    disabled: false,
+    disabled: true,
     // forceFallback: false,
-    group: 'nested',
-    fallbackOnBody: true,
-    swapThreshold: 0.65,
+    // group: 'nested',
+    // fallbackOnBody: true,
+    // swapThreshold: 0.65,
     draggable: '.draggable-item',
     dragClass: '.draggable-item',
+    onStart() {
+      appEvent.drag(false)
+    },
     onEnd(event) {
+      appEvent.drag(true)
       console.log(event)
       const parentId = event.from.dataset.id
       const toId = event.to.dataset.id
@@ -40,6 +49,7 @@ export const sortable: Action<HTMLElement, OnUpdate | undefined> = (dom: HTMLEle
   const keydownEvent = (evt: KeyboardEvent) => {
     if (evt.key != 'Control' || evt.repeat) return
     sortable!.option('disabled', false)
+    console.log('sortable enabled')
   }
   const keyupEvent = (evt: KeyboardEvent) => {
     if (evt.key != 'Control' || evt.repeat) return
@@ -72,4 +82,3 @@ export const sortable: Action<HTMLElement, OnUpdate | undefined> = (dom: HTMLEle
     },
   }
 }
-

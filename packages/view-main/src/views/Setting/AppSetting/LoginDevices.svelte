@@ -81,24 +81,24 @@
 
 <style lang="less">
   .settings-login-devices {
-    margin-left: 16px;
-    font-size: 14px;
     display: flex;
     flex-flow: column nowrap;
     gap: 16px;
+    margin-left: 16px;
+    font-size: 14px;
   }
   .list-item {
     display: flex;
     flex-flow: row nowrap;
-    background-color: var(--color-primary-light-300-alpha-900);
     padding: 12px;
+    background-color: var(--color-primary-light-300-alpha-900);
     border-radius: @radius-border;
   }
   .content {
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
     gap: 6px;
-    flex: auto;
     min-width: 0;
   }
   .sub-row {
@@ -122,8 +122,8 @@
   }
   .ua {
     font-size: 12px;
-    user-select: text;
     color: var(--color-font-label);
+    user-select: text;
   }
   .btns {
     flex: none;

@@ -1,11 +1,10 @@
-import { ipcPreloadEvent } from '@any-listen/app/modules/ipcPreloadEvent'
-import type { ExposeFunctions, MainCall } from '.'
+import type { ClientCall, ExposeFunctions, MainCall } from '.'
 
 // 暴露给后端的方法
-export const createExposeDislike = () => {
+export const createExposeDislike = (client: ClientCall) => {
   return {
     async dislikeAction(event, action) {
-      ipcPreloadEvent.dislikeAction(action)
+      return client.dislikeAction(action)
     },
   } satisfies Partial<ExposeFunctions>
 }
@@ -18,12 +17,6 @@ export const createClientDislike = (main: MainCall) => {
     },
     async dislikeAction(action) {
       return main.dislikeAction(action)
-    },
-    onDislikeAction(listener: (action: AnyListen.IPCDislikeList.ActionList) => void) {
-      ipcPreloadEvent.on('dislikeAction', listener)
-      return () => {
-        ipcPreloadEvent.off('dislikeAction', listener)
-      }
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

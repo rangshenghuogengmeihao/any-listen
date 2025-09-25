@@ -48,23 +48,23 @@
 
 <style lang="less">
   .log-main {
+    display: flex;
     flex: auto;
     min-height: 0;
-    display: flex;
-    border-radius: @radius-border;
-    background-color: var(--color-primary-light-900-alpha-700);
     overflow: hidden;
+    background-color: var(--color-primary-light-900-alpha-700);
+    border-radius: @radius-border;
   }
   .log-content {
     flex: auto;
 
     pre {
+      padding: 2px 4px;
       font-size: 12px;
       line-height: 1.5;
-      white-space: pre-wrap;
       word-wrap: break-word;
+      white-space: pre-wrap;
       user-select: text;
-      padding: 2px 4px;
     }
   }
 </style>

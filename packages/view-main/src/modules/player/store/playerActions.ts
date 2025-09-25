@@ -5,7 +5,7 @@ import { addInfo } from '@/modules/dislikeList/actions'
 import { addListMusics, removeListMusics } from '@/modules/musicLibrary/store/actions'
 import { settingState } from '@/modules/setting/store/state'
 import { i18n } from '@/plugins/i18n'
-import { isEmpty, releasePlayer, setPause, setPlay, setResource, setStop } from '@/plugins/player'
+import { getSrc, isEmpty, releasePlayer, setPause, setPlay, setResource, setStop } from '@/plugins/player'
 import { parseInterval } from '@/shared'
 import { LIST_IDS } from '@any-listen/common/constants'
 import { createPlayMusicInfoList } from '@any-listen/common/tools'
@@ -51,7 +51,9 @@ const { addDelayNextTimeout: addLoadTimeout, clearDelayNextTimeout: clearLoadTim
 const diffCurrentMusicInfo = (curMusicInfo: AnyListen.Music.MusicInfo): boolean => {
   // return curMusicInfo !== playMusicInfo.musicInfo || isPlay.value
   return (
-    gettingUrlId != curMusicInfo.id || curMusicInfo.id != playerState.playMusicInfo?.musicInfo.id || playerState.playerPlaying
+    gettingUrlId != curMusicInfo.id ||
+    curMusicInfo.id != playerState.playMusicInfo?.musicInfo.id ||
+    (!!getSrc() && playerState.playerPlaying)
   )
 }
 
@@ -92,6 +94,7 @@ const getMusicPlayUrl = async (
 
   return getMusicUrl({ musicInfo, isRefresh })
     .then(({ url }) => {
+      console.log('url', url)
       if (diffCurrentMusicInfo(musicInfo)) return null
       // console.log(url)
       return url

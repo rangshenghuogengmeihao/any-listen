@@ -9,7 +9,7 @@
   let label = $derived($volumeMute ? $t('player__volume_muted') : `${$t('player__volume')}${Math.trunc($volume * 100)}%`)
 
   const handleWheel: WheelEventHandler<HTMLButtonElement> = (event) => {
-    actions.exec('player.setVolume', Math.round($volume * 100 + (-event.deltaY / 100 * 2)) / 100)
+    actions.exec('player.setVolume', Math.round($volume * 100 + (-event.deltaY / 100) * 2) / 100)
   }
 
   const handleUpdateVolume = (val: number) => {
@@ -20,15 +20,17 @@
     actions.exec('player.setVolumeMute', val)
   }
 
-  const icon = $derived($volumeMute
-    ? '#icon-volume-mute'
-    : $volume == 0
-      ? '#icon-volume-off'
-      : $volume < 0.3
-        ? '#icon-volume-low'
-        : $volume < 0.7
-          ? '#icon-volume-medium'
-          : '#icon-volume-high')
+  const icon = $derived(
+    $volumeMute
+      ? '#icon-volume-mute'
+      : $volume == 0
+        ? '#icon-volume-off'
+        : $volume < 0.3
+          ? '#icon-volume-low'
+          : $volume < 0.7
+            ? '#icon-volume-medium'
+            : '#icon-volume-high'
+  )
 </script>
 
 <PopupBtn onwheel={handleWheel} aria-label={label}>
@@ -40,7 +42,7 @@
   {#snippet content()}
     <div class="setting">
       <div class="info">
-        <span>{ Math.trunc($volume * 100) }%</span>
+        <span>{Math.trunc($volume * 100)}%</span>
         <Checkbox
           id="player__volume_mute"
           checked={$volumeMute}
@@ -53,64 +55,61 @@
   {/snippet}
 </PopupBtn>
 
-
 <style lang="less">
-// .container {
-//   flex: none;
-//   height: 100%;
-// }
+  // .container {
+  //   flex: none;
+  //   height: 100%;
+  // }
 
-.icon {
-  position: relative;
-  // color: var(--color-button-font);
-  justify-content: center;
-  align-items: center;
-  transition: color @transition-normal;
-  cursor: pointer;
-  width: 24px;
-  display: flex;
-  flex-flow: column nowrap;
-  padding: 0;
+  .icon {
+    position: relative;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    // color: var(--color-button-font);
+    justify-content: center;
+    width: 24px;
+    padding: 0;
+    cursor: pointer;
+    transition: color @transition-normal;
 
-  svg {
-    transition: opacity @transition-fast;
-    opacity: .5;
-    // filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.2));
-  }
-  &:hover {
     svg {
-      opacity: .9;
+      opacity: 0.5;
+      transition: opacity @transition-fast;
+      // filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.2));
+    }
+    &:hover {
+      svg {
+        opacity: 0.9;
+      }
+    }
+    &:active {
+      svg {
+        opacity: 1;
+      }
     }
   }
-  &:active {
-    svg {
-      opacity: 1;
+
+  .setting {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 8px;
+    width: 140px;
+    padding: 2px 3px;
+
+    :global(.slider) {
+      width: 100%;
     }
   }
-}
 
-.setting {
-  display: flex;
-  flex-flow: column nowrap;
-  padding: 2px 3px;
-  gap: 8px;
-  width: 140px;
-
-  :global(.slider) {
-    width: 100%;
+  .info {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    span {
+      line-height: 1.2;
+    }
   }
-}
-
-.info {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 13px;
-  span {
-    line-height: 1.2;
-  }
-}
-
-
 </style>

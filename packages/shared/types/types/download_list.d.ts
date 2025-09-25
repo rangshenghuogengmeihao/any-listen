@@ -52,9 +52,9 @@ declare global {
         progress: number
         speed: string
         metadata: {
-          musicInfo: AnyListen.Music.MusicInfoOnline
+          musicInfo: Music.MusicInfoOnline
           url: string | null
-          quality: AnyListen.Music.Quality
+          quality: string
           ext: FileExt
           fileName: string
           filePath: string
@@ -63,7 +63,7 @@ declare global {
 
       interface saveDownloadMusicInfo {
         list: ListItem[]
-        addMusicLocationType: AnyListen.AddMusicLocationType
+        addMusicLocationType: AddMusicLocationType
       }
     }
   }

@@ -259,7 +259,7 @@ export const useLyric = (options: {
         handleScrollLrc(600)
       }, 650)
     } else {
-      handleScrollLrc()
+      handleScrollLrc(600)
     }
     oldLine = line
   }

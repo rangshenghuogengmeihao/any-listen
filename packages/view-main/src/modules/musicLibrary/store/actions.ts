@@ -18,6 +18,7 @@ import {
   saveListScrollPosition as saveListScrollPositionRemote,
   updateListMusics as updateListMusicsFromRemote,
   updateUserList as updateUserListFromRemote,
+  updateUserListPosition as updateUserListPositionFromRemote,
 } from './listRemoteActions'
 
 export { getSubUserLists, setFetchingListStatus, setUserListInited, userListExist } from './commit'
@@ -70,7 +71,27 @@ export const createUserList = async (position: number, info: AnyListen.List.User
         ],
       })
       break
-
+    case 'remote': {
+      const listInfo = {
+        id: generateIdSimple(),
+        type: info.type,
+        name: info.name,
+        parentId: null,
+        meta: {
+          ...info.meta,
+          createTime: Date.now(),
+          desc: '',
+          playCount: 0,
+          posTime: Date.now(),
+          updateTime: Date.now(),
+        },
+      }
+      await createUserListFromRemote({
+        position,
+        listInfos: [listInfo],
+      })
+      break
+    }
     default:
       break
   }
@@ -93,10 +114,26 @@ export const updateUserList = async (info: AnyListen.List.UserListInfo) => {
         },
       ])
       break
-
+    case 'remote': {
+      const listInfo = {
+        ...targetList,
+        name: info.name,
+        meta: {
+          ...targetList.meta,
+          ...info.meta,
+          updateTime: Date.now(),
+        },
+      }
+      await updateUserListFromRemote([listInfo])
+      break
+    }
     default:
       break
   }
+}
+
+export const updateUserListPosition = async (id: string, position: number) => {
+  return updateUserListPositionFromRemote({ ids: [id], position })
 }
 
 export const addListMusics = async (id: string, musicInfos: AnyListen.Music.MusicInfo[]) => {

@@ -9,7 +9,7 @@
     item,
   }: {
     id: string
-    item: AnyListen.Extension.SettingValueItem
+    item: AnyListen.Extension.FormValueItem
   } = $props()
 </script>
 

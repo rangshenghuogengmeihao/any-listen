@@ -4,6 +4,10 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { extensionEvent } from './event'
 import {
+  buildExtensionI18nMessage as buildExtensionI18nMessageByInternal,
+  getExtensionList as getExtensionListByInternal,
+} from './internalExtension'
+import {
   backupExtension,
   buildExtensionI18nMessage,
   downloadExtension,
@@ -42,7 +46,7 @@ export const loadLocalExtensions = async () => {
     }),
   ])
   const settingMap = new Map(settings.map((ext) => [ext.id, ext]))
-  extensionState.extensions = []
+  extensionState.extensions = [...(await getExtensionListByInternal())]
   const tempList: AnyListen.Extension.Extension[] = []
   const removedExtension: AnyListen.Extension.Extension[] = []
   for (const ext of extensions) {
@@ -102,6 +106,7 @@ export const enableExtension = async (id: string) => {
 export const disableExtension = async (id: string) => {
   const targetExtension = extensionState.extensions.find((ext) => ext.id == id)
   if (!targetExtension) throw new Error(`extension not found: ${id}`)
+  if (targetExtension.internal) throw new Error(`Internal extensions cannot be disabled: ${id}`)
   targetExtension.enabled = false
   void saveExtensionsSetting(extensionState.extensions)
   extensionEvent.enabled(id, false)
@@ -112,6 +117,7 @@ export const disableExtension = async (id: string) => {
 export const restartExtension = async (id: string) => {
   const targetExtension = extensionState.extensions.find((ext) => ext.id == id)
   if (!targetExtension) throw new Error(`extension not found: ${id}`)
+  if (targetExtension.internal) throw new Error(`Internal extensions cannot be restarted: ${id}`)
   if (targetExtension.loaded) {
     extensionEvent.stoping(id)
     await stopRunExtension(targetExtension)
@@ -150,6 +156,7 @@ export const updateExtension = async (tempExtension: AnyListen.Extension.Extensi
   }
 
   const targetExtension = extensionState.extensions[targetExtensionIndex]
+  if (targetExtension.internal) throw new Error(`Will update extension does not exist: ${tempExtension.id}`)
   // if (targetExtension.loaded) throw new Error(`Will update extension does running: ${tempExtension.id}`)
   if (targetExtension.publicKey != tempExtension.publicKey) throw new Error('Signature does not match')
 
@@ -205,6 +212,7 @@ export const uninstallExtension = async (id: string) => {
   const targetExtensionIndex = extensionState.extensions.findIndex((ext) => ext.id == id)
   if (targetExtensionIndex < 0) throw new Error(`extension not found: ${id}`)
   const targetExtension = extensionState.extensions[targetExtensionIndex]
+  if (targetExtension.internal) throw new Error(`Internal extensions cannot be uninstalled: ${id}`)
   targetExtension.requiredReload = await stopRunExtension(targetExtension)
   if (!targetExtension.requiredReload) {
     await removeExtensions([targetExtension])
@@ -217,7 +225,8 @@ export const uninstallExtension = async (id: string) => {
 
 export const updateExtensionI18nMessages = async () => {
   for (const ext of extensionState.extensions) {
-    ext.i18nMessages = await buildExtensionI18nMessage(ext.directory)
+    if (ext.internal) ext.i18nMessages = buildExtensionI18nMessageByInternal(ext.id)
+    else ext.i18nMessages = await buildExtensionI18nMessage(ext.directory)
   }
   extensionEvent.listSet(extensionState.extensions)
 }

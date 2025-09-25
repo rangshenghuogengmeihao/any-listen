@@ -1,5 +1,5 @@
+import type { Cache } from '@any-listen/common/cache'
 import type Koa from 'koa'
-import type { LRUCache } from 'lru-cache'
 
 declare global {
   namespace AnyListen {
@@ -17,7 +17,7 @@ declare global {
   interface Anylisten {
     dataPath: string
     config: AnyListen.Config
-    publicStaticPaths: LRUCache<string, string>
+    publicStaticPaths: Cache<string>
   }
 
   var anylisten: Anylisten

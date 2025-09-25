@@ -4,6 +4,7 @@
   import { extensionList } from '@/modules/extension/reactive.svelte'
   import { extI18n } from '@/modules/extension/i18n'
   import { openUrl } from '@/shared/ipc/app'
+  import { isUrl } from '@/shared'
 
   let {
     onafterleave,
@@ -28,7 +29,7 @@
   }
 
   const handleComfirm = (btn: AnyListen.IPCCommon.MessageButton) => {
-    if (btn.link && /^https?:\/\//.test(btn.link)) {
+    if (btn.link && isUrl(btn.link)) {
       void openUrl(btn.link)
     }
     promise?.[0](buttons.indexOf(btn))
@@ -95,11 +96,11 @@
 <style lang="less">
   .main {
     flex: auto;
+    // max-width: 320px;
+    min-width: 320px;
     min-height: 40px;
     padding: 15px 15px 0;
     font-size: 14px;
-    // max-width: 320px;
-    min-width: 320px;
     line-height: 1.5;
     white-space: pre-line;
     &.select {
@@ -108,12 +109,12 @@
   }
 
   .footer {
-    flex: none;
-    padding: 15px;
     display: flex;
+    flex: none;
     flex-flow: row nowrap;
-    justify-content: flex-end;
     gap: 15px;
+    justify-content: flex-end;
+    padding: 15px;
 
     :global(.btn) {
       min-width: 70px;

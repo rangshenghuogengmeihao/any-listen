@@ -5,6 +5,10 @@ export class Event extends _Event {
     this.emit(eventName, ...args)
   }
 
+  localeChanged(locale: AnyListen.Locale) {
+    this.emit('localeChanged', locale)
+  }
+
   extensionEvent(action: AnyListen.IPCExtension.EventExtension) {
     this.emit('extensionEvent', action)
   }

@@ -82,13 +82,12 @@
 
 <style lang="less">
   .log-container {
-    flex: auto;
-    min-width: 0;
-    overflow: hidden;
     display: flex;
-    flex-flow: column nowrap;
     flex: auto;
+    flex-flow: column nowrap;
+    min-width: 0;
     margin: 10px;
+    overflow: hidden;
     // padding-left: 10px;
   }
 </style>

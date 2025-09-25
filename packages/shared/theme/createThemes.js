@@ -148,7 +148,8 @@ const defaultThemes = [
     name: '重斤球紫',
     isDark: false,
     config: {
-      primary: 'rgb(155, 89, 182)',
+      // primary: 'rgb(155, 89, 182)',
+      primary: 'rgb(121, 72, 187)',
       font: 'rgb(33, 33, 33)',
       '--color-app-background': 'var(--color-primary-light-900-alpha-900)',
       '--color-main-background': 'rgba(255, 255, 255, 1)',
@@ -232,7 +233,7 @@ const defaultThemes = [
 
       '--color-badge-primary': 'var(--color-primary)',
       '--color-badge-secondary': '#b080db',
-      '--color-badge-tertiary': '#b080db',
+      '--color-badge-tertiary': '#db80c4',
     },
   },
   {

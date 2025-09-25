@@ -8,7 +8,6 @@ const defaultSetting: AnyListen.AppSetting = {
   'common.font': '',
   'common.isShowAnimation': true,
   'common.isAgreePact': false,
-  'common.controlBtnPosition': 'right',
   'common.playBarProgressStyle': 'centerControl',
   'common.transparentWindow': true,
   'common.tryAutoUpdate': true,
@@ -123,7 +122,7 @@ const defaultSetting: AnyListen.AppSetting = {
 
   'tray.enable': false,
   // 'tray.isToTray': false,
-  'tray.themeId': 0,
+  'tray.themeId': 1,
 
   'sync.mode': 'server',
   'sync.enable': false,
@@ -132,8 +131,8 @@ const defaultSetting: AnyListen.AppSetting = {
   'sync.client.host': '',
 
   // 'theme.id': 'blue_plus',
-  'theme.id': 'green',
-  'theme.lightId': 'green',
+  'theme.id': 'blue2',
+  'theme.lightId': 'blue2',
   'theme.darkId': 'black',
 
   'odc.isAutoClearSearchInput': false,

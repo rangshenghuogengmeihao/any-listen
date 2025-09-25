@@ -118,11 +118,11 @@
 </script>
 
 <div class="slider" class:disabled>
-  <div class="sliderContent">
-    <div class="sliderBar" bind:this={domSliderBar} style:transform={`scaleX(${(value - min) / (max - min) || 0})`}></div>
+  <div class="slider-content">
+    <div class="slider-bar" bind:this={domSliderBar} style:transform={`scaleX(${(value - min) / (max - min) || 0})`}></div>
   </div>
   <div
-    class="sliderMask"
+    class="slider-mask"
     role="slider"
     tabindex="0"
     aria-valuenow={value}
@@ -136,13 +136,13 @@
 
 <style lang="less">
   .slider {
-    flex: none;
     position: relative;
-    width: 100px;
-    padding: 5px 0;
     // margin-right: 10px;
     display: flex;
+    flex: none;
     align-items: center;
+    width: 100px;
+    padding: 5px 0;
     opacity: 0.5;
     transition: opacity @transition-normal;
     &:hover {
@@ -150,23 +150,23 @@
     }
     &.disabled {
       opacity: 0.3;
-      .sliderMask {
+      .slider-mask {
         cursor: default;
       }
     }
   }
 
-  .sliderContent {
+  .slider-content {
+    // background-color: #f5f5f5;
+    position: relative;
     // cursor: pointer;
     width: 100%;
     height: 5px;
-    border-radius: 20px;
     overflow: hidden;
+    background-color: var(--color-primary-alpha-700);
+    border-radius: 20px;
     transition: @transition-normal;
     transition-property: background-color, opacity;
-    background-color: var(--color-primary-alpha-700);
-    // background-color: #f5f5f5;
-    position: relative;
     // border-radius: @radius-progress-border;
   }
 
@@ -174,23 +174,23 @@
   //   opacity: .5;
   // }
 
-  .sliderBar {
+  .slider-bar {
     position: absolute;
-    left: 0;
     top: 0;
-    transform: scaleX(0);
-    transform-origin: 0;
-    transition-property: transform;
-    transition-timing-function: ease;
+    left: 0;
     width: 100%;
     height: 100%;
+    background-color: var(--color-button-font);
+    box-shadow: 0 0 2px rgb(0 0 0 / 20%);
+    transform: scaleX(0);
+    transform-origin: 0;
+    transition-timing-function: ease;
     // border-radius: @radius-progress-border;
     transition-duration: 0.2s;
-    background-color: var(--color-button-font);
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    transition-property: transform;
   }
 
-  .sliderMask {
+  .slider-mask {
     position: absolute;
     top: 0;
     width: 100%;

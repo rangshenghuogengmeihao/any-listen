@@ -1,4 +1,4 @@
-import mime from 'mime'
+import { getMimeType } from '@any-listen/common/mime'
 import fs from 'node:fs'
 
 interface Range {
@@ -19,34 +19,30 @@ interface Options {
   // root: string
 }
 
-const getType = (filepath: string) => mime.getType(filepath) ?? 'application/octet-stream'
-
-const parseRange = (total: number, range?: string) => {
-  if (range == null || range.length === 0) return null
-
-  let array = range.split(/bytes=(\d*)-(\d*)/)
-  let result: Range = {
-    start: parseInt(array[1]),
-    end: parseInt(array[2]),
-    total,
+const parseRange = (range: string, total: number): Range | null => {
+  const matches = /bytes=(\d*)-(\d*)/.exec(range)
+  if (!matches) return null
+  let start: number
+  if (matches[1]) {
+    start = parseInt(matches[1], 10)
+    if (isNaN(start) || start < 0) return null
+  } else {
+    start = 0
+  }
+  let end: number
+  if (matches[2]) {
+    end = parseInt(matches[2], 10)
+    if (isNaN(end) || (start && end < start)) return null
+  } else {
+    end = total - 1
   }
 
-  if (isNaN(result.end) || result.end < 0) {
-    result.end = total - 1
-  }
-
-  if (isNaN(result.start) || result.start < 0) {
-    result.start = 0
-  }
-
-  // if (result.start == 0 && result.end == total - 1) return null
-
-  return result
+  return { start, end, total }
 }
 
 const headRequest = (ctx: AnyListen.RequestContext, filepath: string, stats: fs.Stats) => {
   ctx.set('Content-Length', String(stats.size))
-  ctx.set('Content-Type', getType(filepath))
+  ctx.set('Content-Type', getMimeType(filepath))
   ctx.set('Accept-Ranges', 'bytes')
   ctx.set('Last-Modified', stats.mtime.toUTCString())
   ctx.status = 200
@@ -59,7 +55,7 @@ const endRequest = (ctx: AnyListen.RequestContext, size: number) => {
 }
 
 const sendFile = (ctx: AnyListen.RequestContext, filepath: string, stats: fs.Stats, options: Options) => {
-  ctx.set('Content-Type', getType(filepath))
+  ctx.set('Content-Type', getMimeType(filepath))
   ctx.set('Content-Length', String(stats.size))
   ctx.set('Accept-Ranges', 'bytes')
 
@@ -98,7 +94,7 @@ const streamRange = (
 
 const handleFileStream = (ctx: AnyListen.RequestContext, range: Range, filepath: string, stat: fs.Stats, options: Options) => {
   let stream = fs.createReadStream(filepath, { start: range.start, end: range.end })
-  let contentType = getType(filepath)
+  let contentType = getMimeType(filepath)
   streamRange(ctx, stream, range, contentType, stat, options)
 }
 
@@ -131,14 +127,15 @@ export const handleRequest = async (ctx: AnyListen.RequestContext, filepath: str
     headRequest(ctx, filepath, stat)
     return
   }
-  const range = parseRange(stat.size, ctx.headers.range)
 
-  if (range == null) {
+  if (ctx.headers.range == null) {
     sendFile(ctx, filepath, stat, options)
     return
   }
 
-  if (range.start >= stat.size || range.end >= stat.size) {
+  const range = parseRange(ctx.headers.range, stat.size)
+
+  if (!range || range.start >= stat.size || range.end >= stat.size) {
     endRequest(ctx, stat.size)
     return
   }

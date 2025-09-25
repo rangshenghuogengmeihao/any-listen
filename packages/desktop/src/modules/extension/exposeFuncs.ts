@@ -1,6 +1,8 @@
 import { extensionEvent } from '@/modules/extension'
 import { rendererIPC } from '@/renderer/winMain/rendererEvent'
 import { getAllUserLists, getListMusics, sendMusicListAction } from '@any-listen/app/modules/musicList'
+import { checkProxyCache, createProxy, writeProxyCache } from '@any-listen/app/modules/proxyServer'
+import type { Options } from '@any-listen/nodejs/request'
 import { getPlayInfo, playerEvent } from '../player'
 import { boxTools } from './clientTools'
 
@@ -10,6 +12,15 @@ import { boxTools } from './clientTools'
 export const exposedFuncs: AnyListen.IPCExtension.MainIPCActions = {
   async onExtensionEvent(action) {
     extensionEvent.extensionEvent(action)
+  },
+  async createProxyUrl(url, options) {
+    return createProxy(url, options as Options)
+  },
+  async checkProxyCache(url) {
+    return checkProxyCache(url)
+  },
+  async writeProxyCache(fileName, data) {
+    return writeProxyCache(fileName, data)
   },
 
   async getPlayInfo() {
@@ -51,14 +62,16 @@ export const exposedFuncs: AnyListen.IPCExtension.MainIPCActions = {
     })
   },
   async showOpenBox(extId, key, options) {
-    return boxTools.showBox(key, async () => {
-      return rendererIPC.showOpenBox(extId, key, options)
-    })
+    // TODO
+    // return boxTools.showBox(key, async () => {
+    //   return rendererIPC.showOpenBox(extId, key, options)
+    // })
   },
   async showSaveBox(extId, key, options) {
-    return boxTools.showBox(key, async () => {
-      return rendererIPC.showSaveBox(extId, key, options)
-    })
+    // TODO
+    // return boxTools.showBox(key, async () => {
+    //   return rendererIPC.showSaveBox(extId, key, options)
+    // })
   },
   async closeMessageBox(key) {
     boxTools.closeBox(key)

@@ -32,7 +32,7 @@ export const getExtSource = <T extends AnyListen.Extension.ResourceAction>(
   )
 }
 
-const httpRxp = /^https?:/
+const httpRxp = /^(https?:\/\/|\/\w+)/
 export const allowedUrl = (url: string) => {
   return httpRxp.test(url)
 }

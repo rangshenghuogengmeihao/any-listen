@@ -8,6 +8,7 @@ import { env } from './env'
 import { iconv } from './iconv'
 import { logcat } from './logcat'
 import { musicList } from './musicList'
+import { musicUtils } from './musicUtils'
 import { player } from './player'
 import { request } from './request'
 import { registerResourceAction } from './resource'
@@ -22,6 +23,7 @@ export const getAPI = () => {
     logcat,
     storage,
     configuration,
+    musicUtils,
     registerResourceAction,
     utils: {
       buffer,

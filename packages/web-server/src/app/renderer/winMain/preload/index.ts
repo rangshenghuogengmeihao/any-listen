@@ -18,21 +18,28 @@ export type ExposeServerFunctions = Omit<
   AnyListen.IPC.ServerIPC,
   'showOpenDialog' | 'showSaveDialog' | 'openDirInExplorer' | 'openDevTools'
 >
-
-const exposeObj: ExposeFunctions = {
-  ...createExposeApp(),
-  ...createExposePlayer(),
-  ...createExposeHotkey(),
-  ...createExposeList(),
-  ...createExposeDislike(),
-  ...createExposeTheme(),
-  ...createExposeExtension(),
-}
+export type ClientCall = AnyListen.IPC.ClientIPC
 
 let host = `${location.origin}${location.pathname}`
 if (import.meta.env.DEV) host = 'http://localhost:9500'
 
-const connectIPCService: AnyListen.IPC.ConnectIPCSrivice = (onConnected, onDisconnected, onFailed, onLogout, pwd) => {
+const connectIPCService: AnyListen.IPC.ConnectIPCSrivice = ({
+  onConnected,
+  onDisconnected,
+  onFailed,
+  onLogout,
+  pwd,
+  clientCall,
+}) => {
+  const exposeObj: ExposeFunctions = {
+    ...createExposeApp(clientCall),
+    ...createExposePlayer(clientCall),
+    ...createExposeHotkey(clientCall),
+    ...createExposeList(clientCall),
+    ...createExposeDislike(clientCall),
+    ...createExposeTheme(clientCall),
+    ...createExposeExtension(clientCall),
+  }
   createIPC({
     exposeObj,
     host,

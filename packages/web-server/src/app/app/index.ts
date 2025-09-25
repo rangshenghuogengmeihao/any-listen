@@ -3,6 +3,7 @@ import { startCheckUpdateTimeout, update } from '@/app/shared/update'
 import { socketEvent } from '@/modules/ipc/event'
 import { appLog } from '@/shared/log4js'
 import { checkAndCreateDir, removePath } from '@/shared/utils'
+import { initCommon } from '@any-listen/app/common'
 import { parseEnvParams } from '@any-listen/nodejs/env'
 import { version } from '../../../package.json' with { type: 'json' }
 import { getAppSetting, saveSetting } from './data'
@@ -112,6 +113,9 @@ export const initAppEnv = async () => {
   await setUserDataPath()
   appState.appSetting = (await getAppSetting()).setting
   listenerAppEvent()
+  initCommon({
+    getSettings: () => appState.appSetting,
+  })
 }
 
 /**

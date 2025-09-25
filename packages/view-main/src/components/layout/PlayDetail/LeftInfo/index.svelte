@@ -11,11 +11,11 @@
 
 <style lang="less">
   .left-info {
-    flex: none;
-    width: 50%;
     display: flex;
+    flex: none;
     flex-flow: column nowrap;
     align-items: center;
+    width: 50%;
     padding: 14px 15px 14px 20px;
     contain: strict;
     // transition: flex-basis @transition-normal;

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { t } from '@/plugins/i18n'
+  import { i18n, t } from '@/plugins/i18n'
   import { createUserList, editUserList } from './shared'
   import Input from '@/components/base/Input.svelte'
 
@@ -7,11 +7,11 @@
     item,
     targetId,
   }: {
-    item?: AnyListen.List.UserListInfoType<'general'> | null
+    item?: AnyListen.List.GeneralListInfo | null
     targetId?: AnyListen.List.ParentId
   } = $props()
 
-  const initData: AnyListen.List.UserListInfoType<'general'> = {
+  const initData: AnyListen.List.GeneralListInfo = {
     id: '',
     name: '',
     parentId: null,
@@ -24,7 +24,7 @@
       posTime: 0,
     },
   }
-  let listInfo = $state<AnyListen.List.UserListInfoType<'general'>>({
+  let listInfo = $state<AnyListen.List.GeneralListInfo>({
     ...initData,
     meta: { ...initData.meta },
   })
@@ -32,9 +32,8 @@
   export const verify = () => {
     const name = listInfo.name.trim()
     if (!name.length || name.length > 30) {
-      return false
+      throw new Error(i18n.t('edit_list_modal__form_err_name'))
     }
-    return true
   }
   export const reset = () => {
     listInfo = {
@@ -43,7 +42,7 @@
     }
   }
   export const submit = async () => {
-    if (!verify()) return
+    verify()
     if (item) {
       await editUserList(listInfo)
     } else {
@@ -66,10 +65,10 @@
 
 <style lang="less">
   .main {
+    display: flex;
     // flex: auto;
     // padding: 0 15px;
     // width: 320px;
-    display: flex;
     flex-flow: column nowrap;
     // min-height: 0;
     // max-height: 100%;

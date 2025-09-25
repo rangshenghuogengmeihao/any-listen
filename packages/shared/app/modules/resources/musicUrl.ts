@@ -1,5 +1,5 @@
 import { services } from './shared'
-import { findMusic, findMusicByLocal } from './tools'
+import { findMusicByLocal, findMusicByOnline } from './tools'
 import { allowedUrl, buildExtSourceId, getExtSource } from './utils'
 
 export const getMusicUrlByExtensionSource = async ({
@@ -12,7 +12,7 @@ export const getMusicUrlByExtensionSource = async ({
   extensionId: string
   source: string
   musicInfo: AnyListen.Music.MusicInfoOnline
-  quality?: AnyListen.Music.Quality
+  quality?: string
   type?: AnyListen.Music.FileType
 }): Promise<AnyListen.IPCExtension.MusicUrlInfo> => {
   return services.extensionSerive
@@ -24,7 +24,7 @@ export const getMusicUrlByExtensionSource = async ({
       type,
     })
     .then((result) => {
-      console.log(result)
+      // console.log(result)
       if (!result.url) throw new Error('Get music pic failed')
       if (!allowedUrl(result.url)) throw new Error('Get music pic failed, url not allowed')
       return result
@@ -38,7 +38,7 @@ const handleGetMusicUrl = async (
     type,
   }: {
     musicInfo: AnyListen.Music.MusicInfoOnline
-    quality?: AnyListen.Music.Quality
+    quality?: string
     type?: AnyListen.Music.FileType
   },
   excludeList: string[] = []
@@ -60,7 +60,7 @@ const handleGetMusicUrl = async (
 
 export const getMusicUrl = async (data: {
   musicInfo: AnyListen.Music.MusicInfo
-  quality?: AnyListen.Music.Quality
+  quality?: string
   type?: AnyListen.Music.FileType
 }): Promise<AnyListen.IPCExtension.MusicUrlInfo> => {
   if (data.musicInfo.isLocal) {
@@ -79,19 +79,11 @@ export const getMusicUrl = async (data: {
       type: data.type,
     })
   } catch {}
-  return findMusic(
-    {
-      name: data.musicInfo.name,
-      singer: data.musicInfo.singer,
-      albumName: data.musicInfo.meta.albumName,
-      interval: data.musicInfo.interval,
-    },
-    async (info) => {
-      return handleGetMusicUrl({
-        musicInfo: info,
-        quality: data.quality,
-        type: data.type,
-      })
-    }
-  )
+  return findMusicByOnline(data.musicInfo, async (info) => {
+    return handleGetMusicUrl({
+      musicInfo: info,
+      quality: data.quality,
+      type: data.type,
+    })
+  })
 }

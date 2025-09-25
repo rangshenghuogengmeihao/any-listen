@@ -89,7 +89,7 @@
 
 <ul class="aside-nav" role="menu">
   {#each menus as item (item.to)}
-    <li class="navItem" role="presentation">
+    <li class="nav-item" role="presentation">
       <a
         class="link"
         class:active={activePath == item.to}
@@ -106,7 +106,7 @@
             <use xlink:href={item.icon} />
           </svg>
         </div>
-        <span class="navName">{item.name}</span>
+        <span class="nav-name">{item.name}</span>
       </a>
     </li>
   {/each}
@@ -114,61 +114,61 @@
 
 <style lang="less">
   .aside-nav {
-    flex: none;
-    padding: 20px 12px 0;
     display: flex;
+    flex: none;
     flex-flow: column nowrap;
+    padding: 0 12px;
   }
-  .navItem {
+  .nav-item {
     position: relative;
   }
   .link {
-    text-decoration: none;
-    padding: 10px 15px 10px 5px;
-    transition: @transition-fast;
-    transition-property: background-color, opacity;
+    display: flex;
+    align-items: center;
+    padding: 8px 15px 8px 5px;
     color: var(--color-primary-font);
+    text-decoration: none;
     cursor: pointer;
     // font-size: 12px;
     outline: none;
-    display: flex;
-    align-items: center;
     border-radius: @radius-border;
+    transition: @transition-fast;
+    transition-property: background-color, opacity;
     .mixin-ellipsis-1();
 
     &.active {
+      cursor: default;
       // border-left-color: @color-theme-active;
       background-color: var(--color-primary-light-300-alpha-700);
-      cursor: default;
     }
 
     &:hover {
       // color: var(--color-primary-font);
 
       &:not(.active) {
-        opacity: 0.8;
         background-color: var(--color-primary-light-400-alpha-700);
+        opacity: 0.8;
       }
     }
     &:active:not(.active) {
-      opacity: 0.6;
       background-color: var(--color-primary-light-300-alpha-600);
+      opacity: 0.6;
     }
   }
 
   .icon {
-    // margin-bottom: 5px;
-    margin-right: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 20px;
+    // margin-bottom: 5px;
+    margin-right: 6px;
     & > svg {
       height: 20px;
     }
   }
-  .navName {
-    line-height: 1.2;
+  .nav-name {
     font-size: 13px;
+    line-height: 1.2;
   }
 </style>

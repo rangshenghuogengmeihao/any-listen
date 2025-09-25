@@ -3,7 +3,7 @@
   import { t } from '@/plugins/i18n'
   import Menu, { type MenuItem, type MenuList } from '@/components/base/Menu.svelte'
   import { LIST_IDS } from '@any-listen/common/constants'
-  import { importLocalFile, importLocalFileFolder, removeUserList } from './action'
+  import { importLocalFile, importLocalFileFolder, removeUserList, syncUserList } from './action'
   import { showListEditModal } from '@/components/apis/listEditModal'
   import { musicLibraryEvent } from '@/modules/musicLibrary/store/event'
 
@@ -53,21 +53,23 @@
         break
     }
 
-    menus = [
-      { action: 'create', label: $t('user_list_menu__create') },
-      { action: 'edit', disabled: !edit, label: $t('user_list_menu__edit') },
-      { action: 'local_file', disabled: fetching, label: $t('user_list_menu__select_local_file') },
-      { action: 'local_file_folder', disabled: fetching, label: $t('user_list_menu__select_local_file_folder') },
-      { action: 'update', disabled: !update || fetching, label: $t('user_list_menu__sync') },
-      // null,
-      // { action: 'sort', label: $t('user_list_menu__sort_list') },
-      // { action: 'duplicate', label: $t('user_list_menu__duplicate') },
-      // { action: 'sourceDetail', label: $t('user_list_menu__source_detail') },
-      // { action: 'import', label: $t('user_list_menu__import') },
-      // { action: 'export', label: $t('user_list_menu__export') },
-      null,
-      { action: 'remove', disabled: !remove || fetching, label: $t('user_list_menu__remove') },
-    ]
+    menus = (
+      [
+        update && { action: 'update', disabled: fetching, label: $t('user_list_menu__sync') },
+        { action: 'create', label: $t('user_list_menu__create') },
+        { action: 'edit', disabled: !edit, label: $t('user_list_menu__edit') },
+        { action: 'local_file', disabled: fetching, label: $t('user_list_menu__select_local_file') },
+        { action: 'local_file_folder', disabled: fetching, label: $t('user_list_menu__select_local_file_folder') },
+        // null,
+        // { action: 'sort', label: $t('user_list_menu__sort_list') },
+        // { action: 'duplicate', label: $t('user_list_menu__duplicate') },
+        // { action: 'sourceDetail', label: $t('user_list_menu__source_detail') },
+        // { action: 'import', label: $t('user_list_menu__import') },
+        // { action: 'export', label: $t('user_list_menu__export') },
+        null,
+        { action: 'remove', disabled: !remove || fetching, label: $t('user_list_menu__remove') },
+      ] satisfies Array<MenuList<MenuType>[number] | false>
+    ).filter((m) => m !== false)
   }
 
   export const show = async (selectInfo: AnyListen.List.MyListInfo | null, position: { x: number; y: number }) => {
@@ -91,6 +93,9 @@
         break
       case 'local_file_folder':
         void importLocalFileFolder(info!)
+        break
+      case 'update':
+        void syncUserList(info!.id)
         break
       case 'remove':
         void removeUserList(info!.id)

@@ -2,12 +2,11 @@
 mode: agent
 ---
 
-将 ${workspaceFolder} 目录下的 README_zh.md 翻译到同目录下的 README.md 和其他 README\_\*.md 文件，主要规则如下：
+根据以下要求将 ${workspaceFolder}/docs/README_zh.md 翻译为其他语言版本：
 
-- 翻译内容使用 markdown 语法编写
-- README.md 为英文版本，其他语言的 README 文件命名为 README\_\*.md，其中 \* 为对应语言的缩写，如简体中文为`zh`
-- 头部的 `English | 中文` 等为其他版本的 README 导航，当前语言的 README 对应的语言名称不需要链接，但需要为其他语言添加对应链接，
-  例如 `English | 中文`，如果当前是英文 README，则`English`不需要链接，但需要添加其他语言的链接，如 `English | [中文](README_zh.md)`，
-  确保所有语言版本的 README 文件都包含完整现存语言的语言导航。
-- 翻译时不要求逐字翻译，只需尽量使用目标语言的专业术语和常用表达方式，符合目标语言的语法和常见表达习惯。
-- 不要修改英文版本的 License 内容，总是将英文版本的 License 内容翻译到其他语言的 README 文件中。
+- 翻译内容需使用 markdown 语法
+- 翻译只需采用目标语言的专业术语和常用表达，确保符合目标语言的语法和表达习惯，并且表达方式足够地道
+- 不要修改英文版本的 License 内容，始终将英文 License 内容翻译到其他语言的 README 文件中
+- 英文版本存放于：${workspaceFolder}/README.md，其他语言版本存放于：${workspaceFolder}/docs/README\_\*.md，其中 \_ 为对应语言缩写，如简体中文为 zh，繁体中文为 zh-tw
+- 所有语言版本的 README 文件顶部需包含完整的语言导航，并保持一致。当前语言无需链接，其他语言需添加对应链接。例如英文 README 顶部为 `English | [中文](./docs/README_zh.md)`，中文 README 顶部为 `[English](../README.md) | 中文`
+- 确保其他版本与简体中文版的内容结构、信息量一致，若发现内容新增、修改或删除，需同步更新所有语言版本

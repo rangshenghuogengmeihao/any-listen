@@ -1,17 +1,16 @@
-import { ipcPreloadEvent } from '@any-listen/app/modules/ipcPreloadEvent'
-import type { ExposeFunctions, MainCall } from '.'
+import type { ClientCall, ExposeFunctions, MainCall } from '.'
 
 // 暴露给后端的方法
-export const createExposePlayer = () => {
+export const createExposePlayer = (client: ClientCall) => {
   return {
     async playerAction(event, action) {
-      ipcPreloadEvent.playerAction(action)
+      return client.playerAction(action)
     },
     async playListAction(event, action) {
-      ipcPreloadEvent.playListAction(action)
+      return client.playListAction(action)
     },
     async playHistoryListAction(event, action) {
-      ipcPreloadEvent.playHistoryListAction(action)
+      return client.playHistoryListAction(action)
     },
   } satisfies Partial<ExposeFunctions>
 }
@@ -30,24 +29,6 @@ export const createClientPlayer = (main: MainCall) => {
     },
     async playHistoryListAction(action) {
       return main.playHistoryListAction(action)
-    },
-    onPlayerAction(listener) {
-      ipcPreloadEvent.on('playerAction', listener)
-      return () => {
-        ipcPreloadEvent.off('playerAction', listener)
-      }
-    },
-    onPlayListAction(listener) {
-      ipcPreloadEvent.on('playListAction', listener)
-      return () => {
-        ipcPreloadEvent.off('playListAction', listener)
-      }
-    },
-    onPlayHistoryListAction(listener) {
-      ipcPreloadEvent.on('playHistoryListAction', listener)
-      return () => {
-        ipcPreloadEvent.off('playHistoryListAction', listener)
-      }
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

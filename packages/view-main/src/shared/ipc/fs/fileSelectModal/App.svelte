@@ -283,7 +283,7 @@
       {/snippet}
     </VirtualizedList>
     {#if errorMessage}
-      <div class="errorView">{errorMessage}</div>
+      <div class="error-view">{errorMessage}</div>
     {/if}
   </div>
   <div class="footer">
@@ -335,21 +335,21 @@
   //   // overflow: hidden;
   // }
   .header {
-    flex: none;
     display: flex;
+    flex: none;
     flex-direction: row;
     align-items: center;
     padding: 15px;
     text-align: center;
     h2 {
+      font-size: 14px;
       color: var(--color-font);
       word-break: break-all;
-      font-size: 14px;
     }
     :global {
       .btn {
-        height: 30px;
         width: 30px;
+        height: 30px;
 
         &:first-of-type {
           margin-left: 15px;
@@ -365,12 +365,12 @@
       .input {
         flex: auto;
         height: 30px;
-        border-radius: 0;
         border-left: 1px solid var(--color-border);
+        border-radius: 0;
 
         + .btn {
-          border-left: 1px solid var(--color-border);
           margin-left: 0;
+          border-left: 1px solid var(--color-border);
           border-top-left-radius: 0;
           border-bottom-left-radius: 0;
         }
@@ -379,50 +379,50 @@
   }
 
   .main {
-    flex: auto;
-    min-height: 0;
+    position: relative;
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
+    min-height: 0;
     margin: 0 15px;
     overflow: hidden;
-    position: relative;
     // min-height: 300px;
 
     :global(.list) {
-      min-height: 200px;
       min-width: 460px;
+      min-height: 200px;
       font-size: 13px;
       transition-property: height;
     }
   }
-  .errorView {
+  .error-view {
     position: absolute;
-    left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
-    font-size: 20px;
+    left: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-font-label);
+    width: 100%;
+    height: 100%;
     padding: 15px;
+    font-size: 20px;
+    color: var(--color-font-label);
     word-break: break-all;
   }
 
   .footer {
-    flex: none;
-    margin: 20px 15px 15px;
     display: flex;
+    flex: none;
     flex-direction: row;
     gap: 10px;
     justify-content: space-between;
+    margin: 20px 15px 15px;
 
     .left {
       display: flex;
       flex-direction: row;
-      align-items: center;
       gap: 10px;
+      align-items: center;
     }
     // .exts {
     //   font-size: 12px;

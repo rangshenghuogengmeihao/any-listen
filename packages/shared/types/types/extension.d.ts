@@ -19,53 +19,60 @@ declare global {
         | 'musicPicSearch'
         | 'lyricSearch'
         | 'lyricDetail'
-      interface SettingBase {
+
+      interface FormBase {
         field: string
         name: string
         description: string
       }
-      interface SettingInput extends SettingBase {
+      interface FormInput extends FormBase {
         type: 'input'
         textarea?: boolean
         default: string
       }
-      interface SettingBoolean extends SettingBase {
+      interface FormBoolean extends FormBase {
         type: 'boolean'
         default: boolean
       }
-      interface SettingSelection extends SettingBase {
+      interface FormSelection extends FormBase {
         type: 'selection'
         default: string
         enum: string[]
         enumName: string[]
       }
-      type SettingValue<T extends SettingItems> = T & { value?: T['default'] }
-      type SettingItems = SettingInput | SettingBoolean | SettingSelection
-
-      type SettingValueItem = SettingValue<SettingInput> | SettingValue<SettingBoolean> | SettingValue<SettingSelection>
+      type FormValue<T extends FormItems> = T & { value?: T['default'] }
+      type FormValueItem = FormValue<FormInput> | FormValue<FormBoolean> | FormValue<FormSelection>
+      type FormItems = FormInput | FormBoolean | FormSelection
+      interface ListProvider {
+        id: string
+        name: string
+        description: string
+        form: FormItems[]
+      }
 
       interface Manifest {
         id: string
         name: string
-        description: string
-        icon: string
+        description?: string
+        icon?: string
         version: string
-        target_engine: string
-        author: string
-        homepage: string
-        license: string
-        categories: string[]
-        tags: string[]
+        target_engine?: string
+        author?: string
+        homepage?: string
+        license?: string
+        categories?: string[]
+        tags?: string[]
         main: string
         publicKey: string
-        grant: Grant[]
-        contributes: {
+        grant?: Grant[]
+        contributes?: {
           resource?: Array<{
             id: string
             name: string
             resource: ResourceAction[]
           }>
-          settings?: SettingItems[]
+          listProviders?: ListProvider[]
+          settings?: FormItems[]
         }
       }
       interface Setting {
@@ -79,7 +86,8 @@ declare global {
       interface ExtensionSetting {
         id: string
         name: string
-        settingItems: SettingValueItem[]
+        internal: boolean
+        settingItems: FormValueItem[]
       }
       // interface Resource {
       //   id: string
@@ -87,16 +95,22 @@ declare global {
       //   resource: ResourceAction[]
       //   extensionId: string
       // }
-      type ResourceList = Partial<
-        Record<
-          ResourceAction,
-          Array<{
-            id: string
-            name: string
-            extensionId: string
-          }>
+      interface ListProviderResource extends ListProvider {
+        extensionId: string
+      }
+      interface ResourceList {
+        resources: Partial<
+          Record<
+            ResourceAction,
+            Array<{
+              id: string
+              name: string
+              extensionId: string
+            }>
+          >
         >
-      >
+        listProvider: ListProviderResource[]
+      }
       type ExtensionI18nMessages = Record<string, string>
       // type ResourceMap = Map<string, {}>
       interface Extension extends Setting {
@@ -107,10 +121,10 @@ declare global {
         author: Manifest['author']
         homepage: Manifest['homepage']
         license: Manifest['license']
-        categories: Manifest['categories']
-        tags: Manifest['tags']
-        grant: Manifest['grant']
-        contributes: Manifest['contributes']
+        categories: NonNullable<Manifest['categories']>
+        tags: NonNullable<Manifest['tags']>
+        grant: NonNullable<Manifest['grant']>
+        contributes: NonNullable<Manifest['contributes']>
         publicKey: Manifest['publicKey']
         directory: string
         dataDirectory: string
@@ -120,6 +134,7 @@ declare global {
         errorMessage?: string
         requiredReload?: boolean
         i18nMessages: Record<string, string>
+        internal: boolean
       }
 
       interface OnlineExtension extends Manifest {

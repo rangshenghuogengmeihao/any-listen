@@ -115,15 +115,6 @@ export const settings: SettingListSection[] = [
         type: 'radio',
         enum: langList.map((l) => ({ value: l.locale, name: l.name as keyof Message })),
       },
-      // {
-      //   field: 'common.controlBtnPosition',
-      //   name: 'settings__basic_control_btn_position',
-      //   type: 'radio',
-      //   enum: [
-      //     { value: 'left', name: 'settings__basic_control_btn_position_left' },
-      //     { value: 'right', name: 'settings__basic_control_btn_position_right' },
-      //   ],
-      // },
       // t('settings.basic.play_bar_style_center_control_full_btn')
       {
         field: 'common.playBarProgressStyle',
@@ -218,7 +209,7 @@ export const settings: SettingListSection[] = [
   },
   {
     id: 'extension',
-    // t('settings.extension.gh_mirror_hosts')
+    // t('settings.extension')
     name: 'settings.extension',
     list: [
       {
@@ -232,13 +223,11 @@ export const settings: SettingListSection[] = [
     id: 'update',
     name: 'settings__update',
     list: [
-      import.meta.env.VITE_IS_DESKTOP
-        ? {
-            field: 'common.tryAutoUpdate',
-            name: 'settings__update_try_auto_update',
-            type: 'boolean',
-          }
-        : null,
+      {
+        field: 'common.tryAutoUpdate',
+        name: 'settings__update_try_auto_update',
+        type: 'boolean',
+      },
       {
         field: 'common.allowPreRelease',
         name: 'settings__update_allow_pre_release',
@@ -291,11 +280,23 @@ if (import.meta.env.VITE_IS_DESKTOP) {
     id: 'other',
     name: 'settings.other',
     list: [
+      import.meta.env.VITE_IS_MAC
+        ? null
+        : {
+            field: 'common.transparentWindow',
+            name: 'settings.common.transparent_window',
+            description: 'settings.common.transparent_window_desc',
+            type: 'boolean',
+          },
       {
-        field: 'common.transparentWindow',
-        name: 'settings.common.transparent_window',
-        description: 'settings.common.transparent_window_desc',
-        type: 'boolean',
+        field: 'tray.themeId',
+        name: 'settings.tray.theme_id',
+        type: 'radio',
+        enum: [
+          { value: 0, name: 'settings.tray.theme_id_light' },
+          { value: 2, name: 'settings.tray.theme_id_dark' },
+          { value: 1, name: 'settings.tray.theme_id_origin' },
+        ] satisfies Array<{ value: AnyListen.AppSetting['tray.themeId']; name: keyof Message }>,
       },
     ],
   })

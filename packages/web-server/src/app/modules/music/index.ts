@@ -22,7 +22,7 @@ export const getMusicUrl = async ({
 }: {
   musicInfo: AnyListen.Music.MusicInfo
   isRefresh?: boolean
-  quality?: AnyListen.Music.Quality
+  quality?: string
 }): Promise<AnyListen.IPCMusic.MusicUrlInfo> => {
   if (musicInfo.isLocal) {
     const info = await getLocalMusicUrl({

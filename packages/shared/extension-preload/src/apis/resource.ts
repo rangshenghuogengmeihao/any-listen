@@ -31,7 +31,7 @@ export const registerResourceAction = (_actions: Partial<AnyListen_API.ResourceA
 const QUALITYS: AnyListen.Music.Quality[] = ['128k', '192k', '320k', 'wav', 'flac', 'flac24bit', 'dobly', 'master']
 const qualityFilter = (qualitys: AnyListen.Music.MusicInfoOnline['meta']['qualitys']) => {
   return Object.fromEntries(
-    (Object.entries(qualitys) as EntriesObject<typeof qualitys>)
+    (Object.entries(qualitys ?? {}) as EntriesObject<NonNullable<typeof qualitys>>)
       .filter(([quality]) => QUALITYS.includes(quality))
       .map(([key, data]) => {
         const dataArr = Object.entries(data!)
@@ -51,9 +51,14 @@ const substrLength = (str: string, length = 128): string => {
 }
 const verifyStringArray = (arr: string[], name: string): string[] => {
   if (!Array.isArray(arr)) throw new Error(`${name} result is not an array`)
-  return arr.filter((s) => s != null).map((s) => substrLength(String(s)))
+  return arr
+    .filter((s) => {
+      if (typeof s !== 'string') throw new Error(`${name} result is not a string`)
+      return !!s.trim()
+    })
+    .map((s) => substrLength(String(s)))
 }
-const verifyOnlineMusicArray = (
+export const verifyOnlineMusicArray = (
   list: AnyListen.Music.MusicInfoOnline[],
   name: string,
   source: string
@@ -84,6 +89,10 @@ const verifyOnlineMusicArray = (
       } else musicInfo.meta.year = Math.trunc(musicInfo.meta.year)
       if (!musicInfo.meta.qualitys) throw new Error(`${name} result.meta.qualitys is null`)
       musicInfo.meta.qualitys = qualityFilter(musicInfo.meta.qualitys)
+      musicInfo.meta.filePath &&= substrLength(String(musicInfo.meta.filePath), 2048)
+      musicInfo.meta.bitrateLabel &&= substrLength(String(musicInfo.meta.bitrateLabel), 50)
+      musicInfo.meta.sizeStr &&= substrLength(String(musicInfo.meta.sizeStr), 50)
+      musicInfo.meta.ext &&= substrLength(String(musicInfo.meta.ext), 50)
       musicInfo.meta.source = source
     } catch (e) {
       list.splice(i, 1)
@@ -98,7 +107,7 @@ const verifyListCommonResult = <T>(result: ListCommonResult<T>, name: string): L
   if (typeof result.limit != 'number') throw new Error(`${name} result.limit is not an number`)
   return result
 }
-const urlRxp = /^(https?|file):\/\//
+const urlRxp = /^(?:(?:https?|file):\/\/|\/\w+)/
 const verifyUrl = (url: string, name: string) => {
   if (typeof url != 'string') throw new Error(`${name} url result is not a string`)
   if (url.length > 2048) throw new Error(`${name} url is too long`)
@@ -189,69 +198,51 @@ const verifyLeaderboardDetailAction = (
 }
 
 type RA = AnyListen.IPCExtension.ResourceAction
+const actionHandles: RA = {
+  async musicSearch(params) {
+    return verifyMusicSearchAction(await actions.musicSearch!(params), params.source)
+  },
+  async musicPic(params) {
+    return verifyMusicPicAction(await actions.musicPic!(params))
+  },
+  async musicUrl(params) {
+    return verifyMusicUrlAction(await actions.musicUrl!(params))
+  },
+  async musicLyric(params) {
+    return verifyLyricAction(await actions.musicLyric!(params))
+  },
+  async musicPicSearch(params) {
+    return verifyMusicPicAction(await actions.musicPicSearch!(params))
+  },
+  async lyricSearch(params) {
+    return verifyLyricSearchAction(await actions.lyricSearch!(params))
+  },
+  async lyricDetail(params) {
+    return verifyLyricAction(await actions.lyricDetail!(params))
+  },
+  // case 'songlistSearch':
+  //   return verifySonglistSearchAction(await actions.songlistSearch!(params)) as Awaited<ReturnType<RA[T]>>
+  // case 'songlistSorts':
+  //   return verifySonglistSortsAction(await actions.songlistSorts!(params)) as Awaited<ReturnType<RA[T]>>
+  // case 'songlistTags':
+  //   return verifySonglistTagsAction(await actions.songlistTags!(params)) as Awaited<ReturnType<RA[T]>>
+  // case 'songlist':
+  //   return verifySonglistAction(await actions.songlist!(params)) as Awaited<ReturnType<RA[T]>>
+  // case 'songlistDetail':
+  //   return verifySonglistDetailAction(await actions.songlistDetail!(params), action.data.source) as Awaited<ReturnType<RA[T]>>
+  // case 'leaderboard':
+  //   return verifyLeaderboardAction(await actions.leaderboard!(params)) as Awaited<ReturnType<RA[T]>>
+  // // case 'leaderboardDate': return verifyLeaderboardDateAction(await handler(action))
+  // case 'leaderboardDetail':
+  //   return verifyLeaderboardDetailAction(await actions.leaderboardDetail!(params), action.data.source) as Awaited<ReturnType<RA[T]>>
+}
+
 export const onResourceAction = async <T extends keyof RA>(
   action: T,
   params: Parameters<RA[T]>[0]
 ): Promise<Awaited<ReturnType<RA[T]>>> => {
   if (!actions) throw new Error('resource action not registered')
   if (!actions[action]) throw new Error(`resource action ${action} not registered`)
-  switch (action) {
-    // case 'tipSearch':
-    //   return verifyTipSearchAction(await actions.tipSearch!(params)) as Awaited<ReturnType<RA[T]>>
-    // case 'hotSearch':
-    //   return verifyHotSearchAction(await actions.hotSearch!(params)) as Awaited<ReturnType<RA[T]>>
-    case 'musicSearch':
-      return verifyMusicSearchAction(
-        await actions.musicSearch!(params as AnyListen.IPCExtension.SearchParams),
-        params.source
-      ) as Awaited<ReturnType<RA[T]>>
-    case 'musicPic':
-      return verifyMusicPicAction(await actions.musicPic!(params as AnyListen.IPCExtension.MusicCommonParams)) as Awaited<
-        ReturnType<RA[T]>
-      >
-    case 'musicUrl':
-      return verifyMusicUrlAction(await actions.musicUrl!(params as AnyListen.IPCExtension.MusicUrlParams)) as Awaited<
-        ReturnType<RA[T]>
-      >
-    case 'musicLyric':
-      return verifyLyricAction(await actions.musicLyric!(params as AnyListen.IPCExtension.MusicCommonParams)) as Awaited<
-        ReturnType<RA[T]>
-      >
-    case 'musicPicSearch':
-      return verifyMusicPicAction(await actions.musicPicSearch!(params as AnyListen.IPCExtension.PicSearchParams)) as Awaited<
-        ReturnType<RA[T]>
-      >
-    case 'lyricSearch':
-      return verifyLyricSearchAction(await actions.lyricSearch!(params as AnyListen.IPCExtension.LyricSearchParams)) as Awaited<
-        ReturnType<RA[T]>
-      >
-    case 'lyricDetail':
-      return verifyLyricAction(await actions.lyricDetail!(params as AnyListen.IPCExtension.ListDetailParams)) as Awaited<
-        ReturnType<RA[T]>
-      >
-    // case 'songlistSearch':
-    //   return verifySonglistSearchAction(await actions.songlistSearch!(params)) as Awaited<ReturnType<RA[T]>>
-    // case 'songlistSorts':
-    //   return verifySonglistSortsAction(await actions.songlistSorts!(params)) as Awaited<ReturnType<RA[T]>>
-    // case 'songlistTags':
-    //   return verifySonglistTagsAction(await actions.songlistTags!(params)) as Awaited<ReturnType<RA[T]>>
-    // case 'songlist':
-    //   return verifySonglistAction(await actions.songlist!(params)) as Awaited<ReturnType<RA[T]>>
-    // case 'songlistDetail':
-    //   return verifySonglistDetailAction(await actions.songlistDetail!(params), action.data.source) as Awaited<ReturnType<RA[T]>>
-    // case 'leaderboard':
-    //   return verifyLeaderboardAction(await actions.leaderboard!(params)) as Awaited<ReturnType<RA[T]>>
-    // // case 'leaderboardDate': return verifyLeaderboardDateAction(await handler(action))
-    // case 'leaderboardDetail':
-    //   return verifyLeaderboardDetailAction(await actions.leaderboardDetail!(params), action.data.source) as Awaited<ReturnType<RA[T]>>
-
-    default:
-      // eslint-disable-next-line no-case-declarations, @typescript-eslint/no-unused-vars
-      const unknownAction: never = action
-      throw new Error(`unknown action: ${JSON.stringify(action)}`)
-  }
-  // return handler(
-  //   // @ts-expect-error
-  //   action,
-  // )
+  // @ts-expect-error
+  return actionHandles[action](params) as Awaited<ReturnType<RA[T]>>
 }

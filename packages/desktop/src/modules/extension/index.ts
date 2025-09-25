@@ -1,7 +1,7 @@
 import { appEvent, appState } from '@/app'
 import { playerEvent } from '@/modules/player'
 import { startExtensionServiceWorker } from '@/worker'
-import { extensionEvent, extensionState } from '@any-listen/app/modules/extension'
+import { extensionEvent, extensionState, initExtensionModule } from '@any-listen/app/modules/extension'
 import { musicListEvent } from '@any-listen/app/modules/musicList'
 import { workers } from '@any-listen/app/modules/worker'
 import { EXTENSION, STORE_NAMES } from '@any-listen/common/constants'
@@ -21,6 +21,7 @@ const setupExtension = async () => {
     onlineExtensionHost: appState.appSetting['extension.onlineExtensionHost'],
     gHMirrorHosts: appState.appSetting['extension.ghMirrorHosts'],
   })
+  await initExtensionModule()
   await workers.extensionService.loadLocalExtensions()
   await workers.extensionService.startExtensions()
   extensionEvent.setup(workers.extensionService)
@@ -171,4 +172,14 @@ export const resourceAction = async <T extends keyof RA>(
   return workers.extensionService.resourceAction(action, params)
 }
 
+type LPA = AnyListen.IPCExtension.ListProviderAction
+export const listProviderAction = async <T extends keyof LPA>(
+  action: T,
+  params: Parameters<LPA[T]>[0]
+): Promise<Awaited<ReturnType<LPA[T]>>> => {
+  return workers.extensionService.listProviderAction(action, params)
+}
+
 export { extensionEvent, extensionState }
+
+export { syncUserList } from '@any-listen/app/modules/extension'

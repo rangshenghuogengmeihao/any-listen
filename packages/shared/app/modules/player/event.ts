@@ -75,11 +75,11 @@ export class Event extends _Event {
     this.emitEvent('musicChanged', index, historyIndex)
   }
 
-  musicInfoUpdated(info: AnyListen.Player.MusicInfo) {
+  musicInfoUpdated(info: Partial<AnyListen.Player.MusicInfo>) {
     this.emitEvent('musicInfoUpdated', info)
   }
 
-  playInfoUpdated(info: AnyListen.Player.PlayInfo) {
+  playInfoUpdated(info: Partial<AnyListen.Player.PlayInfo>) {
     this.emitEvent('playInfoUpdated', info)
   }
 

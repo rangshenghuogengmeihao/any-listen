@@ -135,14 +135,14 @@
       // border: .0625rem solid @theme_color2;
       // border-radius: .3125rem;
       li {
+        display: flex;
+        line-height: 1.2;
         // margin-right: @padding;
         // color: var(--color-button-font);
         // border: .0625rem solid @theme_line;
         // border-radius: .3125rem;
         transition: 0.4s ease;
         transition-property: all;
-        line-height: 1.2;
-        display: flex;
         // border-right: none;
         svg {
           height: 1em;
@@ -151,9 +151,9 @@
         button {
           display: block;
           padding: 7px 12px;
+          font-size: 13px;
           line-height: 1.2;
           color: var(--color-button-font);
-          font-size: 13px;
         }
         &.active {
           span {
@@ -161,9 +161,9 @@
           }
         }
         button {
+          cursor: pointer;
           background-color: transparent;
           border: none;
-          cursor: pointer;
           // outline: none;
           transition: background-color 0.3s ease;
           &:hover {

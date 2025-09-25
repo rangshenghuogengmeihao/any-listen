@@ -39,7 +39,7 @@ export const app: AnyListen_API.App = {
   async showFormDialog({ signal, ...options }: AnyListen_API.FormDialogOptions) {
     return buildKey(
       async (key) => {
-        return hostContext.hostFuncs.showInputBox(key, options)
+        // return hostContext.hostFuncs.showInputBox(key, options)
       },
       signal as AbortSignal | undefined
     )
@@ -47,7 +47,7 @@ export const app: AnyListen_API.App = {
   async showOpenDialog({ signal, ...options }) {
     return buildKey(
       async (key) => {
-        return hostContext.hostFuncs.showOpenBox(key, options)
+        return hostContext.hostFuncs.showOpenBox(key, options) as Promise<string | string[] | undefined>
       },
       signal as AbortSignal | undefined
     )
@@ -55,7 +55,7 @@ export const app: AnyListen_API.App = {
   async showSaveDialog({ signal, ...options }) {
     return buildKey(
       async (key) => {
-        return hostContext.hostFuncs.showSaveBox(key, options)
+        return hostContext.hostFuncs.showSaveBox(key, options) as Promise<string | undefined>
       },
       signal as AbortSignal | undefined
     )

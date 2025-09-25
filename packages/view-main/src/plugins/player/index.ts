@@ -405,6 +405,7 @@ export const setStop = () => {
 }
 
 export const isEmpty = (): boolean => !audio?.src
+export const getSrc = (): string | undefined => audio?.src
 
 export const setLoopPlay = (isLoop: boolean) => {
   if (audio) audio.loop = isLoop

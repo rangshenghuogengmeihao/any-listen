@@ -52,8 +52,6 @@ export declare type ServerCommonActions = WarpPromiseRecord<{
     action: AnyListen.FileSystem.Actions[T][0]
   ) => Promise<AnyListen.FileSystem.Actions[T][1]>
 
-  messageBoxConfirm: (key: string, result: unknown) => void
-
   /** 获取当前版本信息 */
   getCurrentVersionInfo: () => AnyListen.CurrentVersionInfo
   /** 检查软件更新 */

@@ -42,7 +42,7 @@
 </script>
 
 {#snippet content()}
-  <div bind:this={domBtns} class="controBtn">
+  <div bind:this={domBtns} class="control-btn">
     <button
       type="button"
       class="hide"
@@ -76,7 +76,7 @@
     .header {
       -webkit-app-region: no-drag;
       align-self: flex-start;
-      // .controBtn {
+      // .control-btn {
       //   .close,
       //   .min {
       //     display: none;
@@ -88,43 +88,33 @@
     }
   }
   .header {
-    flex: none;
     position: relative;
+    flex: none;
     flex: 0 0 @height-toolbar;
-    -webkit-app-region: drag;
-    width: 100%;
     align-self: flex-start;
+    width: 100%;
+    -webkit-app-region: drag;
 
-    .controBtn {
+    .control-btn {
       position: absolute;
       top: 0;
+      right: 0;
       display: flex;
       -webkit-app-region: no-drag;
 
       button {
-        display: flex;
         position: relative;
-        background: none;
-        border: none;
-        outline: none;
-        padding: 1px;
-        cursor: pointer;
         display: flex;
-        justify-content: center;
         align-items: center;
-      }
-
-      // .fullscreenExit {
-      //   display: none;
-      // }
-    }
-
-    .controBtn {
-      right: 0;
-      button {
+        justify-content: center;
         width: 46px;
         height: 30px;
+        padding: 1px;
         color: var(--color-font-label);
+        cursor: pointer;
+        outline: none;
+        background: none;
+        border: none;
         transition: background-color 0.2s ease-in-out;
 
         &:global(.hover) {
@@ -135,6 +125,10 @@
           }
         }
       }
+
+      // .fullscreenExit {
+      //   display: none;
+      // }
     }
   }
 </style>

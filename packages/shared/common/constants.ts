@@ -1,6 +1,6 @@
 export const URL_SCHEME_RXP = /^anylisten:\/\//
 
-export const NATIVE_VERSION = 2
+export const NATIVE_VERSION = 4
 
 export const DEV_SERVER_PORTS = {
   'view-main': 9200,
@@ -207,3 +207,5 @@ export const API_PREFIX = '/api'
 
 /** singer name sep */
 export const SINGERS_RXP = /[、&_;；/,，|]/
+
+export const PROXY_SERVER_PATH = '/p_static'

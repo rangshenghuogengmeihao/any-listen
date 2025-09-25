@@ -1,9 +1,9 @@
 import { encodePath } from '@/shared/electron'
-import { basename, joinPath } from '@/shared/utils'
+import { basename } from '@/shared/utils'
 import { workers } from '@/worker'
 import { getLocalFilePath } from '@any-listen/app/modules/music/utils'
-import fs from 'node:fs/promises'
-import { buildLyricInfo, getCachedLyricInfo, getTempDir } from './shared'
+import { writeProxyCache } from '@any-listen/app/modules/proxyServer'
+import { buildLyricInfo, getCachedLyricInfo } from './shared'
 
 export const getMusicUrl = async ({
   musicInfo,
@@ -48,24 +48,9 @@ export const getMusicPicUrl = async ({
           // toggleSource: false,
         }
       }
-      if (Buffer.byteLength(pic.data) > 500_000) {
-        try {
-          const tempDir = await getTempDir()
-          const tempFile = joinPath(tempDir, `${basename(musicInfo.meta.filePath)}.${pic.format}`)
-          await fs.writeFile(tempFile, pic.data)
-          return {
-            url: tempFile,
-            isFromCache: false,
-            // toggleSource: false,
-          }
-        } catch (err) {
-          console.log(err)
-        }
-      }
       return {
-        url: `data:image/${pic.format};base64,${Buffer.from(pic.data).toString('base64')}`,
+        url: await writeProxyCache(`${basename(musicInfo.meta.filePath)}.${pic.format}`, pic.data),
         isFromCache: false,
-        // toggleSource: false,
       }
     }
 

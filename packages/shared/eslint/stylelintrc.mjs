@@ -9,6 +9,7 @@ export default {
       },
     ],
     'rule-empty-line-before': null,
+    'no-descending-specificity': null,
     // 'rule-empty-line-before': [
     //   'always',
     //   {

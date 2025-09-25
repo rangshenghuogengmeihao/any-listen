@@ -10,6 +10,7 @@ import {
   createListClearStatement,
   createListDeleteStatement,
   createListInsertStatement,
+  createListMusicInfoQueryStatement,
   createListUpdateStatement,
   createMusicInfoByListAndMusicInfoIdQueryStatement,
   createMusicInfoByMusicInfoIdQueryStatement,
@@ -71,7 +72,7 @@ export const inertUserLists = (parentId: UserListInfo['parent_id'], lists: UserL
   const db = getDB()
   const listClearStatement: unknown = (parentId == null ? createListClearNullStatement : createListClearStatement)()
   const listInsertStatement = createListInsertStatement()
-  db.transaction((parentId: UserListInfo['parent_id'], lists: UserListInfo[]) => {
+  db.transaction((parentId: UserListInfo['parent_id'], lists: UserListInfo[], isClear: boolean) => {
     if (isClear) {
       if (parentId == null) {
         ;(listClearStatement as ReturnType<typeof createListClearNullStatement>).run()
@@ -89,7 +90,7 @@ export const inertUserLists = (parentId: UserListInfo['parent_id'], lists: UserL
         position: list.position,
       })
     }
-  })(parentId, lists)
+  })(parentId, lists, isClear)
 }
 
 /**
@@ -196,6 +197,11 @@ export const updateMusicInfos = (list: MusicInfo[]) => {
 export const queryMusicInfoByListId = (listId: string) => {
   const musicInfoQueryStatement = createMusicInfoQueryStatement()
   return musicInfoQueryStatement.all({ list_id: listId })
+}
+
+export const queryListMusicInfo = (listId: string, musicId: string) => {
+  const musicInfoQueryStatement = createListMusicInfoQueryStatement()
+  return musicInfoQueryStatement.get({ list_id: listId, music_id: musicId })
 }
 
 /**

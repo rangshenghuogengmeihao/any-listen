@@ -52,25 +52,25 @@
 
 <style lang="less">
   .aside-footer-menu {
-    flex: none;
-    padding: 0 12px;
     display: flex;
+    flex: none;
     flex-flow: column nowrap;
+    padding: 0 12px;
   }
   .menu-item {
     position: relative;
   }
   .link {
-    text-decoration: none;
+    display: flex;
     padding: 10px 15px;
-    transition: @transition-fast;
-    transition-property: background-color, opacity;
     color: var(--color-primary-font);
+    text-decoration: none;
     cursor: pointer;
     // font-size: 12px;
     outline: none;
-    display: flex;
     border-radius: @radius-border;
+    transition: @transition-fast;
+    transition-property: background-color, opacity;
     .mixin-ellipsis-1();
 
     &.active {
@@ -82,29 +82,29 @@
       // color: var(--color-primary-font);
 
       &:not(.active) {
-        opacity: 0.8;
         background-color: var(--color-primary-light-400-alpha-700);
+        opacity: 0.8;
       }
     }
     &:active:not(.active) {
-      opacity: 0.6;
       background-color: var(--color-primary-light-300-alpha-600);
+      opacity: 0.6;
     }
   }
 
   .menu-icon {
-    // margin-bottom: 5px;
-    margin-right: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 15px;
+    // margin-bottom: 5px;
+    margin-right: 5px;
     & > svg {
       height: 15px;
     }
   }
   .menu-name {
-    line-height: 1.2;
     font-size: 13px;
+    line-height: 1.2;
   }
 </style>

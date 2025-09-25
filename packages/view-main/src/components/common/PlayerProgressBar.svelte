@@ -89,76 +89,76 @@
 
 <div class="progress">
   <div
-    class="progressBar progressBar2"
-    class:barTransition={isActiveTransition}
+    class="progress-bar progress-bar2"
+    class:bar-transition={isActiveTransition}
     style={`transform: scaleX(${$progress.progress || 0})`}
     ontransitionend={handleTransitionend}
   ></div>
-  <div class:show={dragging} class="progressBar progressBar3" style={`transform: scaleX(${dragProgress || 0})`}></div>
+  <div class:show={dragging} class="progress-bar progress-bar3" style={`transform: scaleX(${dragProgress || 0})`}></div>
 </div>
 <div
   role="slider"
   tabindex="0"
   aria-valuenow={$progress.progress}
   bind:this={domProgress}
-  class="progressMask"
+  class="progress-mask"
   onmousedown={handleMsDown}
   ontouchstart={handleTouchDown}
 ></div>
 
 <style lang="less">
   .progress {
-    width: 100%;
-    height: 5px;
-    overflow: hidden;
-    transition: @transition-normal;
-    transition-property: background-color;
-    background-color: var(--color-primary-light-100-alpha-800);
     // background-color: #f5f5f5;
     position: relative;
-    border-radius: 40px;
+    width: 100%;
+    height: 5px;
     contain: strict;
+    overflow: hidden;
+    background-color: var(--color-primary-light-100-alpha-800);
+    border-radius: 40px;
+    transition: @transition-normal;
+    transition-property: background-color;
   }
-  .progressMask {
+  .progress-mask {
     position: absolute;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    cursor: pointer;
     contain: strict;
+    cursor: pointer;
   }
-  .progressBar {
+  .progress-bar {
     position: absolute;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     transform-origin: 0;
   }
-  // .progressBar1 {
+  // .progress-bar1 {
   //   background-color: var(--color-primary-light-100-alpha-600);
   // }
 
-  .progressBar2 {
+  .progress-bar2 {
     background-color: var(--color-primary-light-100-alpha-400);
     will-change: transform;
   }
 
-  .progressBar3 {
+  .progress-bar3 {
     background-color: var(--color-primary-light-100-alpha-200);
-    transition: @transition-normal;
-    transition-property: opacity;
     // box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
     opacity: 0;
+    transition: @transition-normal;
+    transition-property: opacity;
     &.show {
       opacity: 0.5;
     }
   }
 
-  .barTransition {
-    transition-property: transform;
+  .bar-transition {
     transition-timing-function: ease-out;
     transition-duration: 0.2s;
+    transition-property: transform;
   }
 </style>

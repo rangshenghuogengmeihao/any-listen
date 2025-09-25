@@ -34,11 +34,11 @@
     contain: strict;
   }
   .footer-content {
-    height: 100%;
     position: relative;
     display: flex;
     flex-flow: column nowrap;
-    padding: 0 30px 16px 30px;
+    height: 100%;
+    padding: 0 30px 16px;
     > :global(.middle-play-progress) {
       flex: none;
       width: 100%;
@@ -46,17 +46,17 @@
   }
   .control {
     display: flex;
-    flex-flow: row nowrap;
     flex: auto;
+    flex-flow: row nowrap;
   }
 
   .side {
-    height: 100%;
-    flex: 1;
+    position: relative;
     display: flex;
+    flex: 1;
     flex-flow: row nowrap;
     align-items: center;
-    position: relative;
+    height: 100%;
     padding-top: 15px;
   }
 

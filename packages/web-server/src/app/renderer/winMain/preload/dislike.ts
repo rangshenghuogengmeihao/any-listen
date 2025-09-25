@@ -1,12 +1,11 @@
 import type { IPCSocket } from '@/preload/ws'
-import { ipcPreloadEvent } from '@any-listen/app/modules/ipcPreloadEvent'
-import type { ExposeFunctions } from '.'
+import type { ClientCall, ExposeFunctions } from '.'
 
 // 暴露给后端的方法
-export const createExposeDislike = () => {
+export const createExposeDislike = (client: ClientCall) => {
   return {
     async dislikeAction(socket: IPCSocket, action: AnyListen.IPCDislikeList.ActionList) {
-      ipcPreloadEvent.dislikeAction(action)
+      return client.dislikeAction(action)
     },
   } satisfies Partial<ExposeFunctions>
 }
@@ -19,12 +18,6 @@ export const createClientDislike = (ipcSocket: IPCSocket) => {
     },
     async dislikeAction(action) {
       return ipcSocket.remoteQueueDislike.dislikeAction(action)
-    },
-    onDislikeAction(listener) {
-      ipcPreloadEvent.on('dislikeAction', listener)
-      return () => {
-        ipcPreloadEvent.off('dislikeAction', listener)
-      }
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

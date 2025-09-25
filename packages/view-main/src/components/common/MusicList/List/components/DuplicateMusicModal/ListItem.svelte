@@ -20,14 +20,14 @@
   let sourceLabel = buildSourceLabel(info.musicInfo)
 </script>
 
-<div class="listItem">
+<div class="list-item">
   <div class="num">{info.index + 1}</div>
-  <div class="textContent">
+  <div class="text-content">
     <h3 class="text" aria-label={nameLabel}>
       {nameLabel}
     </h3>
     {#if info.musicInfo.meta.albumName}
-      <h3 class="text albumName" aria-label={info.musicInfo.meta.albumName}>
+      <h3 class="text album-name" aria-label={info.musicInfo.meta.albumName}>
         {info.musicInfo.meta.albumName}
       </h3>
     {/if}
@@ -49,16 +49,16 @@
 </div>
 
 <style lang="less">
-  .listItem {
+  .list-item {
     position: relative;
-    padding: 0 10px;
-    transition: background-color 0.2s ease;
-    line-height: 1.4;
-    height: 100%;
     // overflow: hidden;
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
+    height: 100%;
+    padding: 0 10px;
+    line-height: 1.4;
+    transition: background-color 0.2s ease;
 
     &:hover {
       background-color: var(--color-primary-background-hover);
@@ -72,47 +72,47 @@
 
   .num {
     flex: none;
-    font-size: 12px;
     width: 30px;
-    text-align: center;
+    font-size: 12px;
     color: var(--color-font-label);
+    text-align: center;
   }
 
-  .textContent {
-    flex: auto;
-    padding-left: 5px;
-    min-width: 0;
+  .text-content {
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
     align-items: flex-start;
+    min-width: 0;
+    padding-left: 5px;
     overflow: hidden;
   }
   .text {
     max-width: 100%;
     .mixin-ellipsis-1();
   }
-  .albumName {
+  .album-name {
     font-size: 12px;
     opacity: 0.6;
     // .mixin-ellipsis-1();
   }
   .label {
+    display: flex;
     flex: none;
+    align-items: center;
+    padding: 0 5px;
     font-size: 12px;
     opacity: 0.5;
-    padding: 0 5px;
-    display: flex;
-    align-items: center;
     // transform: rotate(45deg);
     // background-color:
   }
   .btns {
+    display: flex;
     flex: none;
+    gap: 5px;
+    align-items: center;
     // font-size: 12px;
     padding: 0 5px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
     svg {
       width: 80% !important;
       height: 80% !important;

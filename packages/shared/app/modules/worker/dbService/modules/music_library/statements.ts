@@ -166,6 +166,18 @@ export const createMusicInfoQueryStatement = () => {
 }
 
 /**
+ * 创建音乐查询语句
+ * @returns 查询语句
+ */
+export const createListMusicInfoQueryStatement = () => {
+  return dbPrepare<ListMusicInfoQuery, MusicInfo>(`
+    SELECT mInfo."id", mInfo."name", mInfo."singer", mInfo."is_local", mInfo."interval", mInfo."meta"
+    FROM my_list_music_info mInfo
+    WHERE mInfo.list_id=@list_id AND mInfo.id=@music_id
+    `)
+}
+
+/**
  * 创建音乐信息插入语句
  * @returns 插入语句
  */

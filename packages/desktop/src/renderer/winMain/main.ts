@@ -107,6 +107,11 @@ export const createWindow = () => {
       spellcheck: false, // 禁用拼写检查器
     },
   }
+  if (import.meta.env.VITE_IS_MAC) {
+    options.frame = true
+    options.titleBarStyle = 'hidden'
+    options.trafficLightPosition = { x: 12, y: 8 }
+  }
   if (appState.envParams.cmdParams.dt) options.backgroundColor = theme.colors['--color-primary-light-1000']
   if (appState.appSetting['common.startInFullscreen']) {
     options.fullscreen = true

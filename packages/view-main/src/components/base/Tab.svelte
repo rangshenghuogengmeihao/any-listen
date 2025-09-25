@@ -35,7 +35,7 @@
     {#each list as item (item[itemkey])}
       <a
         href={item[href] as string}
-        class="listItem link"
+        class="list-item link"
         class:active={value == item[itemkey]}
         tabindex="0"
         role="tab"
@@ -53,7 +53,7 @@
   {:else}
     {#each list as item (item[itemkey])}
       <button
-        class="listItem"
+        class="list-item"
         class:active={value == item[itemkey]}
         tabindex="0"
         role="tab"
@@ -74,8 +74,8 @@
   .list {
     display: flex;
     flex-flow: row nowrap;
-    font-size: 12px;
     gap: 25px;
+    font-size: 12px;
     // padding: 0 15px;
 
     &:global(.left) {
@@ -89,16 +89,16 @@
     }
 
     &.disabled {
-      opacity: 0.5;
       pointer-events: none;
+      opacity: 0.5;
     }
   }
-  .listItem {
-    background-color: transparent;
-    border: none;
+  .list-item {
     display: block;
     // padding: 5px 15px;
     cursor: pointer;
+    background-color: transparent;
+    border: none;
     transition: color @transition-normal;
 
     &.link {
@@ -114,7 +114,7 @@
       cursor: default;
 
       > .label {
-        &:after {
+        &::after {
           // background-color: var(--color-primary);
           opacity: 1;
           transform: translateY(0);
@@ -124,20 +124,21 @@
   }
 
   .label {
-    display: block;
     position: relative;
+    display: block;
     padding: 8px 0;
-    &:after {
+    &::after {
       .mixin-after();
-      left: 0;
+
       bottom: 0;
+      left: 0;
       width: 100%;
       height: 2px;
-      border-radius: 20px;
       background-color: transparent;
-      transform: translateY(-4px);
-      opacity: 0;
       background-color: var(--color-primary-alpha-300);
+      border-radius: 20px;
+      opacity: 0;
+      transform: translateY(-4px);
       transition: @transition-fast;
       transition-property: transform, opacity;
     }

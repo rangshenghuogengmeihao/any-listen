@@ -39,7 +39,7 @@ const replaceSqliteLib = async (electronNodeAbi, arch) => {
   )
   console.log(filePath)
   const targetPath = path.join(__dirname, '../node_modules/better-sqlite3/build/Release/better_sqlite3.node')
-  await fsPromises.unlink(targetPath).catch((_) => _)
+  await fsPromises.mkdir(path.dirname(targetPath), { recursive: true }).catch((_) => _)
   await fsPromises.copyFile(filePath, targetPath)
 }
 

@@ -1,5 +1,6 @@
 import type { DBSeriveTypes } from '../worker/utils'
 import { initPlayerEvent, playerEvent } from './event'
+import { initPlayTimeStore } from './playTimeStore'
 
 // let dbService: DBSeriveTypes
 
@@ -16,9 +17,10 @@ import { initPlayerEvent, playerEvent } from './event'
 //   return hotKeyState.state
 // }
 
-export const initPlayer = (_dbService: DBSeriveTypes) => {
+export const initPlayer = (_dbService: DBSeriveTypes, dataPath: string) => {
   // dbService = _dbService
   initPlayerEvent(_dbService)
+  initPlayTimeStore(dataPath)
 }
 
 export const onPlayListAction = (listAction: (action: AnyListen.IPCPlayer.PlayListAction) => Promise<void>): (() => void) => {
@@ -41,3 +43,5 @@ export {
   // hotKeyState,
   playerEvent,
 }
+
+export { getPlayInfo, setPlayInfo, setPlayMusic, setPlayTime } from './playInfo'

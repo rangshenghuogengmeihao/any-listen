@@ -89,9 +89,9 @@ declare namespace AnyListen {
 
     type MusicQualityType = Partial<
       Record<
-        Quality,
+        string,
         {
-          size: string | null
+          sizeStr: string | null
           [key: string]: string | null
         }
       >
@@ -109,14 +109,19 @@ declare namespace AnyListen {
 
     interface MusicInfoMeta_online extends MusicInfoMetaBase {
       source: Source // 源
-      qualitys: MusicQualityType
+      qualitys?: MusicQualityType
+      filePath?: string
+      ext?: string
+      bitrateLabel?: string | null
+      sizeStr?: string
+      [key: string]: string | number | boolean | null | undefined | object
     }
 
     interface MusicInfoMeta_local extends MusicInfoMetaBase {
       filePath: string
       ext: string
       bitrateLabel: string | null
-      size: string
+      sizeStr: string
     }
 
     interface MusicInfoBase<IsLocal extends boolean> {
@@ -178,15 +183,24 @@ declare namespace AnyListen {
       path: string
     }
     interface UserListInfoByOnlineMeta extends UserListInfoBaseMeta {
+      extensionId: string
       source: string
       syncId: string
       syncTime: number
+      picUrl: string | null
+    }
+    interface UserListInfoByRemoteMeta extends UserListInfoBaseMeta {
+      extensionId: string
+      source: string
+      syncTime: number
+      [key: string]: unknown
     }
 
     interface UserListInfoMetas {
       general: UserListInfoByGeneralMeta
       local: UserListInfoByLocalMeta
       online: UserListInfoByOnlineMeta
+      remote: UserListInfoByRemoteMeta
     }
     interface UserListInfoType<Type extends keyof UserListInfoMetas> {
       id: string
@@ -198,21 +212,25 @@ declare namespace AnyListen {
 
     type UserListType = keyof UserListInfoMetas
 
-    type UserListInfo = UserListInfoType<'general'> | UserListInfoType<'local'> | UserListInfoType<'online'>
+    type GeneralListInfo = UserListInfoType<'general'>
+    type LocalListInfo = UserListInfoType<'local'>
+    type OnlineListInfo = UserListInfoType<'online'>
+    type RemoteListInfo = UserListInfoType<'remote'>
+    type UserListInfo = GeneralListInfo | LocalListInfo | OnlineListInfo | RemoteListInfo
 
-    interface MyDefaultListInfo extends Omit<UserListInfoType<'general'>, 'type'> {
+    interface MyDefaultListInfo extends Omit<GeneralListInfo, 'type'> {
       id: 'default'
       name: 'default'
       type: 'default'
     }
 
-    interface MyLoveListInfo extends Omit<UserListInfoType<'general'>, 'type'> {
+    interface MyLoveListInfo extends Omit<GeneralListInfo, 'type'> {
       id: 'love'
       name: 'love'
       type: 'default'
     }
 
-    interface MyLastPlayListInfo extends Omit<UserListInfoType<'general'>, 'type'> {
+    interface MyLastPlayListInfo extends Omit<GeneralListInfo, 'type'> {
       id: 'last_played'
       name: 'last_played'
       type: 'default'
@@ -583,7 +601,7 @@ interface SonglistListParams extends CommonListParams {
   sort: string
   tag: string
 }
-interface ListCommonResult<T> {
+export interface ListCommonResult<T> {
   list: T[]
   total: number
   page: number
@@ -594,12 +612,12 @@ interface MusicCommonParams extends CommonParams {
   musicInfo: AnyListen.Music.MusicInfoOnline
 }
 interface MusicUrlParams extends MusicCommonParams {
-  quality?: AnyListen.Music.Quality
+  quality?: string
   type?: AnyListen.Music.FileType
 }
 interface MusicUrlInfo {
   url: string
-  quality: AnyListen.Music.Quality
+  quality: string
 }
 
 interface SongListItem {
@@ -845,7 +863,7 @@ declare global {
     }
     /** 应用相关 */
     interface App {
-      showMessage: (message: string, options?: MessageDialogOptions) => Promise<number | undefined>
+      showMessage: (message: string, options?: MessageDialogOptions) => Promise<number>
       // TODO
       showFormDialog: (options: FormDialogOptions) => Promise<string | undefined>
       // showInput: (options: InputDialogOptions) => Promise<string | undefined>
@@ -910,7 +928,30 @@ declare global {
     }
     interface MusicUrlInfo {
       url: string
-      quality: Quality
+      quality: string
+    }
+
+    type BuildListProviderActionCommonParams<D> = CommonParams & {
+      data: D
+    }
+    type ListProviderActionParams = BuildListProviderActionCommonParams<AnyListen.List.RemoteListInfo>
+    interface ListProviderAction {
+      createList: (params: ListProviderActionParams) => Promise<void>
+      updateList: (params: ListProviderActionParams) => Promise<void>
+      deleteList: (params: ListProviderActionParams) => Promise<void>
+      getListMusicIds: (params: ListProviderActionParams) => Promise<string[]>
+      getMusicInfoByIds: (
+        params: BuildListProviderActionCommonParams<{
+          list: AnyListen.List.RemoteListInfo
+          ids: string[]
+        }>
+      ) => Promise<{
+        musics: AnyListen.Music.MusicInfoOnline[]
+        waitingParseMetadata?: boolean
+      }>
+      parseMusicInfoMetadata: (
+        params: BuildListProviderActionCommonParams<AnyListen.Music.MusicInfoOnline>
+      ) => Promise<AnyListen.Music.MusicInfoOnline>
     }
 
     interface ResourceAction {
@@ -974,11 +1015,16 @@ declare global {
       setConfigs: (datas: Array<[string, string]>) => Promise<void>
       onConfigChanged: (callback: (keys: string[], configuration: Record<string, unknown>) => void) => () => void
     }
+    interface MusicUtils {
+      createProxyUrl: (url: string, options: RequestOptions) => Promise<string>
+      writeProxyCache: (fileName: string, data: Uint8Array) => Promise<string>
+    }
     interface API {
       env: Env
       app: App
       musicList: MusicList
       player: Player
+      musicUtils: MusicUtils
       /** http 请求 */
       request: <Resp = unknown>(url: string, options?: RequestOptions) => Promise<Response<Resp>>
       t: (key: string, data?: Record<string, string | number | null | undefined>) => string

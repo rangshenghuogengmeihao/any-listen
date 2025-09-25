@@ -94,18 +94,18 @@
 
 <style lang="less">
   .container {
+    position: relative;
     display: flex;
     flex-flow: row nowrap;
+    gap: 10px;
     align-items: center;
     height: 100%;
     padding: 5px;
-    gap: 10px;
-    position: relative;
-    transition: 0.3s ease;
-    background-color: transparent;
-    border-radius: @radius-border;
     font-size: 13px;
+    background-color: transparent;
     border: 1px dashed transparent;
+    border-radius: @radius-border;
+    transition: 0.3s ease;
     transition-property: color, background-color, opacity, border-color;
     // &:hover {
     //   .num {
@@ -133,8 +133,8 @@
   // }
 
   .pic {
-    flex: none;
     position: relative;
+    flex: none;
     // background-color: var(--color-primary-light-200-alpha-900);
     // display: flex;
     // align-items: center;
@@ -176,12 +176,12 @@
   // }
   .play-icon {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    left: 0;
-    top: 0;
-    color: var(--color-button-font);
     padding: 6px;
+    color: var(--color-button-font);
 
     + :global(.pic) {
       opacity: 0.1;
@@ -201,9 +201,9 @@
   // }
 
   .list-item-cell {
-    flex: none;
     // padding: 0 6px;
     position: relative;
+    flex: none;
     // transition:  0.3s cubic-bezier(0.4, 0, 0.2, 1);
     line-height: 16px;
     vertical-align: middle;
@@ -216,10 +216,10 @@
     &.name {
       display: flex;
       flex-flow: row nowrap;
-      overflow: hidden;
-      white-space: initial;
-      text-overflow: initial;
       align-items: center;
+      overflow: hidden;
+      text-overflow: initial;
+      white-space: initial;
 
       > .name {
         .mixin-ellipsis-1();

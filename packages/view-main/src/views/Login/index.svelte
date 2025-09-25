@@ -40,15 +40,15 @@
 <style lang="less">
   .container {
     position: absolute;
-    left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
+    left: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
   }
   .login-content {
     display: flex;
@@ -63,23 +63,23 @@
     text-align: center;
   }
   .login-form {
-    margin-top: 26px;
     display: flex;
     flex-direction: row;
     width: 100%;
+    margin-top: 26px;
     // align-items: center;
     // justify-content: center;
 
     :global {
       .btn {
+        flex: none;
         height: 30px;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
-        flex: none;
       }
       .input {
-        height: 30px;
         flex: auto;
+        height: 30px;
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
       }

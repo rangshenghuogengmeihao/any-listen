@@ -1,6 +1,6 @@
 import { isValidLyric } from '@any-listen/common/tools'
 import { services } from './shared'
-import { findMusic, findMusicByLocal } from './tools'
+import { findMusicByLocal, findMusicByOnline } from './tools'
 import { buildExtSourceId, getExtSource } from './utils'
 
 export const searchMusicLyric = async ({
@@ -86,17 +86,9 @@ export const getMusicLyric = async (data: { musicInfo: AnyListen.Music.MusicInfo
       musicInfo: data.musicInfo,
     })
   } catch {}
-  return findMusic(
-    {
-      name: data.musicInfo.name,
-      singer: data.musicInfo.singer,
-      albumName: data.musicInfo.meta.albumName,
-      interval: data.musicInfo.interval,
-    },
-    async (info) => {
-      return handleGetMusicLyric({
-        musicInfo: info,
-      })
-    }
-  )
+  return findMusicByOnline(data.musicInfo, async (info) => {
+    return handleGetMusicLyric({
+      musicInfo: info,
+    })
+  })
 }

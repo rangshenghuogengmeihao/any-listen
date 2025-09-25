@@ -1,11 +1,13 @@
 <script lang="ts">
   import Modal from '@/components/material/Modal.svelte'
-  import { t } from '@/plugins/i18n'
+  import { i18n, t } from '@/plugins/i18n'
   import Btn from '@/components/base/Btn.svelte'
   import ListTypeSelect from './ListTypeSelect.svelte'
   import { musicLibraryState } from '@/modules/musicLibrary/store/state'
   import GeneralListForm from './GeneralListForm.svelte'
   import type { ComponentExports } from 'svelte'
+  import RemoteListForm from './remoteListForm/RemoteListForm.svelte'
+  import { showNotify } from '../notify'
 
   let {
     onafterleave,
@@ -16,7 +18,7 @@
   let visible = $state(false)
   let isEdit = $state(false)
   let listType = $state<AnyListen.List.UserListType>('general')
-  let targetId: string | undefined
+  let targetId = $state<string | undefined>()
   let form = $state<ComponentExports<typeof GeneralListForm>>()
   let targetInfo = $state<AnyListen.List.UserListInfo | null>(null)
 
@@ -25,7 +27,18 @@
   }
 
   const handleComfirm = async () => {
-    await form?.submit()
+    try {
+      await form?.submit()
+    } catch (e) {
+      console.error(e)
+      const msg = (e as Error).message
+      if (isEdit) {
+        showNotify(i18n.t('edit_list_modal__edit_failed', { err: msg }))
+      } else {
+        showNotify(i18n.t('edit_list_modal__create_failed', { err: msg }))
+      }
+      return
+    }
     closeModal()
   }
   export const show = (_targetId?: string, _isEdit = false) => {
@@ -36,6 +49,7 @@
       const info = musicLibraryState.userLists.find((l) => l.id == _targetId)
       if (!info) return
       targetInfo = info
+      listType = info.type
     }
     visible = true
   }
@@ -53,7 +67,9 @@
     <div class="content">
       <ListTypeSelect bind:value={listType} disabled={isEdit} />
       {#if listType == 'general'}
-        <GeneralListForm bind:this={form} {targetId} item={targetInfo as AnyListen.List.UserListInfoType<'general'> | null} />
+        <GeneralListForm bind:this={form} {targetId} item={targetInfo as AnyListen.List.GeneralListInfo | null} />
+      {:else if listType == 'remote'}
+        <RemoteListForm bind:this={form} {targetId} item={targetInfo as AnyListen.List.RemoteListInfo | null} />
       {/if}
     </div>
     <div class="footer">
@@ -65,12 +81,12 @@
 
 <style lang="less">
   .main {
-    flex: auto;
-    padding: 0 15px;
-    width: 320px;
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
+    width: 450px;
     min-height: 0;
+    padding: 0 15px;
     // max-height: 100%;
     // overflow: hidden;
   }
@@ -85,21 +101,22 @@
   }
 
   .content {
-    flex: auto;
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
     gap: 10px;
+    min-height: 0;
     // font-size: 14px;
     // color: var(--color-font-label);
     // padding: 10px 0 8px;
   }
 
   .footer {
-    flex: none;
-    margin: 20px 0 15px auto;
     display: flex;
+    flex: none;
     flex-direction: row;
     gap: 10px;
+    margin: 20px 0 15px auto;
 
     :global(.btn) {
       min-width: 70px;

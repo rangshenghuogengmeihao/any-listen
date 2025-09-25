@@ -1,8 +1,7 @@
-import { SINGERS_RXP } from '@any-listen/common/constants'
-import { formatPlayTime, sizeFormate } from '@any-listen/common/utils'
-import { basename, checkFile, checkPath, dirname, extname, getFileStats, joinPath, readFile } from '@any-listen/nodejs'
-import type { IAudioMetadata } from 'music-metadata'
-import type { IComment } from 'music-metadata/lib/type'
+import { isLikelyGarbage } from '@any-listen/common/utils'
+import { checkFile, checkPath, dirname, extname, getFileStats, joinPath, readFile } from '@any-listen/nodejs'
+import { decodeString } from '@any-listen/nodejs/char'
+import { getFileLyric, getFilePic, parseFileMetadata } from '@any-listen/nodejs/music'
 
 export const checkDownloadFileAvailable = async (musicInfo: AnyListen.Download.ListItem, savePath: string): Promise<boolean> => {
   return (
@@ -60,51 +59,15 @@ export const getMusicFilePath = async (musicInfo: AnyListen.Music.MusicInfo, sav
   return ''
 }
 
-const bitrateFormat = (formate: IAudioMetadata['format']) => {
-  if (formate.lossless) {
-    if (formate.bitsPerSample) return `${formate.bitsPerSample}bit`
-  }
-  if (formate.bitrate) return `${Math.trunc(formate.bitrate / 1000)}k`
-  return ''
-}
-
-const singerFormat = (name: string) => {
-  if (!name) return ''
-  return SINGERS_RXP.test(name)
-    ? name
-        .split(SINGERS_RXP)
-        .map((s) => s.trim())
-        .filter((s) => s)
-        .join('、')
-    : name || ''
-}
-
 /**
  * 创建本地音乐信息对象
  * @param path 文件路径
  * @returns
  */
 export const createLocalMusicInfo = async (path: string): Promise<AnyListen.Music.MusicInfoLocal | null> => {
-  if (!(await checkPath(path))) return null
-  const { parseFile } = await import('music-metadata')
-
-  let metadata
-  try {
-    metadata = await parseFile(path, {
-      skipCovers: true,
-    })
-  } catch (err) {
-    console.log(err)
-    return null
-  }
-
-  let ext = extname(path)
-  let name = (metadata.common.title || basename(path, ext)).trim()
-  let singer = metadata.common.artists?.length ? singerFormat(metadata.common.artists.join(';')) : ''
-  let interval = metadata.format.duration ? formatPlayTime(metadata.format.duration) : ''
-  let albumName = metadata.common.album?.trim() ?? ''
-
-  let size = sizeFormate((await getFileStats(path))?.size ?? 0)
+  let result = await parseFileMetadata(path)
+  if (!result) return null
+  const { name, singer, interval, albumName, sizeStr, ext, bitrateLabel, year } = result
 
   const now = Date.now()
 
@@ -119,10 +82,10 @@ export const createLocalMusicInfo = async (path: string): Promise<AnyListen.Musi
       albumName,
       filePath: path,
       picUrl: '',
-      ext: ext.replace(/^\./, ''),
-      bitrateLabel: bitrateFormat(metadata.format),
-      size,
-      year: metadata.common.year ?? 0,
+      ext,
+      bitrateLabel,
+      sizeStr,
+      year,
       createTime: now,
       updateTime: now,
       posTime: now,
@@ -130,27 +93,6 @@ export const createLocalMusicInfo = async (path: string): Promise<AnyListen.Musi
   } satisfies AnyListen.Music.MusicInfoLocal
 }
 
-let prevFileInfo: {
-  path: string
-  promise: Promise<IAudioMetadata | null>
-} = {
-  path: '',
-  promise: Promise.resolve(null),
-}
-const getFileMetadata = async (path: string) => {
-  if (prevFileInfo.path == path) return prevFileInfo.promise
-  prevFileInfo.path = path
-  return (prevFileInfo.promise = checkPath(path).then(async (isExist) => {
-    return isExist
-      ? import('music-metadata')
-          .then(async ({ parseFile }) => parseFile(path))
-          .catch((err) => {
-            console.log(err)
-            return null
-          })
-      : null
-  }))
-}
 const tryPicExt = ['.jpg', '.jpeg', '.png'] as const
 /**
  * 获取歌曲文件封面图片
@@ -163,10 +105,7 @@ export const getLocalMusicFilePic = async (path: string) => {
     if (await checkFile(picPath)) return picPath
   }
   // 尝试读取文件内图片
-  const metadata = await getFileMetadata(path)
-  if (!metadata) return null
-  const { selectCover } = await import('music-metadata')
-  const pic = selectCover(metadata.common.picture)
+  const pic = await getFilePic(path)
   if (pic) return pic
 
   // 尝试读取同目录下的cover.jpg
@@ -228,47 +167,10 @@ export const getLocalMusicFileLyric = async (path: string): Promise<string | nul
   // console.log(lrcPath, stats)
   if (stats && stats.size < 1024 * 1024 * 10) {
     const lrcBuf = await readFile(lrcPath)
-    const { detect } = await import('jschardet')
-    const { confidence, encoding } = detect(lrcBuf)
-    console.log('lrc file encoding', confidence, encoding)
-    if (confidence > 0.8) {
-      const iconv = await import('iconv-lite')
-      if (iconv.encodingExists(encoding)) {
-        const lrc = iconv.decode(lrcBuf, encoding)
-        if (lrc) return lrc
-      }
-    }
+    const lrc = await decodeString(lrcBuf)
+    if (lrc && !isLikelyGarbage(lrc)) return lrc
   }
 
   // 尝试读取文件内歌词
-  const metadata = await getFileMetadata(path)
-  // console.log(metadata?.common)
-  if (!metadata) return null
-  let lyricInfo = metadata.common.lyrics?.[0]
-  if (lyricInfo) {
-    let lyric: string | undefined
-    if (typeof lyricInfo == 'object') lyric = lyricInfo.text
-    else if (typeof lyricInfo == 'string') lyric = lyricInfo
-    if (lyric && lyric.length > 10) {
-      return lyric
-    }
-  }
-  // console.log(metadata)
-  for (const info of Object.values(metadata.native)) {
-    for (const ust of info) {
-      switch (ust.id) {
-        case 'LYRICS': {
-          const value = typeof ust.value == 'string' ? ust.value : (ust as IComment).text
-          if (value && value.length > 10) return value
-          break
-        }
-        case 'USLT': {
-          const value = ust.value as IComment
-          if (value.text && value.text.length > 10) return value.text
-          break
-        }
-      }
-    }
-  }
-  return null
+  return getFileLyric(path)
 }

@@ -167,6 +167,10 @@ const initUserList = (force = false) => {
 const filterUserLists = (parentId: UserListInfo['parent_id']) => {
   return userLists.filter((l) => l.parentId === parentId)
 }
+const overwriteUserList = (parentId: UserListInfo['parent_id'], lists: AnyListen.List.UserListInfo[]) => {
+  const newList = userLists.filter((l) => l.parentId !== parentId)
+  userLists = [...newList, ...lists]
+}
 
 /**
  * 获取所有用户列表
@@ -318,7 +322,8 @@ export const updateUserListsPosition = (position: number, ids: string[]) => {
   position = Math.min(targetList.length, position)
 
   arrPushByPosition(targetList, updateLists, position)
-  inertUserLists(id, toDBListInfo(targetList), true)
+  inertUserLists(targetInfo.parentId, toDBListInfo(targetList), true)
+  overwriteUserList(targetInfo.parentId, targetList)
 }
 
 /**
@@ -500,6 +505,40 @@ export const musicsUpdate = (musicInfos: AnyListen.IPCList.ListActionMusicUpdate
     targetMusic.interval = musicInfo.interval
     targetMusic.meta = musicInfo.meta
   }
+}
+
+/**
+ * 更新歌曲图片
+ * @param musicInfos 歌曲&列表信息
+ */
+export const musicPicUpdate = (listId: string, musicId: string, picUrl: string) => {
+  let targetList = musicLists.get(listId)
+  if (!targetList) {
+    targetList = getListMusics(listId)
+    musicLists.set(listId, targetList)
+  }
+  const musicInfo = targetList.find((item) => item.id == musicId)
+  if (!musicInfo) return
+  musicInfo.meta.picUrl = picUrl
+  musicsUpdate([{ id: listId, musicInfo }])
+  return musicInfo
+}
+
+/**
+ * 更新歌曲基本信息
+ * @param musicInfos 歌曲&列表信息
+ */
+export const musicBaseInfoUpdate = (listId: string, musicInfo: AnyListen.Music.MusicInfo) => {
+  let targetList = musicLists.get(listId)
+  if (!targetList) {
+    targetList = getListMusics(listId)
+    musicLists.set(listId, targetList)
+  }
+  const targetInfo = targetList.find((item) => item.id == musicInfo.id)
+  if (!targetInfo) return
+  musicInfo.meta.picUrl = targetInfo.meta.picUrl
+  musicsUpdate([{ id: listId, musicInfo }])
+  return musicInfo
 }
 
 /**

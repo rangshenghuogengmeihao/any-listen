@@ -1,7 +1,8 @@
 import { getMusicPic as getMusicPicFromRemote, getMusicUrl as getMusicUrlFromRemote } from '@/shared/ipc/music'
-import { onPlayHistoryListAction, onPlayerAction, sendPlayHistoryListAction, sendPlayerEvent } from '@/shared/ipc/player'
+import { sendPlayerEvent, sendPlayHistoryListAction } from '@/shared/ipc/player'
 import * as commit from './commit'
 
+import { playerActionEvent, playHistoryListActionEvent } from '@/shared/ipc/player/event'
 import { playerEvent } from './event'
 import { pause, play, playId, seekTo, setCollectStatus, skipNext, skipPrev, togglePlay } from './playerActions'
 import { playerState } from './state'
@@ -13,13 +14,37 @@ export { getMusicLyric } from '@/shared/ipc/music'
 const picCache = new Map<string, AnyListen.IPCMusic.MusicPicInfo>()
 const picCacheQueue: string[] = []
 
+const checkUrl = async (url: string) => {
+  return new Promise<boolean>((resolve) => {
+    const img = new Image()
+    img.src = url
+    img.onload = () => {
+      resolve(true)
+    }
+    img.onerror = () => {
+      resolve(false)
+    }
+  })
+}
+const handleGetMusicPicFromRemote = async (info: AnyListen.IPCMusic.GetMusicPicInfo) => {
+  const urlInfo = await getMusicPicFromRemote(info)
+  if (urlInfo.isFromCache) {
+    const isValid = await checkUrl(urlInfo.url)
+    if (!isValid && !info.isRefresh) {
+      return handleGetMusicPicFromRemote({ ...info, isRefresh: true })
+    }
+  }
+
+  return urlInfo
+}
+
 export const getMusicPic = async (info: AnyListen.IPCMusic.GetMusicPicInfo) => {
   if (picCache.has(info.musicInfo.id)) {
     picCacheQueue.splice(picCacheQueue.indexOf(info.musicInfo.id), 1)
     picCacheQueue.push(info.musicInfo.id)
     return picCache.get(info.musicInfo.id)!
   }
-  const urlInfo = await getMusicPicFromRemote(info)
+  const urlInfo = await handleGetMusicPicFromRemote(info)
   picCache.set(info.musicInfo.id, urlInfo)
   picCacheQueue.push(info.musicInfo.id)
   if (picCacheQueue.length > 100) {
@@ -36,7 +61,7 @@ export const getMusicPicDelay = (info: AnyListen.IPCMusic.GetMusicPicInfo, onUrl
   let isCanceled = false
   let timeout: number | null = setTimeout(() => {
     timeout = null
-    void getMusicPicFromRemote(info).then((urlInfo) => {
+    void handleGetMusicPicFromRemote(info).then((urlInfo) => {
       picCache.set(info.musicInfo.id, urlInfo)
       picCacheQueue.push(info.musicInfo.id)
       if (picCacheQueue.length > 100) {
@@ -215,7 +240,7 @@ export const registerLocalPlayerAction = () => {
 }
 
 export const registerRemotePlayerAction = () => {
-  return onPlayerAction((action): void => {
+  return playerActionEvent.on((action): void => {
     switch (action.action) {
       case 'seek':
         seekTo(action.data)
@@ -253,7 +278,7 @@ export const registerRemotePlayerAction = () => {
 }
 
 export const registerRemoteHistoryListAction = () => {
-  return onPlayHistoryListAction((action): void => {
+  return playHistoryListActionEvent.on((action): void => {
     switch (action.action) {
       case 'setList':
         commit.setPlayHistoryList(action.data)

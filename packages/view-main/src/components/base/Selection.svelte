@@ -80,7 +80,7 @@
     <div bind:this={domList} class="list scroll" style={listStyle}>
       {#each list as item (item[itemkey])}
         <button
-          class="listItem"
+          class="list-item"
           class:active={item[itemkey] == value}
           aria-label={item[itemname] as string}
           onclick={() => {
@@ -99,10 +99,10 @@
   @selection-height: 28px;
 
   .select {
-    display: inline-block;
-    font-size: 12px;
     position: relative;
+    display: inline-block;
     width: 300px;
+    font-size: 12px;
 
     &.active {
       .button {
@@ -120,20 +120,20 @@
   }
 
   .button {
-    background-color: var(--color-button-background);
-    padding: 0 10px;
-    transition: background-color @transition-normal;
+    display: flex;
+    align-items: center;
+    width: 100%;
     height: @selection-height;
+    padding: 0 10px;
     // line-height: 27px;
     line-height: 1.5;
     color: var(--color-button-font);
-    border-radius: @form-radius;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    border: none;
-    width: 100%;
     text-align: left;
+    cursor: pointer;
+    background-color: var(--color-button-background);
+    border: none;
+    border-radius: @form-radius;
+    transition: background-color @transition-normal;
 
     span {
       flex: auto;
@@ -145,8 +145,8 @@
       line-height: 0;
       svg {
         width: 1em;
-        transition: transform 0.2s ease;
         transform: rotate(0);
+        transition: transform 0.2s ease;
       }
     }
 
@@ -162,32 +162,32 @@
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 10;
     width: 100%;
+    max-height: 200px;
+    overflow: auto;
     background-color: var(--color-content-background);
+    border-radius: @form-radius;
+    box-shadow: @shadow-popup;
     opacity: 0;
     transform: scaleY(0) translateY(0);
     transform-origin: 0 (@selection-height / 2) 0;
     transition: 0.25s ease;
     transition-property: transform, opacity;
-    z-index: 10;
-    border-radius: @form-radius;
-    box-shadow: @shadow-popup;
-    overflow: auto;
-    max-height: 200px;
   }
-  .listItem {
-    cursor: pointer;
+  .list-item {
+    display: block;
+    width: 100%;
     padding: 0 10px;
     line-height: @selection-height;
+    text-align: left;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
     // color: var(--color-button-font);
     // outline: none;
     transition: background-color @transition-normal;
-    background-color: transparent;
     .mixin-ellipsis-1();
-    border: none;
-    display: block;
-    width: 100%;
-    text-align: left;
 
     &:hover {
       background-color: var(--color-button-background-hover);

@@ -32,12 +32,12 @@
 
 <style lang="less">
   .container {
-    padding-left: 20px;
-    padding-right: 10px;
-    flex: none;
     display: flex;
+    flex: none;
     flex-flow: row nowrap;
     gap: 15px;
+    padding-right: 10px;
+    padding-left: 20px;
 
     //   button {
     //     color: var(--color-button-font);

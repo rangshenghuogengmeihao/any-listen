@@ -1,5 +1,7 @@
 import { extensionEvent } from '@/app/modules/extension'
 import { getAllUserLists, getListMusics, sendMusicListAction } from '@any-listen/app/modules/musicList'
+import { checkProxyCache, createProxy, writeProxyCache } from '@any-listen/app/modules/proxyServer'
+import type { Options } from '@any-listen/nodejs/request'
 import { createExtensionIconPublicPath, removeExtensionIconPublicPath } from '../fileSystem'
 import { getPlayInfo, playerEvent } from '../player'
 import { boxTools } from './clientTools'
@@ -11,9 +13,15 @@ export const exposedFuncs: AnyListen.IPCExtension.MainIPCActions = {
   async onExtensionEvent(action) {
     extensionEvent.extensionEvent(action)
   },
-  // async getConnectedClientIds() {
-  //   return getConnectedClients()
-  // },
+  async createProxyUrl(url, options) {
+    return createProxy(url, options as Options)
+  },
+  async checkProxyCache(url) {
+    return checkProxyCache(url)
+  },
+  async writeProxyCache(fileName, data) {
+    return writeProxyCache(fileName, data)
+  },
 
   async getPlayInfo() {
     return getPlayInfo()

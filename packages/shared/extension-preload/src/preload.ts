@@ -1,5 +1,6 @@
 import { triggerTimeout } from '@/apis/global'
 import { createMessage2Call } from 'message2call'
+import { onListProviderAction } from './apis/listProvider'
 import { onResourceAction } from './apis/resource'
 import {
   configurationEvent,
@@ -40,6 +41,12 @@ const exposeObj = {
     params: Parameters<AnyListen.IPCExtension.ResourceAction[T]>[0]
   ): Promise<Awaited<ReturnType<AnyListen.IPCExtension.ResourceAction[T]>>> {
     return onResourceAction(action, params)
+  },
+  async listProviderAction<T extends keyof AnyListen.IPCExtension.ListProviderAction>(
+    action: T,
+    params: Parameters<AnyListen.IPCExtension.ListProviderAction[T]>[0]
+  ): Promise<Awaited<ReturnType<AnyListen.IPCExtension.ListProviderAction[T]>>> {
+    return onListProviderAction(action, params)
   },
   // clientConnectAction(id, isConnected) {
   //   if (isConnected) {

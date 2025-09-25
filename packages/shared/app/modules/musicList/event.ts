@@ -1,4 +1,5 @@
 import _Event, { type EventType } from '@any-listen/nodejs/Event'
+import { verifyListCreate, verifyListDelete, verifyListUpdate } from '../extension/listProvider'
 import type { DBSeriveTypes } from '../worker/utils'
 
 let dbService: DBSeriveTypes
@@ -49,6 +50,11 @@ export class Event extends _Event {
    * @param isRemote 是否属于远程操作
    */
   async list_create(position: number, lists: AnyListen.List.UserListInfo[], isRemote = false) {
+    for (const list of lists) {
+      if (list.type === 'remote') {
+        await verifyListCreate(list)
+      }
+    }
     await dbService.createUserLists(position, lists)
     this.emitEvent('list_create', position, lists, isRemote)
     this.list_changed()
@@ -60,6 +66,13 @@ export class Event extends _Event {
    * @param isRemote 是否属于远程操作
    */
   async list_remove(ids: string[], isRemote = false) {
+    const userList = (await dbService.getAllUserLists()).userList
+    for (const id of ids) {
+      const targetList = userList.find((l) => l.id === id)
+      if (targetList && targetList.type === 'remote') {
+        await verifyListDelete(targetList)
+      }
+    }
     await dbService.removeUserLists(ids)
     this.emitEvent('list_remove', ids, isRemote)
     this.list_changed()
@@ -71,6 +84,11 @@ export class Event extends _Event {
    * @param isRemote 是否属于远程操作
    */
   async list_update(lists: AnyListen.List.UserListInfo[], isRemote = false) {
+    for (const list of lists) {
+      if (list.type === 'remote') {
+        await verifyListUpdate(list)
+      }
+    }
     await dbService.updateUserLists(lists)
     this.emitEvent('list_update', lists, isRemote)
     this.list_changed()
@@ -214,6 +232,33 @@ export class Event extends _Event {
   }
 
   /**
+   * 本地更新歌曲图片
+   * @param listId
+   * @param musicId
+   * @param pic
+   */
+  async list_music_update_pic(listId: string, musicInfo: AnyListen.Music.MusicInfo) {
+    const newInfo = await dbService.musicPicUpdate(listId, musicInfo.id, musicInfo.meta.picUrl || '')
+    const info: AnyListen.IPCList.ListActionMusicUpdate = [{ id: listId, musicInfo: newInfo || musicInfo }]
+    this.emitEvent('list_music_update_pic', info, false)
+    this.list_changed()
+    this.emitEvent('listAction', { action: 'list_music_update', data: info })
+  }
+
+  /**
+   * 本地更新歌曲基础信息
+   * @param listId
+   * @param musicInfo
+   */
+  async list_music_base_info_update(listId: string, musicInfo: AnyListen.Music.MusicInfo) {
+    const newInfo = await dbService.musicBaseInfoUpdate(listId, musicInfo)
+    const info: AnyListen.IPCList.ListActionMusicUpdate = [{ id: listId, musicInfo: newInfo || musicInfo }]
+    this.emitEvent('list_music_update', info, false)
+    this.list_changed()
+    this.emitEvent('listAction', { action: 'list_music_update', data: info })
+  }
+
+  /**
    * 清空列表内的歌曲
    * @param ids 列表Id
    * @param isRemote 是否属于远程操作
@@ -288,10 +333,6 @@ export class Event extends _Event {
         break
       case 'list_music_clear':
         await this.list_music_clear(action.data)
-        break
-      default:
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-case-declarations
-        let neverValue: never = action
         break
     }
     this.emitEvent('listAction', action)

@@ -1,12 +1,11 @@
-import { ipcPreloadEvent } from '@any-listen/app/modules/ipcPreloadEvent'
 import { createProxyCallback } from 'message2call'
-import type { ExposeFunctions, MainCall } from '.'
+import type { ClientCall, ExposeFunctions, MainCall } from '.'
 
 // 暴露给后端的方法
-export const createExposeList = () => {
+export const createExposeList = (client: ClientCall) => {
   return {
     async listAction(event, action) {
-      ipcPreloadEvent.listAction(action)
+      return client.listAction(action)
     },
   } satisfies Partial<ExposeFunctions>
 }
@@ -28,12 +27,6 @@ export const createClientList = (main: MainCall) => {
     },
     async listAction(action) {
       return main.listAction(action)
-    },
-    onListAction(listener) {
-      ipcPreloadEvent.on('listAction', listener)
-      return () => {
-        ipcPreloadEvent.off('listAction', listener)
-      }
     },
     async getListScrollPosition() {
       return main.getListScrollPosition()

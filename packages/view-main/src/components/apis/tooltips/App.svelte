@@ -104,22 +104,22 @@
 <style lang="less">
   .tips {
     position: fixed;
+    z-index: 10001;
+    box-sizing: border-box;
+    padding: 4px 5px;
+    overflow: hidden;
+    font-size: 12px;
     // transform: scale(1);
     line-height: 1.2;
-    word-wrap: break-word;
-    padding: 4px 5px;
-    z-index: 10001;
-    font-size: 12px;
     // max-width: 80%;
     color: var(--color-font);
-    border-radius: 3px;
-    background: var(--color-content-background);
-    overflow: hidden;
-    pointer-events: none;
-    // text-align: justify;
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+    word-wrap: break-word;
     white-space: pre-wrap;
-    box-sizing: border-box;
+    pointer-events: none;
+    background: var(--color-content-background);
+    border-radius: 3px;
+    // text-align: justify;
+    box-shadow: 0 1px 8px rgb(0 0 0 / 30%);
   }
 
   // :global(.tips-fade-enter-active),

@@ -243,7 +243,7 @@
   use:verticalScrollbar={{ offset: scrollbaroffset, scrollbarWidth: scrollbarwidth }}
   tabindex="0"
   role="listbox"
-  style="height: 100%; position: relative; overflow-y: auto; display: block;"
+  style="position: relative; display: block; height: 100%; overflow-y: auto;"
   style:contain
   {oncontextmenu}
 >

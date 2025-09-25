@@ -61,6 +61,7 @@ export const initUpdate = () => {
   appEvent.on('inited', () => {
     updateIgnoreVersion(getStore(STORE_NAMES.DATA).get(DATA_KEYS.ignoreVersion))
   })
+  update.initUpdate()
 }
 
 export const updateIgnoreVersion = (version: string | null) => {

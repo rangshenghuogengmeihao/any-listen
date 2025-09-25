@@ -1,13 +1,12 @@
 import type { IPCSocket } from '@/preload/ws'
-import { ipcPreloadEvent } from '@any-listen/app/modules/ipcPreloadEvent'
 import { createProxyCallback } from 'message2call'
-import type { ExposeFunctions } from '.'
+import type { ClientCall, ExposeFunctions } from '.'
 
 // 暴露给后端的方法
-export const createExposeList = () => {
+export const createExposeList = (client: ClientCall) => {
   return {
     async listAction(socket, action) {
-      ipcPreloadEvent.listAction(action)
+      return client.listAction(action)
     },
   } satisfies Partial<ExposeFunctions>
 }
@@ -29,12 +28,6 @@ export const createClientList = (ipcSocket: IPCSocket) => {
     },
     async listAction(action) {
       return ipcSocket.remoteQueueList.listAction(action)
-    },
-    onListAction(listener) {
-      ipcPreloadEvent.on('listAction', listener)
-      return () => {
-        ipcPreloadEvent.off('listAction', listener)
-      }
     },
     async getListScrollPosition() {
       return ipcSocket.remoteQueueList.getListScrollPosition()

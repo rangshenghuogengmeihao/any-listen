@@ -18,21 +18,18 @@
 
 <style lang="less">
   #app-main {
-    flex: auto;
-    display: flex;
-    flex-flow: row nowrap;
     position: relative;
     z-index: 1;
+    display: flex;
+    flex: auto;
+    flex-flow: row nowrap;
   }
   #app-right {
-    flex: auto;
-    display: flex;
-    flex-flow: column nowrap;
     position: relative;
+    display: flex;
     // border-left: 2px solid var(--color-border);
 
     flex: auto;
-    display: flex;
     flex-flow: column nowrap;
 
     // border-top-left-radius: @radius-border;

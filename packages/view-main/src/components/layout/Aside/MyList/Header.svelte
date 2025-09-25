@@ -1,7 +1,6 @@
 <script lang="ts">
-import { t } from '@/plugins/i18n'
-// console.log(params)
-
+  import { t } from '@/plugins/i18n'
+  // console.log(params)
 </script>
 
 <div class="container">
@@ -9,18 +8,16 @@ import { t } from '@/plugins/i18n'
 </div>
 
 <style lang="less">
-.container {
-  flex: none;
-  // display: flex;
-  // flex-flow: row nowrap;
-  // align-items: center;
-  padding: 6px 12px;
-}
+  .container {
+    flex: none;
+    // display: flex;
+    // flex-flow: row nowrap;
+    // align-items: center;
+    padding: 6px 12px;
+  }
 
-h2 {
-  color: var(--color-primary-light-300);
-  font-size: 12px;
-}
-
+  h2 {
+    font-size: 12px;
+    color: var(--color-primary-light-300);
+  }
 </style>
-

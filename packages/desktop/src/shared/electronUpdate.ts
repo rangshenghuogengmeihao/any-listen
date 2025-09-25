@@ -58,8 +58,12 @@ export const checkUpdate = (isAutoUpdate: boolean, allowPrerelease: boolean) => 
 }
 
 export const downloadUpdate = async () => {
-  if (!autoUpdater.isUpdaterActive()) return
+  if (!autoUpdater.isUpdaterActive()) {
+    update.emit('error', new Error('No update available'))
+    return
+  }
   void autoUpdater.downloadUpdate()
+  update.emit('download_progress', { percent: 0, bytesPerSecond: 0, total: 0, transferred: 0, delta: 0 })
 }
 
 export const restartUpdate = () => {

@@ -95,12 +95,12 @@
 
 <style lang="less">
   .main {
-    flex: auto;
-    padding: 0 10px;
-    width: 460px;
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
+    width: 460px;
     min-height: 0;
+    padding: 0 10px;
     // max-height: 100%;
     // overflow: hidden;
   }
@@ -109,19 +109,19 @@
     padding: 10px;
     text-align: center;
     h2 {
+      font-size: 14px;
       color: var(--color-font);
       word-break: break-all;
-      font-size: 14px;
     }
   }
 
   .content {
-    flex: auto;
-    min-height: 0;
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
-    overflow: hidden;
+    min-height: 0;
     margin-bottom: 10px;
+    overflow: hidden;
   }
   .list {
     display: flex;

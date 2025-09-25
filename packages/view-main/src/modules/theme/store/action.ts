@@ -1,6 +1,6 @@
-import { onThemeChanged } from '@/shared/ipc/theme'
-import { themeState } from './state'
+import { themeChangedEvent } from '@/shared/ipc/theme/event'
 import * as commit from './commit'
+import { themeState } from './state'
 
 export const applyTheme = (colors: AnyListen.ThemeSetting['colors']) => {
   window.setTheme(colors)
@@ -21,11 +21,11 @@ export const themePreview = (colors: AnyListen.ThemeSetting['colors'] | null) =>
 }
 
 export const registerRemoteThemeAction = () => {
-  return onThemeChanged((theme) => {
+  return themeChangedEvent.on((theme) => {
     commit.updateTheme(theme)
     if (themeState.themePreview) return
     applyTheme(theme.colors)
   })
 }
 
-export { getThemeSetting, getThemeList } from '@/shared/ipc/theme'
+export { getThemeList, getThemeSetting } from '@/shared/ipc/theme'

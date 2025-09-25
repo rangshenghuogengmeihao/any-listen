@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { EXTENSION } from '@any-listen/common/constants'
-import { generateId, throttle } from '@any-listen/common/utils'
+import { generateId, isUrl, throttle } from '@any-listen/common/utils'
 import {
   basename,
   checkFile,
@@ -23,6 +23,7 @@ import { verifySignature } from '@any-listen/nodejs/sign'
 import fs from 'node:fs'
 import path from 'node:path'
 import { extensionEvent } from '../event'
+import { loadExtension as loadExtensionByInternalExtension } from '../internalExtension'
 import { extensionState } from '../state'
 import { createVmConetxt, destroyContext, runExtension, setupVmContext } from '../vm'
 import { sendConfigUpdatedEvent } from '../vm/hostContext/preloadFuncs'
@@ -59,28 +60,17 @@ const buildPath = async (extensionPath: string, _path: string) => {
   return enterFilePath
 }
 
-const verifyManifest = async (extensionPath: string, manifest: AnyListen.Extension.Manifest) => {
+export const formatManifest = (manifest: AnyListen.Extension.Manifest) => {
   if (manifest.id != null) manifest.id = String(manifest.id)
   if (!manifest.id) throw new Error('Manifest id not defined')
-  if (/[^\w-_]/.test(manifest.id)) throw new Error('Manifest ID Invalid')
+  if (/[^\w-_.]/.test(manifest.id)) throw new Error('Manifest ID Invalid')
 
   if (manifest.name != null) manifest.name = String(manifest.name)
   if (!manifest.name) throw new Error('Manifest name not defined')
 
   if (manifest.description != null) manifest.description = String(manifest.description)
   if (manifest.icon != null) manifest.icon = String(manifest.icon)
-  manifest.icon = manifest.icon ? await buildPath(extensionPath, manifest.icon).catch(() => '') : ''
-  if (manifest.icon) {
-    if (!availableIcons.includes(path.extname(manifest.icon).toLowerCase())) {
-      manifest.icon = ''
-    } else {
-      manifest.icon = await extensionState.remoteFuncs.createExtensionIconPublicPath(manifest.icon)
-    }
-  }
-
   if (manifest.main != null) manifest.main = String(manifest.main)
-  manifest.main = await buildPath(extensionPath, manifest.main)
-  if (!manifest.main) throw new Error('Main enter not defined')
 
   if (manifest.version != null) manifest.version = String(manifest.version)
   if (manifest.target_engine != null) manifest.target_engine = String(manifest.target_engine)
@@ -150,9 +140,77 @@ const verifyManifest = async (extensionPath: string, manifest: AnyListen.Extensi
         })
         .filter((s) => s != null)
     }
+    if (Array.isArray(manifest.contributes.listProviders)) {
+      contributes.listProviders = manifest.contributes.listProviders.map((p) => {
+        p.id = String(p.id)
+        p.name = String(p.name)
+        p.description = String(p.description)
+        p.form = p.form
+          .map((s) => {
+            switch (s.type) {
+              case 'input':
+                return {
+                  field: String(s.field),
+                  name: String(s.name),
+                  description: String(s.description),
+                  type: s.type,
+                  textarea: Boolean(s.textarea),
+                  default: String(s.default),
+                }
+              case 'boolean':
+                return {
+                  field: String(s.field),
+                  name: String(s.name),
+                  description: String(s.description),
+                  type: s.type,
+                  default: Boolean(s.default),
+                }
+              case 'selection':
+                return {
+                  field: String(s.field),
+                  name: String(s.name),
+                  description: String(s.description),
+                  type: s.type,
+                  default: String(s.default),
+                  enum: s.enum.map((e) => String(e)),
+                  enumName: s.enumName.map((e) => String(e)),
+                }
+              // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+              default:
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-case-declarations
+                let neverValue: never = s
+                // throw new Error(`Unknown setting type: ${s.type}`)
+                // @ts-expect-error
+                console.log(`Unknown setting type: ${s.type}`)
+                return null
+            }
+          })
+          .filter((s) => s != null)
+
+        return {
+          id: String(p.id),
+          name: String(p.name),
+          description: String(p.description),
+          form: p.form,
+        }
+      })
+    }
     manifest.contributes = contributes
   } else manifest.contributes = {}
+}
 
+const verifyManifest = async (extensionPath: string, manifest: AnyListen.Extension.Manifest) => {
+  formatManifest(manifest)
+  manifest.icon = manifest.icon ? await buildPath(extensionPath, manifest.icon).catch(() => '') : ''
+  if (manifest.icon) {
+    if (!availableIcons.includes(path.extname(manifest.icon).toLowerCase())) {
+      manifest.icon = ''
+    } else {
+      manifest.icon = await extensionState.remoteFuncs.createExtensionIconPublicPath(manifest.icon)
+    }
+  }
+  manifest.main = await buildPath(extensionPath, manifest.main)
+  if (!manifest.main) throw new Error('Main enter not defined')
   return manifest
 }
 
@@ -178,10 +236,10 @@ export const parseExtension = async (extensionPath: string): Promise<AnyListen.E
     author: manifest.author,
     homepage: manifest.homepage,
     license: manifest.license,
-    categories: manifest.categories,
-    tags: manifest.tags,
-    grant: manifest.grant,
-    contributes: manifest.contributes,
+    categories: manifest.categories!,
+    tags: manifest.tags!,
+    grant: manifest.grant!,
+    contributes: manifest.contributes!,
 
     directory: extensionPath,
     i18nMessages: await buildExtensionI18nMessage(extensionPath),
@@ -194,6 +252,7 @@ export const parseExtension = async (extensionPath: string): Promise<AnyListen.E
     loadTimestamp: 0,
     removed: false,
     publicKey: manifest.publicKey ?? '',
+    internal: false,
   }
 }
 
@@ -230,9 +289,13 @@ export const loadExtension = async (extension: AnyListen.Extension.Extension) =>
   extension.loaded = false
   let runTotalTime: number
   try {
-    const vmState = await createVmConetxt(extension, extensionState.preloadScript)
-    await setupVmContext(vmState)
-    runTotalTime = await runExtension(vmState.vmContext, vmState.extension)
+    if (extension.internal) {
+      runTotalTime = await loadExtensionByInternalExtension(extension)
+    } else {
+      const vmState = await createVmConetxt(extension, extensionState.preloadScript)
+      await setupVmContext(vmState)
+      runTotalTime = await runExtension(vmState.vmContext, vmState.extension)
+    }
   } catch (err) {
     console.error('load extension error: ', err)
     extension.errorMessage = (err as Error).message
@@ -246,6 +309,7 @@ export const loadExtension = async (extension: AnyListen.Extension.Extension) =>
 }
 
 export const stopRunExtension = async (extension: AnyListen.Extension.Extension) => {
+  if (extension.internal) throw new Error('Internal extensions cannot be stopped')
   extensionEvent.stoping(extension.id)
   await destroyContext(extension.id)
   extension.loaded = false
@@ -263,7 +327,7 @@ const downloadExtensionFile = async (url: string, bundlePath: string) => {
 }
 
 export const downloadExtension = async (url: string, manifest?: AnyListen.Extension.Manifest) => {
-  if (!/^https?:\/\//i.test(url)) {
+  if (!isUrl(url)) {
     const stats = await getFileStats(url)
     if (!stats) throw new Error(`Invalid extension path: ${url}`)
     if (stats.isFile()) {
@@ -404,17 +468,33 @@ export const buildExtensionI18nMessage = async (extensionDir: string) => {
 }
 
 export const updateResourceList = () => {
-  const resourceList: AnyListen.Extension.ResourceList = {}
+  const resourceList: AnyListen.Extension.ResourceList = {
+    resources: {},
+    listProvider: [],
+  }
   for (const ext of extensionState.extensions) {
-    if (!ext.loaded || !ext.contributes.resource) continue
-    for (const res of ext.contributes.resource) {
-      for (const action of res.resource) {
-        let list = resourceList[action]
-        if (!list) resourceList[action] = list = []
-        list.push({
+    if (!ext.loaded) continue
+    if (ext.contributes.resource) {
+      for (const res of ext.contributes.resource) {
+        for (const action of res.resource) {
+          let list = resourceList.resources[action]
+          if (!list) resourceList.resources[action] = list = []
+          list.push({
+            extensionId: ext.id,
+            id: res.id,
+            name: res.name,
+          })
+        }
+      }
+    }
+    if (ext.contributes.listProviders) {
+      for (const provider of ext.contributes.listProviders) {
+        resourceList.listProvider.push({
           extensionId: ext.id,
-          id: res.id,
-          name: res.name,
+          id: provider.id,
+          name: provider.name,
+          description: provider.description,
+          form: provider.form,
         })
       }
     }
@@ -433,6 +513,7 @@ export const buildExtensionSettings = async () => {
     const extSetting: AnyListen.Extension.ExtensionSetting = {
       id: ext.id,
       name: ext.name,
+      internal: ext.internal,
       settingItems: [],
     }
     const configs = await getConfig(ext)
@@ -463,7 +544,9 @@ export const updateExtensionSettings = async (id: string, config: Record<string,
     }
   }
   extensionEvent.extenstionSettingUpdated(id, Object.keys(config), config)
-  if (targetExt.loaded) sendConfigUpdatedEvent(id, Object.keys(config), config)
+  if (targetExt.loaded && !targetExt.internal) {
+    sendConfigUpdatedEvent(id, Object.keys(config), config)
+  }
 }
 
 export const getExtensionLastLogs = async (extId?: string): Promise<AnyListen.IPCExtension.LastLog[]> => {

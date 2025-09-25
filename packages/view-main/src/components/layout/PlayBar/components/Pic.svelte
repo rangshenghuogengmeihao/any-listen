@@ -27,21 +27,21 @@
 <style lang="less">
   .container {
     flex: none;
+    min-width: 0;
     // width: @height-player;
     height: 100%;
-    min-width: 0;
     padding: 8px 10px;
   }
   .btn {
     display: block;
-    border: none;
-    background: none;
     height: 100%;
+    aspect-ratio: 1;
     // aspect-ratio: 1;
     padding: 0;
-    transition: opacity @transition-fast;
     cursor: pointer;
-    aspect-ratio: 1;
+    background: none;
+    border: none;
+    transition: opacity @transition-fast;
 
     &:hover {
       opacity: 0.6;

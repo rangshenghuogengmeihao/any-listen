@@ -1,6 +1,9 @@
-import { checkAllowPath, createMediaPublicPath, createPicFilePublicPath, createPicPublicPath } from '@/app/modules/fileSystem'
+import { checkAllowPath, createMediaPublicPath, createPicPublicPath } from '@/app/modules/fileSystem'
 import { workers } from '@/app/worker'
 import { getLocalFilePath } from '@any-listen/app/modules/music/utils'
+import { writeProxyCache } from '@any-listen/app/modules/proxyServer'
+import { isUrl } from '@any-listen/common/utils'
+import { basename } from 'node:path'
 import { buildLyricInfo, getCachedLyricInfo } from './shared'
 
 export const getMusicUrl = async ({
@@ -44,7 +47,6 @@ export const getMusicUrl = async ({
   return null
 }
 
-const httpRxp = /^https?:/
 export const getMusicPicUrl = async ({
   musicInfo,
   isRefresh = false,
@@ -58,13 +60,14 @@ export const getMusicPicUrl = async ({
     const pic = await workers.utilService.getMusicFilePic(musicInfo.meta.filePath)
     if (pic) {
       if (typeof pic == 'string') {
-        if (httpRxp.test(pic)) {
+        if (isUrl(pic)) {
           return {
             url: pic,
             isFromCache: true,
             // toggleSource: false,
           }
         }
+
         let url = await createPicPublicPath(musicInfo.meta.filePath, pic)
         if (url) {
           return {
@@ -74,13 +77,9 @@ export const getMusicPicUrl = async ({
           }
         }
       } else {
-        let url = await createPicFilePublicPath(musicInfo.meta.filePath, pic.format, pic.data)
-        if (url) {
-          return {
-            url,
-            isFromCache: false,
-            // toggleSource: false,
-          }
+        return {
+          url: await writeProxyCache(`${basename(musicInfo.meta.filePath)}.${pic.format}`, pic.data),
+          isFromCache: false,
         }
       }
     }

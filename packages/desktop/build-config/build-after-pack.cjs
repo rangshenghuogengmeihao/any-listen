@@ -1,19 +1,86 @@
 const fs = require('fs').promises
 
-const macLanguagesInfoPlistStrings = {
-  en: {
-    CFBundleDisplayName: 'LX Music',
-    CFBundleName: 'LX Music',
-  },
-  zh_CN: {
-    CFBundleDisplayName: 'LX Music',
-    CFBundleName: 'LX Music',
-  },
-  zh_TW: {
-    CFBundleDisplayName: 'LX Music',
-    CFBundleName: 'LX Music',
-  },
+// 包含 macOS 常见语言代码的列表
+const locales = [
+  'af',
+  'en',
+  'hr',
+  'mr',
+  'sv',
+  'am',
+  'en_GB',
+  'hu',
+  'ms',
+  'sw',
+  'es',
+  'nb',
+  'ta',
+  'es_419',
+  'id',
+  'nl',
+  'te',
+  'ar',
+  'et',
+  'it',
+  'pl',
+  'th',
+  'bg',
+  'fa',
+  'ja',
+  'pt_BR',
+  'tr',
+  'bn',
+  'fi',
+  'kn',
+  'pt_PT',
+  'uk',
+  'ca',
+  'fil',
+  'ko',
+  'ro',
+  'ur',
+  'cs',
+  'fr',
+  'ru',
+  'vi',
+  'da',
+  'gu',
+  'lt',
+  'sk',
+  'zh_CN',
+  'de',
+  'he',
+  'lv',
+  'sl',
+  'zh_TW',
+  'el',
+  'hi',
+  'ml',
+  'sr',
+]
+
+const commonMacLanguagesInfoPlistStrings = {
+  CFBundleDisplayName: 'Any Listen',
+  CFBundleName: 'Any Listen',
 }
+// const macLanguagesInfoPlistStrings = {
+//   en: {
+//     CFBundleDisplayName: 'Any Listen',
+//     CFBundleName: 'Any Listen',
+//   },
+//   zh_CN: {
+//     CFBundleDisplayName: 'Any Listen',
+//     CFBundleName: 'Any Listen',
+//   },
+//   zh_TW: {
+//     CFBundleDisplayName: 'Any Listen',
+//     CFBundleName: 'Any Listen',
+//   },
+// }
+const macLanguagesInfoPlistStrings = locales.reduce((acc, locale) => {
+  acc[locale] = { ...commonMacLanguagesInfoPlistStrings }
+  return acc
+}, {})
 
 // https://github.com/electron-userland/electron-builder/issues/4630
 // https://github.com/electron-userland/electron-builder/issues/4630#issuecomment-782020139

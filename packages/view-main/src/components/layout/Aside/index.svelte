@@ -2,15 +2,14 @@
   import Logo from './Logo.svelte'
   import Nav from './Nav.svelte'
   import MyList from './MyList/index.svelte'
-  import { useSettingValue } from '@/modules/setting/reactive.svelte'
-  let controlBtnPosition = useSettingValue('common.controlBtnPosition')
+  // import { useSettingValue } from '@/modules/setting/reactive.svelte'
   // export let params = {}
 
   // console.log(params)
 </script>
 
 <div class="aside">
-  {#if controlBtnPosition.val == 'right'}
+  {#if !import.meta.env.VITE_IS_MAC}
     <Logo />
   {/if}
   <Nav />
@@ -19,7 +18,10 @@
 
 <style lang="less">
   .aside {
+    // background-color: var(--color-primary-light-900-alpha-900);
+    display: flex;
     flex: none;
+    flex-flow: column nowrap;
     width: 20%;
     max-width: 320px;
     // box-shadow: 0 0 5px rgba(0, 0, 0, .3);
@@ -31,9 +33,6 @@
     // -webkit-app-region: drag;
     // -webkit-user-select: none;
     background-color: var(--color-app-background);
-    // background-color: var(--color-primary-light-900-alpha-900);
-    display: flex;
-    flex-flow: column nowrap;
 
     // &.fullscreen {
     //   // -webkit-app-region: no-drag;
@@ -45,6 +44,10 @@
     // :global(.aside-logo + .aside-nav) {
     //   padding-top: 20px;
     // }
+  }
+
+  :global(html.mac .aside) {
+    padding-top: calc(env(titlebar-area-height, 30px) + 4px);
   }
 
   // :global(html.mac .aside-nav) {

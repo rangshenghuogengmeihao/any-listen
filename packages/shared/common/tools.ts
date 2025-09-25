@@ -1,3 +1,4 @@
+import { SINGERS_RXP } from './constants'
 import { dateFormat, generateIdByPerf } from './utils'
 
 export const getMusicInfo = (musicInfo: AnyListen.Download.ListItem | AnyListen.Music.MusicInfo) => {
@@ -75,10 +76,10 @@ export const logFormat = (log: AnyListen.LogInfo) => {
   return `${dateFormat(log.timestamp)} ${log.type.toUpperCase()} ${log.message}`
 }
 
-export const buildMusicCacheId = (musicInfo: AnyListen.Music.MusicInfo, quality: AnyListen.Music.Quality) => {
+export const buildMusicCacheId = (musicInfo: AnyListen.Music.MusicInfo, quality: string) => {
   return `${musicInfo.id}_${quality}`
 }
-export const getFileType = (quality: AnyListen.Music.Quality): AnyListen.Music.FileType => {
+export const getFileType = (quality: string): AnyListen.Music.FileType => {
   switch (quality) {
     case '128k':
     case '192k':
@@ -92,6 +93,7 @@ export const getFileType = (quality: AnyListen.Music.Quality): AnyListen.Music.F
     case 'master':
       return 'flac'
   }
+  return 'mp3'
 }
 
 const existTimeExp = /\[\d{1,2}:.*\d{1,4}\]/
@@ -128,4 +130,20 @@ export const formatExtensionGHMirrorHosts = (hosts: string[]) => {
         .filter((v) => v !== '')
     )
   )
+}
+
+/**
+ * 歌手名称格式化
+ * @param name 歌手名称，可能包含多个歌手，用 / ; , 等分隔
+ * @returns
+ */
+export const singerFormat = (name: string) => {
+  if (!name) return ''
+  return SINGERS_RXP.test(name)
+    ? name
+        .split(SINGERS_RXP)
+        .map((s) => s.trim())
+        .filter((s) => s)
+        .join('、')
+    : name || ''
 }

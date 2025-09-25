@@ -1,4 +1,5 @@
 import { showNotify } from '@/components/apis/notify'
+import { syncUserList as syncUserListRemote } from '@/modules/extension/store/actions'
 import {
   addListMusics,
   removeUserList as removeUserListRemote,
@@ -77,6 +78,12 @@ export const importLocalFileFolder = async (listInfo: AnyListen.List.MyListInfo)
   console.log(taskId)
 }
 
+export const syncUserList = async (id: string) => {
+  await syncUserListRemote(id)
+}
+
 export const removeUserList = async (id: string) => {
   await removeUserListRemote([id])
 }
+
+export { updateUserListPosition } from '@/modules/musicLibrary/store/actions'

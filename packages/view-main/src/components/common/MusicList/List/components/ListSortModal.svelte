@@ -63,7 +63,7 @@
     <section>
       <h3 class="title">{$t('list_sort_modal_by_field')}</h3>
       <ul class="list">
-        <li class="listItem">
+        <li class="list-item">
           <Radio
             id="list_sort_modal_field_name"
             checked={sortField == 'name'}
@@ -75,7 +75,7 @@
             label={$t('list_sort_modal_by_name')}
           />
         </li>
-        <li class="listItem">
+        <li class="list-item">
           <Radio
             id="list_sort_modal_field_singer"
             checked={sortField == 'singer'}
@@ -86,7 +86,7 @@
             label={$t('list_sort_modal_by_singer')}
           />
         </li>
-        <li class="listItem">
+        <li class="list-item">
           <Radio
             id="list_sort_modal_field_album"
             checked={sortField == 'albumName'}
@@ -97,7 +97,7 @@
             label={$t('list_sort_modal_by_album')}
           />
         </li>
-        <li class="listItem">
+        <li class="list-item">
           <Radio
             id="list_sort_modal_field_time"
             checked={sortField == 'interval'}
@@ -108,7 +108,7 @@
             label={$t('list_sort_modal_by_time')}
           />
         </li>
-        <li class="listItem">
+        <li class="list-item">
           <Radio
             id="list_sort_modal_field_ctime"
             checked={sortField == 'createTime'}
@@ -119,7 +119,7 @@
             label={$t('list_sort_modal_by_create_time')}
           />
         </li>
-        <li class="listItem">
+        <li class="list-item">
           <Radio
             id="list_sort_modal_field_uptime"
             checked={sortField == 'updateTime'}
@@ -135,7 +135,7 @@
     <section>
       <h3 class="title">{$t('list_sort_modal_by_type')}</h3>
       <ul class="list">
-        <li class="listItem">
+        <li class="list-item">
           <Radio
             id="list_sort_modal_type_up"
             checked={sortType == 'up'}
@@ -145,7 +145,7 @@
             label={$t('list_sort_modal_by_up')}
           />
         </li>
-        <li class="listItem">
+        <li class="list-item">
           <Radio
             id="list_sort_modal_type_down"
             checked={sortType == 'down'}
@@ -155,7 +155,7 @@
             label={$t('list_sort_modal_by_down')}
           />
         </li>
-        <li class="listItem">
+        <li class="list-item">
           <Radio
             id="list_sort_modal_type_random"
             checked={sortType == 'random'}
@@ -186,34 +186,34 @@
   }
 
   .main {
-    padding: 0 15px;
-    width: 320px;
     display: flex;
     flex-flow: column nowrap;
+    width: 320px;
     min-height: 0;
+    padding: 0 15px;
     // max-height: 100%;
     // overflow: hidden;
   }
   .title {
+    padding: 10px 0 8px;
     font-size: 14px;
     color: var(--color-font-label);
-    padding: 10px 0 8px;
   }
   .list {
     display: flex;
     flex-flow: row wrap;
     font-size: 14px;
   }
-  .listItem {
+  .list-item {
     width: (100% / 3);
     padding-left: 10px;
     margin-bottom: 8px;
   }
   .footer {
-    margin: 20px 0 15px auto;
     display: flex;
     flex-direction: row;
     gap: 10px;
+    margin: 20px 0 15px auto;
 
     :global(.btn) {
       min-width: 70px;

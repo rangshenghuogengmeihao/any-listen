@@ -151,16 +151,15 @@
     top: 0;
     left: 0;
     z-index: 99;
-    width: 100%;
-    height: 100%;
     // background-color: rgba(0, 0, 0, .2);
     // background-color: rgba(255, 255, 255, .6);
     // background-color: var(--color-primary-light-600-alpha-900);
     // backdrop-filter: blur(4px);
     // backdrop-filter: grayscale(70%);
     display: grid;
-    align-items: center;
-    justify-items: center;
+    place-items: center center;
+    width: 100%;
+    height: 100%;
     // will-change: transform;
     contain: strict;
 
@@ -182,9 +181,9 @@
 
   .content {
     position: relative;
-    border-radius: 4px;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
+    z-index: 100;
+    display: flex;
+    flex-flow: column nowrap;
     // max-height: 80%;
     // max-width: 76%;
     // width: var(--width, auto);
@@ -193,25 +192,24 @@
     // max-width: var(--max-width, 76%);
     // min-width: var(--min-width, 280px);
     min-height: 250px;
-    position: relative;
-    display: flex;
-    flex-flow: column nowrap;
-    z-index: 100;
-    background-color: var(--color-content-background);
+    overflow: hidden;
     outline: none;
+    background-color: var(--color-content-background);
+    border-radius: 4px;
+    box-shadow: 0 0 4px rgb(0 0 0 / 25%);
   }
 
   .header {
-    flex: none;
-    background-color: var(--color-primary-light-100-alpha-400);
     display: flex;
+    flex: none;
     align-items: center;
     justify-content: space-between;
     height: 18px;
+    background-color: var(--color-primary-light-100-alpha-400);
 
     h3 {
-      font-size: 12px;
       padding: 0 4px;
+      font-size: 12px;
       color: var(--color-primary-dark-500-alpha-600);
     }
 
@@ -220,15 +218,15 @@
     }
 
     button {
-      border: none;
-      cursor: pointer;
-      padding: 0 7px;
       height: 100%;
-      background-color: transparent;
+      padding: 0 7px;
+      line-height: 0;
       color: var(--color-primary-dark-500-alpha-500);
+      cursor: pointer;
+      background-color: transparent;
+      border: none;
       // outline: none;
       transition: background-color 0.2s ease;
-      line-height: 0;
 
       svg {
         height: 0.7em;

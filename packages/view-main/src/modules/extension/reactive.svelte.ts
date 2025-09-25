@@ -14,9 +14,9 @@ export const extensionStatus = readable(extensionState.status, (set) => {
 })
 
 export const extensionList = readable(extensionState.extensionList, (set) => {
-  set(extensionState.extensionList)
+  set(extensionState.extensionList.filter((ext) => !ext.internal))
   const unsubscribe = extensionEvent.on('listChanged', () => {
-    set([...extensionState.extensionList])
+    set([...extensionState.extensionList.filter((ext) => !ext.internal)])
   })
 
   return function stop() {

@@ -8,7 +8,8 @@ if (isWin) {
 } else {
   defaultSetting['player.isPlayAwlrc'] = false
   if (isMac) {
-    defaultSetting['common.controlBtnPosition'] = 'right'
+    defaultSetting['tray.themeId'] = 0
+    defaultSetting['common.transparentWindow'] = false
   }
 }
 

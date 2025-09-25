@@ -12,11 +12,16 @@ const rootPath = path.join(__dirname, '../../..')
  * @see https://www.electron.build/configuration/configuration
  */
 const options = {
-  appId: 'cn.toside.music.desktop.v3',
-  productName: 'Any Listen',
+  appId: 'cn.toside.anylisten.desktop',
+  productName: 'any-listen',
   extraMetadata: {
-    name: 'Any Listen',
+    name: 'any-listen',
     main: 'dist/electron/main.js',
+    description: 'A cross-platform private music playback service',
+    author: {
+      name: 'lyswhut',
+      email: 'lyswhut@qq.com',
+    },
   },
   beforePack,
   afterPack,
@@ -45,8 +50,8 @@ const options = {
   publish: [
     {
       provider: 'github',
-      owner: 'lyswhut',
-      repo: 'lx-music-desktop-v3',
+      owner: 'any-listen',
+      repo: 'any-listen-desktop',
     },
   ],
 }
@@ -58,7 +63,7 @@ const winOptions = {
   win: {
     icon: './resources/icons/icon.ico',
     legalTrademarks: 'lyswhut',
-    // artifactName: '${productName}-v${version}-${env.ARCH}-${env.TARGET}.${ext}',
+    // artifactName: '${productName}-${version}-${env.ARCH}-${env.TARGET}.${ext}',
   },
   nsis: {
     oneClick: false,
@@ -89,14 +94,14 @@ const linuxOptions = {
         'Name[zh_CN]': 'Any Listen',
         'Name[zh_TW]': 'Any Listen',
         Encoding: 'UTF-8',
-        MimeType: 'x-scheme-handler/lxmusic',
+        MimeType: 'x-scheme-handler/anylisten',
         StartupNotify: 'false',
       },
       // Name: 'Any Listen',
       // 'Name[zh_CN]': 'Any Listen',
       // 'Name[zh_TW]': 'Any Listen',
       // Encoding: 'UTF-8',
-      // MimeType: 'x-scheme-handler/lxmusic',
+      // MimeType: 'x-scheme-handler/anylisten',
       // StartupNotify: 'false',
     },
   },
@@ -116,19 +121,18 @@ const macOptions = {
     // artifactName: '${productName}-${version}.${ext}',
   },
   dmg: {
-    window: {
-      width: 600,
-      height: 400,
-    },
+    // window: {
+    //   width: 540,
+    //   height: 100,
+    // },
     contents: [
       {
-        x: 106,
-        y: 252,
-        name: 'Any Listen',
+        x: 130,
+        y: 190,
       },
       {
-        x: 490,
-        y: 252,
+        x: 410,
+        y: 190,
         type: 'link',
         path: '/Applications',
       },
@@ -139,9 +143,9 @@ const macOptions = {
 
 // win: {
 // tagret: {
-//   setup: ['nsis', '${productName}-v${version}-${env.ARCH}-Setup.${ext}'],
-//   green: ['7z', '${productName}-v${version}-${env.ARCH}-green.${ext}'],
-//   portable: ['portable', '${productName}-v${version}-${env.ARCH}-portable.${ext}'],
+//   setup: ['nsis', '${productName}-${version}-${env.ARCH}-Setup.${ext}'],
+//   green: ['7z', '${productName}-${version}-${env.ARCH}-green.${ext}'],
+//   portable: ['portable', '${productName}-${version}-${env.ARCH}-portable.${ext}'],
 // },
 // },
 // linux: {
@@ -179,25 +183,25 @@ const createTarget = {
   win(arch, packageType) {
     switch (packageType) {
       case 'setup':
-        winOptions.artifactName = `\${productName}-v\${version}-${arch}-Setup.\${ext}`
+        winOptions.artifactName = `\${productName}-\${version}-${arch}-Setup.\${ext}`
         return {
           buildOptions: { win: ['nsis'] },
           options: winOptions,
         }
       case 'green':
-        winOptions.artifactName = `\${productName}-v\${version}-win_${arch}-green.\${ext}`
+        winOptions.artifactName = `\${productName}-\${version}-win_${arch}-green.\${ext}`
         return {
           buildOptions: { win: ['7z'] },
           options: winOptions,
         }
       case 'win7_green':
-        winOptions.artifactName = `\${productName}-v\${version}-win7_${arch}-green.\${ext}`
+        winOptions.artifactName = `\${productName}-\${version}-win7_${arch}-green.\${ext}`
         return {
           buildOptions: { win: ['7z'] },
           options: winOptions,
         }
       case 'portable':
-        winOptions.artifactName = `\${productName}-v\${version}-${arch}-portable.\${ext}`
+        winOptions.artifactName = `\${productName}-\${version}-${arch}-portable.\${ext}`
         return {
           buildOptions: { win: ['portable'] },
           options: winOptions,
@@ -267,7 +271,7 @@ const createTarget = {
  * @param {'win' | 'mac' | 'linux' | 'dir'} target 构建目标平台
  * @param {'x86_64' | 'x64' | 'x86' | 'arm64' | 'armv7l'} arch 包架构
  * @param {*} packageType 包类型
- * @param {'onTagOrDraft' | 'always' | 'never'} publishType 发布类型
+ * @param {'onTag' | 'onTagOrDraft' | 'always' | 'never'} publishType 发布类型
  */
 const build = async (target, arch, packageType, publishType) => {
   if (target == 'dir') {

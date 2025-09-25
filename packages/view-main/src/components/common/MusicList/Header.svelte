@@ -85,9 +85,9 @@
 
 <style lang="less">
   .header {
-    flex: none;
     // height: 46px;
     display: flex;
+    flex: none;
     flex-flow: row nowrap;
     // align-items: center;
     padding: 10px 15px 10px 12px;
@@ -99,13 +99,13 @@
   }
 
   .right {
-    flex: auto;
-    padding-left: 15px;
     display: flex;
+    flex: auto;
     flex-flow: column nowrap;
     justify-content: space-between;
-    padding-bottom: 5px;
     padding-top: 2px;
+    padding-bottom: 5px;
+    padding-left: 15px;
   }
 
   .title {
@@ -116,12 +116,12 @@
   }
 
   .info-item {
-    padding-top: 5px;
-    font-size: 13px;
-    color: var(--color-font-label);
     display: flex;
     flex-flow: row wrap;
     gap: 10px;
+    padding-top: 5px;
+    font-size: 13px;
+    color: var(--color-font-label);
 
     + .info-item {
       padding-top: 0;
@@ -133,18 +133,17 @@
   }
 
   .control-btns {
-    margin-top: 15px;
     display: flex;
     // gap: 10px;
     flex-flow: row wrap;
-    display: flex;
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    margin-top: 15px;
 
     .btns {
-      flex: none;
       display: flex;
+      flex: none;
       flex-flow: row nowrap;
       gap: 10px;
     }

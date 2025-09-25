@@ -12,8 +12,8 @@
   .svg-icon {
     width: 1.2em;
     height: 1.2em;
-    vertical-align: -0.25em;
-    fill: currentColor;
     overflow: hidden;
+    vertical-align: -0.25em;
+    fill: currentcolor;
   }
 </style>

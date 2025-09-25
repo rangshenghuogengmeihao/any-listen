@@ -13,6 +13,7 @@ export const extI18n = {
     const cacheKey = `${extenstionId}_${transKey}`
     let str = this.cache.get(cacheKey)
     if (str != null) return str
+    if (transKey.startsWith('t(')) transKey = `{${transKey.substring(2, transKey.length - 1)}}`
     str = transKey.replace(/{([\w-.]+)}/g, (_, k) => {
       const key = `${extenstionId}.${k}`
       return this.message[key] ?? k

@@ -14,6 +14,7 @@
     onchange = () => {},
     onblur = () => {},
     autofocus = false,
+    class: className,
   }: {
     id?: string
     class?: string
@@ -75,8 +76,7 @@
 
 <textarea
   bind:this={domInput}
-  class="textarea"
-  class:min
+  class={['textarea', className, { min }]}
   {id}
   {placeholder}
   {value}
@@ -93,22 +93,22 @@
 <style lang="less">
   .textarea {
     display: block;
-    border: none;
-    border-radius: @form-radius;
-    padding: 7px 8px;
-    color: var(--color-font);
-    outline: none;
-    transition: background-color 0.2s ease;
-    background-color: var(--color-primary-background);
-    font-size: 14px;
-    height: 90px;
     min-width: 130px;
     max-width: 100%;
+    height: 90px;
+    padding: 7px 8px;
+    font-size: 14px;
+    color: var(--color-font);
+    outline: none;
+    background-color: var(--color-primary-background);
+    border: none;
+    border-radius: @form-radius;
+    transition: background-color 0.2s ease;
 
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
-      -webkit-appearance: none;
       margin: 0;
+      appearance: none;
     }
 
     &[disabled] {

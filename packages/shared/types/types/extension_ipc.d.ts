@@ -87,14 +87,36 @@ declare namespace AnyListen {
       musicInfo: Music.MusicInfoOnline
     }
     interface MusicUrlParams extends MusicCommonParams {
-      quality?: Music.Quality
+      quality?: string
       type?: Music.FileType
     }
     interface MusicUrlInfo {
       url: string
-      quality: Music.Quality
+      quality: string
     }
 
+    type BuildListProviderActionCommonParams<D> = CommonParams & {
+      data: D
+    }
+    type ListProviderActionParams = BuildListProviderActionCommonParams<List.RemoteListInfo>
+    interface ListProviderAction {
+      createList: (params: ListProviderActionParams) => Promise<void>
+      updateList: (params: ListProviderActionParams) => Promise<void>
+      deleteList: (params: ListProviderActionParams) => Promise<void>
+      getListMusicIds: (params: ListProviderActionParams) => Promise<string[]>
+      getMusicInfoByIds: (
+        params: BuildListProviderActionCommonParams<{
+          list: List.RemoteListInfo
+          ids: string[]
+        }>
+      ) => Promise<{
+        musics: Music.MusicInfoOnline[]
+        waitingParseMetadata?: boolean
+      }>
+      parseMusicInfoMetadata: (
+        params: BuildListProviderActionCommonParams<Music.MusicInfoOnline>
+      ) => Promise<Music.MusicInfoOnline>
+    }
     interface ResourceAction {
       // tipSearch: (params: CommonParams) => Promise<string[]>
       // hotSearch: (params: CommonParams) => Promise<string[]>
@@ -209,6 +231,11 @@ declare namespace AnyListen {
         action: T,
         params: Parameters<ResourceAction[T]>[0]
       ) => Promise<Awaited<ReturnType<ResourceAction[T]>>>
+      listProviderAction: <T extends keyof ListProviderAction>(
+        action: T,
+        params: Parameters<ListProviderAction[T]>[0]
+      ) => Promise<Awaited<ReturnType<ListProviderAction[T]>>>
+      syncUserList: (id: string) => Promise<void>
     }>
     type ServerIPCActions<Socket = undefined> = IPC.WarpIPCHandlerActions<Socket, ServerActions>
 
@@ -222,6 +249,9 @@ declare namespace AnyListen {
       onExtensionEvent: (action: EventExtension) => Promise<void>
       // getConnectedClients: () => Promise<string[]>
       // showMessage: (message: string) => Promise<string[]>
+      createProxyUrl: (url: string, reqOptions: unknown) => Promise<string>
+      checkProxyCache: (url: string) => Promise<boolean>
+      writeProxyCache: (fileName: string, data: Uint8Array) => Promise<string>
 
       getAllUserLists: () => Promise<List.MyAllList>
       getListMusics: (listId: string) => Promise<Music.MusicInfo[]>
@@ -236,18 +266,27 @@ declare namespace AnyListen {
 
       /** 显示消息弹窗 */
       showMessageBox: (extensionId: string, key: string, options: IPCCommon.MessageDialogOptions) => Promise<number>
-      showInputBox: (extensionId: string, key: string, options: IPCCommon.InputDialogOptions) => Promise<string | undefined>
-      showOpenBox: (
-        extensionId: string,
-        key: string,
-        options: IPCCommon.OpenDialogOptions
-      ) => Promise<string | string[] | undefined>
-      showSaveBox: (extensionId: string, key: string, options: IPCCommon.SaveDialogOptions) => Promise<string | undefined>
+      showInputBox: (extensionId: string, key: string, options: IPCCommon.InputDialogOptions) => Promise<unknown>
+      showOpenBox: (extensionId: string, key: string, options: IPCCommon.OpenDialogOptions) => Promise<unknown>
+      showSaveBox: (extensionId: string, key: string, options: IPCCommon.SaveDialogOptions) => Promise<unknown>
       closeMessageBox: (key: string) => Promise<void>
     }
 
     interface RequestOptions {
-      method?: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH'
+      method?:
+        | 'GET'
+        | 'HEAD'
+        | 'POST'
+        | 'PUT'
+        | 'DELETE'
+        | 'OPTIONS'
+        | 'PATCH'
+        | 'PROPFIND'
+        | 'COPY'
+        | 'MOVE'
+        | 'MKCOL'
+        | 'PROPPATCH'
+        | 'QUOTA'
       query?: Record<string, string | number | null | undefined | boolean>
       headers?: Record<string, string | string[]>
       timeout?: number
@@ -276,9 +315,9 @@ declare namespace AnyListen {
     // extension worker funcs, exposed to extension vm
     interface PreloadIPCActions {
       showMessageBox: (key: string, options: IPCCommon.MessageDialogOptions) => Promise<number>
-      showInputBox: (key: string, options: IPCCommon.InputDialogOptions) => Promise<string | undefined>
-      showOpenBox: (key: string, options: IPCCommon.OpenDialogOptions) => Promise<string | string[] | undefined>
-      showSaveBox: (key: string, options: IPCCommon.SaveDialogOptions) => Promise<string | undefined>
+      // showInputBox: (key: string, options: IPCCommon.InputDialogOptions) => Promise<string | undefined>
+      showOpenBox: (key: string, options: IPCCommon.OpenDialogOptions) => Promise<unknown>
+      showSaveBox: (key: string, options: IPCCommon.SaveDialogOptions) => Promise<unknown>
       closeMessageBox: (key: string) => void
 
       request: <Resp = unknown>(url: string, options?: RequestOptions) => Promise<Response<Resp>>
@@ -298,6 +337,9 @@ declare namespace AnyListen {
       getAllUserLists: () => Promise<List.MyAllList>
       getListMusics: (listId: string) => Promise<Music.MusicInfo[]>
       listAction: (action: IPCList.ActionList) => Promise<void>
+
+      createProxyUrl: (url: string, options: RequestOptions) => Promise<string>
+      writeProxyCache: (fileName: string, data: Uint8Array) => Promise<string>
     }
 
     // extension vm funcs, exposed to extension worker
@@ -314,6 +356,10 @@ declare namespace AnyListen {
         action: T,
         params: Parameters<ResourceAction[T]>[0]
       ) => Promise<Awaited<ReturnType<ResourceAction[T]>>>
+      listProviderAction: <T extends keyof ListProviderAction>(
+        action: T,
+        params: Parameters<ListProviderAction[T]>[0]
+      ) => Promise<Awaited<ReturnType<ListProviderAction[T]>>>
     }
   }
 }

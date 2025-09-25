@@ -43,29 +43,29 @@
 
 <style lang="less">
   .container {
-    flex: none;
-    height: 100%;
     display: flex;
+    flex: none;
     flex-flow: row nowrap;
-    align-items: center;
-    padding-left: 10px;
-    padding-right: 10px;
     gap: 14px;
+    align-items: center;
+    height: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
   }
   .btn {
+    display: flex;
     flex: none;
+    // padding: 5px;
+    padding: 0;
+    color: var(--color-button-font);
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    opacity: 1;
     // height: 52%;
     // margin-top: -2px;
     transition: @transition-fast;
     transition-property: color, opacity;
-    color: var(--color-button-font);
-    opacity: 1;
-    cursor: pointer;
-    background-color: transparent;
-    border: none;
-    // padding: 5px;
-    padding: 0;
-    display: flex;
 
     // svg {
     //   filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.2));

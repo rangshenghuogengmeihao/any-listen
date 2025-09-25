@@ -1,11 +1,11 @@
-import type http from 'http'
 import { IPC_CODE } from '@any-listen/common/constants'
-import { verifyToken, createToken, getIP } from './tools'
+import type http from 'node:http'
 import querystring from 'node:querystring'
 import store from './cache'
+import { createToken, getIP, verifyToken } from './tools'
 // import { getUserSpace, getUserName, setUserName, createClientKeyInfo } from '@/user'
-import { toSha256 } from '@/shared/utils'
 import { checkClientInfo, createClientInfo, getServerName, getTokenSecret, saveClientInfo, updateLastActive } from '@/shared/data'
+import { toSha256 } from '@/shared/utils'
 
 const getAvailableIP = (ip: string) => {
   return ip && (store.get<number>(ip) ?? 0) < 10 ? ip : null
@@ -70,13 +70,13 @@ export const authCode = async (ctx: AnyListen.RequestContext, pwd: string) => {
   }
   // console.log(req.headers)
 
-  ctx.code = code
+  ctx.status = code
   ctx.body = msg
 }
 
 export const authConnect = async (req: http.IncomingMessage) => {
   let ip: string | null | undefined = getIP(req)
-  if (ip) ip = getAvailableIP(ip)
+  ip &&= getAvailableIP(ip)
   if (ip) {
     const query = querystring.parse(req.url!.split('?')[1])
     // const i = query.i

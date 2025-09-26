@@ -13,17 +13,17 @@ export const createExposeApp = (client: ClientCall) => {
       return client.createDesktopLyricProcess(event.ports)
     },
 
-    async showMessageBox(event, extId, key, options) {
-      return client.showMessageBox(extId, key, options)
+    async showMessageBox(event, key, extId, options) {
+      return client.showMessageBox(key, extId, options)
     },
-    async showInputBox(event, extId, key, options) {
-      return client.showInputBox(extId, key, options)
+    async showInputBox(event, key, extId, options) {
+      return client.showInputBox(key, extId, options)
     },
-    async showOpenBox(event, extId, key, options) {
-      return client.showOpenBox(extId, key, options)
+    async showOpenBox(event, key, extId, options) {
+      return client.showOpenBox(key, extId, options)
     },
-    async showSaveBox(event, extId, key, options) {
-      return client.showSaveBox(extId, key, options)
+    async showSaveBox(event, key, extId, options) {
+      return client.showSaveBox(key, extId, options)
     },
     async closeMessageBox(event, key) {
       return client.closeMessageBox(key)

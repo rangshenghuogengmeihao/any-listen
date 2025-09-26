@@ -6,6 +6,8 @@ import { checkAndCreateDir, removePath } from '@/shared/utils'
 import { initCommon } from '@any-listen/app/common'
 import { parseEnvParams } from '@any-listen/nodejs/env'
 import { version } from '../../../package.json' with { type: 'json' }
+import { i18n } from '../i18n'
+import { boxTools } from '../modules/extension/clientTools'
 import { getAppSetting, saveSetting } from './data'
 import { appEvent } from './event'
 import { appState } from './state'
@@ -55,6 +57,7 @@ const listenerAppEvent = () => {
       keys.includes('network.proxy.enable') ||
       (appState.appSetting['network.proxy.enable'] && keys.some((k) => k.includes('network.proxy.')))
     ) {
+      // TODO remove proxy to config file
       handleProxyChange()
     }
   })
@@ -115,6 +118,12 @@ export const initAppEnv = async () => {
   listenerAppEvent()
   initCommon({
     getSettings: () => appState.appSetting,
+    showMessageBox: async (key, options) => {
+      return boxTools.showBox(key, options.modal === true, async (socket) => {
+        return socket.remote.showMessageBox(key, '', options)
+      })
+    },
+    translate: (key, val) => i18n.t(key, val),
   })
 }
 

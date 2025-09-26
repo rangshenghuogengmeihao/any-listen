@@ -1,9 +1,9 @@
 ### Fixed
 
-- Fixed an issue where WebDAV song covers could not be read.
+- Optimized the remote list synchronization process. Now, a prompt will be displayed when synchronization fails.
 
 ---
 
 ### 修复
 
-- 修复 WebDAV 歌曲封面读取
+- 优化远程列表同步流程，在同步失败时弹出提示

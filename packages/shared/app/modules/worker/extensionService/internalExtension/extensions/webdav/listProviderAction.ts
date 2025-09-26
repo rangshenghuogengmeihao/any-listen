@@ -2,6 +2,7 @@ import { sizeFormate } from '@any-listen/common/utils'
 import { logcat } from './shared'
 import { getWebDAVOptionsByListInfo, getWebDAVOptionsByMusicInfo } from './utils'
 import {
+  buildWebDAVError,
   createWebDAVClient,
   parseMusicMetadata,
   testDir,
@@ -30,12 +31,12 @@ export const listProviderActions: AnyListen.IPCExtension.ListProviderAction = {
     logcat.info(`ListProviderAction updateList`, params)
     await testDir(await getWebDAVOptionsByListInfo(params.data.meta))
   },
-  async getListMusicIds({ data }) {
+  async getListMusicIds({ extensionId, data }) {
     const options = await getWebDAVOptionsByListInfo(data.meta)
     const webDAVClient = createWebDAVClient(options)
-    const list = await webDAVClient.ls(options.path).catch((err) => {
+    const list = await webDAVClient.ls(options.path).catch((err: Error) => {
       logcat.error('WebDAV list error', err)
-      throw err
+      throw buildWebDAVError(options, err)
     })
     const map = new Map<string, WebDAVFileItem>()
     listCache.set(data.id, map)

@@ -95,10 +95,10 @@
         void importLocalFileFolder(info!)
         break
       case 'update':
-        void syncUserList(info!.id)
+        void syncUserList(info!)
         break
       case 'remove':
-        void removeUserList(info!.id)
+        void removeUserList(info!)
         break
 
       default:

@@ -78,12 +78,16 @@ export const importLocalFileFolder = async (listInfo: AnyListen.List.MyListInfo)
   console.log(taskId)
 }
 
-export const syncUserList = async (id: string) => {
-  await syncUserListRemote(id)
+export const syncUserList = async (listInfo: AnyListen.List.MyListInfo) => {
+  await syncUserListRemote(listInfo.id).catch((e: Error) => {
+    showNotify(i18n.t('user_list__sync_failed', { name: listInfo.name, err: e.message }))
+  })
 }
 
-export const removeUserList = async (id: string) => {
-  await removeUserListRemote([id])
+export const removeUserList = async (listInfo: AnyListen.List.MyListInfo) => {
+  await removeUserListRemote([listInfo.id]).catch((e: Error) => {
+    showNotify(i18n.t('user_list__remove_failed', { name: listInfo.name, err: e.message }))
+  })
 }
 
 export { updateUserListPosition } from '@/modules/musicLibrary/store/actions'

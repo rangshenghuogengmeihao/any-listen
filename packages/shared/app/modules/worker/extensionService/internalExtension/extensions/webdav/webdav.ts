@@ -26,18 +26,21 @@ export const createWebDAVClient = (options: WebDAVClientOptions) => {
   })
 }
 
+export const buildWebDAVError = (options: WebDAVClientOptions, err: Error) => {
+  const msg = err.message
+  if (msg.startsWith('401')) {
+    if (!options.password) {
+      return Error(hostContext.i18n.t('exts.webdav.form.error.no_password'))
+    }
+    return Error(hostContext.i18n.t('exts.webdav.form.error.invalid_password'))
+  }
+  return err
+}
+
 export const testDir = async (options: WebDAVClientOptions) => {
   const webDAVClient = createWebDAVClient(options)
   await webDAVClient.ls(options.path).catch((err: Error) => {
-    const msg = err.message
-    if (msg.startsWith('401')) {
-      if (!options.password) {
-        throw new Error(hostContext.i18n.t('exts.webdav.form.error.no_password'))
-      } else {
-        throw new Error(hostContext.i18n.t('exts.webdav.form.error.invalid_password'))
-      }
-    }
-    throw err
+    throw buildWebDAVError(options, err)
   })
 }
 

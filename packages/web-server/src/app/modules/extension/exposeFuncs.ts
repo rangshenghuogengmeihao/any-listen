@@ -53,24 +53,24 @@ export const exposedFuncs: AnyListen.IPCExtension.MainIPCActions = {
     removeExtensionIconPublicPath(filePath)
   },
 
-  async showMessageBox(extId, key, options) {
-    return boxTools.showBox(key, async (socket) => {
-      return socket.remote.showMessageBox(extId, key, options)
+  async showMessageBox(key, extId, options) {
+    return boxTools.showBox(key, options.modal === true, async (socket) => {
+      return socket.remote.showMessageBox(key, extId, options)
     })
   },
-  async showInputBox(extId, key, options) {
-    return boxTools.showBox(key, async (socket) => {
-      return socket.remote.showInputBox(extId, key, options)
+  async showInputBox(key, extId, options) {
+    return boxTools.showBox(key, true, async (socket) => {
+      return socket.remote.showInputBox(key, extId, options)
     })
   },
-  async showOpenBox(extId, key, options) {
-    return boxTools.showBox(key, async (socket) => {
-      return socket.remote.showOpenBox(extId, key, options)
+  async showOpenBox(key, extId, options) {
+    return boxTools.showBox(key, true, async (socket) => {
+      return socket.remote.showOpenBox(key, extId, options)
     })
   },
-  async showSaveBox(extId, key, options) {
-    return boxTools.showBox(key, async (socket) => {
-      return socket.remote.showSaveBox(extId, key, options)
+  async showSaveBox(key, extId, options) {
+    return boxTools.showBox(key, true, async (socket) => {
+      return socket.remote.showSaveBox(key, extId, options)
     })
   },
   async closeMessageBox(key) {

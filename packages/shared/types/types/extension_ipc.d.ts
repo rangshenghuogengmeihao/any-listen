@@ -265,10 +265,10 @@ declare namespace AnyListen {
       playerAction: (action: IPCPlayer.ActionPlayer) => Promise<void>
 
       /** 显示消息弹窗 */
-      showMessageBox: (extensionId: string, key: string, options: IPCCommon.MessageDialogOptions) => Promise<number>
-      showInputBox: (extensionId: string, key: string, options: IPCCommon.InputDialogOptions) => Promise<unknown>
-      showOpenBox: (extensionId: string, key: string, options: IPCCommon.OpenDialogOptions) => Promise<unknown>
-      showSaveBox: (extensionId: string, key: string, options: IPCCommon.SaveDialogOptions) => Promise<unknown>
+      showMessageBox: (key: string, extensionId: string, options: IPCCommon.MessageDialogOptions) => Promise<number>
+      showInputBox: (key: string, extensionId: string, options: IPCCommon.InputDialogOptions) => Promise<unknown>
+      showOpenBox: (key: string, extensionId: string, options: IPCCommon.OpenDialogOptions) => Promise<unknown>
+      showSaveBox: (key: string, extensionId: string, options: IPCCommon.SaveDialogOptions) => Promise<unknown>
       closeMessageBox: (key: string) => Promise<void>
     }
 

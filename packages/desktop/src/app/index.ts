@@ -8,6 +8,8 @@ import { appState } from './state'
 import { parseEnvParams } from '@any-listen/nodejs/env'
 import { checkAndCreateDir, isMac } from '@any-listen/nodejs/index'
 
+import { i18n } from '@/i18n'
+import { rendererIPC } from '@/renderer/winMain/rendererEvent'
 import { buildElectronProxyConfig } from '@/shared/electron'
 import { log } from '@/shared/log'
 import { setProxyByHost } from '@/shared/request'
@@ -290,6 +292,11 @@ export const initAppEnv = async () => {
   listenerAppEvent()
   initCommon({
     getSettings: () => appState.appSetting,
+    showMessageBox: async (key, options) => {
+      console.log(key, options)
+      return rendererIPC.showMessageBox(key, '', options)
+    },
+    translate: (key, val) => i18n.t(key, val),
   })
 }
 

@@ -1,6 +1,6 @@
 import { appActions } from '@/app'
 import { log } from '@/shared/log'
-import { isWin } from '@any-listen/nodejs/index'
+import { isWin, sleep } from '@any-listen/nodejs/index'
 import { autoUpdater } from 'electron-updater'
 import type { Update } from './update'
 
@@ -46,12 +46,11 @@ export const initUpdate = (_update: Update) => {
   })
 }
 
-export const checkUpdate = (isAutoUpdate: boolean, allowPrerelease: boolean) => {
+export const checkUpdate = async (allowPrerelease: boolean) => {
   // 由于集合安装包中不包含win arm版，这将会导致arm版更新失败
   if (!isWin || !process.arch.includes('arm')) {
-    autoUpdater.autoDownload = isAutoUpdate
     autoUpdater.allowPrerelease = allowPrerelease
-    void autoUpdater.checkForUpdates()
+    await autoUpdater.checkForUpdates()
   } else {
     update.emit('error', new Error('Windows ARM is not supported'))
   }
@@ -62,14 +61,16 @@ export const downloadUpdate = async () => {
     update.emit('error', new Error('No update available'))
     return
   }
-  void autoUpdater.downloadUpdate()
   update.emit('download_progress', { percent: 0, bytesPerSecond: 0, total: 0, transferred: 0, delta: 0 })
+  await autoUpdater.downloadUpdate().catch((err: Error) => {
+    update.emit('error', err)
+  })
 }
 
-export const restartUpdate = () => {
+export const restartUpdate = async () => {
   appActions.setSkipTrayQuit(true)
 
-  setTimeout(() => {
-    autoUpdater.quitAndInstall(true, true)
-  }, 1000)
+  await sleep(1000)
+  autoUpdater.quitAndInstall(true, true)
+  await sleep(3000)
 }

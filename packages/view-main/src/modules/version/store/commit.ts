@@ -55,7 +55,7 @@ export const setUpdateInfo = (info: AnyListen.IPCCommon.UpdateInfo) => {
       versionEvent.updated({ ...versionState.versionInfo })
       break
     case 'download_progress':
-      if (versionState.versionInfo.status != 'downloading') {
+      if (versionState.versionInfo.status != 'downloading' && versionState.versionInfo.status !== 'downloaded') {
         versionState.versionInfo.status = 'downloading'
         versionEvent.updated({ ...versionState.versionInfo })
       }

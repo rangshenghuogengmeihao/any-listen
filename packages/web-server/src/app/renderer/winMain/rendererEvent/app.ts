@@ -52,7 +52,7 @@ export const createExposeApp = () => {
       void downloadUpdate()
     },
     async restartUpdate(event) {
-      restartUpdate()
+      await restartUpdate()
     },
   } satisfies Partial<ExposeClientFunctions>
 }

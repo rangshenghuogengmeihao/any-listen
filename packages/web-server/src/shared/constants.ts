@@ -8,6 +8,7 @@ export const ENV_PARAMS = [
   'LOGIN_PWD',
   'ALLOW_PUBLIC_DIR',
   'EXTENSION_GH_MIRROR_HOSTS',
+  'HTTP_PROXY',
   // 'AnyListen_USER_',
 ] as const
 

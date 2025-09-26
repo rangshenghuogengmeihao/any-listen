@@ -75,6 +75,7 @@
 |        `CONFIG_PATH`        | 配置文件路径，默认 `./data/config.js`                                                    |
 |         `LOG_PATH`          | 日志存储路径，默认 `./data/logs`                                                         |
 | `EXTENSION_GH_MIRROR_HOSTS` | 扩展商店 Github 镜像地址，多个地址用英文逗号分隔                                         |
+|        `HTTP_PROXY`         | 代理服务器，例子 `127.0.0.1:2080`                                                        |
 
 ### 源码编译
 

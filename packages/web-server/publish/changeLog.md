@@ -5,6 +5,7 @@
 - Added support for reading and playing Any Listen lyrics tag data.
 - Added the creation of **"Remote Playlist"**.
 - Added basic support for reading and playing songs from **"WebDAV services"**. You can use this feature via _Playlist right-click menu > New Playlist > Remote Playlist_.
+- Added **`httpProxy`** setting and **`HTTP_PROXY`** environment variable for configuring the proxy server. After setting the proxy server, all traffic will be forwarded to the proxy server.
 
 ### Improved
 
@@ -32,6 +33,7 @@
 - 新增 Any Listen 歌词标签数据读取与播放
 - 新增 **「远程列表」** 的创建
 - 新增对 **「WebDAV 服务」** 内歌曲基本的读取与播放支持，可以在 _列表右键菜单 > 新建列表 > 远程列表_ 使用
+- 新增 **`httpProxy`** 设置及 **`HTTP_PROXY`** 环境变量来设置代理服务器，设置代理服务器后所有流量将会被转发到代理服务器
 
 ### 优化
 

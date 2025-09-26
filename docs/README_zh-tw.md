@@ -1,4 +1,3 @@
-
 <p align="center"><a href="https://github.com/any-listen/any-listen"><img height="110" src="./images/header-logo.svg" alt="any-listen logo"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/any-listen/any-listen"><img height="86" src="./images/header-name.svg" alt="any-listen name"></a></p>
 
 <p align="center">一個跨平台的私人音樂播放服務</p>
@@ -11,7 +10,7 @@
 
 ## 桌面版
 
-下載最新版本安裝檔：[https://github.com/any-listen/any-listen-desktop/releases](https://github.com/any-listen/any-listen-desktop/releases)
+下載最新版本安裝即可：[https://github.com/any-listen/any-listen-desktop/releases](https://github.com/any-listen/any-listen-desktop/releases)
 
 ## 網頁版
 
@@ -19,7 +18,7 @@
 
 ### Docker 部署
 
-映像檔發佈地址：[https://hub.docker.com/r/lyswhut/any-listen-web-server](https://hub.docker.com/r/lyswhut/any-listen-web-server)
+映像發佈地址：[https://hub.docker.com/r/lyswhut/any-listen-web-server](https://hub.docker.com/r/lyswhut/any-listen-web-server)
 
 ### 直接部署
 
@@ -76,6 +75,7 @@
 |        `CONFIG_PATH`        | 配置文件路徑，預設 `./data/config.js`                                                    |
 |         `LOG_PATH`          | 日誌儲存路徑，預設 `./data/logs`                                                         |
 | `EXTENSION_GH_MIRROR_HOSTS` | 擴展商店 Github 鏡像地址，多個地址用英文逗號分隔                                         |
+|        `HTTP_PROXY`         | 代理伺服器，例如 `127.0.0.1:2080`                                                        |
 
 ### 原始碼編譯
 
@@ -93,7 +93,7 @@ node index.cjs
 歡迎 PR！為了讓你的 PR 能順利合併，請注意以下事項：
 
 - 新功能建議先建立 Issue 討論需求。
-- 修復 bug 請提供說明及重現方式。
+- 修復 bug 請提供修復前後的說明及重現方式。
 - 其他類型 PR 請附上說明。
 
 貢獻步驟：

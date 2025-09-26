@@ -1,8 +1,12 @@
+### Added
+
+- Added **"HTTP Proxy"** option in _Settings > Network Settings_. After setting the proxy server, all traffic will be forwarded to the proxy server.
+
 ### Improved
 
 - Improved the display logic of **control buttons** on _MacOS_.
 - Improved the process for checking and updating to new versions.
-- Optimized the remote list synchronization process. Now, a prompt will be displayed when synchronization fails.
+- Optimized the remote list synchronization process. A prompt will now be displayed when synchronization fails.
 
 ### Fixed
 
@@ -10,6 +14,10 @@
 - Fixed issues with the process for checking and updating to new versions.
 
 ---
+
+### 新增
+
+- 新增 _设置 > 网络设置_ 下的 **「HTTP代理」** 选项，设置代理服务器后所有流量将会被转发到代理服务器
 
 ### 优化
 

@@ -42,6 +42,11 @@ declare namespace AnyListen {
     'extension.ghMirrorHosts': string[]
 
     /**
+     * 代理服务器
+     */
+    httpProxy: string
+
+    /**
      * 允许选择的系统路径范围
      */
     allowPublicDir: string[]

@@ -108,6 +108,10 @@ if (envParams.EXTENSION_GH_MIRROR_HOSTS) {
 global.anylisten.config['extension.ghMirrorHosts'] = formatExtensionGHMirrorHosts(
   global.anylisten.config['extension.ghMirrorHosts']
 )
+if (envParams.HTTP_PROXY) {
+  global.anylisten.config.httpProxy = envParams.HTTP_PROXY
+}
+global.anylisten.config.httpProxy = global.anylisten.config.httpProxy.replace(/https?:\/\//, '')
 
 console.log(`Allowed Public Paths:
   ${global.anylisten.config.allowPublicDir.join('\n  ') || '  No Paths'}

@@ -6,6 +6,7 @@ import type { Component } from 'svelte'
 import About from './About.svelte'
 import ExtensionGHMirrorHosts from './ExtensionGHMirrorHosts.svelte'
 import LoginDevices from './LoginDevices.svelte'
+import Network from './Network.svelte'
 import Update from './Update.svelte'
 
 interface SettingBase<T = unknown> {
@@ -216,6 +217,18 @@ export const settings: SettingListSection[] = [
         name: 'settings.extension.gh_mirror_hosts',
         type: 'component',
         component: ExtensionGHMirrorHosts,
+      },
+    ],
+  },
+  {
+    id: 'network',
+    // t('settings.network.proxy')
+    name: 'settings.network',
+    list: [
+      {
+        name: 'settings.network.proxy',
+        type: 'component',
+        component: Network,
       },
     ],
   },

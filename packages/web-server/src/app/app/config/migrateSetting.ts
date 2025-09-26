@@ -4,6 +4,16 @@ export const migrateSetting = (setting: Record<string, unknown>): Partial<AnyLis
   setting = { ...setting }
 
   setting['extension.ghMirrorHosts'] = global.anylisten.config['extension.ghMirrorHosts']
+  if (global.anylisten.config.httpProxy) {
+    const [host, port] = global.anylisten.config.httpProxy.split(':')
+    setting['network.proxy.enable'] = true
+    setting['network.proxy.host'] = host
+    setting['network.proxy.port'] = port || '80'
+  } else {
+    setting['network.proxy.enable'] = false
+    setting['network.proxy.host'] = ''
+    setting['network.proxy.port'] = ''
+  }
 
   if (compareVersions(setting.version as string, '1.0.1') < 0) {
     setting.version = '1.0.1'

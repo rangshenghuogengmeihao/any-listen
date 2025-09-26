@@ -19,6 +19,8 @@ const config: AnyListen.Config = {
 
   'extension.ghMirrorHosts': defaultSetting['extension.ghMirrorHosts'].split('\n'), // 扩展的镜像站点
 
+  httpProxy: '', // 代理服务器
+
   allowPublicDir: [],
   password: '',
 }

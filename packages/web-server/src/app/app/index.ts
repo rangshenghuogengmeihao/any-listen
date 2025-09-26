@@ -63,7 +63,7 @@ const listenerAppEvent = () => {
   })
   appEvent.on('inited', () => {
     handleProxyChange()
-    void startCheckUpdateTimeout()
+    if (process.env.NODE_ENV === 'production') void startCheckUpdateTimeout()
   })
   appEvent.on('proxy_changed', (host, port) => {
     setProxyByHost(host, port)

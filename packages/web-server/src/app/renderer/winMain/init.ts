@@ -10,7 +10,7 @@ import { init as initRendererEvent, rendererIPC } from './rendererEvent'
 
 export const initWinMain = () => {
   initRendererEvent()
-  initUpdate()
+  if (process.env.NODE_ENV === 'production') initUpdate()
 
   appEvent.on('inited', () => {
     winMainReadyEvent.emit()

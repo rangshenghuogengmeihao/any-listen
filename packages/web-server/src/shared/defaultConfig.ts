@@ -19,7 +19,7 @@ const config: AnyListen.Config = {
 
   'extension.ghMirrorHosts': defaultSetting['extension.ghMirrorHosts'].split('\n'), // 扩展的镜像站点
 
-  httpProxy: '', // 代理服务器
+  httpProxy: '', // 代理服务器地址，例子 `127.0.0.1:2080`
 
   allowPublicDir: [],
   password: '',

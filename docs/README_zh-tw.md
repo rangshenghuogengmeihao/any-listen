@@ -44,6 +44,7 @@
       // 'upstreamProxy.enabled': false, // 是否使用代理轉發請求
       // 'upstreamProxy.header': '', // 代理轉發請求標頭（如 `x-real-ip`）
       // 'extension.ghMirrorHosts': [], // 擴展商店 Github 鏡像地址
+      // httpProxy: '', // 代理伺服器地址，例子 `127.0.0.1:2080`
 
       // 允許訪問的本地目錄
       // allowPublicDir: ['G:', 'E:\\music'], // Windows 範例

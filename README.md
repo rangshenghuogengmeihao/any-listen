@@ -44,6 +44,7 @@ Refer to [https://github.com/lyswhut/lx-music-sync-server](https://github.com/ly
       // 'upstreamProxy.enabled': false, // Use proxy for requests
       // 'upstreamProxy.header': '', // Proxy request header (e.g. `x-real-ip`)
       // 'extension.ghMirrorHosts': [], // Extension store Github mirror addresses
+      // httpProxy: '', // Proxy server address, e.g. `127.0.0.1:2080`
 
       // Allowed local directories
       // allowPublicDir: ['G:', 'E:\\music'], // Windows example

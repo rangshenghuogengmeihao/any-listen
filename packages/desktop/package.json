@@ -67,10 +67,10 @@
   "devDependencies": {
     "@any-listen/eslint": "workspace:@shared/eslint@*",
     "@any-listen/types": "workspace:@shared/types@*",
-    "electron": "^37.5.1",
+    "electron": "^37.6.0",
     "electron-builder": "^26.0.20",
     "electron-debug": "^4.1.0",
-    "electron-to-chromium": "^1.5.224",
+    "electron-to-chromium": "^1.5.225",
     "node-abi": "^4.14.0",
     "prebuild-install": "^7.1.3",
     "tar": "^7.5.1",

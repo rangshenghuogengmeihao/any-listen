@@ -33,7 +33,7 @@
     versionInfo.val.status == 'downloading'
       ? progress.val?.percent
         ? `${progress.val.percent.toFixed(2)}% - ${sizeFormate(progress.val.transferred)}/${sizeFormate(progress.val.total)} - ${sizeFormate(progress.val.bytesPerSecond)}/s`
-        : $t('settings__update_init')
+        : $t('settings.update.init')
       : ''
   )
 
@@ -48,46 +48,46 @@
   <div class="gap-top">
     {#if import.meta.env.VITE_IS_DESKTOP}
       <div class="p small" role="presentation" onclick={handleOpenDevTools}>
-        {$t('settings__update_current_label')}{versionInfo.val.version}
+        {$t('settings.update.current_label')}{versionInfo.val.version}
       </div>
     {/if}
     {#if import.meta.env.VITE_IS_WEB}
       <div class="p small">
-        {$t('settings__update_current_label')}{versionInfo.val.version}
+        {$t('settings.update.current_label')}{versionInfo.val.version}
       </div>
     {/if}
     {#if commitId}
-      <div class="p small">{$t('settings__update_commit_id')}<span class="select">{commitId}</span></div>
+      <div class="p small">{$t('settings.update.commit_id')}<span class="select">{commitId}</span></div>
     {/if}
     {#if commitDate}
-      <div class="p small">{$t('settings__update_commit_date')}<span class="select">{commitDate}</span></div>
+      <div class="p small">{$t('settings.update.commit_date')}<span class="select">{commitDate}</span></div>
     {/if}
   </div>
   <div class="p small gap-top">
-    {$t('settings__update_latest_label')}{versionInfo.val.newVersion && latestVersion != '0.0.0'
+    {$t('settings.update.latest_label')}{versionInfo.val.newVersion && latestVersion != '0.0.0'
       ? latestVersion
-      : $t('settings__update_unknown')}
+      : $t('settings.update.unknown')}
   </div>
   {#if downloadProgress}
     <div class="p small" style="line-height: 1.5;">
-      {$t('settings__update_downloading')}<br />{$t('settings__update_progress')}{downloadProgress}
+      {$t('settings.update.downloading')}<br />{$t('settings.update.progress')}{downloadProgress}
     </div>
   {/if}
   {#if versionInfo.val.newVersion}
     {#if versionInfo.val.isLatest}
-      <div class="p"><span>{$t('settings__update_latest')}</span></div>
+      <div class="p"><span>{$t('settings.update.latest')}</span></div>
     {:else if versionInfo.val.isUnknown}
-      <div class="p"><span>{$t('settings__update_unknown_tip')}</span></div>
+      <div class="p"><span>{$t('settings.update.unknown_tip')}</span></div>
     {:else if versionInfo.val.status != 'downloading'}
-      <div class="p"><span>{$t('settings__update_new_version')}</span></div>
+      <div class="p"><span>{$t('settings.update.new_version')}</span></div>
     {/if}
     <div class="p">
       <Btn min onclick={showUpdateModal}>
-        {$t('settings__update_open_version_modal_btn')}
+        {$t('settings.update.open_version_modal_btn')}
       </Btn>
     </div>
   {:else if versionInfo.val.status == 'checking'}
-    <div class="p small">{$t('settings__update_checking')}</div>
+    <div class="p small">{$t('settings.update.checking')}</div>
   {/if}
 </div>
 

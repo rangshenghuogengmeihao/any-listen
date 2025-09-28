@@ -234,27 +234,29 @@ export const settings: SettingListSection[] = [
   },
   {
     id: 'update',
-    name: 'settings__update',
+    name: 'settings.update',
     list: [
+      // t('settings.update.try_auto_update')
       {
         field: 'common.tryAutoUpdate',
-        name: 'settings__update_try_auto_update',
+        name: 'settings.update.try_auto_update',
+        description: 'settings.update.try_auto_update_desc',
         type: 'boolean',
       },
       {
         field: 'common.allowPreRelease',
-        name: 'settings__update_allow_pre_release',
-        description: 'settings__update_allow_pre_release_desc',
+        name: 'settings.update.allow_pre_release',
+        description: 'settings.update.allow_pre_release_desc',
         type: 'boolean',
       },
       {
         field: 'common.showChangeLog',
-        name: 'settings__update_show_change_log',
-        description: 'settings__update_show_change_log_desc',
+        name: 'settings.update.show_change_log',
+        description: 'settings.update.show_change_log_desc',
         type: 'boolean',
       },
       {
-        name: 'settings__update',
+        name: 'settings.update',
         type: 'component',
         component: Update,
       },

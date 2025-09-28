@@ -6,6 +6,8 @@
   import Checkbox from '@/components/base/Checkbox.svelte'
   import { settingState } from '@/modules/setting/store/state'
   import { debounce } from '@/shared'
+  import { onMount } from 'svelte'
+  import { settingEvent } from '@/modules/setting/store/event'
 
   let enable = $state(settingState.setting['network.proxy.enable'])
   let host = $state(settingState.setting['network.proxy.host'])
@@ -13,6 +15,20 @@
   const handleSaveEnabled = debounce((enable: boolean) => {
     void updateSetting({
       'network.proxy.enable': enable,
+    })
+  })
+
+  onMount(() => {
+    return settingEvent.on('updated', (keys, settings) => {
+      if (keys.includes('network.proxy.enable')) {
+        enable = settings['network.proxy.enable']!
+      }
+      if (keys.includes('network.proxy.host')) {
+        host = settings['network.proxy.host']!
+      }
+      if (keys.includes('network.proxy.port')) {
+        port = settings['network.proxy.port']!
+      }
     })
   })
 </script>

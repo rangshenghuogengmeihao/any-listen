@@ -160,14 +160,12 @@ const runSyncList = throttle(async () => {
   void handleSyncList()
 }, 500)
 export const initListProvider = async () => {
-  let winMainInited = false
+  let initCount = 0
   const handleRunSyncList = () => {
-    if (winMainInited && !state.initing) runSyncList()
+    initCount++
+    if (initCount < 2) runSyncList()
   }
-  winMainReadyEvent.on(() => {
-    winMainInited = true
-    handleRunSyncList()
-  })
+  winMainReadyEvent.on(handleRunSyncList)
   extensionEvent.on('extensionEvent', (event) => {
     switch (event.action) {
       case 'starting':

@@ -157,7 +157,7 @@ const init = () => {
   createMenu()
 }
 
-export const initTray = () => {
+export const initTray = async () => {
   appEvent.on('updated_config', (keys) => {
     if (!watchConfigKeys.some((key) => keys.includes(key))) return
     init()

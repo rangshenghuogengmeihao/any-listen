@@ -52,10 +52,8 @@ export const initWinMain = () => {
     if (isExistWindow()) {
       if (deeplink) void rendererIPC.deeplink(deeplink)
       else showWindow()
-    } else {
-      if (isMac) createWindow()
-      else actions.exec('app.quit')
-    }
+    } else if (isMac) createWindow()
+    else actions.exec('app.quit')
   })
   appEvent.on('activate', () => {
     if (isExistWindow()) {

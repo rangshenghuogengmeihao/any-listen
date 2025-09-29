@@ -1,8 +1,8 @@
-import { getAllThemes, getTheme, saveTheme as saveThemeData, removeTheme as removeThemeData } from './data'
-import { themeState, themeEvent } from '@any-listen/app/modules/theme'
 import { appEvent, appState } from '@/app'
+import { themeEvent, themeState } from '@any-listen/app/modules/theme'
+import { getAllThemes, getTheme, removeTheme as removeThemeData, saveTheme as saveThemeData } from './data'
 
-export const initTheme = () => {
+export const initTheme = async () => {
   Object.assign(themeState, getTheme())
   const themeConfigKeys = ['theme.id', 'theme.lightId', 'theme.darkId']
   appEvent.on('updated_config', (keys) => {
@@ -48,4 +48,4 @@ export const removeTheme = (id: string) => {
   themeEvent.theme_list_change(getAllThemes())
 }
 
-export { themeState, themeEvent }
+export { themeEvent, themeState }

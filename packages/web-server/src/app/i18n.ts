@@ -1,6 +1,9 @@
 import type { Langs, Locale, Message, TranslateValues } from '@any-listen/i18n'
 import { fillMessage, messages } from '@any-listen/i18n'
+import SingleEvent from '@any-listen/nodejs/SimpleSingleEvent'
 import { appEvent, appState } from './app'
+
+export const languageChangeEvent = new SingleEvent<[Langs]>()
 
 export const i18n = {
   locale: 'zh-cn' as Locale,
@@ -9,7 +12,9 @@ export const i18n = {
   messages,
   message: messages['zh-cn'],
   setLanguage(locale?: Locale | null) {
-    this.message = locale && locale in messages ? messages[locale as Langs] : messages[this.fallbackLocale]
+    if (!locale || !(locale in messages)) locale = this.fallbackLocale
+    this.message = messages[locale as Langs]
+    languageChangeEvent.emit(locale as Langs)
   },
   getMessage(key: keyof Message, val?: TranslateValues): string {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

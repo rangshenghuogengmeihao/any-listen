@@ -1,8 +1,11 @@
-import { type Langs, type Locale, type Message, type TranslateValues, fillMessage, langList, messages } from '@any-listen/i18n'
 import { settingEvent } from '@/modules/setting/store/event'
+import { type Langs, type Locale, type Message, type TranslateValues, fillMessage, langList, messages } from '@any-listen/i18n'
+import SingleEvent from '@any-listen/web/SimpleSingleEvent'
 import { derived, writable } from 'svelte/store'
 
 const $locale = writable<Locale>('zh-cn')
+
+export const languageChangeEvent = new SingleEvent<[Langs]>()
 
 const i18n = {
   locale: 'zh-cn' as Locale,
@@ -17,6 +20,7 @@ const i18n = {
     this.message = messages[_locale]
     this.locale = _locale
     $locale.set(_locale)
+    languageChangeEvent.emit(_locale)
   },
   getMessage(key: keyof Message, val?: TranslateValues): string {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -60,6 +64,6 @@ const initI18n = () => {
 
 export const t = derived($locale, () => i18n.getMessage.bind(i18n))
 
-export { setLanguage, getEnvLocale, initI18n, i18n, langList, $locale as _locale }
+export { $locale as _locale, getEnvLocale, i18n, initI18n, langList, setLanguage }
 
 export type { Langs, Message }

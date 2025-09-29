@@ -16,25 +16,27 @@ import { initExtension } from './extension'
 import { initResources } from './resources'
 
 export const initModules = async () => {
-  void initHotKey()
-  void initPlayer()
-  initTheme()
-  initDislikeList(workers.dbService)
-  initMusicList(
-    workers.dbService,
-    async () => {
-      return getStore(STORE_NAMES.LIST_SCROLL_POSITION).getAll()
-    },
-    async (info) => {
-      getStore(STORE_NAMES.LIST_SCROLL_POSITION).override(info)
-    }
-  )
-  void initExtension()
-  void initResources()
-  void initProxyServer(
-    import.meta.env.DEV ? `http://localhost:9500/api${PROXY_SERVER_PATH}` : `/api${PROXY_SERVER_PATH}`,
-    appState.cacheDataPath
-  )
+  await Promise.all([
+    initHotKey(),
+    initPlayer(),
+    initTheme(),
+    initDislikeList(workers.dbService),
+    initMusicList(
+      workers.dbService,
+      async () => {
+        return getStore(STORE_NAMES.LIST_SCROLL_POSITION).getAll()
+      },
+      async (info) => {
+        getStore(STORE_NAMES.LIST_SCROLL_POSITION).override(info)
+      }
+    ),
+    initExtension(),
+    initResources(),
+    initProxyServer(
+      import.meta.env.DEV ? `http://localhost:9500/api${PROXY_SERVER_PATH}` : `/api${PROXY_SERVER_PATH}`,
+      appState.cacheDataPath
+    ),
+  ])
   // initMusicList()
   // initDielikeList()
   // initUserApi()

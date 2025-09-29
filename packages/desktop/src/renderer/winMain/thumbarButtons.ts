@@ -1,4 +1,4 @@
-import { appEvent } from '@/app'
+import { languageChangeEvent } from '@/i18n'
 import { getPlayerMusic } from '@/modules/player'
 import { playerEvent } from '@any-listen/app/modules/player'
 import { setThumbarButtons } from './main'
@@ -11,10 +11,8 @@ const taskBarButtonFlags: AnyListen.TaskBarButtonFlags = {
   prev: true,
 }
 export const initThumbarButtons = () => {
-  appEvent.on('updated_config', (keys, setting) => {
-    if (keys.includes('common.langId')) {
-      setThumbarButtons(taskBarButtonFlags)
-    }
+  languageChangeEvent.on(() => {
+    setThumbarButtons(taskBarButtonFlags)
   })
 
   playerEvent.on('musicChanged', () => {

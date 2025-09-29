@@ -9,7 +9,7 @@ let scrollInfo: Map<string, number>
 let getScrollInfo: () => Promise<AnyListen.List.ListPositionInfo>
 let saveScrollInfo: (scrollInfo: AnyListen.List.ListPositionInfo) => Promise<void>
 
-export const initMusicList = (
+export const initMusicList = async (
   _dbService: DBSeriveTypes,
   _getScrollInfo: typeof getScrollInfo,
   _saveScrollInfo: typeof saveScrollInfo

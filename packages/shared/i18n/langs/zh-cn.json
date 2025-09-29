@@ -110,6 +110,18 @@
   "login_label": "输入登录密码",
   "logout": "退出登录",
   "lyric__load_error": "歌词获取失败",
+  "main.app_menu.about_app": "关于 Any Listen",
+  "main.app_menu.copy": "复制",
+  "main.app_menu.cut": "剪切",
+  "main.app_menu.edit": "编辑",
+  "main.app_menu.hide": "隐藏",
+  "main.app_menu.paste": "粘贴",
+  "main.app_menu.redo": "重做",
+  "main.app_menu.select_all": "选择全部",
+  "main.app_menu.undo": "撤销",
+  "main.app_menu.window": "窗口",
+  "main.app_menu.window_close": "关闭",
+  "main.app_menu.window_minimize": "最小化",
   "main_window__hide": "隐藏主界面",
   "main_window__show": "显示主界面",
   "min": "最小化",
@@ -436,7 +448,5 @@
   "user_list_music_menu__play": "播放",
   "user_list_music_menu__play_later": "稍后播放",
   "user_list_music_menu__remove": "移除",
-  "user_list_music_menu__sort": "调整位置",
-  "window__close": "关闭",
-  "window__minimize": "最小化"
+  "user_list_music_menu__sort": "调整位置"
 }

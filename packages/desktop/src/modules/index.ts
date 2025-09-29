@@ -17,26 +17,26 @@ import { initProxyServer } from './proxyServer'
 import { initResources } from './resources'
 
 export const initModules = async () => {
-  void initHotKey()
-  void initPlayer()
-  initTheme()
-  initDislikeList(workers.dbService)
-  initMusicList(
-    workers.dbService,
-    async () => {
-      return getStore(STORE_NAMES.LIST_SCROLL_POSITION).getAll()
-    },
-    async (info) => {
-      getStore(STORE_NAMES.LIST_SCROLL_POSITION).override(info)
-    }
-  )
-  initAppMenu()
-  initTray()
-  void initExtension()
-  void initResources()
-  // TODO
-  void initProxyServer()
-
+  await Promise.all([
+    initHotKey(),
+    initPlayer(),
+    initTheme(),
+    initDislikeList(workers.dbService),
+    initMusicList(
+      workers.dbService,
+      async () => {
+        return getStore(STORE_NAMES.LIST_SCROLL_POSITION).getAll()
+      },
+      async (info) => {
+        getStore(STORE_NAMES.LIST_SCROLL_POSITION).override(info)
+      }
+    ),
+    initAppMenu(),
+    initTray(),
+    initExtension(),
+    initResources(),
+    initProxyServer(),
+  ])
   // initMusicList()
   // initDielikeList()
   // initUserApi()

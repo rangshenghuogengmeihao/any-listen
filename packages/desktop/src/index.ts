@@ -9,7 +9,12 @@ import { initModules } from './modules'
 import { initRenderers } from './renderer'
 import { startCommonWorkers, startExtensionServiceWorker } from './worker'
 
-let isInited = false
+let initedCount = 0
+const handleInited = () => {
+  initedCount++
+  if (initedCount < 3) return
+  sendInitedEvent()
+}
 // 初始化应用
 const init = async () => {
   console.log('init')
@@ -17,21 +22,20 @@ const init = async () => {
   initI18n()
   await startCommonWorkers(appState.dataPath)
   void startExtensionServiceWorker()
-  await initModules()
+  void initModules().finally(handleInited)
   await initRenderers()
 
   // registerModules()
-  if (app.isReady()) sendInitedEvent()
-  else isInited = true
+  handleInited()
 }
 
 void app.whenReady().then(() => {
   // https://github.com/electron/electron/issues/16809
   if (isLinux) {
     setTimeout(() => {
-      if (isInited) sendInitedEvent()
+      handleInited()
     }, 300)
-  } else if (isInited) sendInitedEvent()
+  } else handleInited()
 })
 
 void init()

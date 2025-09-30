@@ -94,10 +94,15 @@ export const importLocalFileFolder = async (listInfo: AnyListen.List.MyListInfo)
 }
 
 export const syncUserList = async (listInfo: AnyListen.List.MyListInfo) => {
-  await syncUserListRemote(listInfo.id).catch((e: Error) => {
-    showNotify(i18n.t('user_list__sync_failed', { name: listInfo.name, err: e.message }))
-    throw e
-  })
+  setFetchingListStatus(listInfo.id, true)
+  await syncUserListRemote(listInfo.id)
+    .catch((e: Error) => {
+      showNotify(i18n.t('user_list__sync_failed', { name: listInfo.name, err: e.message }))
+      throw e
+    })
+    .finally(() => {
+      setFetchingListStatus(listInfo.id, false)
+    })
   showNotify(i18n.t('user_list__sync_successful', { name: listInfo.name }))
 }
 

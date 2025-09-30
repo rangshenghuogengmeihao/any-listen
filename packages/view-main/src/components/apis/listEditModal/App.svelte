@@ -8,6 +8,7 @@
   import type { ComponentExports } from 'svelte'
   import RemoteListForm from './remoteListForm/RemoteListForm.svelte'
   import { showNotify } from '../notify'
+  import LocalListForm from './LocalListForm.svelte'
 
   let {
     onafterleave,
@@ -68,6 +69,8 @@
       <ListTypeSelect bind:value={listType} disabled={isEdit} />
       {#if listType == 'general'}
         <GeneralListForm bind:this={form} {targetId} item={targetInfo as AnyListen.List.GeneralListInfo | null} />
+      {:else if listType == 'local'}
+        <LocalListForm bind:this={form} {targetId} item={targetInfo as AnyListen.List.LocalListInfo | null} />
       {:else if listType == 'remote'}
         <RemoteListForm bind:this={form} {targetId} item={targetInfo as AnyListen.List.RemoteListInfo | null} />
       {/if}

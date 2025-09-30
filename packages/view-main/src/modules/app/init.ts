@@ -1,14 +1,20 @@
 // import { createUnsubscriptionSet } from '@/shared'
-import { sendInitedEvent } from '@/shared/ipc/app'
 import { keyboardEvent } from '../hotkey/keyboard'
 import { settingEvent } from '../setting/store/event'
-import { onRelease } from './shared'
-import { setWorkerInitPromise } from './store/action'
+import { onConnected, onRelease } from './shared'
+import { getMachineId, sendInitedEvent, setMachineId, setWorkerInitPromise } from './store/action'
 import { appEvent } from './store/event'
 
+const init = async () => {
+  const machineId = await getMachineId()
+  setMachineId(machineId)
+}
 // let unregistereds = createUnsubscriptionSet()
 export const initApp = () => {
   // onRelease(unregistereds.clear.bind(unregistereds))
+  onConnected(() => {
+    void init()
+  })
   settingEvent.on('inited', () => {
     // unregistereds.register((subscriptions) => {})
     void sendInitedEvent()

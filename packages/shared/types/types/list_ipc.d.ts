@@ -128,6 +128,7 @@ declare namespace AnyListen {
       saveListScrollPosition: (id: string, position: number) => void
       addFolderMusics: (listId: string, filePaths: string[], onEnd: (errorMessage?: string | null) => void) => string
       cancelAddFolderMusics: (taskId: string) => void
+      syncUserList: (id: string) => Promise<void>
     }>
     type ServerIPCActions<Socket = undefined> = IPC.WarpIPCHandlerActions<Socket, ServerActions>
 

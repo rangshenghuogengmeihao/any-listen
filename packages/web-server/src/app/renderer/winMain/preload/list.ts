@@ -45,5 +45,8 @@ export const createClientList = (ipcSocket: IPCSocket) => {
     async cancelAddFolderMusics(taskId) {
       return ipcSocket.remoteQueueList.cancelAddFolderMusics(taskId)
     },
+    async syncUserList(id) {
+      return ipcSocket.remoteQueueList.syncUserList(id)
+    },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

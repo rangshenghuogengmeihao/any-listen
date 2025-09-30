@@ -20,6 +20,9 @@ export const createExposeApp = () => {
       event.isInited = true
       socketEvent.new_socket_inited(event)
     },
+    async getMachineId(event) {
+      return appState.machineId
+    },
     async getSetting(event) {
       return appState.appSetting
     },

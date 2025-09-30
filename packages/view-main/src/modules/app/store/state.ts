@@ -1,4 +1,5 @@
 export interface InitState {
+  machineId: string
   rootOffsetX: number
   rootOffsetY: number
   isShowPact: boolean
@@ -21,6 +22,7 @@ export interface InitState {
 }
 
 export const appState: InitState = {
+  machineId: '',
   rootOffsetX: window.dt ? 0 : 8,
   rootOffsetY: window.dt ? 0 : 8,
   isShowPact: false,

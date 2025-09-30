@@ -1,8 +1,12 @@
 import { LIST_IDS } from '@any-listen/common/constants'
-import { throttle } from '@any-listen/common/utils'
-import type { DBSeriveTypes } from '../worker/utils'
+import { arrPush, throttle } from '@any-listen/common/utils'
+import { getSettings } from '../../common'
+import { getDeviceId } from '../../common/deviceId'
+import { syncRemoteUserList } from '../../modules/extension'
+import { workers } from '../worker'
+import { proxyCallback, type DBSeriveTypes } from '../worker/utils'
 import { initMusicListEvent, musicListEvent } from './event'
-import { scanFolderMusics } from './scanMusics'
+import { initLocalListProvider, syncLocalList } from './localListProvider'
 
 let dbService: DBSeriveTypes
 let scrollInfo: Map<string, number>
@@ -18,6 +22,7 @@ export const initMusicList = async (
   initMusicListEvent(_dbService)
   getScrollInfo = _getScrollInfo
   saveScrollInfo = _saveScrollInfo
+  await initLocalListProvider()
 }
 
 export const getAllUserLists = async () => {
@@ -94,46 +99,57 @@ export const onMusicListAction = (listAction: (action: AnyListen.IPCList.ActionL
   }
 }
 
-const handleAddMusics = async (
-  filePaths: string[],
-  createLocalMusicInfos: (filePaths: string[]) => Promise<AnyListen.Music.MusicInfoLocal[]>,
-  addListMusics: (musicInfos: AnyListen.Music.MusicInfoLocal[]) => Promise<void>,
-  index = -1
-) => {
-  // console.log(index + 1, index + 201)
-  const paths = filePaths.slice(index + 1, index + 201)
-  const musicInfos = await createLocalMusicInfos(paths)
+const handleAddMusics = async (listId: string, filePaths: string[], index = -1) => {
+  // console.log(index + 1, index + 101)
+  const paths = filePaths.slice(index + 1, index + 101)
+  const musicInfos = await workers.utilService.createLocalMusicInfos(paths)
   let failedCount = paths.length - musicInfos.length
-  if (musicInfos.length) await addListMusics(musicInfos)
-  index += 200
+  if (musicInfos.length) {
+    await sendMusicListAction({
+      action: 'list_music_add',
+      data: { id: listId, musicInfos, addMusicLocationType: getSettings()['list.addMusicLocationType'] },
+    })
+  }
+  index += 100
   if (filePaths.length - 1 > index) {
-    failedCount += await handleAddMusics(filePaths, createLocalMusicInfos, addListMusics, index)
+    failedCount += await handleAddMusics(listId, filePaths, index)
   }
   return failedCount
 }
 
+const updateMusicPosition = async (listId: string, ids: string[]) => {
+  const musicInfos = await workers.dbService.getListMusics(listId)
+  const musicIds = new Set(musicInfos.map((m) => m.id))
+  ids = ids.filter((id) => musicIds.has(id))
+  await sendMusicListAction({
+    action: 'list_music_update_position',
+    data: { ids, listId, position: getSettings()['list.addMusicLocationType'] === 'top' ? 0 : musicInfos.length - 1 },
+  })
+}
+
 const addFolderMusicTasks = new Map<string, () => void>()
-export const addFolderMusics = async (
-  listId: string,
-  filePaths: string[],
-  onEnd: (errorMessage?: string | null) => void,
-  createLocalMusicInfos: (filePaths: string[]) => Promise<AnyListen.Music.MusicInfoLocal[]>,
-  addListMusics: (musicInfos: AnyListen.Music.MusicInfoLocal[]) => Promise<void>
-) => {
-  addFolderMusicTasks.set(
-    listId,
-    scanFolderMusics(
-      filePaths,
-      async (paths) => {
-        await handleAddMusics(paths, createLocalMusicInfos, addListMusics)
-      },
-      (canceled) => {
-        addFolderMusicTasks.delete(listId)
-        if (canceled) onEnd(null)
-        else onEnd()
-      }
-    )
-  )
+export const addFolderMusics = async (listId: string, filePaths: string[], onEnd: (errorMessage?: string | null) => void) => {
+  let parsePromise = Promise.resolve(0)
+  let files: string[] = []
+  const onFilesProxy = proxyCallback(async (paths: string[]) => {
+    arrPush(files, paths)
+    parsePromise = handleAddMusics(listId, paths)
+    await parsePromise
+  })
+  const onEndProxy = proxyCallback((canceled: boolean) => {
+    addFolderMusicTasks.delete(listId)
+    void parsePromise.finally(() => {
+      void updateMusicPosition(listId, files)
+      if (canceled) onEnd(null)
+      else onEnd()
+    })
+  })
+  const id = await workers.utilService.scanFolderMusics(filePaths, onFilesProxy, onEndProxy)
+  addFolderMusicTasks.set(listId, () => {
+    void workers.utilService.stopFolderMusicsScan(id)
+    onFilesProxy.releaseProxy()
+    onEndProxy.releaseProxy()
+  })
   return listId
 }
 export const cancelAddFolderMusics = async (taskId: string) => {
@@ -143,6 +159,27 @@ export const cancelAddFolderMusics = async (taskId: string) => {
 }
 export const getScanTaksIds = async () => {
   return Array.from(addFolderMusicTasks.keys())
+}
+
+export const syncUserList = async (id: string) => {
+  const userLists = (await workers.dbService.getAllUserLists()).userList
+  const targetList = userLists.find((l) => l.id === id)
+  if (!targetList) throw new Error('list not found')
+  switch (targetList.type) {
+    case 'local':
+      if (targetList.meta.deviceId !== getDeviceId()) {
+        throw new Error('can not sync local list of other device')
+      }
+      return syncLocalList(targetList)
+    case 'remote':
+      return syncRemoteUserList(targetList)
+    case 'online':
+      // TODO sync online list
+      throw new Error('not implemented')
+    default:
+      console.log('not sync list', targetList)
+      throw new Error('not supported list type')
+  }
 }
 
 export { musicListEvent }

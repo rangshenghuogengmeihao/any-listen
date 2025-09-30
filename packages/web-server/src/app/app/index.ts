@@ -4,6 +4,7 @@ import { socketEvent } from '@/modules/ipc/event'
 import { appLog } from '@/shared/log4js'
 import { checkAndCreateDir, removePath } from '@/shared/utils'
 import { initCommon } from '@any-listen/app/common'
+import { initDeviceId } from '@any-listen/app/common/deviceId'
 import { parseEnvParams } from '@any-listen/nodejs/env'
 import { version } from '../../../package.json' with { type: 'json' }
 import { i18n } from '../i18n'
@@ -114,7 +115,10 @@ const listenerAppEvent = () => {
 export const initAppEnv = async () => {
   initState()
   await setUserDataPath()
-  appState.appSetting = (await getAppSetting()).setting
+  ;[appState.machineId, appState.appSetting] = await Promise.all([
+    initDeviceId(appState.dataPath),
+    getAppSetting().then((res) => res.setting),
+  ])
   listenerAppEvent()
   initCommon({
     getSettings: () => appState.appSetting,

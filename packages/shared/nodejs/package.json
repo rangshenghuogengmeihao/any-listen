@@ -2,6 +2,7 @@
   "name": "@shared/nodejs",
   "dependencies": {
     "@any-listen/common": "workspace:@shared/common@*",
+    "chokidar": "^4.0.3",
     "fast-xml-parser": "^5.2.5",
     "iconv-lite": "^0.7.0",
     "jschardet": "^3.1.4",

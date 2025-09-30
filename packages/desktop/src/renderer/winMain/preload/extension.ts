@@ -72,9 +72,6 @@ export const createClientExtension = (main: MainCall) => {
     async updateExtensionSettings(extId, config) {
       return main.updateExtensionSettings(extId, config)
     },
-    async syncUserList(id) {
-      return main.syncUserList(id)
-    },
     async resourceAction<T extends keyof AnyListen.IPCExtension.ResourceAction>(
       action: T,
       params: Parameters<AnyListen.IPCExtension.ResourceAction[T]>[0]

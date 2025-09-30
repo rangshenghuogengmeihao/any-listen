@@ -22,7 +22,7 @@ import {
 } from './listRemoteActions'
 
 export { getSubUserLists, setFetchingListStatus, setUserListInited, userListExist } from './commit'
-export { removeUserList, updateListMusicsPosition } from './listRemoteActions'
+export { removeUserList, syncUserList, updateListMusicsPosition } from './listRemoteActions'
 
 /**
  * 获取所有列表
@@ -71,6 +71,27 @@ export const createUserList = async (position: number, info: AnyListen.List.User
         ],
       })
       break
+    case 'local': {
+      const listInfo: AnyListen.List.LocalListInfo = {
+        id: generateIdSimple(),
+        type: info.type,
+        name: info.name,
+        parentId: null,
+        meta: {
+          ...info.meta,
+          createTime: Date.now(),
+          desc: '',
+          playCount: 0,
+          posTime: Date.now(),
+          updateTime: Date.now(),
+        },
+      }
+      await createUserListFromRemote({
+        position,
+        listInfos: [listInfo],
+      })
+      break
+    }
     case 'remote': {
       const listInfo = {
         id: generateIdSimple(),
@@ -114,6 +135,19 @@ export const updateUserList = async (info: AnyListen.List.UserListInfo) => {
         },
       ])
       break
+    case 'local': {
+      const listInfo = {
+        ...targetList,
+        name: info.name,
+        meta: {
+          ...targetList.meta,
+          ...info.meta,
+          updateTime: Date.now(),
+        },
+      }
+      await updateUserListFromRemote([listInfo])
+      break
+    }
     case 'remote': {
       const listInfo = {
         ...targetList,
@@ -169,10 +203,11 @@ export const updateListMusic = async (listId: string, musicInfo: AnyListen.Music
 /**
  * 获取列表内的歌曲
  * @param listId
+ * @param forceUpdate 是否强制更新
  */
-export const getListMusics = async (listId: string | null): Promise<AnyListen.Music.MusicInfo[]> => {
+export const getListMusics = async (listId: string | null, forceUpdate = false): Promise<AnyListen.Music.MusicInfo[]> => {
   if (!listId) return []
-  if (musicLibraryState.allMusicList.has(listId)) return musicLibraryState.allMusicList.get(listId)!
+  if (!forceUpdate && musicLibraryState.allMusicList.has(listId)) return musicLibraryState.allMusicList.get(listId)!
   const list = await getListMusicsFromRemote(listId).catch((err: Error) => {
     showNotify(i18n.t('lists__music_load_failed', { err: err.message }))
     throw err

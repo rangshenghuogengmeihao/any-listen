@@ -44,5 +44,8 @@ export const createClientList = (main: MainCall) => {
     async cancelAddFolderMusics(taskId) {
       return main.cancelAddFolderMusics(taskId)
     },
+    async syncUserList(id) {
+      return main.syncUserList(id)
+    },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

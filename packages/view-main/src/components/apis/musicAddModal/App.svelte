@@ -7,6 +7,7 @@
   import { getMusicExistListIds } from '@/modules/musicLibrary/actions'
   import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar'
   import { addMusic, moveMusic } from './shared'
+  import { GENERAL_LIST_TYPES } from '@/shared/constants'
 
   let {
     onafterleave,
@@ -34,7 +35,9 @@
   )
 
   const userLists = useUserList(null)
-  const lists = $derived([...$defaultLists, ...userLists.val].filter((l) => l.id != listId))
+  const lists = $derived(
+    [...$defaultLists, ...userLists.val].filter((l) => l.id != listId && GENERAL_LIST_TYPES.includes(l.type))
+  )
 
   const closeModal = () => {
     visible = false

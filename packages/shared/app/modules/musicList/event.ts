@@ -1,6 +1,7 @@
 import _Event, { type EventType } from '@any-listen/nodejs/Event'
 import { verifyListCreate, verifyListDelete, verifyListUpdate } from '../extension/listProvider'
 import type { DBSeriveTypes } from '../worker/utils'
+import { verifyLocalListCreate, verifyLocalListDelete, verifyLocalListUpdate } from './localListProvider'
 
 let dbService: DBSeriveTypes
 
@@ -51,8 +52,15 @@ export class Event extends _Event {
    */
   async list_create(position: number, lists: AnyListen.List.UserListInfo[], isRemote = false) {
     for (const list of lists) {
-      if (list.type === 'remote') {
-        await verifyListCreate(list)
+      switch (list.type) {
+        case 'local':
+          await verifyLocalListCreate(list)
+          break
+        case 'remote':
+          await verifyListCreate(list)
+          break
+        default:
+          break
       }
     }
     await dbService.createUserLists(position, lists)
@@ -69,8 +77,17 @@ export class Event extends _Event {
     const userList = (await dbService.getAllUserLists()).userList
     for (const id of ids) {
       const targetList = userList.find((l) => l.id === id)
-      if (targetList && targetList.type === 'remote') {
-        await verifyListDelete(targetList)
+      if (targetList) {
+        switch (targetList.type) {
+          case 'local':
+            await verifyLocalListDelete(targetList)
+            break
+          case 'remote':
+            await verifyListDelete(targetList)
+            break
+          default:
+            break
+        }
       }
     }
     await dbService.removeUserLists(ids)
@@ -85,8 +102,15 @@ export class Event extends _Event {
    */
   async list_update(lists: AnyListen.List.UserListInfo[], isRemote = false) {
     for (const list of lists) {
-      if (list.type === 'remote') {
-        await verifyListUpdate(list)
+      switch (list.type) {
+        case 'local':
+          await verifyLocalListUpdate(list)
+          break
+        case 'remote':
+          await verifyListUpdate(list)
+          break
+        default:
+          break
       }
     }
     await dbService.updateUserLists(lists)

@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { appState } from '@/app/app'
-import { workers } from '@/app/worker'
 import { broadcast } from '@/modules/ipc/websocket'
 import {
   addFolderMusics,
@@ -13,6 +11,7 @@ import {
   onMusicListAction,
   saveListScrollPosition,
   sendMusicListAction,
+  syncUserList,
 } from '@any-listen/app/modules/musicList'
 import type { ExposeClientFunctions, ExposeServerFunctions } from '.'
 
@@ -41,27 +40,13 @@ export const createExposeList = () => {
       return saveListScrollPosition(id, position)
     },
     async addFolderMusics(event, listId, filePaths, onEnd) {
-      return addFolderMusics(
-        listId,
-        filePaths,
-        onEnd,
-        async (paths) => {
-          return workers.utilService.createLocalMusicInfos(paths)
-        },
-        async (musicInfos) => {
-          await sendMusicListAction({
-            action: 'list_music_add',
-            data: {
-              id: listId,
-              musicInfos,
-              addMusicLocationType: appState.appSetting['list.addMusicLocationType'],
-            },
-          })
-        }
-      )
+      return addFolderMusics(listId, filePaths, onEnd)
     },
     async cancelAddFolderMusics(event, taskId) {
       return cancelAddFolderMusics(taskId)
+    },
+    async syncUserList(event, id) {
+      return syncUserList(id)
     },
   } satisfies Partial<ExposeClientFunctions>
 }

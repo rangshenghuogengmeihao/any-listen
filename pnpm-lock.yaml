@@ -86,8 +86,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       electron-to-chromium:
-        specifier: ^1.5.225
-        version: 1.5.226
+        specifier: ^1.5.227
+        version: 1.5.227
       node-abi:
         specifier: latest
         version: 4.14.0
@@ -184,8 +184,8 @@ importers:
         specifier: ^5.6.2
         version: 5.6.2
       npm-check-updates:
-        specifier: ^18.3.0
-        version: 18.3.0
+        specifier: ^19.0.0
+        version: 19.0.0
 
   packages/shared/eslint:
     devDependencies:
@@ -247,6 +247,9 @@ importers:
       '@any-listen/common':
         specifier: workspace:@shared/common@*
         version: link:../common
+      chokidar:
+        specifier: ^4.0.3
+        version: 4.0.3
       fast-xml-parser:
         specifier: ^5.2.5
         version: 5.2.5
@@ -2076,8 +2079,8 @@ packages:
   electron-publish@26.0.20:
     resolution: {integrity: sha512-2OAcMmawYZCxRSGnGMkyWOYAPLS2ZEL2F886fkilYojy1lFXLdRCkcyQVD5GV2KeEjNBsuhcvz9pddWcYT9JMw==}
 
-  electron-to-chromium@1.5.226:
-    resolution: {integrity: sha512-0tS/r72Ze0WUBiDwnqw4X43TxA7gEuZg0kFwLthoCzkshIbNQFjkf6D8xEzBe6tY6Y65fUhZIuNedTugw+11Lw==}
+  electron-to-chromium@1.5.227:
+    resolution: {integrity: sha512-ITxuoPfJu3lsNWUi2lBM2PaBPYgH3uqmxut5vmBxgYvyI4AlJ6P3Cai1O76mOrkJCBzq0IxWg/NtqOrpu/0gKA==}
 
   electron-updater@6.6.8:
     resolution: {integrity: sha512-n8FeXRc7Q7BBweS85+H5h4/uzBz8hSSOYhDnwOumpbIhYdPk9EEzWLKDyoArMyf4RebywqWBUE96QDn9TETRhQ==}
@@ -3352,9 +3355,9 @@ packages:
     resolution: {integrity: sha512-DlL+XwOy3NxAQ8xuC0okPgK46iuVNAK01YN7RueYBqqFeGsBjV9XmCAzAdgt+667bCl5kPh9EqKKDwnaPG1I7A==}
     engines: {node: '>=10'}
 
-  npm-check-updates@18.3.0:
-    resolution: {integrity: sha512-Wcm90Af5JuzxwPTtdLl0OH2O1TCeqPTYBch1M3bePmfqylRMiFXXh+uglE4sfMjwdTjw7aIReMwudXeqoYvh2Q==}
-    engines: {node: ^18.18.0 || >=20.0.0, npm: '>=8.12.1'}
+  npm-check-updates@19.0.0:
+    resolution: {integrity: sha512-qcfjZEv6xB+WvW24S8wU1MKISPPiTREraBg62XDo/7zmOLXH3Zj7ti2v/LRfks0qITU8SDZLTWwgIitflvursw==}
+    engines: {node: '>=20.0.0', npm: '>=8.12.1'}
     hasBin: true
 
   nth-check@2.1.1:
@@ -6225,7 +6228,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  electron-to-chromium@1.5.226: {}
+  electron-to-chromium@1.5.227: {}
 
   electron-updater@6.6.8:
     dependencies:
@@ -7715,7 +7718,7 @@ snapshots:
 
   normalize-url@6.1.0: {}
 
-  npm-check-updates@18.3.0: {}
+  npm-check-updates@19.0.0: {}
 
   nth-check@2.1.1:
     dependencies:

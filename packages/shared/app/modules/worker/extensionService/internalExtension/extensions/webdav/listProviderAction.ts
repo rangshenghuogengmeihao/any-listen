@@ -1,4 +1,5 @@
 import { sizeFormate } from '@any-listen/common/utils'
+import { isMusicFile } from '@any-listen/nodejs/music'
 import { logcat } from './shared'
 import { getWebDAVOptionsByListInfo, getWebDAVOptionsByMusicInfo } from './utils'
 import {
@@ -13,9 +14,6 @@ import {
 
 const listCache = new Map<string, Map<string, WebDAVFileItem>>()
 
-const isMusicFile = (name: string) => {
-  return /\.(mp3|flac|wav|m4a|aac|ogg)$/i.test(name)
-}
 const generateId = (extId: string, source: string, options: WebDAVClientOptions, item: WebDAVItem) => {
   return `${extId}_${source}_${options.username}_${options.url}_${item.path}`
 }

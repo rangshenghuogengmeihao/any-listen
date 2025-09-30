@@ -31,7 +31,7 @@ import { getWindowSizeInfo } from './utils'
 
 export const initWinMain = () => {
   initRendererEvent((name, data) => {
-    getWebContents().send(name, data)
+    getWebContents()?.send(name, data)
   })
   // initUpdate()
   if (process.env.NODE_ENV === 'production') initUpdate()

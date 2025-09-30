@@ -1,11 +1,12 @@
 ### Added
 
+- Added **"Local List"** creation. You can create a local list via _List right-click menu > New List > Local List_. The local list will automatically update its content according to the songs in the directory created on your device.
+- Added the creation of **"Remote List"**.
+- Added basic support for reading and playing songs from **"WebDAV services"**. You can use this feature via _Playlist right-click menu > New Playlist > Remote Playlist_.
+- Added **`httpProxy`** setting and **`HTTP_PROXY`** environment variable for configuring the proxy server. After setting the proxy server, all traffic will be forwarded to the proxy server.
 - Added a **"Swap translated lyrics and romanized lyrics"** option in _Settings > Playback Settings_.
 - Added a **"Bold lyrics font"** option in _Settings > Playback Details_. Enabled by default.
 - Added support for reading and playing Any Listen lyrics tag data.
-- Added the creation of **"Remote Playlist"**.
-- Added basic support for reading and playing songs from **"WebDAV services"**. You can use this feature via _Playlist right-click menu > New Playlist > Remote Playlist_.
-- Added **`httpProxy`** setting and **`HTTP_PROXY`** environment variable for configuring the proxy server. After setting the proxy server, all traffic will be forwarded to the proxy server.
 
 ### Improved
 
@@ -28,12 +29,13 @@
 
 ### 新增
 
-- 新增 **「调换翻译歌词与罗马音歌词位置」** 选项，位于 _设置 > 播放设置_
-- 新增 **「加粗歌词字体」** 选项，位于 _设置 > 播放详情页设置_，默认启用
-- 新增 Any Listen 歌词标签数据读取与播放
+- 新增 **「本地列表」** 的创建，可通过 _列表右键菜单 > 新建列表 > 本地列表_ 创建，本地列表会自动跟随本机创建的列表歌曲目录内容更新
 - 新增 **「远程列表」** 的创建
 - 新增对 **「WebDAV 服务」** 内歌曲基本的读取与播放支持，可以在 _列表右键菜单 > 新建列表 > 远程列表_ 使用
 - 新增 **`httpProxy`** 设置及 **`HTTP_PROXY`** 环境变量来设置代理服务器，设置代理服务器后所有流量将会被转发到代理服务器
+- 新增 **「调换翻译歌词与罗马音歌词位置」** 选项，位于 _设置 > 播放设置_
+- 新增 **「加粗歌词字体」** 选项，位于 _设置 > 播放详情页设置_，默认启用
+- 新增 Any Listen 歌词标签数据读取与播放
 
 ### 优化
 

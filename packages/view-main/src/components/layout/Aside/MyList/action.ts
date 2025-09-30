@@ -1,10 +1,13 @@
 import { showNotify } from '@/components/apis/notify'
-import { syncUserList as syncUserListRemote } from '@/modules/extension/store/actions'
 import {
   addListMusics,
+  getListMusics,
   removeUserList as removeUserListRemote,
   setFetchingListStatus,
+  syncUserList as syncUserListRemote,
+  updateListMusicsPosition,
 } from '@/modules/musicLibrary/store/actions'
+import { settingState } from '@/modules/setting/store/state'
 import { i18n } from '@/plugins/i18n'
 import { showOpenDialog } from '@/shared/ipc/app'
 import { addFolderMusics } from '@/shared/ipc/list'
@@ -12,17 +15,28 @@ import { createLocalMusicInfos } from '@/shared/ipc/music'
 import { MEDIA_FILE_TYPES } from '@any-listen/common/constants'
 
 const handleAddMusics = async (listId: string, filePaths: string[], index = -1) => {
-  // console.log(index + 1, index + 201)
-  const paths = filePaths.slice(index + 1, index + 201)
+  // console.log(index + 1, index + 101)
+  const paths = filePaths.slice(index + 1, index + 101)
   const musicInfos = await createLocalMusicInfos(paths)
   let failedCount = paths.length - musicInfos.length
   if (musicInfos.length) await addListMusics(listId, musicInfos)
-  index += 200
+  index += 100
   if (filePaths.length - 1 > index) {
     failedCount += await handleAddMusics(listId, filePaths, index)
   }
   return failedCount
 }
+const updateMusicPosition = async (listId: string, ids: string[]) => {
+  const musicInfos = await getListMusics(listId, true)
+  const musicIds = new Set(musicInfos.map((m) => m.id))
+  ids = ids.filter((id) => musicIds.has(id))
+  await updateListMusicsPosition({
+    ids,
+    listId,
+    position: settingState.setting['list.addMusicLocationType'] === 'top' ? 0 : musicInfos.length - 1,
+  })
+}
+
 export const importLocalFile = async (listInfo: AnyListen.List.MyListInfo) => {
   const { canceled, filePaths } = await showOpenDialog({
     title: i18n.t('user_list__select_local_file'),
@@ -37,14 +51,15 @@ export const importLocalFile = async (listInfo: AnyListen.List.MyListInfo) => {
   console.log(filePaths)
   setFetchingListStatus(listInfo.id, true)
   const failedCount = await handleAddMusics(listInfo.id, filePaths)
+  await updateMusicPosition(listInfo.id, filePaths)
   setFetchingListStatus(listInfo.id, false)
   const all = filePaths.length
   let message =
     failedCount == 0
       ? i18n.t('user_list__add_local_file_successfull', { num: all })
-      : failedCount != all
-        ? i18n.t('user_list__add_local_file_success_part', { all, count: failedCount })
-        : i18n.t('user_list__add_local_file_failed', { num: all })
+      : failedCount == all
+        ? i18n.t('user_list__add_local_file_failed', { num: all })
+        : i18n.t('user_list__add_local_file_success_part', { all, count: failedCount })
   showNotify(message)
 }
 export const importLocalFileFolder = async (listInfo: AnyListen.List.MyListInfo) => {
@@ -81,7 +96,9 @@ export const importLocalFileFolder = async (listInfo: AnyListen.List.MyListInfo)
 export const syncUserList = async (listInfo: AnyListen.List.MyListInfo) => {
   await syncUserListRemote(listInfo.id).catch((e: Error) => {
     showNotify(i18n.t('user_list__sync_failed', { name: listInfo.name, err: e.message }))
+    throw e
   })
+  showNotify(i18n.t('user_list__sync_successful', { name: listInfo.name }))
 }
 
 export const removeUserList = async (listInfo: AnyListen.List.MyListInfo) => {

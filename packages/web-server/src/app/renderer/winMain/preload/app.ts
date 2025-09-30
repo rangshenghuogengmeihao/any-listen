@@ -38,6 +38,9 @@ export const createExposeApp = (client: ClientCall) => {
 // 暴露给前端的方法
 export const createClientApp = (ipcSocket: IPCSocket) => {
   return {
+    async getMachineId() {
+      return ipcSocket.remote.getMachineId()
+    },
     async getSetting() {
       return ipcSocket.remote.getSetting()
     },

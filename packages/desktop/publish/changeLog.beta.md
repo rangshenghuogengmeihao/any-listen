@@ -1,10 +1,12 @@
 ### Added
 
+- Added **"Local List"** creation. You can create a local list via _List right-click menu > New List > Local List_. The local list will automatically update its content according to the songs in the directory created on your device.
 - Added **"HTTP Proxy"** option in _Settings > Network Settings_. After setting the proxy server, all traffic will be forwarded to the proxy server.
 
 ### Improved
 
 - Optimized the remote list synchronization process. A prompt will now be displayed when synchronization fails.
+- Optimized the batch add song sorting mechanism.
 
 ### Fixed
 
@@ -14,11 +16,13 @@
 
 ### 新增
 
+- 新增 **「本地列表」** 的创建，可通过 _列表右键菜单 > 新建列表 > 本地列表_ 创建，本地列表会自动跟随本机创建的列表歌曲目录内容更新
 - 新增 _设置 > 网络设置_ 下的 **「HTTP代理」** 选项，设置代理服务器后所有流量将会被转发到代理服务器
 
 ### 优化
 
 - 优化远程列表同步流程，在同步失败时弹出提示
+- 优化批量添加歌曲排序机制
 
 ### 修复
 

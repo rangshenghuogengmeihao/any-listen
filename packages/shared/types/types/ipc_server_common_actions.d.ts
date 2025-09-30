@@ -16,6 +16,8 @@ export declare type ServerCommonActions = WarpPromiseRecord<{
   openDevTools: () => void
   openUrl: (url: string) => void
 
+  /** 获取机器ID */
+  getMachineId: () => string
   /** 获取配置 */
   getSetting: () => AnyListen.AppSetting
   /** 更新配置 */

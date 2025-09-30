@@ -1,5 +1,3 @@
-import { appState } from '@/app/state'
-import { workers } from '@/worker'
 import {
   addFolderMusics,
   cancelAddFolderMusics,
@@ -10,6 +8,7 @@ import {
   getMusicExistListIds,
   saveListScrollPosition,
   sendMusicListAction,
+  syncUserList,
 } from '@any-listen/app/modules/musicList'
 import type { ExposeFunctions } from '.'
 
@@ -39,27 +38,13 @@ export const createExposeList = () => {
     },
 
     async addFolderMusics(event, listId, filePaths, onEnd) {
-      return addFolderMusics(
-        listId,
-        filePaths,
-        onEnd,
-        async (paths) => {
-          return workers.utilService.createLocalMusicInfos(paths)
-        },
-        async (musicInfos) => {
-          await sendMusicListAction({
-            action: 'list_music_add',
-            data: {
-              id: listId,
-              musicInfos,
-              addMusicLocationType: appState.appSetting['list.addMusicLocationType'],
-            },
-          })
-        }
-      )
+      return addFolderMusics(listId, filePaths, onEnd)
     },
     async cancelAddFolderMusics(event, taskId) {
       return cancelAddFolderMusics(taskId)
+    },
+    async syncUserList(event, id) {
+      return syncUserList(id)
     },
   } satisfies Partial<ExposeFunctions>
 }

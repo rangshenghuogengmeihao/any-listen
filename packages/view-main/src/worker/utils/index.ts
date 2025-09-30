@@ -51,6 +51,4 @@ export const createMainWorker = (): WorkerMainTypes => {
 //   return msg2call.remote
 // }
 
-export const proxyCallback = <Args extends any[]>(callback: (...args: Args) => void) => {
-  return createProxyCallback(callback)
-}
+export { createProxyCallback as proxyCallback }

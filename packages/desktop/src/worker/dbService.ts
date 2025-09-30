@@ -1,6 +1,6 @@
 import { openDirInExplorer } from '@/shared/electron'
 import { dialog } from 'electron'
-import path from 'path'
+import path from 'node:path'
 // import { log } from '@/shared/log'
 import { i18n } from '@/i18n'
 import { startDBServiceWorker as _startDBServiceWorker, workers } from '@any-listen/app/modules/worker'

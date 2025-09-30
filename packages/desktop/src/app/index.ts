@@ -5,6 +5,7 @@ import path from 'node:path'
 import { appEvent } from './event'
 import { appState } from './state'
 // import { navigationUrlWhiteList } from '@common/config'
+import { initDeviceId } from '@any-listen/app/common/deviceId'
 import { parseEnvParams } from '@any-listen/nodejs/env'
 import { checkAndCreateDir, isMac } from '@any-listen/nodejs/index'
 
@@ -282,7 +283,10 @@ export const initAppEnv = async () => {
   await setUserDataPath()
   registerDeeplink()
   listenerElectronEvent()
-  appState.appSetting = (await getAppSetting()).setting
+  ;[appState.machineId, appState.appSetting] = await Promise.all([
+    initDeviceId(appState.dataPath),
+    getAppSetting().then((res) => res.setting),
+  ])
   if (import.meta.env.VITE_IS_MAC) {
     appState.envParams.cmdParams.dt = true
   } else {

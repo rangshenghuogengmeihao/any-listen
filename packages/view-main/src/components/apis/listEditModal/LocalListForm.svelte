@@ -46,6 +46,7 @@
   export const reset = () => {
     listInfo = {
       ...initData,
+      id: targetId || '',
       meta: { ...initData.meta, deviceId: appState.machineId },
     }
     updateDeviceId = true

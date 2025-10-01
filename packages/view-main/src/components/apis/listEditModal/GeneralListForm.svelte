@@ -38,6 +38,7 @@
   export const reset = () => {
     listInfo = {
       ...initData,
+      id: targetId || '',
       meta: { ...initData.meta },
     }
   }
@@ -51,11 +52,12 @@
   }
 
   $effect(() => {
-    if (!item) return
-    listInfo = {
-      ...item,
-      meta: { ...item.meta },
-    }
+    if (item) {
+      listInfo = {
+        ...item,
+        meta: { ...item.meta },
+      }
+    } else reset()
   })
 </script>
 

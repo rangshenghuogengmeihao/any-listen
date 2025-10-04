@@ -21,6 +21,7 @@ overrides:
   'ws>bufferutil': '-'
   'ws>utf-8-validate': '-'
   'tmp@<=0.2.3': '>=0.2.4'
+  'tar-fs@>=2.0.0 <2.1.4': '>=2.1.4'
 
 # https://github.com/pnpm/pnpm/issues/8378
 publicHoistPattern:

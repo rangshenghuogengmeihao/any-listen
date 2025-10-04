@@ -5,6 +5,7 @@
 ### Fixed
 
 - Fixed the issue where the update reminder did not pop up again after the update was downloaded.
+- Fixed the issue where residual callbacks were not properly unregistered when monitoring changes to local lists.
 
 ---
 
@@ -15,3 +16,4 @@
 ### 修复
 
 - 修复更新下载完成之后没有再次弹出更新提醒问题
+- 修复本地列表监听变更时的残留回调注销问题

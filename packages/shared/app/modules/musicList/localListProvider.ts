@@ -224,6 +224,8 @@ const syncList = async (list: AnyListen.List.LocalListInfo) => {
     async () => {
       await workers.utilService.removeMusicDirWatcher(id)
       onFileProxy.releaseProxy()
+      onReadyProxy.releaseProxy()
+      onErrorProxy.releaseProxy()
     },
   ])
 

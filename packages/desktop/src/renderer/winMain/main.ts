@@ -313,9 +313,9 @@ export const getCacheSize = async () => {
   return browserWindow.webContents.session.getCacheSize()
 }
 
-export const getWebContents = (): Electron.WebContents => {
-  if (!browserWindow) throw new Error('main window is undefined')
-  return browserWindow.webContents
+export const getWebContents = () => {
+  // if (!browserWindow) throw new Error('main window is undefined')
+  return browserWindow?.webContents
 }
 
 /** 展示通知窗口 */

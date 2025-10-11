@@ -38,11 +38,12 @@ export const scrollListTo = (listId: string, isOnline: boolean, musicId: string)
 }
 
 export {
+  setFullScreen,
+  setMachineId,
+  setRootOffset,
   // setInited,
   // setShowLogin,
   setWorkerInitPromise,
-  setFullScreen,
-  setRootOffset,
 } from './commit'
 
-export { getSetting, setSetting, getLoginDevices, removeLoginDevice } from '@/shared/ipc/app'
+export { getLoginDevices, getMachineId, getSetting, removeLoginDevice, sendInitedEvent, setSetting } from '@/shared/ipc/app'

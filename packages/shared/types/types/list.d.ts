@@ -12,6 +12,7 @@ declare namespace AnyListen {
     interface UserListInfoByLocalMeta extends UserListInfoBaseMeta {
       deviceId: string
       path: string
+      includeSubDir: boolean
     }
     interface UserListInfoByOnlineMeta extends UserListInfoBaseMeta {
       extensionId: string

@@ -25,6 +25,11 @@ export const initVersion = () => {
           void showUpdateModal()
         })
       )
+      subscriptions.add(
+        versionEvent.on('downloaded', () => {
+          void showUpdateModal()
+        })
+      )
 
       void init()
     })

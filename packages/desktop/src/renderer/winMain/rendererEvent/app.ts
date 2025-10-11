@@ -8,6 +8,9 @@ import { closeWindow, minimize, showOpenDialog, showSaveDialog, toggleDevTools }
 // 暴露给前端的方法
 export const createExposeApp = () => {
   return {
+    async getMachineId(event) {
+      return appState.machineId
+    },
     async getSetting(event) {
       return appState.appSetting
     },
@@ -59,7 +62,7 @@ export const createExposeApp = () => {
       void downloadUpdate()
     },
     async restartUpdate(event) {
-      restartUpdate()
+      await restartUpdate()
     },
   } satisfies Partial<ExposeFunctions>
 }

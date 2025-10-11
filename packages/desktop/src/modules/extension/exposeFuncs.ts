@@ -51,26 +51,29 @@ export const exposedFuncs: AnyListen.IPCExtension.MainIPCActions = {
   },
   async removeExtensionIconPublicPath(filePath) {},
 
-  async showMessageBox(extId, key, options) {
+  async showMessageBox(key, extId, options) {
+    if (options.modal) {
+      return boxTools.showBox(key, async () => {
+        return rendererIPC.showMessageBox(key, extId, options)
+      })
+    }
+    return rendererIPC.showMessageBox(key, extId, options)
+  },
+  async showInputBox(key, extId, options) {
     return boxTools.showBox(key, async () => {
-      return rendererIPC.showMessageBox(extId, key, options)
+      return rendererIPC.showInputBox(key, extId, options)
     })
   },
-  async showInputBox(extId, key, options) {
-    return boxTools.showBox(key, async () => {
-      return rendererIPC.showInputBox(extId, key, options)
-    })
-  },
-  async showOpenBox(extId, key, options) {
+  async showOpenBox(key, extId, options) {
     // TODO
     // return boxTools.showBox(key, async () => {
-    //   return rendererIPC.showOpenBox(extId, key, options)
+    //   return rendererIPC.showOpenBox(key, extId, options)
     // })
   },
-  async showSaveBox(extId, key, options) {
+  async showSaveBox(key, extId, options) {
     // TODO
     // return boxTools.showBox(key, async () => {
-    //   return rendererIPC.showSaveBox(extId, key, options)
+    //   return rendererIPC.showSaveBox(key, extId, options)
     // })
   },
   async closeMessageBox(key) {

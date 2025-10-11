@@ -18,7 +18,7 @@
       id={`new_list_type_${type}`}
       value={type}
       name="new_list_type"
-      disabled={disabled || (type != 'general' && type != 'remote')}
+      disabled={disabled || type == 'online'}
       label={$t(`edit_list_modal__list_${type}`)}
       checked={value == type}
       onselect={(val) => {

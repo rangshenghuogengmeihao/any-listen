@@ -37,6 +37,10 @@ export const cancelAddFolderMusics: AnyListen.IPC.ServerIPC['cancelAddFolderMusi
   return ipc.cancelAddFolderMusics(taskId)
 }
 
+export const syncUserList: AnyListen.IPC.ServerIPC['syncUserList'] = async (id) => {
+  return ipc.syncUserList(id)
+}
+
 // export const importLocalFile: AnyListen.IPC.ServerIPC['importLocalFile'] = async(listId) => {
 //   return ipc.importLocalFile(listId)
 // }

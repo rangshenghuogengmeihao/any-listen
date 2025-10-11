@@ -11,6 +11,10 @@ import { appState } from './state'
 //   appEvent.showLogin()
 // }
 
+export const setMachineId = (machineId: string) => {
+  appState.machineId = machineId
+}
+
 export const setRootOffset = (x: number, y: number) => {
   appState.rootOffsetX = x
   appState.rootOffsetY = y

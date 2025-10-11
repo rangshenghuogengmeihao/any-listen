@@ -3,7 +3,7 @@ import { dislikeListEvent, initDislikeListEvent } from './event'
 
 let dbService: DBSeriveTypes
 
-export const initDislikeList = (_dbService: DBSeriveTypes) => {
+export const initDislikeList = async (_dbService: DBSeriveTypes) => {
   dbService = _dbService
   initDislikeListEvent(_dbService)
 }

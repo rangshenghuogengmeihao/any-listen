@@ -60,7 +60,7 @@ const webSha256 = async (str: string | Uint8Array) => {
   if (crypto.subtle == null) throw new Error('crypto.subtle is not available')
   const msgBuffer = typeof str == 'string' ? new TextEncoder().encode(str) : str
   // hash the message
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer as Uint8Array<ArrayBuffer>)
   // convert ArrayBuffer to Array
   const hashArray = Array.from(new Uint8Array(hashBuffer))
   // convert bytes to hex string

@@ -20,7 +20,6 @@ export {
   restartExtension,
   restartExtensionHost,
   startExtension,
-  syncUserList,
   uninstallExtension,
   updateExtension,
   updateExtensionSettings,

@@ -6,6 +6,13 @@ import { getClientInfos } from '@/shared/data'
 import type { ExposeClientFunctions, ExposeServerFunctions } from '.'
 import { checkUpdate, downloadUpdate, restartUpdate } from '../autoUpdate'
 
+const IGINORE_KEYS: Array<keyof AnyListen.AppSetting> = [
+  'network.proxy.enable',
+  'network.proxy.host',
+  'network.proxy.port',
+  'extension.ghMirrorHosts',
+]
+
 // 暴露给前端的方法
 export const createExposeApp = () => {
   return {
@@ -13,10 +20,17 @@ export const createExposeApp = () => {
       event.isInited = true
       socketEvent.new_socket_inited(event)
     },
+    async getMachineId(event) {
+      return appState.machineId
+    },
     async getSetting(event) {
       return appState.appSetting
     },
     async setSetting(event, setting) {
+      for (const key of Object.keys(setting) as Array<keyof AnyListen.AppSetting>) {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        if (IGINORE_KEYS.includes(key)) delete setting[key]
+      }
       updateSetting(setting)
     },
     async fileSystemAction(event, action) {
@@ -41,7 +55,7 @@ export const createExposeApp = () => {
       void downloadUpdate()
     },
     async restartUpdate(event) {
-      restartUpdate()
+      await restartUpdate()
     },
   } satisfies Partial<ExposeClientFunctions>
 }

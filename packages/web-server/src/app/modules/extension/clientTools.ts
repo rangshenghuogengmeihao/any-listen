@@ -64,7 +64,8 @@ export const boxTools = {
   queue: [] as string[],
   promise: Promise.resolve(),
   currentKey: null as null | string,
-  async showBox<T>(key: string, run: (socket: ServerSocketWinMain) => Promise<T>): Promise<T> {
+  async showBox<T>(key: string, sync: boolean, run: (socket: ServerSocketWinMain) => Promise<T>): Promise<T> {
+    // TODO async message box
     return new Promise<T>((resolve, reject) => {
       this.queue.push(key)
       this.datas.set(key, [run, resolve as (result: unknown) => void, reject])

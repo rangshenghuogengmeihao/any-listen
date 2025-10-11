@@ -67,6 +67,7 @@
   export const reset = () => {
     listInfo = {
       ...initData,
+      id: targetId || '',
       meta: { ...initData.meta },
     }
   }
@@ -91,10 +92,11 @@
     }
   })
   $effect(() => {
-    if (!item) return
-    provider = item.meta.extensionId
-      ? $resourceList.listProvider.find((p) => p.extensionId == item.meta.extensionId && p.id == item.meta.source) || null
-      : null
+    if (item) {
+      provider = item.meta.extensionId
+        ? $resourceList.listProvider.find((p) => p.extensionId == item.meta.extensionId && p.id == item.meta.source) || null
+        : null
+    } else reset()
   })
 </script>
 

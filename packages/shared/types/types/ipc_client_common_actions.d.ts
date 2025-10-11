@@ -12,10 +12,10 @@ export declare type ClientCommonActions = WarpPromiseRecord<{
   /** 创建桌面歌词进程 */
   createDesktopLyricProcess: (ports: MessagePort[]) => void
   /** 显示消息弹窗 */
-  showMessageBox: (extensionId: string, key: string, options: AnyListen.IPCCommon.MessageDialogOptions) => Promise<number>
-  showInputBox: (extensionId: string, key: string, options: AnyListen.IPCCommon.InputDialogOptions) => Promise<unknown>
-  showOpenBox: (extensionId: string, key: string, options: AnyListen.IPCCommon.OpenDialogOptions) => Promise<unknown>
-  showSaveBox: (extensionId: string, key: string, options: AnyListen.IPCCommon.SaveDialogOptions) => Promise<unknown>
+  showMessageBox: (key: string, extensionId: string, options: AnyListen.IPCCommon.MessageDialogOptions) => Promise<number>
+  showInputBox: (key: string, extensionId: string, options: AnyListen.IPCCommon.InputDialogOptions) => Promise<unknown>
+  showOpenBox: (key: string, extensionId: string, options: AnyListen.IPCCommon.OpenDialogOptions) => Promise<unknown>
+  showSaveBox: (key: string, extensionId: string, options: AnyListen.IPCCommon.SaveDialogOptions) => Promise<unknown>
   closeMessageBox: (key: string) => void
   updateInfo: (event: AnyListen.IPCCommon.UpdateInfo) => void
 }>

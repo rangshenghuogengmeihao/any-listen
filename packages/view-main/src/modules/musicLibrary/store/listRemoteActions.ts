@@ -28,6 +28,7 @@ export {
   getMusicExistListIds,
   saveListPrevSelectId,
   saveListScrollPosition,
+  syncUserList,
 } from '@/shared/ipc/list'
 
 /**

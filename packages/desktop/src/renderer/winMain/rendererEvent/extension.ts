@@ -18,7 +18,6 @@ import {
   restartExtension,
   restartExtensionHost,
   startExtension,
-  syncUserList,
   uninstallExtension,
   updateExtension,
   updateExtensionSettings,
@@ -87,9 +86,6 @@ export const createExposeExtension = () => {
     },
     async updateExtensionSettings(event, extId, config) {
       return updateExtensionSettings(extId, config)
-    },
-    async syncUserList(event, id) {
-      return syncUserList(id)
     },
     async resourceAction(event, action, params) {
       return resourceAction(action, params)

@@ -1,6 +1,7 @@
 import defaultSetting from '@/shared/defaultSetting'
 
 export const appState: {
+  machineId: string
   envParams: AnyListen.EnvParams
   staticPath: string
   dataPath: string
@@ -15,6 +16,7 @@ export const appState: {
     port: string
   }
 } = {
+  machineId: '',
   envParams: {
     cmdParams: {},
     workAreaSize: {

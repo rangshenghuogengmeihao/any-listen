@@ -1,3 +1,4 @@
+import { MEDIA_FILE_TYPES } from '@any-listen/common/constants'
 import { singerFormat } from '@any-listen/common/tools'
 import { formatPlayTime, isLikelyGarbage, sizeFormate } from '@any-listen/common/utils'
 import type { IAudioMetadata } from 'music-metadata'
@@ -142,4 +143,9 @@ export const getFileLyric = async (path: string) => {
   const lyric = getMetadataLyric(metadata)
   if (lyric && isLikelyGarbage(lyric)) return null
   return lyric
+}
+
+const musicExtensions = MEDIA_FILE_TYPES.map((ext) => `.${ext}`)
+export const isMusicFile = (filePath: string): boolean => {
+  return musicExtensions.includes(extname(filePath).toLowerCase())
 }

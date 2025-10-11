@@ -77,14 +77,12 @@ export const checkUpdate = async () => {
 }
 
 export const downloadUpdate = async () => {
-  if (!(await update.isUpdaterActive())) return
+  if (!(await update.isUpdateAvailable())) return
   void update.downloadUpdate()
 }
 
-export const restartUpdate = () => {
+export const restartUpdate = async () => {
   // appActions.setSkipTrayQuit(true)
 
-  setTimeout(() => {
-    void update.quitAndInstall()
-  }, 1000)
+  await update.quitAndInstall()
 }

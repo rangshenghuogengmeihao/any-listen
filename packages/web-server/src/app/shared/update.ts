@@ -119,7 +119,7 @@ class Update extends UpdateEvent {
     this.emit('error', new Error('todo download'))
     // throw new Error('')
   }
-  async isUpdaterActive() {
+  async isUpdateAvailable() {
     return this.checkForUpdates(false)
   }
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
@@ -131,7 +131,7 @@ class Update extends UpdateEvent {
 export const update = new Update()
 
 export const startCheckUpdateTimeout = async (): Promise<void> => {
-  await update.checkForUpdates(false).catch(() => {})
+  await update.checkForUpdates(appState.appSetting['common.tryAutoUpdate']).catch(() => {})
   await sleep(86400_000)
   return startCheckUpdateTimeout()
 }

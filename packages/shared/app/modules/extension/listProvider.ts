@@ -1,5 +1,6 @@
 import { throttle } from '@any-listen/common/utils'
-import { getSettings } from '../../common'
+import { getSettings, showMessageBox, t } from '../../common'
+import { winMainReadyEvent } from '../../common/event'
 import { musicListEvent, sendMusicListAction, updateMusicBaseInfo } from '../../modules/musicList'
 import { workers } from '../worker'
 import { extensionEvent } from './event'
@@ -113,8 +114,15 @@ const handleSyncList = async () => {
   state.syncing = true
   while (state.waitingSyncLists.length) {
     // TODO multi sync
-    await syncList(state.waitingSyncLists.shift()!).catch((err) => {
+    const list = state.waitingSyncLists.shift()!
+    await syncList(list).catch((err: Error) => {
       console.error('Sync list error:', err)
+      void showMessageBox({
+        detail: t('extension.list_provider.get_list_music_ids_error', {
+          name: list.name,
+          err: err.message,
+        }),
+      })
     })
   }
   state.syncing = false
@@ -152,6 +160,12 @@ const runSyncList = throttle(async () => {
   void handleSyncList()
 }, 500)
 export const initListProvider = async () => {
+  let initCount = 0
+  const handleRunSyncList = () => {
+    initCount++
+    if (initCount < 2) runSyncList()
+  }
+  winMainReadyEvent.on(handleRunSyncList)
   extensionEvent.on('extensionEvent', (event) => {
     switch (event.action) {
       case 'starting':
@@ -159,7 +173,7 @@ export const initListProvider = async () => {
         break
       case 'started':
         state.initing = false
-        runSyncList()
+        handleRunSyncList()
         break
       case 'loaded':
         state.loadedExtensions.push(event.data.id)

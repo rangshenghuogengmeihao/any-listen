@@ -21,6 +21,10 @@ class Event extends _Event {
   download_progress_updated(info: State['progress']) {
     this.emitEvent('download_progress_updated', info)
   }
+
+  downloaded() {
+    this.emitEvent('downloaded')
+  }
 }
 
 type EventMethods = Omit<Event, keyof _Event | 'emitEvent'>

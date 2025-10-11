@@ -1,7 +1,9 @@
 import { sizeFormate } from '@any-listen/common/utils'
+import { isMusicFile } from '@any-listen/nodejs/music'
 import { logcat } from './shared'
 import { getWebDAVOptionsByListInfo, getWebDAVOptionsByMusicInfo } from './utils'
 import {
+  buildWebDAVError,
   createWebDAVClient,
   parseMusicMetadata,
   testDir,
@@ -12,9 +14,6 @@ import {
 
 const listCache = new Map<string, Map<string, WebDAVFileItem>>()
 
-const isMusicFile = (name: string) => {
-  return /\.(mp3|flac|wav|m4a|aac|ogg)$/i.test(name)
-}
 const generateId = (extId: string, source: string, options: WebDAVClientOptions, item: WebDAVItem) => {
   return `${extId}_${source}_${options.username}_${options.url}_${item.path}`
 }
@@ -30,12 +29,12 @@ export const listProviderActions: AnyListen.IPCExtension.ListProviderAction = {
     logcat.info(`ListProviderAction updateList`, params)
     await testDir(await getWebDAVOptionsByListInfo(params.data.meta))
   },
-  async getListMusicIds({ data }) {
+  async getListMusicIds({ extensionId, data }) {
     const options = await getWebDAVOptionsByListInfo(data.meta)
     const webDAVClient = createWebDAVClient(options)
-    const list = await webDAVClient.ls(options.path).catch((err) => {
+    const list = await webDAVClient.ls(options.path).catch((err: Error) => {
       logcat.error('WebDAV list error', err)
-      throw err
+      throw buildWebDAVError(options, err)
     })
     const map = new Map<string, WebDAVFileItem>()
     listCache.set(data.id, map)

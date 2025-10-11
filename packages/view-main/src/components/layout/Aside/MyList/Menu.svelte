@@ -6,6 +6,8 @@
   import { importLocalFile, importLocalFileFolder, removeUserList, syncUserList } from './action'
   import { showListEditModal } from '@/components/apis/listEditModal'
   import { musicLibraryEvent } from '@/modules/musicLibrary/store/event'
+  import { appState } from '@/modules/app/store/state'
+  import { GENERAL_LIST_TYPES } from '@/shared/constants'
 
   let {
     onhide,
@@ -37,29 +39,31 @@
       return
     }
     let edit = false
-    let update = false
+    // let update = false
     let remove = false
     // let local_file = !listState.fetchingListStatus[listInfo.id]
-    let userList: AnyListen.List.UserListInfo
+    // let userList: AnyListen.List.UserListInfo
     switch (info.id) {
       case LIST_IDS.DEFAULT:
       case LIST_IDS.LOVE:
         break
       default:
-        userList = info as AnyListen.List.UserListInfo
+        // userList = info as AnyListen.List.UserListInfo
         edit = true
         remove = true
-        update = userList.type != 'general'
         break
     }
 
+    const disabledUpdate = fetching || (info.type == 'local' && info.meta.deviceId != appState.machineId)
+    const isGeneral = GENERAL_LIST_TYPES.includes(info.type)
+
     menus = (
       [
-        update && { action: 'update', disabled: fetching, label: $t('user_list_menu__sync') },
+        !isGeneral && { action: 'update', disabled: disabledUpdate, label: $t('user_list_menu__sync') },
         { action: 'create', label: $t('user_list_menu__create') },
         { action: 'edit', disabled: !edit, label: $t('user_list_menu__edit') },
-        { action: 'local_file', disabled: fetching, label: $t('user_list_menu__select_local_file') },
-        { action: 'local_file_folder', disabled: fetching, label: $t('user_list_menu__select_local_file_folder') },
+        isGeneral && { action: 'local_file', disabled: fetching, label: $t('user_list_menu__select_local_file') },
+        isGeneral && { action: 'local_file_folder', disabled: fetching, label: $t('user_list_menu__select_local_file_folder') },
         // null,
         // { action: 'sort', label: $t('user_list_menu__sort_list') },
         // { action: 'duplicate', label: $t('user_list_menu__duplicate') },
@@ -95,10 +99,10 @@
         void importLocalFileFolder(info!)
         break
       case 'update':
-        void syncUserList(info!.id)
+        void syncUserList(info!)
         break
       case 'remove':
-        void removeUserList(info!.id)
+        void removeUserList(info!)
         break
 
       default:

@@ -12,21 +12,21 @@ export default {
   async createDesktopLyricProcess() {
     // TODO
   },
-  async showMessageBox(extId, key, options) {
+  async showMessageBox(key, extId, options) {
     if (options.modal) {
-      return showMessageBox(extId, key, options)
+      return showMessageBox(key, extId, options)
     }
-    return showNotifyBox(extId, key, options)
+    return showNotifyBox(key, extId, options)
   },
-  async showInputBox(extId, key, options) {
+  async showInputBox(key, extId, options) {
     // TODO
-    // return client.showInputBox(extId, key, options)
+    // return client.showInputBox(key, extId, options)
     return ''
   },
-  async showOpenBox(extId, key, options) {
+  async showOpenBox(key, extId, options) {
     // TODO import.meta.env.VITE_IS_WEB
   },
-  async showSaveBox(extId, key, options) {
+  async showSaveBox(key, extId, options) {
     // TODO import.meta.env.VITE_IS_WEB
   },
   async closeMessageBox(key) {

@@ -1,11 +1,7 @@
-import { MEDIA_FILE_TYPES } from '@any-listen/common/constants'
+import { generateId } from '@any-listen/common/utils'
+import { isMusicFile } from '@any-listen/nodejs/music'
 import fs from 'node:fs'
 import path from 'node:path'
-
-const musicExtensions = MEDIA_FILE_TYPES.map((ext) => `.${ext}`)
-const isMusicFile = (filePath: string): boolean => {
-  return musicExtensions.includes(path.extname(filePath).toLowerCase())
-}
 
 /**
  * scans a directory for music files.
@@ -14,9 +10,9 @@ const isMusicFile = (filePath: string): boolean => {
  * @param onEnd - A callback function that is called when the scan is complete
  * returns a function that can be called to cancel the scan
  */
-export const scanFolderMusics = (
+const _scanFolderMusics = (
   dirs: string[],
-  onFiles: (paths: string[]) => Promise<void>,
+  onFiles: (paths: string[]) => void | Promise<void>,
   onEnd: (canceled: boolean) => void
 ) => {
   let isCancelled = false
@@ -68,6 +64,9 @@ export const scanFolderMusics = (
   setImmediate(async () => {
     try {
       for (const dir of dirs) await scanBFS(dir)
+    } catch (err) {
+      console.error('Error during scanning:', err)
+      throw err
     } finally {
       onEnd(isCancelled)
     }
@@ -75,4 +74,34 @@ export const scanFolderMusics = (
   return () => {
     isCancelled = true
   }
+}
+
+const scanTasks = new Map<string, () => void>()
+/**
+ * scans a directory for music files.
+ * @param dirs - The directory to scan for music files
+ * @param onFiles - A callback function that is called with the array of file paths
+ * @param onEnd - A callback function that is called when the scan is complete
+ * returns a function that can be called to cancel the scan
+ */
+export const scanFolderMusics = (
+  dirs: string[],
+  onFiles: (paths: string[]) => void | Promise<void>,
+  onEnd: (canceled: boolean) => void
+) => {
+  const id = generateId()
+  scanTasks.set(
+    id,
+    _scanFolderMusics(dirs, onFiles, (canceled) => {
+      scanTasks.delete(id)
+      onEnd(canceled)
+    })
+  )
+  return id
+}
+export const stopFolderMusicsScan = async (id: string) => {
+  const stop = scanTasks.get(id)
+  if (!stop) return
+  stop()
+  scanTasks.delete(id)
 }

@@ -1,5 +1,4 @@
-import { onSettingChanged } from '@/modules/setting/shared'
-import { i18n } from '@/plugins/i18n'
+import { i18n, languageChangeEvent } from '@/plugins/i18n'
 import { LIST_IDS } from '@any-listen/common/constants'
 import { derived, get, readable } from 'svelte/store'
 import { getSubUserLists } from './store/actions'
@@ -29,7 +28,7 @@ export const defaultLists = readable(getDefaultLists(), (set) => {
       handleUpdate()
     }
   })
-  const unsub2 = onSettingChanged('common.langId', handleUpdate)
+  const unsub2 = languageChangeEvent.on(handleUpdate)
 
   return function stop() {
     unsub()

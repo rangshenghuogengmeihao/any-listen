@@ -39,3 +39,5 @@ export const createLocalMusicInfos = async (filePaths: string[]): Promise<AnyLis
 
   return list
 }
+
+export { scanFolderMusics, stopFolderMusicsScan } from './scanMusics'

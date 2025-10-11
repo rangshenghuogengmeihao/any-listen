@@ -22,6 +22,7 @@ import { isMac } from '@any-listen/nodejs/index'
 import { actions } from '@/actions'
 import { extensionEvent } from '@/modules/extension'
 import { playerEvent } from '@/modules/player'
+import { winMainReadyEvent } from '@any-listen/app/common/event'
 import { initUpdate } from './autoUpdate'
 import { winMainEvent } from './event'
 import { initTaskProgress } from './taskProgress'
@@ -30,10 +31,10 @@ import { getWindowSizeInfo } from './utils'
 
 export const initWinMain = () => {
   initRendererEvent((name, data) => {
-    getWebContents().send(name, data)
+    getWebContents()?.send(name, data)
   })
-  initUpdate()
-  // if (process.env.NODE_ENV === 'production') initUpdate()
+  // initUpdate()
+  if (process.env.NODE_ENV === 'production') initUpdate()
   initMainWindowHandlerTray(winMainEvent, isExistWindow, isShowWindow)
   // initMainWindowHandlerUserApi(winMainEvent)
   // initMainWindowHandlerSync(winMainEvent)
@@ -51,10 +52,8 @@ export const initWinMain = () => {
     if (isExistWindow()) {
       if (deeplink) void rendererIPC.deeplink(deeplink)
       else showWindow()
-    } else {
-      if (isMac) createWindow()
-      else actions.exec('app.quit')
-    }
+    } else if (isMac) createWindow()
+    else actions.exec('app.quit')
   })
   appEvent.on('activate', () => {
     if (isExistWindow()) {
@@ -62,6 +61,9 @@ export const initWinMain = () => {
     } else {
       createWindow()
     }
+  })
+  winMainEvent.on('inited', () => {
+    winMainReadyEvent.emit()
   })
   themeEvent.on('theme_change', (theme) => {
     void rendererIPC.themeChanged(theme)

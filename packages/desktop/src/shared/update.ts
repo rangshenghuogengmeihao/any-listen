@@ -107,8 +107,20 @@ export class Update extends UpdateEvent {
     if (!this.info) return false
     const latest = getLatestVersion(this.info, appState.appSetting['common.allowPreRelease'])
     if (compareVersions(appState.version.version, latest.version) < 0) {
+      await checkUpdate(appState.appSetting['common.allowPreRelease'])
+        .then(() => {
+          if (isAutoUpdate) {
+            setImmediate(() => {
+              void downloadUpdate()
+            })
+          }
+        })
+        .catch((error) => {
+          setImmediate(() => {
+            this.emit('error', error as Error)
+          })
+        })
       this.emit('update_available', this.info)
-      checkUpdate(isAutoUpdate, appState.appSetting['common.allowPreRelease'])
       return true
     }
     this.emit('update_not_available', this.info)
@@ -129,18 +141,18 @@ export class Update extends UpdateEvent {
   async downloadUpdate() {
     await downloadUpdate()
   }
-  async isUpdaterActive() {
+  async isUpdateAvailable() {
     return this.checkForUpdates(false)
   }
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   async quitAndInstall() {
-    restartUpdate()
+    await restartUpdate()
   }
 }
 export const update = new Update()
 
 export const startCheckUpdateTimeout = async (): Promise<void> => {
-  await update.checkForUpdates(false).catch(() => {})
+  await update.checkForUpdates(appState.appSetting['common.tryAutoUpdate']).catch(() => {})
   await sleep(86400_000)
   return startCheckUpdateTimeout()
 }

@@ -4,6 +4,7 @@
 
   let {
     min = false,
+    middle = false,
     outline = false,
     link = false,
     disabled = false,
@@ -19,6 +20,7 @@
     'aria-label': arialabel,
   }: {
     min?: boolean
+    middle?: boolean
     outline?: boolean
     link?: boolean
     disabled?: boolean
@@ -39,7 +41,7 @@
 
 <button
   type={rawtype}
-  class={['btn', { min, outline, link, icon, icontext, loading: loading || asyncLoading }]}
+  class={['btn', { min, middle, outline, link, icon, icontext, loading: loading || asyncLoading }]}
   tabindex="0"
   aria-label={arialabel}
   disabled={disabled || loading || asyncLoading}
@@ -127,7 +129,10 @@
     &.loading {
     }
   }
-
+  .middle {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
   .min {
     padding: 2.5px 8px;
     font-size: 12px;

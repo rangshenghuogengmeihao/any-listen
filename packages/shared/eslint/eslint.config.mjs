@@ -50,6 +50,8 @@ export const baseRule = {
   'max-nested-callbacks': 'off',
   complexity: 'off',
   'max-lines': 'off',
+  'no-param-reassign': 'off',
+  'no-plusplus': 'off',
 }
 export const typescriptRule = {
   ...baseRule,

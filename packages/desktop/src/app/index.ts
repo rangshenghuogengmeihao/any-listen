@@ -5,9 +5,12 @@ import path from 'node:path'
 import { appEvent } from './event'
 import { appState } from './state'
 // import { navigationUrlWhiteList } from '@common/config'
+import { initDeviceId } from '@any-listen/app/common/deviceId'
 import { parseEnvParams } from '@any-listen/nodejs/env'
 import { checkAndCreateDir, isMac } from '@any-listen/nodejs/index'
 
+import { i18n } from '@/i18n'
+import { rendererIPC } from '@/renderer/winMain/rendererEvent'
 import { buildElectronProxyConfig } from '@/shared/electron'
 import { log } from '@/shared/log'
 import { setProxyByHost } from '@/shared/request'
@@ -225,7 +228,7 @@ const listenerAppEvent = () => {
   appEvent.on('inited', () => {
     void app.setProxy(buildElectronProxyConfig(appState.proxy.host, appState.proxy.port))
     handleProxyChange()
-    void startCheckUpdateTimeout()
+    if (process.env.NODE_ENV === 'production') void startCheckUpdateTimeout()
   })
   appEvent.on('proxy_changed', (host, port) => {
     setProxyByHost(host, port)
@@ -280,7 +283,10 @@ export const initAppEnv = async () => {
   await setUserDataPath()
   registerDeeplink()
   listenerElectronEvent()
-  appState.appSetting = (await getAppSetting()).setting
+  ;[appState.machineId, appState.appSetting] = await Promise.all([
+    initDeviceId(appState.dataPath),
+    getAppSetting().then((res) => res.setting),
+  ])
   if (import.meta.env.VITE_IS_MAC) {
     appState.envParams.cmdParams.dt = true
   } else {
@@ -290,6 +296,11 @@ export const initAppEnv = async () => {
   listenerAppEvent()
   initCommon({
     getSettings: () => appState.appSetting,
+    showMessageBox: async (key, options) => {
+      console.log(key, options)
+      return rendererIPC.showMessageBox(key, '', options)
+    },
+    translate: (key, val) => i18n.t(key, val),
   })
 }
 

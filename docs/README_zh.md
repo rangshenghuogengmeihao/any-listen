@@ -44,6 +44,7 @@
       // 'upstreamProxy.enabled': false, // 是否使用代理转发请求
       // 'upstreamProxy.header': '', // 代理转发请求头（如 `x-real-ip`）
       // 'extension.ghMirrorHosts': [], // 扩展商店 Github 镜像地址
+      // httpProxy: '', // 代理服务器地址，例子 `127.0.0.1:2080`
 
       // 允许访问的本地目录
       // allowPublicDir: ['G:', 'E:\\music'], // Windows 示例
@@ -75,6 +76,7 @@
 |        `CONFIG_PATH`        | 配置文件路径，默认 `./data/config.js`                                                    |
 |         `LOG_PATH`          | 日志存储路径，默认 `./data/logs`                                                         |
 | `EXTENSION_GH_MIRROR_HOSTS` | 扩展商店 Github 镜像地址，多个地址用英文逗号分隔                                         |
+|        `HTTP_PROXY`         | 代理服务器，例子 `127.0.0.1:2080`                                                        |
 
 ### 源码编译
 

@@ -3,7 +3,8 @@
   import Input from '@/components/base/Input.svelte'
   import { connectIPC } from '@/modules'
   import { appEvent } from '@/modules/app/store/event'
-  import { t } from '@/plugins/i18n'
+  import { t, i18n } from '@/plugins/i18n'
+  import { IPC_CODE } from '@any-listen/common/constants'
   import { onMount } from 'svelte'
 
   let value = $state('')
@@ -15,7 +16,20 @@
   }
   onMount(() => {
     return appEvent.on('connectFailed', (message) => {
-      errorMessage = message
+      switch (message) {
+        case IPC_CODE.abnormalDisconnection:
+          errorMessage = i18n.t('login.abnormal_disconnection')
+          break
+        case IPC_CODE.authFailed:
+          errorMessage = i18n.t('login.auth_failed')
+          break
+        case IPC_CODE.msgBlockedIp:
+          errorMessage = i18n.t('login.blocked_ip')
+          break
+        default:
+          errorMessage = message
+          break
+      }
     })
   })
 </script>

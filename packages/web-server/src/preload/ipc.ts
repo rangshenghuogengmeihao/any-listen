@@ -39,7 +39,7 @@ const handleConnect = async (
   if (id != connectId) return null
   const keyInfo = await handleAuth(urlInfo, authCode)
   if (id != connectId) return null
-  socketConnect(exposeObj, urlInfo, keyInfo, winType)
+  await socketConnect(exposeObj, urlInfo, keyInfo, winType)
 }
 const handleDisconnect = async () => {
   await socketDisconnect()
@@ -57,6 +57,7 @@ const connect = async (
     switch (err.message) {
       case IPC_CODE.missingAuthCode:
       case IPC_CODE.authFailed:
+      case IPC_CODE.abnormalDisconnection:
       case IPC_CODE.msgBlockedIp:
         onFailed(err.message)
         return false

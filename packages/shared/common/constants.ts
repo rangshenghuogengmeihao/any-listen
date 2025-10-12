@@ -119,6 +119,7 @@ export const IPC_CODE = {
   missingAuthCode: 'Missing auth code',
   getServiceIdFailed: 'Get service id failed',
   connectServiceFailed: 'Connect service failed',
+  abnormalDisconnection: 'Abnormal disconnection',
   connecting: 'Connecting...',
   unknownServiceAddress: 'Unknown service address',
   lowServiceVersion: 'Web server version too low, please upgrade server to latest',

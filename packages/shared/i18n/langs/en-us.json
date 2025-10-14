@@ -83,7 +83,7 @@
   "exts.webdav.form.username.description": "Log in to account name",
   "exts.webdav.form.username.name": "Account name",
   "exts.webdav.name": "WebDAV",
-  "exts.webdav.servers.description": "For the security of WebDAV services, the login password needs to be set here separately, each service line, and each information is separated by commas. Examples: <service name>, <user name>, <password>. If there is a comma in the content, a backslash must be added before it, such as: \"\\,\"",
+  "exts.webdav.servers.description": "For the security of the WebDAV service, the login password needs to be set here separately. Each service has one line, and each information is separated by commas. For example: <service address>, <username>, <password>. If there is a comma in the content, a backslash needs to be added in front, such as: \"\\,\"",
   "exts.webdav.servers.name": "WebDAV Service List",
   "find_music": "Song search",
   "find_music_exit": "Exit search",

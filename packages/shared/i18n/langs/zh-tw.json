@@ -83,7 +83,7 @@
   "exts.webdav.form.username.description": "登錄賬戶名",
   "exts.webdav.form.username.name": "賬戶名",
   "exts.webdav.name": "WebDAV",
-  "exts.webdav.servers.description": "為了WebDAV服務的安全，登錄密碼需單獨在這裡設置，每個服務一行，每個信息使用逗號分隔，例子：<服務名>,<用戶名>,<密碼>，若內容中存在逗號，需在前面添加反斜杠，如：“\\,”",
+  "exts.webdav.servers.description": "為了WebDAV服務的安全，登錄密碼需單獨在這裡設置，每個服務一行，每個信息使用逗號分隔，例子：<服務地址>,<用戶名>,<密碼>，若內容中存在逗號，需在前面添加反斜杠，如：“\\,”",
   "exts.webdav.servers.name": "WebDAV服務列表",
   "find_music": "歌曲查找",
   "find_music_exit": "退出查找",

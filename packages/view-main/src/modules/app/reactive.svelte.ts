@@ -1,13 +1,14 @@
 import { useSettingValue } from '@/modules/setting/reactive.svelte'
 import { getFontSizeWithScreen } from '@/shared'
 import { IPC_CODE } from '@any-listen/common/constants'
+import { settingEvent } from '../setting/store/event'
 import { appEvent } from './store/event'
 import { appState } from './store/state'
 
 export const useAppAeady = () => {
   let appAeady = $state.raw(false)
 
-  const unsubscribe = appEvent.on('connected', () => {
+  const unsubscribe = settingEvent.on('inited', () => {
     appAeady = true
   })
   const unsubscribe2 = appEvent.on('desconnected', () => {

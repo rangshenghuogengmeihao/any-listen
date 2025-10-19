@@ -20,7 +20,11 @@ export const initApp = () => {
     void sendInitedEvent()
   })
   let mainWorkerResolve: () => void
-  setWorkerInitPromise(new Promise((resolve) => (mainWorkerResolve = resolve)))
+  setWorkerInitPromise(
+    new Promise((resolve) => {
+      mainWorkerResolve = resolve
+    })
+  )
   window.addEventListener('worker-initialized-main', mainWorkerResolve!)
 
   document.documentElement.addEventListener(

@@ -8,6 +8,7 @@ export interface WebDAVClientOptions {
   baseUrl: string
   username?: string
   password?: string
+  onError?: (errorMessage: string) => void
 }
 
 export interface WebDAVDirItem {
@@ -51,11 +52,13 @@ const buildError = (statusCode?: number, error?: string) => {
 }
 
 export class WebDAVClient {
+  private readonly options: WebDAVClientOptions
   private readonly baseUrl: string
   private readonly authHeader?: string
   private readonly xmlParser: XMLParser
 
   constructor(options: WebDAVClientOptions) {
+    this.options = options
     this.baseUrl = options.baseUrl.replace(/\/$/, '')
     if (options.username) {
       const token = Buffer.from(`${options.username}:${options.password || ''}`).toString('base64')
@@ -67,6 +70,16 @@ export class WebDAVClient {
       parseTagValue: false,
       removeNSPrefix: true,
     })
+  }
+
+  private handleRequestError(url: string, method: Options['method'], statusCode?: number, body?: string) {
+    const error = buildError(statusCode, body)
+    if (statusCode != 404) {
+      try {
+        this.options.onError?.(`[${method} ${url}] ${error.message}`)
+      } catch {}
+    }
+    return error
   }
 
   private async request<T = unknown>(
@@ -85,9 +98,9 @@ export class WebDAVClient {
     if (!res.statusCode || res.statusCode > 299) {
       if (res.body && contentType.includes('xml')) {
         const error = this.xmlParser.parse(res.body)
-        throw buildError(res.statusCode, JSON.stringify(error) || '')
+        throw this.handleRequestError(url, method, res.statusCode, JSON.stringify(error) || '')
       }
-      throw buildError(res.statusCode, res.body)
+      throw this.handleRequestError(url, method, res.statusCode, res.body)
     }
     if (method === 'HEAD') return res.headers as T
     if (contentType.includes('xml')) {
@@ -159,11 +172,11 @@ export class WebDAVClient {
     return res
   }
 
-  async getPartial(path: string, start: number | null, end: number | null) {
+  async getPartial(path: string, start: number | null, end?: number | null) {
     const res = await this.request<Uint8Array>('GET', {
       needRaw: true,
       path,
-      headers: { Range: `bytes=${start || ''}-${end || ''}` },
+      headers: { Range: `bytes=${start || '0'}-${end || ''}` },
     })
     return Buffer.from(res)
   }

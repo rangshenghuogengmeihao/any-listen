@@ -77,7 +77,7 @@ export const proxyRequest = async (name: string, rangeHeader?: string): Promise<
     ...proxyInfo.requestOptions,
     headers: {
       ...(proxyInfo.requestOptions.headers ?? {}),
-      ...(range ? { Range: `bytes=${range.start ?? 0}-${range.end ?? ''}` } : {}),
+      ...(range ? { Range: `bytes=${range.start || 0}-${range.end || ''}` } : {}),
     },
     needBody: true,
   })

@@ -52,6 +52,7 @@ export const baseRule = {
   'max-lines': 'off',
   'no-param-reassign': 'off',
   'no-plusplus': 'off',
+  radix: 'off',
 }
 export const typescriptRule = {
   ...baseRule,

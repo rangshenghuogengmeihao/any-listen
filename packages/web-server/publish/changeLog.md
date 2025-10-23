@@ -8,6 +8,7 @@
 ### Fixed
 
 - Fixed an issue where residual callbacks were not properly unregistered when observing changes to local lists.
+- Fixed an issue where internal extension logs did not update in real time.
 
 ---
 
@@ -21,3 +22,4 @@
 ### 修复
 
 - 修复本地列表变更监听时残留回调未正确注销的问题。
+- 修复内部扩展日志未实时更新的问题。

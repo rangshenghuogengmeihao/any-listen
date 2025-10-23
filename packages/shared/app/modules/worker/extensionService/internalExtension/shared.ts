@@ -2,6 +2,7 @@ import { EXTENSION } from '@any-listen/common/constants'
 import { logFormat } from '@any-listen/common/tools'
 import { dateFormat } from '@any-listen/common/utils'
 import { createSimpleLogcat } from '@any-listen/nodejs/logs'
+import { extensionEvent } from '../event'
 
 export const createLogTools = async (extension: AnyListen.Extension.Extension) => {
   const log = await createSimpleLogcat(extension.dataDirectory, EXTENSION.logFileName)
@@ -19,6 +20,7 @@ export const createLogTools = async (extension: AnyListen.Extension.Extension) =
       console.log(`[ExtensionHost ${dateFormat(info.timestamp)} ${info.type.toUpperCase()} - ${info.id}] ${info.message}`)
     }
     log(logFormat(info))
+    extensionEvent.logOutput(info)
   }
   return {
     debug(...args: unknown[]) {

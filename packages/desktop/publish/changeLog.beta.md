@@ -1,17 +1,9 @@
-### Improved
-
-- Improved the **WebDAV data reading logic** to enhance compatibility with various *WebDAV* services.
-
 ### Fixed
 
-- Fixed an issue where internal extension logs did not update in real time.
+- Fixed an issue where the **update** feature failed to take effect when modifying *proxy settings* dynamically.
 
 ---
 
-### 优化
-
-- 优化 **WebDAV 数据读取逻辑**，提高与多种 *WebDAV* 服务的兼容性。
-
 ### 修复
 
-- 修复内部扩展日志未实时更新的问题。
+- 修复在动态修改 *代理设置* 时 **更新功能** 未生效的问题

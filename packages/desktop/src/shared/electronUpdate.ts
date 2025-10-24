@@ -1,4 +1,4 @@
-import { appActions } from '@/app'
+import { appActions, appEvent } from '@/app'
 import { log } from '@/shared/log'
 import { isWin, sleep } from '@any-listen/nodejs/index'
 import { autoUpdater } from 'electron-updater'
@@ -20,6 +20,9 @@ let update: Update
 
 export const initUpdate = (_update: Update) => {
   update = _update
+  appEvent.on('proxy_changed', (host, port, electronProxy) => {
+    void autoUpdater.netSession.setProxy(electronProxy)
+  })
   autoUpdater.on('checking-for-update', () => {
     sendStatusToWindow('Checking for update...')
   })

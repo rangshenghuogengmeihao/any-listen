@@ -215,7 +215,7 @@ const listenerAppEvent = () => {
     if (appState.proxy.host == host && appState.proxy.port == port) return
     appState.proxy.host = host
     appState.proxy.port = port
-    appEvent.proxy_changed(host, port)
+    appEvent.proxy_changed(host, port, buildElectronProxyConfig(host, port))
   }
   appEvent.on('updated_config', (keys, setting) => {
     if (
@@ -230,14 +230,13 @@ const listenerAppEvent = () => {
     handleProxyChange()
     if (process.env.NODE_ENV === 'production') void startCheckUpdateTimeout()
   })
-  appEvent.on('proxy_changed', (host, port) => {
+  appEvent.on('proxy_changed', (host, port, electronProxy) => {
     setProxyByHost(host, port)
-    const proxy = buildElectronProxyConfig(host, port)
-    void app.setProxy(proxy)
+    void app.setProxy(electronProxy)
     for (const wc of webContents.getAllWebContents()) {
-      void wc.session.setProxy(proxy)
+      void wc.session.setProxy(electronProxy)
     }
-    console.log(proxy)
+    console.log(electronProxy)
   })
   update.on('checking_for_update', () => {
     appState.version.status = 'checking'

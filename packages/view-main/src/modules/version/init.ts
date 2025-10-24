@@ -1,5 +1,8 @@
+import { showSimpleModal } from '@/components/apis/dialog'
+import { showNotify } from '@/components/apis/notify'
 import { showUpdateModal } from '@/components/apis/updateModal'
 import { onConnected, onRelease } from '@/modules/app/shared'
+import { i18n } from '@/plugins/i18n'
 import { createUnsubscriptionSet } from '@/shared'
 import { settingState } from '../setting/store/state'
 import { getCurrentVersionInfo, initCurrentVersionInfo, registerRemoteActions } from './store/actions'
@@ -30,7 +33,25 @@ export const initVersion = () => {
           void showUpdateModal()
         })
       )
-
+      subscriptions.add(
+        versionEvent.on('error', (preStatus, message) => {
+          if (preStatus == 'downloading') {
+            const preTime = parseInt(localStorage.getItem('update__download_failed_tip') ?? '0')
+            showNotify(i18n.t('update_download_failed_tip', { msg: message }))
+            void showUpdateModal()
+            if (Date.now() - preTime < 7 * 86400_000) return
+            setTimeout(() => {
+              void showSimpleModal(i18n.t('update_failed_tip')).finally(() => {
+                localStorage.setItem('update__download_failed_tip', String(Date.now()))
+              })
+            }, 400)
+          } else if (preStatus == 'checking') {
+            showNotify(i18n.t('update.checking_failed', { msg: message }))
+          } else if (preStatus == 'idle') {
+            showNotify(i18n.t('update.update_failed', { msg: message }))
+          }
+        })
+      )
       void init()
     })
   })

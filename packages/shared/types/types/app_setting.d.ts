@@ -294,6 +294,11 @@ declare global {
       'playDetail.isDynamicBackground': boolean
 
       /**
+       * 播放详情页-封面样式
+       */
+      'playDetail.coverStyle': 'cd' | 'square'
+
+      /**
        * 是否启用桌面歌词
        */
       'desktopLyric.enable': boolean

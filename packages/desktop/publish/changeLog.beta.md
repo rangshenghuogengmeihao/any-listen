@@ -1,9 +1,9 @@
-### Fixed
+### Added
 
-- Fixed an issue where the **update** feature failed to take effect when modifying *proxy settings* dynamically.
+- Added a **cover style** option for the *Play Details* page. Two styles are available now: **CD** and **Square**. You can change it at _Settings > Play Details Page Settings > Cover Style_.
 
 ---
 
-### 修复
+### 新增
 
-- 修复在动态修改 *代理设置* 时 **更新功能** 未生效的问题
+- 新增 **播放详情页封面样式** 选项，当前提供 **CD** 与 **正方形** 两种样式。可在 _设置 > 播放详情页设置 > 封面样式_ 中进行切换。

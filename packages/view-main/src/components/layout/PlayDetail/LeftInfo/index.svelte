@@ -20,6 +20,6 @@
     contain: strict;
     // transition: flex-basis @transition-normal;
 
-    --content-with: 72%;
+    --content-width: 72%;
   }
 </style>

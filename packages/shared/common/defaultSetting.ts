@@ -59,6 +59,7 @@ const defaultSetting: AnyListen.AppSetting = {
   'playDetail.style.fontWeight': true,
   'playDetail.isDelayScroll': true,
   'playDetail.isDynamicBackground': true,
+  'playDetail.coverStyle': 'cd',
 
   'desktopLyric.enable': false,
   'desktopLyric.isLock': false,

@@ -175,7 +175,7 @@ export const settings: SettingListSection[] = [
     id: 'playDetail',
     name: 'settings.play_detail',
     list: [
-      // t('settings.play_detail.style_font_weight')
+      // t('settings.play_detail.cover_style_square')
       {
         field: 'playDetail.isDynamicBackground',
         name: 'settings.play_detail.dynamic_background',
@@ -195,6 +195,15 @@ export const settings: SettingListSection[] = [
         field: 'playDetail.style.fontWeight',
         name: 'settings.play_detail.style_font_weight',
         type: 'boolean',
+      },
+      {
+        field: 'playDetail.coverStyle',
+        name: 'settings.play_detail.cover_style',
+        type: 'radio',
+        enum: [
+          { value: 'cd', name: 'settings.play_detail.cover_style_cd' },
+          { value: 'square', name: 'settings.play_detail.cover_style_square' },
+        ] satisfies Array<{ value: AnyListen.AppSetting['playDetail.coverStyle']; name: keyof Message }>,
       },
       {
         field: 'playDetail.style.align',

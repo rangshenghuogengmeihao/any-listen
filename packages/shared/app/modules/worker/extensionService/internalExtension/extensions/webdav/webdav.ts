@@ -62,8 +62,7 @@ export const setPassword = async (options: WebDAVClientOptions) => {
             if (!value) return hostContext.i18n.t('exts.webdav.form.error.no_password_prompt')
             return hostContext.i18n.t('exts.webdav.form.error.invalid_password_prompt')
           }
-          if (msg.startsWith('404')) return null
-          return msg
+          return null
         })
     },
   })

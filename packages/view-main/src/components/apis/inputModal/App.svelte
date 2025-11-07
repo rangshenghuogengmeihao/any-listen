@@ -3,9 +3,9 @@
   import Btn from '@/components/base/Btn.svelte'
   import { extensionList } from '@/modules/extension/reactive.svelte'
   import { extI18n } from '@/modules/extension/i18n'
-  import { openUrl } from '@/shared/ipc/app'
-  import { isUrl } from '@/shared'
+  import { t } from '@/plugins/i18n'
   import { CANCELED_ERROR_MSG } from '@any-listen/common/constants'
+  import InputItem from '@/components/material/form/InputItem.svelte'
 
   let {
     onafterleave,
@@ -14,11 +14,11 @@
   } = $props()
 
   let visible = $state(false)
-  let select = $state(false)
-  let message = $state<[string, string]>(['', ''])
-  let buttons = $state<readonly AnyListen.IPCCommon.MessageButton[]>([])
+  let options = $state.raw<AnyListen.IPCCommon.InputDialogOptions>({})
+  let errorMessage = $state('')
+  let value = $state('')
   let extId = $state('')
-  let promise: [(result: number) => void, (error: Error) => void] | null = null
+  let promise: [(result: string) => void, (error: Error) => void] | null = null
   let extensionName = $derived.by(() => {
     if (!extId) return ''
     const ext = $extensionList.find((ext) => ext.id === extId)
@@ -29,35 +29,34 @@
     visible = false
   }
 
-  const handleComfirm = (btn: AnyListen.IPCCommon.MessageButton) => {
-    if (btn.link && isUrl(btn.link)) {
-      void openUrl(btn.link)
+  const handleComfirm = async () => {
+    errorMessage &&= ''
+    if (options.validateInput) {
+      const err = await options.validateInput(value)
+      if (err) {
+        // eslint-disable-next-line require-atomic-updates
+        errorMessage = err
+        return
+      }
     }
-    promise?.[0](buttons.indexOf(btn))
+    promise?.[0](value)
     closeModal()
   }
 
   const handleAfterLeave = () => {
     onafterleave?.()
   }
-  export const show = async (
-    _extId: string,
-    _buttons: readonly AnyListen.IPCCommon.MessageButton[],
-    _title?: string,
-    _message?: string,
-    _select?: boolean
-  ) => {
+  export const show = async (_extId: string, _options: AnyListen.IPCCommon.InputDialogOptions) => {
     extId = _extId
-    message = [_title ?? '', _message ?? '']
-    buttons = _buttons
-    select = _select ?? false
+    options = _options
+    value = _options.value || ''
     visible = true
-    return new Promise<number>((resolve, reject) => {
+    return new Promise<string>((resolve, reject) => {
       promise = [resolve, reject]
     })
   }
   export const hide = () => {
-    visible = false
+    closeModal()
     promise?.[1](new Error(CANCELED_ERROR_MSG))
   }
 
@@ -75,22 +74,21 @@
   title={extensionName}
   onafterleave={handleAfterLeave}
 >
-  <div class="main" class:select>
-    {#if message[0]}
-      <h3>{message[0]}</h3>
-    {/if}
-    {message[1]}
+  <div class="main">
+    <InputItem
+      autofocus
+      desc={options.prompt}
+      id={`input_${extId}`}
+      name={options.title}
+      bind:value
+      password={options.password}
+      placeholder={options.placeholder}
+    />
+    <p class="error-tip">{errorMessage}</p>
   </div>
   <div class="footer">
-    <!-- <Btn onclick={closeModal}>{$t('btn_cancel')}</Btn> -->
-    {#each buttons as btn (btn.text)}
-      <Btn
-        onclick={() => {
-          handleComfirm(btn)
-        }}
-        >{btn.text}
-      </Btn>
-    {/each}
+    <Btn onclick={hide}>{$t('btn_cancel')}</Btn>
+    <Btn onclick={handleComfirm}>{$t('btn_confirm')}</Btn>
   </div>
 </Modal>
 
@@ -102,11 +100,14 @@
     min-height: 40px;
     padding: 15px 15px 0;
     font-size: 14px;
-    line-height: 1.5;
     white-space: pre-line;
-    &.select {
-      user-select: text;
-    }
+  }
+
+  .error-tip {
+    min-height: 36px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--color-font-error);
   }
 
   .footer {

@@ -16,8 +16,8 @@ export const createExposeApp = (client: ClientCall) => {
     async showMessageBox(event, key, extId, options) {
       return client.showMessageBox(key, extId, options)
     },
-    async showInputBox(event, key, extId, options) {
-      return client.showInputBox(key, extId, options)
+    async showInputBox(event, key, extId, options, validateInput) {
+      return client.showInputBox(key, extId, options, validateInput)
     },
     async showOpenBox(event, key, extId, options) {
       return client.showOpenBox(key, extId, options)

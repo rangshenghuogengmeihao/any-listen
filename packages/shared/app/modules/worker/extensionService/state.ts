@@ -15,11 +15,11 @@ export const extensionState = {
   tempDir: '',
   extensions: [] as AnyListen.Extension.Extension[],
   // prettier-ignore
-  vmContexts: new Map<string, {
-    extension: AnyListen.Extension.Extension
-    key: string
-    vmContext: AnyListen.ExtensionVM.VMContext
-  }>(),
+  // vmContexts: new Map<string, {
+  //   extension: AnyListen.Extension.Extension
+  //   key: string
+  //   vmContext: AnyListen.ExtensionVM.VMContext
+  // }>(),
   preloadScript: '',
   resourceList: empty as AnyListen.Extension.ResourceList,
   extensionSettings: null as AnyListen.Extension.ExtensionSetting[] | null,

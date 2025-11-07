@@ -3,6 +3,7 @@ import { rendererIPC } from '@/renderer/winMain/rendererEvent'
 import { getAllUserLists, getListMusics, sendMusicListAction } from '@any-listen/app/modules/musicList'
 import { checkProxyCache, createProxy, writeProxyCache } from '@any-listen/app/modules/proxyServer'
 import type { Options } from '@any-listen/nodejs/request'
+import { createProxyCallback } from 'message2call'
 import { getPlayInfo, playerEvent } from '../player'
 import { boxTools } from './clientTools'
 
@@ -53,26 +54,31 @@ export const exposedFuncs: AnyListen.IPCExtension.MainIPCActions = {
 
   async showMessageBox(key, extId, options) {
     if (options.modal) {
-      return boxTools.showBox(key, async () => {
+      return boxTools.showBox(key, extId, async () => {
         return rendererIPC.showMessageBox(key, extId, options)
       })
     }
     return rendererIPC.showMessageBox(key, extId, options)
   },
-  async showInputBox(key, extId, options) {
-    return boxTools.showBox(key, async () => {
-      return rendererIPC.showInputBox(key, extId, options)
-    })
+  async showInputBox(key, extId, options, _validateInput) {
+    const validateInput = _validateInput ? createProxyCallback(_validateInput) : undefined
+    return boxTools
+      .showBox(key, extId, async () => {
+        return rendererIPC.showInputBox(key, extId, options, validateInput)
+      })
+      .finally(() => {
+        validateInput?.releaseProxy()
+      })
   },
   async showOpenBox(key, extId, options) {
     // TODO
-    // return boxTools.showBox(key, async () => {
+    // return boxTools.showBox(key,extId, async () => {
     //   return rendererIPC.showOpenBox(key, extId, options)
     // })
   },
   async showSaveBox(key, extId, options) {
     // TODO
-    // return boxTools.showBox(key, async () => {
+    // return boxTools.showBox(key,extId, async () => {
     //   return rendererIPC.showSaveBox(key, extId, options)
     // })
   },

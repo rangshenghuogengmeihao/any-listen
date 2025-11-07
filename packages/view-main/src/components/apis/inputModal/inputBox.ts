@@ -1,20 +1,14 @@
 import { mount, tick, unmount } from 'svelte'
 
 import { onDesconnected } from '@/modules/app/shared'
-import { i18n } from '@/plugins/i18n'
 import { closeMessageBoxEvent } from '@/shared/ipc/app/event'
 import App from './App.svelte'
 
-const buildDefaultButtons = () => {
-  const buttons = [i18n.t('btn_ok')] as const
-  return buttons.map((text) => ({ text }))
-}
-
-export const showMessageBox = async (
+export const showInputBox = async (
   extId: string,
   key: string,
-  options: AnyListen.IPCCommon.MessageDialogOptions
-): Promise<number> => {
+  options: AnyListen.IPCCommon.InputDialogOptions
+): Promise<string> => {
   const app = mount(App, {
     target: document.getElementById('root')!,
     props: {
@@ -34,15 +28,7 @@ export const showMessageBox = async (
     release()
   })
   await tick()
-  return (
-    app.show(
-      extId,
-      options.buttons ?? buildDefaultButtons(),
-      options.title,
-      options.detail,
-      options.textSelect
-    ) as Promise<number>
-  ).finally(() => {
+  return (app.show(extId, options) as Promise<string>).finally(() => {
     key = ''
     unsub()
     unsub2()

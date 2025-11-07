@@ -756,7 +756,7 @@ declare global {
       /** Controls if a password input is shown. Password input hides the typed text. */
       password?: boolean
       /** An optional string to show as placeholder in the input box to guide the user what to type. */
-      placeHolder?: string
+      placeholder?: string
     }
     interface BoolOptions extends FormItemBase<boolean> {
       type: 'boolean'
@@ -773,16 +773,31 @@ declare global {
       type: 'selection'
       enum: Array<EnumItem<T>>
     }
-    interface FormDialogOptions {
+    // interface FormDialogOptions {
+    //   signal?: unknown
+    //   /** An optional string that represents the title of the form dialog. */
+    //   title?: string
+    //   /** An optional string that represents the description of the form dialog. */
+    //   description?: string
+    //   /** The form items */
+    //   items: Array<InputOptions | BoolOptions | RadioOptions | SelectionOptions>
+    //   /** An optional function that will be called to validate input and to give a hint to the user. */
+    //   validateInput?: (index: number, value: string) => null | undefined | string
+    // }
+    interface InputDialogOptions {
       signal?: unknown
-      /** An optional string that represents the title of the form dialog. */
+      /** Controls if a password input is shown. Password input hides the typed text. */
+      password?: boolean
+      /** An optional string to show as placeholder in the input box to guide the user what to type. */
+      placeholder?: string
+      /** The text to display underneath the input box. */
+      prompt?: string
+      /** An optional string that represents the title of the input box. */
       title?: string
-      /** An optional string that represents the description of the form dialog. */
-      description?: string
-      /** The form items */
-      items: Array<InputOptions | BoolOptions | RadioOptions | SelectionOptions>
+      /** The value to pre-fill in the input box. */
+      value?: string
       /** An optional function that will be called to validate input and to give a hint to the user. */
-      validateInput?: (index: number, value: string) => null | undefined | string
+      validateInput?: (value: string) => Promise<null | undefined | string>
     }
 
     interface OpenDialogOptions {
@@ -866,7 +881,8 @@ declare global {
     interface App {
       showMessage: (message: string, options?: MessageDialogOptions) => Promise<number>
       // TODO
-      showFormDialog: (options: FormDialogOptions) => Promise<string | undefined>
+      // showFormDialog: (options: FormDialogOptions) => Promise<string | undefined>
+      showInputBox: (options: InputDialogOptions) => Promise<string | undefined>
       // showInput: (options: InputDialogOptions) => Promise<string | undefined>
       showOpenDialog: (options: OpenDialogOptions) => Promise<string | string[] | undefined>
       showSaveDialog: (options: SaveDialogOptions) => Promise<string | undefined>

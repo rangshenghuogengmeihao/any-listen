@@ -13,7 +13,12 @@ export declare type ClientCommonActions = WarpPromiseRecord<{
   createDesktopLyricProcess: (ports: MessagePort[]) => void
   /** 显示消息弹窗 */
   showMessageBox: (key: string, extensionId: string, options: AnyListen.IPCCommon.MessageDialogOptions) => Promise<number>
-  showInputBox: (key: string, extensionId: string, options: AnyListen.IPCCommon.InputDialogOptions) => Promise<unknown>
+  showInputBox: (
+    key: string,
+    extensionId: string,
+    options: Omit<AnyListen.IPCCommon.InputDialogOptions, 'validateInput'>,
+    validateInput: AnyListen.IPCCommon.InputDialogOptions['validateInput']
+  ) => Promise<string>
   showOpenBox: (key: string, extensionId: string, options: AnyListen.IPCCommon.OpenDialogOptions) => Promise<unknown>
   showSaveBox: (key: string, extensionId: string, options: AnyListen.IPCCommon.SaveDialogOptions) => Promise<unknown>
   closeMessageBox: (key: string) => void
@@ -43,7 +48,7 @@ declare global {
         /** Controls if a password input is shown. Password input hides the typed text. */
         password?: boolean
         /** An optional string to show as placeholder in the input box to guide the user what to type. */
-        placeHolder?: string
+        placeholder?: string
         /** The text to display underneath the input box. */
         prompt?: string
         /** An optional string that represents the title of the input box. */
@@ -51,7 +56,7 @@ declare global {
         /** The value to pre-fill in the input box. */
         value?: string
         /** An optional function that will be called to validate input and to give a hint to the user. */
-        validateInput?: (value: string) => null | undefined | string
+        validateInput?: (value: string) => Promise<null | undefined | string>
       }
 
       interface OpenDialogOptions {

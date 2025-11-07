@@ -211,3 +211,5 @@ export const API_PREFIX = '/api'
 export const SINGERS_RXP = /[、&_;；/,，|]/
 
 export const PROXY_SERVER_PATH = '/p_static'
+
+export const CANCELED_ERROR_MSG = 'canceled'

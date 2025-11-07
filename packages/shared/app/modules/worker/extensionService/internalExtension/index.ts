@@ -1,10 +1,9 @@
 import { createCommon } from '../extensionApis/common'
-import { createConfigurationStore } from '../extensionApis/configuration'
 import { createMusicUtils } from '../extensionApis/musicUtils'
 import { createStore } from '../extensionApis/storage'
 import { i18n } from '../i18n'
 import { extensions } from './extensions'
-import { createBoxs, createLogTools } from './shared'
+import { createBoxs, createConfigurationStore, createLogTools } from './shared'
 import { internalExtensionContextState } from './state'
 
 export { buildExtensionI18nMessage, getExtensionList } from './extensions'

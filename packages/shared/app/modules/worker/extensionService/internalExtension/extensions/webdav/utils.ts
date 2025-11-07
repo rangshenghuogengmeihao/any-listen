@@ -2,18 +2,49 @@ import { generateId, isUrl } from '@any-listen/common/utils'
 import { hostContext } from './shared'
 import type { WebDAVClientOptions } from './webdav'
 
-const getPassword = async (url: string, username: string) => {
-  const config = (await hostContext.getConfigs(['servers']))[0]
-  if (!config) return ''
+const getServers = async () => {
+  let config = (await hostContext.getConfigs(['servers']))[0] || ''
   const randomStr = generateId()
-  for (let line of config.trim().split('\n')) {
-    line = line.trim()
-    line = line.replaceAll('\\,', randomStr)
-    let [_url, _username, _password] = line.split(',').map((part) => part.replaceAll(randomStr, ',').trim())
-    if (_url.endsWith('/')) _url = _url.slice(0, -1)
-    if (url === _url && username === _username) return _password || ''
+  return config
+    .trim()
+    .split('\n')
+    .map((line) => {
+      line = line.trim()
+      line = line.replaceAll('\\,', randomStr)
+      let [_url, _username, _password] = line.split(',').map((part) => part.replaceAll(randomStr, ',').trim())
+      if (_url.endsWith('/')) _url = _url.slice(0, -1)
+      return {
+        url: _url,
+        username: _username,
+        password: _password || '',
+      }
+    })
+}
+const saveServers = async (servers: Array<{ url: string; username: string; password: string }>) => {
+  const config = servers
+    .map((server) => {
+      const url = server.url.replaceAll(',', '\\,')
+      const username = server.username.replaceAll(',', '\\,')
+      const password = server.password.replaceAll(',', '\\,')
+      return `${url}, ${username}${password ? `, ${password}` : ''}`
+    })
+    .join('\n')
+  await hostContext.setConfigs({ servers: config })
+}
+const getPassword = async (url: string, username: string) => {
+  const servers = await getServers()
+  return servers.find((server) => server.url === url && server.username === username)?.password || ''
+}
+
+export const savePassword = async (url: string, username: string, password: string) => {
+  const servers = await getServers()
+  const server = servers.find((server) => server.url === url && server.username === username)
+  if (server) {
+    server.password = password
+  } else {
+    servers.push({ url, username, password })
   }
-  return ''
+  await saveServers(servers)
 }
 
 export const verifyForm = async (

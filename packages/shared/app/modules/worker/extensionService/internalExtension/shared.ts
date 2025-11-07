@@ -80,3 +80,5 @@ export const createBoxs = (common: ReturnType<typeof createCommon>) => {
     },
   }
 }
+
+export { createConfigurationStore } from '../extensionApis/configuration'

@@ -6,6 +6,7 @@
 
 - Optimized the insertion position when creating a new list: when creating a new list by clicking on an existing list, the new list will be inserted immediately after the target list.
 - Improved the **WebDAV data reading logic** to enhance compatibility with various *WebDAV* services.
+- Improved the **WebDAV service list creation** process: when adding a new WebDAV service list, you no longer need to set the password manually. The application will prompt you to set a password and automatically save it to the extension settings.
 
 ### Fixed
 
@@ -23,6 +24,7 @@
 
 - 优化新列表创建位置：在通过点击已有列表创建新列表时，新列表将插入到目标列表之后。
 - 优化 **WebDAV 数据读取逻辑**，提高与多种 *WebDAV* 服务的兼容性。
+- 优化 **WebDAV 服务列表创建流程**：添加新 WebDAV 服务列表时无需手动设置密码，应用会弹窗提示设置密码并自动保存至扩展设置中。
 
 ### 修复
 

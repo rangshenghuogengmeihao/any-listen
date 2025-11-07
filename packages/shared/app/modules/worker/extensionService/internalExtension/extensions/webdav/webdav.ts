@@ -6,6 +6,7 @@ import { decodeString } from '@any-listen/nodejs/char'
 import { parseBufferMetadata } from '@any-listen/nodejs/music'
 import { WebDAVClient } from '@any-listen/nodejs/webdav-client'
 import { hostContext, logcat } from './shared'
+import { savePassword } from './utils'
 
 const cache = createCache({ max: 10, ttl: 60 * 1000 })
 
@@ -40,9 +41,45 @@ export const buildWebDAVError = (options: WebDAVClientOptions, err: Error) => {
   return err
 }
 
+export const setPassword = async (options: WebDAVClientOptions) => {
+  const password = await hostContext.showInputBox({
+    placeholder: hostContext.i18n.t('exts.webdav.form.input.password_placeholder'),
+    // password: true,
+    title: hostContext.i18n.t('exts.webdav.form.input.password_title'),
+    prompt: options.password
+      ? hostContext.i18n.t('exts.webdav.form.error.invalid_password_prompt')
+      : hostContext.i18n.t('exts.webdav.form.error.no_password_prompt'),
+    async validateInput(value) {
+      const webDAVClient = createWebDAVClient({ ...options, password: value })
+      return webDAVClient
+        .ls(options.path)
+        .then(() => {
+          return null
+        })
+        .catch(async (err: Error) => {
+          const msg = err.message
+          if (msg.startsWith('401')) {
+            if (!value) return hostContext.i18n.t('exts.webdav.form.error.no_password_prompt')
+            return hostContext.i18n.t('exts.webdav.form.error.invalid_password_prompt')
+          }
+          throw err
+        })
+    },
+  })
+  await savePassword(options.url, options.username, password).catch((err) => {
+    logcat.error('setPassword error', err)
+    throw err
+  })
+  options.password = password
+}
+
 export const testDir = async (options: WebDAVClientOptions) => {
   const webDAVClient = createWebDAVClient(options)
-  await webDAVClient.ls(options.path).catch((err: Error) => {
+  await webDAVClient.ls(options.path).catch(async (err: Error) => {
+    const msg = err.message
+    if (msg.startsWith('401')) {
+      if ((await setPassword(options).catch(() => 1)) !== 1) return
+    }
     throw buildWebDAVError(options, err)
   })
 }

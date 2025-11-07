@@ -2,7 +2,7 @@
   import Logo from './Logo.svelte'
   import ControlBtns from './ControlBtns.svelte'
   import SearchInput from './SearchInput.svelte'
-  import { windowDarg } from '@/shared/browser/widnow'
+  import { windowDarg } from '@/shared/browser/widnow.svelte'
 
   let isFullscreen = false
 </script>
@@ -21,7 +21,7 @@
   </div>
 {/if}
 {#if import.meta.env.VITE_IS_WEB}
-  <div class="toolbar" class:fullscreen={isFullscreen} use:windowDarg>
+  <div class="toolbar" class:fullscreen={isFullscreen} {@attach windowDarg}>
     <div class="left">
       <SearchInput />
     </div>

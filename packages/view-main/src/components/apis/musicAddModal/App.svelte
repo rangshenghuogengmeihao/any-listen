@@ -5,7 +5,7 @@
   import { useListItemHeight } from '@/modules/app/reactive.svelte'
   import ListItem from './ListItem.svelte'
   import { getMusicExistListIds } from '@/modules/musicLibrary/actions'
-  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar'
+  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar.svelte'
   import { addMusic, moveMusic } from './shared'
   import { GENERAL_LIST_TYPES } from '@/shared/constants'
 
@@ -77,7 +77,7 @@
       <h2>{title}</h2>
     </div>
     <div class="content">
-      <div class="list" use:verticalScrollbar={{ offset: '0' }}>
+      <div class="list" {@attach verticalScrollbar({ offset: '0' })}>
         {#each lists as list (list.id)}
           <ListItem
             picstyle={picStyle}

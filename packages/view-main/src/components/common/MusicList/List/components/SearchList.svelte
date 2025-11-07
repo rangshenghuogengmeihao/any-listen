@@ -3,7 +3,7 @@
   import { keyboardEvent } from '@/modules/hotkey/keyboard'
   import { settingState } from '@/modules/setting/store/state'
   import { debounce } from '@/shared'
-  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar'
+  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar.svelte'
   import { clipboardReadText } from '@/shared/ipc/app'
   import { t } from '@/plugins/i18n'
   import { workers } from '@/worker'
@@ -250,7 +250,7 @@
         </button>
       </div>
       <div class="list-container" style={listStyle}>
-        <div bind:this={domList} class="list" use:verticalScrollbar={{ offset: '0', autoHide: false }}>
+        <div bind:this={domList} class="list" {@attach verticalScrollbar({ offset: '0', autoHide: false })}>
           {#each resultList as item, index (item.id)}
             <div
               tabindex="0"

@@ -8,7 +8,7 @@
 </script>
 
 <script lang="ts" generics="T extends string = string">
-  import { menuLocaltion } from '@/shared/compositions/menuLocaltion'
+  import { menuLocaltion } from '@/shared/compositions/menuLocaltion.svelte'
   import Portal from './Portal.svelte'
   import { tick } from 'svelte'
 
@@ -59,12 +59,27 @@
 {#if render}
   <Portal to="#root">
     <div
-      use:menuLocaltion={{ visible: anim, location, onHide }}
+      {@attach menuLocaltion({
+        reactives: {
+          get visible() {
+            return anim
+          },
+          get location() {
+            return location
+          },
+        },
+        onHide,
+      })}
       class="menu"
       role="toolbar"
       tabindex="-1"
-      aria-hidden={!anim}
+      inert={!anim}
       onclick={onHide}
+      onkeydown={(event) => {
+        if (event.key === 'Escape') {
+          onHide()
+        }
+      }}
       ontransitionend={(event) => {
         if (!visible) render = false
       }}

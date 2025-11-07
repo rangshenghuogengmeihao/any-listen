@@ -2,7 +2,7 @@
   import SvgIcon from '@/components/base/SvgIcon.svelte'
   import { settings } from './settings'
   import type { SettingListSection } from './settings'
-  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar'
+  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar.svelte'
   import { t } from '@/plugins/i18n'
 
   let {
@@ -17,7 +17,7 @@
 </script>
 
 <div class="settings-app-list">
-  <div bind:this={domList} class="list" use:verticalScrollbar={{ offset: '0', scrollbarWidth: '0.4rem' }}>
+  <div bind:this={domList} class="list" {@attach verticalScrollbar({ offset: '0', scrollbarWidth: '0.4rem' })}>
     {#each settings as item (item.id)}
       <div
         role="button"

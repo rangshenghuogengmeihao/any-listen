@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar'
+  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar.svelte'
   import FormItem from './FormItem.svelte'
 
   let {
@@ -12,7 +12,7 @@
 </script>
 
 <div class="settings-list-container">
-  <div class="settings-list" use:verticalScrollbar={{ offset: '0' }}>
+  <div class="settings-list" {@attach verticalScrollbar({ offset: '0' })}>
     {#each list as item (item.field)}
       <FormItem
         {item}

@@ -1,7 +1,7 @@
 <script lang="ts">
   import SvgIcon from '@/components/base/SvgIcon.svelte'
   import type { ExtenstionListItem } from './shared'
-  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar'
+  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar.svelte'
 
   let {
     list,
@@ -19,7 +19,7 @@
 </script>
 
 <div class="settings-extension-list">
-  <div bind:this={domList} class="list" use:verticalScrollbar={{ offset: '0', scrollbarWidth: '0.4rem' }}>
+  <div bind:this={domList} class="list" {@attach verticalScrollbar({ offset: '0', scrollbarWidth: '0.4rem' })}>
     {#each list as item (item.id)}
       <div
         role="button"

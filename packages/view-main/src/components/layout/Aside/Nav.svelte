@@ -98,7 +98,7 @@
         aria-selected={activePath == item.to}
         href={item.to}
         aria-label={item.name}
-        use:link
+        {@attach link()}
       >
         <!-- <a class="link" class:active={activePath == item.to} role="tab" href={item.to} aria-label={item.name}> -->
         <div class="icon">

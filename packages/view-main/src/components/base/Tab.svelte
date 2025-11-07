@@ -39,7 +39,7 @@
         class:active={value == item[itemkey]}
         tabindex="0"
         role="tab"
-        use:link
+        {@attach link()}
         aria-label={item[itemlabel] as string}
         data-ignore-tip
         aria-selected={value == item[itemkey]}

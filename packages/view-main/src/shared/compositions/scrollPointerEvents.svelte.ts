@@ -1,7 +1,6 @@
 import { debounce } from '@any-listen/common/utils'
-import type { Action } from 'svelte/action'
 
-export const scrollPointerEvents: Action = (dom: HTMLElement) => {
+export const scrollPointerEvents = (dom: HTMLElement) => {
   let isListScrolling = false
   const setStopScrollStatus = debounce(() => {
     isListScrolling = false
@@ -19,9 +18,7 @@ export const scrollPointerEvents: Action = (dom: HTMLElement) => {
     passive: true,
   })
 
-  return {
-    destroy() {
-      dom.removeEventListener('scroll', onScroll)
-    },
+  return () => {
+    dom.removeEventListener('scroll', onScroll)
   }
 }

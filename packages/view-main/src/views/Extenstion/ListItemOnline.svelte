@@ -8,13 +8,13 @@
   import { extT } from '@/modules/extension/i18n'
   import { downloadAndParseExtension, updateExtension, installExtension } from '@/modules/extension/store/actions'
   import { showNotify } from '@/components/apis/notify'
-  import { tooltip } from '@/components/apis/tooltips'
+  import { tooltip } from '@/components/apis/tooltips/attach.svelte'
 
   let { ext }: { ext: OnlineListItem } = $props()
   let version = $derived(
     !ext.installed || ext.currentVersion == ext.version ? `v${ext.version}` : `v${ext.currentVersion} → v${ext.version}`
   )
-  let grants = $derived(ext.grant.map((g) => ({ id: g, icon: `ext_grant_${g}`, label: i18n.t(`extension__grant_${g}`) })))
+  let grants = $derived(ext.grant?.map((g) => ({ id: g, icon: `ext_grant_${g}`, label: i18n.t(`extension__grant_${g}`) })) ?? [])
   const handleInstall = async (ext: OnlineListItem, install?: boolean) => {
     // TODO
     try {
@@ -51,7 +51,7 @@
       {#if grants.length}
         <div class="grant">
           {#each grants as grant (grant.id)}
-            <span aria-label={grant.label} data-ignore-tip use:tooltip><SvgIcon name={grant.icon} /></span>
+            <span aria-label={grant.label} data-ignore-tip {@attach tooltip()}><SvgIcon name={grant.icon} /></span>
           {/each}
         </div>
       {/if}

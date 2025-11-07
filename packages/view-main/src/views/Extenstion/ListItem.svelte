@@ -4,7 +4,7 @@
   import { i18n } from '@/plugins/i18n'
   import { extT } from '@/modules/extension/i18n'
   import ActionBtn from './ActionBtn.svelte'
-  import { tooltip } from '@/components/apis/tooltips'
+  import { tooltip } from '@/components/apis/tooltips/attach.svelte'
 
   let { ext }: { ext: AnyListen.Extension.Extension } = $props()
   let version = $derived(/^\d/.test(ext.version) ? `v${ext.version}` : ext.version)
@@ -28,7 +28,7 @@
       {#if grants.length}
         <div class="grant">
           {#each grants as grant (grant.id)}
-            <span aria-label={grant.label} data-ignore-tip use:tooltip><SvgIcon name={grant.icon} /></span>
+            <span aria-label={grant.label} data-ignore-tip {@attach tooltip()}><SvgIcon name={grant.icon} /></span>
           {/each}
         </div>
       {/if}

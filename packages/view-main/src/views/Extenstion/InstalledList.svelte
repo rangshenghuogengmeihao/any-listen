@@ -3,7 +3,7 @@
   import { extensionList } from '@/modules/extension/reactive.svelte'
   import ListItem from './ListItem.svelte'
   import type { viewTypes } from './shared'
-  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar'
+  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar.svelte'
   import ListItemEnpty from './ListItemEnpty.svelte'
   let { type }: { type: Omit<(typeof viewTypes)[number], 'online'> } = $props()
   let list = $derived(
@@ -17,7 +17,7 @@
 
 <div class="container">
   {#if list.length}
-    <ul class="list" use:verticalScrollbar={{ offset: '0.22rem' }}>
+    <ul class="list" {@attach verticalScrollbar({ offset: '0.22rem' })}>
       {#each list as ext (ext.id)}
         <ListItem {ext} />
       {/each}

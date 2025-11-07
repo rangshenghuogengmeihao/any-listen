@@ -1,8 +1,7 @@
 import { setShowPlayDetail } from '@/modules/playDetail/store/commit'
 import { createClickHandle } from '@any-listen/web'
-import type { Action } from 'svelte/action'
 
-export const hidePlayDtail: Action = (dom) => {
+export const hidePlayDtail = (dom: HTMLElement) => {
   const handleClick = createClickHandle(
     () => {},
     () => {
@@ -15,9 +14,7 @@ export const hidePlayDtail: Action = (dom) => {
 
   dom.addEventListener('contextmenu', handleCtxMenu)
 
-  return {
-    destroy() {
-      dom.removeEventListener('contextmenu', handleCtxMenu)
-    },
+  return () => {
+    dom.removeEventListener('contextmenu', handleCtxMenu)
   }
 }

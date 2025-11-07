@@ -8,15 +8,16 @@ const getServers = async () => {
   return config
     .trim()
     .split('\n')
+    .filter((line) => line.trim().length > 0)
     .map((line) => {
       line = line.trim()
       line = line.replaceAll('\\,', randomStr)
-      let [_url, _username, _password] = line.split(',').map((part) => part.replaceAll(randomStr, ',').trim())
+      let [_url = '', _username = '', _password = ''] = line.split(',').map((part) => part.replaceAll(randomStr, ',').trim())
       if (_url.endsWith('/')) _url = _url.slice(0, -1)
       return {
         url: _url,
         username: _username,
-        password: _password || '',
+        password: _password,
       }
     })
 }

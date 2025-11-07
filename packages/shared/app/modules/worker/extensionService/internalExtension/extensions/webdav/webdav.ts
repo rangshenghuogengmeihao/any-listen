@@ -62,7 +62,8 @@ export const setPassword = async (options: WebDAVClientOptions) => {
             if (!value) return hostContext.i18n.t('exts.webdav.form.error.no_password_prompt')
             return hostContext.i18n.t('exts.webdav.form.error.invalid_password_prompt')
           }
-          throw err
+          if (msg.startsWith('404')) return null
+          return msg
         })
     },
   })
@@ -78,7 +79,9 @@ export const testDir = async (options: WebDAVClientOptions) => {
   await webDAVClient.ls(options.path).catch(async (err: Error) => {
     const msg = err.message
     if (msg.startsWith('401')) {
-      if ((await setPassword(options).catch(() => 1)) !== 1) return
+      if ((await setPassword(options).catch(() => 1)) !== 1) {
+        return testDir(options)
+      }
     }
     throw buildWebDAVError(options, err)
   })

@@ -1,9 +1,9 @@
 ### Fixed
 
-- Fixed the build process for linux/arm/v7 Docker images.
+- Fixed an issue where the password popup failed to save when saving a **WebDAV list**.
 
 ---
 
 ### 修复
 
-- 修复 linux/arm/v7 Docker 镜像的构建流程。
+- 修复保存 **WebDAV 列表** 时密码弹窗无法保存的问题

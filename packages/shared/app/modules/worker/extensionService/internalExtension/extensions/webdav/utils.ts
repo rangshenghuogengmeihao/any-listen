@@ -46,6 +46,7 @@ export const savePassword = async (url: string, username: string, password: stri
     servers.push({ url, username, password })
   }
   await saveServers(servers)
+  void hostContext.showMessage(hostContext.i18n.t('exts.webdav.form.message.save_password_success'))
 }
 
 export const verifyForm = async (

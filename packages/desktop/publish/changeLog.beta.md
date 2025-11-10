@@ -1,9 +1,9 @@
-### Fixed
+### Improved
 
-- Fixed an issue where the password popup failed to save when saving a **WebDAV list**.
+- Improved the login password setup process when creating a **WebDAV list**.
 
 ---
 
-### 修复
+### 优化
 
-- 修复保存 **WebDAV 列表** 时密码弹窗无法保存的问题
+- 优化创建 **WebDAV 列表** 时的登录密码设置流程

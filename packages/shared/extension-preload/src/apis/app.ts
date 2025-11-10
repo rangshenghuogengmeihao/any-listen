@@ -32,7 +32,7 @@ export const app: AnyListen_API.App = {
   async showMessage(message, { signal, ...options } = {}) {
     return buildKey(
       async (key) => {
-        return hostContext.hostFuncs.showMessageBox(key, { ...options, title: message })
+        return hostContext.hostFuncs.showMessageBox(key, { ...options, detail: message })
       },
       signal as AbortSignal | undefined
     )

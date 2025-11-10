@@ -60,7 +60,7 @@ export const createBoxs = (common: ReturnType<typeof createCommon>) => {
       { signal, ...options }: AnyListen.IPCCommon.MessageDialogOptions & { signal?: AbortSignal } = {}
     ) {
       return buildKey(async (key) => {
-        return common.showMessageBox(key, { ...options, title: message })
+        return common.showMessageBox(key, { ...options, detail: message })
       }, signal)
     },
     async showInputBox({ signal, ...options }: AnyListen.IPCCommon.InputDialogOptions & { signal?: AbortSignal }) {

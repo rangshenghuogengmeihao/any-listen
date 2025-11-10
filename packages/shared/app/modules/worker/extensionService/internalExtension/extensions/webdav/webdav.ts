@@ -1,7 +1,7 @@
 import { createCache } from '@any-listen/common/cache'
 import { getMimeType } from '@any-listen/common/mime'
 import { isLikelyGarbage } from '@any-listen/common/utils'
-import { basename, extname } from '@any-listen/nodejs'
+import { basename, extname, sleep } from '@any-listen/nodejs'
 import { decodeString } from '@any-listen/nodejs/char'
 import { parseBufferMetadata } from '@any-listen/nodejs/music'
 import { WebDAVClient } from '@any-listen/nodejs/webdav-client'
@@ -79,8 +79,13 @@ export const testDir = async (options: WebDAVClientOptions) => {
     const msg = err.message
     if (msg.startsWith('401')) {
       if ((await setPassword(options).catch(() => 1)) !== 1) {
+        await sleep(500)
         return testDir(options)
       }
+      if (!options.password) {
+        throw Error(hostContext.i18n.t('exts.webdav.form.error.test_no_password'))
+      }
+      throw Error(hostContext.i18n.t('exts.webdav.form.error.test_invalid_password'))
     }
     throw buildWebDAVError(options, err)
   })

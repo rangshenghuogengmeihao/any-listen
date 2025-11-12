@@ -1,7 +1,7 @@
 import { showMessageBox } from '@/components/apis/dialog/messageBox'
 import { showInputBox } from '@/components/apis/inputModal/inputBox'
 import { showNotifyBox } from '@/components/apis/notify'
-import { closeMessageBoxEvent, deeplinkEvent, settingChangedEvent, updateInfoEvent } from './event'
+import { closeMessageBoxEvent, deeplinkEvent, settingChangedEvent, updateInfoEvent, winShowEvent } from './event'
 
 export default {
   async settingChanged(keys, setting) {
@@ -9,6 +9,9 @@ export default {
   },
   async deeplink(deeplink) {
     deeplinkEvent.emit(deeplink)
+  },
+  async winShow(show) {
+    winShowEvent.emit(show)
   },
   async createDesktopLyricProcess() {
     // TODO

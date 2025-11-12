@@ -9,6 +9,8 @@ export declare type ClientCommonActions = WarpPromiseRecord<{
   hotKeyDown: (config: AnyListen.HotKey.HotKeyDownInfo) => void
   /** 快捷键配置更新 */
   hotKeyConfigUpdated: <T extends string>(config: AnyListen.HotKey.HotKeyConfigAll<T>) => void
+  /** 窗口显示变更 */
+  winShow: (show: boolean) => void
   /** 创建桌面歌词进程 */
   createDesktopLyricProcess: (ports: MessagePort[]) => void
   /** 显示消息弹窗 */

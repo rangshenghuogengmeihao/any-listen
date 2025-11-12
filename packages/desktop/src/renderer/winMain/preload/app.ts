@@ -12,6 +12,9 @@ export const createExposeApp = (client: ClientCall) => {
     async createDesktopLyricProcess(event) {
       return client.createDesktopLyricProcess(event.ports)
     },
+    async winShow(event, show) {
+      return client.winShow(show)
+    },
 
     async showMessageBox(event, key, extId, options) {
       return client.showMessageBox(key, extId, options)

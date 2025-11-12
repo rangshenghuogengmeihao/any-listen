@@ -1,8 +1,9 @@
+import { winShowEvent } from '@/shared/ipc/app/event'
 import { playerEvent } from '../player/store/event'
 import { playerState } from '../player/store/state'
 import { settingEvent } from '../setting/store/event'
 import { settingState } from '../setting/store/state'
-import { getDisabledAutoPause, setDisabledAutoPause } from './lyric'
+import { getDisabledAutoPause, getDisabledAutoPauseSize, setDisabledAutoPause } from './lyric'
 import { lyricEvent } from './store/event'
 
 export const initTitleLyric = () => {
@@ -54,10 +55,23 @@ export const initTitleLyric = () => {
   const unsub3 = playerEvent.on('playStatusChanged', () => {
     setLyric()
   })
+  const unsub4 = winShowEvent.on((show) => {
+    if (!settingState.setting['player.isShowTitleLyric'] || getDisabledAutoPauseSize() > 1) {
+      return
+    }
+    if (show) {
+      setDisabledAutoPause(true, 'titleLyric')
+      setLyric()
+    } else {
+      setDisabledAutoPause(false, 'titleLyric')
+      resetLyric()
+    }
+  })
 
   return () => {
     unsub()
     unsub2()
     unsub3()
+    unsub4()
   }
 }

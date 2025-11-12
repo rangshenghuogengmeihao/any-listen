@@ -1,11 +1,14 @@
-import { getCurrentTime, getDuration, getPlaybackRate } from '@/plugins/player'
+import emptyAudioSource from '@/assets/medias/Silence02s.mp3'
 import { onRelease } from '@/modules/app/shared'
-import { playerEvent } from '../store/event'
-import { playerState } from '../store/state'
-import { pause, play, seekTo, skipNext, skipPrev, stop } from '../store/actions'
+import { lyricEvent } from '@/modules/lyric/store/event'
+import { settingEvent } from '@/modules/setting/store/event'
+import { settingState } from '@/modules/setting/store/state'
+import { getCurrentTime, getDuration, getPlaybackRate } from '@/plugins/player'
 import { createUnsubscriptionSet } from '@/shared'
 import { onPlayerCreated } from '../shared'
-import emptyAudioSource from '@/assets/medias/Silence02s.mp3'
+import { pause, play, seekTo, skipNext, skipPrev, stop } from '../store/actions'
+import { playerEvent } from '../store/event'
+import { playerState } from '../store/state'
 
 let unregistered = createUnsubscriptionSet()
 export const initMediaSessionInfo = () => {
@@ -22,7 +25,7 @@ export const initMediaSessionInfo = () => {
   void emptyAudio.play().catch(() => {})
   let prevPicUrl = ''
 
-  const updateMediaSessionInfo = () => {
+  const updateMediaSessionInfo = (lrc?: string) => {
     if (playerState.musicInfo.id == null) {
       navigator.mediaSession.metadata = null
       return
@@ -32,6 +35,10 @@ export const initMediaSessionInfo = () => {
       artist: playerState.musicInfo.singer,
       album: playerState.musicInfo.album,
       artwork: [],
+    }
+    if (lrc != null) {
+      mediaMetadata.title = lrc
+      mediaMetadata.artist = playerState.title || ''
     }
     if (playerState.musicInfo.pic) {
       const pic = new Image()
@@ -138,6 +145,24 @@ export const initMediaSessionInfo = () => {
         navigator.mediaSession.setActionHandler('previoustrack', null)
         navigator.mediaSession.setActionHandler('nexttrack', null)
       })
+      unregistered.add(
+        lyricEvent.on('titleLyricChanged', (text) => {
+          if (text == null) {
+            updateMediaSessionInfo()
+          } else if (settingState.setting['player.isShowMediaSessionLyric']) {
+            updateMediaSessionInfo(text)
+          }
+        })
+      )
+      unregistered.add(
+        settingEvent.on('updated', (keys, settings) => {
+          if (keys.includes('player.isShowMediaSessionLyric')) {
+            if (!settings['player.isShowMediaSessionLyric']) {
+              updateMediaSessionInfo()
+            }
+          }
+        })
+      )
       unregistered.add(playerEvent.on('playerLoadeddata', updatePositionState))
       unregistered.add(playerEvent.on('playerPlaying', updatePositionState))
       unregistered.add(
@@ -154,7 +179,11 @@ export const initMediaSessionInfo = () => {
       unregistered.add(playerEvent.on('error', handlePause))
       unregistered.add(playerEvent.on('playerEmptied', handleSetPlayInfo))
       unregistered.add(playerEvent.on('musicChanged', handleSetPlayInfo))
-      unregistered.add(playerEvent.on('picUpdated', updateMediaSessionInfo))
+      unregistered.add(
+        playerEvent.on('picUpdated', () => {
+          updateMediaSessionInfo()
+        })
+      )
     })
   })
 }

@@ -2,7 +2,7 @@ import _Event, { type EventType } from '@any-listen/web/Event'
 import type { Line } from './state'
 
 class Event extends _Event {
-  emitEvent<K extends keyof EventMethods>(eventName: K, ...args: any[]) {
+  emitEvent<K extends keyof EventMethods>(eventName: K, ...args: unknown[]) {
     this.emit(eventName, ...args)
   }
 
@@ -12,6 +12,10 @@ class Event extends _Event {
 
   lineChanged(text: string, line: number) {
     this.emitEvent('lineChanged', text, line)
+  }
+
+  titleLyricChanged(text: string | null) {
+    this.emitEvent('titleLyricChanged', text)
   }
 }
 

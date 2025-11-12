@@ -1,43 +1,50 @@
-import { setTitle } from '@/shared'
 import { playerEvent } from '../player/store/event'
 import { playerState } from '../player/store/state'
 import { settingEvent } from '../setting/store/event'
 import { settingState } from '../setting/store/state'
-import { setDisabledAutoPause } from './lyric'
+import { getDisabledAutoPause, setDisabledAutoPause } from './lyric'
 import { lyricEvent } from './store/event'
 
 export const initTitleLyric = () => {
   let lrc = ''
-  let playerTitle = ''
-  let preText = ''
+  let preText: string | null = null
+  let enabled = false
   const resetLyric = () => {
-    preText = ''
-    setTitle('')
+    preText = null
   }
-  const setLyric = (lyric = lrc) => {
+  const setLyric = (lyric = lrc, force = false) => {
     if (lrc != lyric) lrc = lyric
-    if (!settingState.setting['player.isShowTitleLyric']) return
-    const text = playerState.playing ? lrc || ' ' : playerTitle
-    if (preText === text) return
+    if (!enabled) return
+    const text = playerState.playing ? lrc || ' ' : null
+    if (preText === text && !force) return
     preText = text
-    setTitle(text)
+    lyricEvent.titleLyricChanged(text)
   }
 
-  const handleEnable = (enable: boolean) => {
-    setDisabledAutoPause(enable, 'titleLyric')
-  }
   if (settingState.setting['player.isShowTitleLyric']) {
-    handleEnable(true)
+    setDisabledAutoPause(true, 'titleLyric')
   }
+  if (settingState.setting['player.isShowMediaSessionLyric']) {
+    setDisabledAutoPause(true, 'mediaSessionLyric')
+  }
+  enabled = getDisabledAutoPause()
 
   const unsub = settingEvent.on('updated', (keys, settings) => {
+    let updated = false
     if (keys.includes('player.isShowTitleLyric')) {
-      handleEnable(settings['player.isShowTitleLyric']!)
-      if (settings['player.isShowTitleLyric']!) {
-        setLyric()
+      updated ||= true
+      setDisabledAutoPause(settings['player.isShowTitleLyric']!, 'titleLyric')
+    }
+    if (keys.includes('player.isShowMediaSessionLyric')) {
+      updated ||= true
+      setDisabledAutoPause(settings['player.isShowMediaSessionLyric']!, 'mediaSessionLyric')
+    }
+    if (updated) {
+      enabled = getDisabledAutoPause()
+      if (enabled) {
+        setLyric(lrc, true)
       } else {
         resetLyric()
-        setTitle(playerTitle)
       }
     }
   })
@@ -47,19 +54,10 @@ export const initTitleLyric = () => {
   const unsub3 = playerEvent.on('playStatusChanged', () => {
     setLyric()
   })
-  const unsub4 = playerEvent.on('titleChanged', (title) => {
-    playerTitle = title || ''
-    if (settingState.setting['player.isShowTitleLyric']) {
-      setLyric()
-    } else {
-      setTitle(title)
-    }
-  })
 
   return () => {
     unsub()
     unsub2()
     unsub3()
-    unsub4()
   }
 }

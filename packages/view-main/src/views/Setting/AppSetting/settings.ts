@@ -163,7 +163,7 @@ export const settings: SettingListSection[] = [
         name: 'settings.player.lyric_trans_roma_swap',
         type: 'boolean',
       },
-      // t('settings.player.title_lyric')
+      // t('settings.player.media_session_lyric')
       {
         field: 'player.isPlayAwlrc',
         name: 'settings.player.play_awlrc',
@@ -172,6 +172,11 @@ export const settings: SettingListSection[] = [
       {
         field: 'player.isShowTitleLyric',
         name: 'settings.player.title_lyric',
+        type: 'boolean',
+      },
+      {
+        field: 'player.isShowMediaSessionLyric',
+        name: 'settings.player.media_session_lyric',
         type: 'boolean',
       },
       import.meta.env.VITE_IS_MAC

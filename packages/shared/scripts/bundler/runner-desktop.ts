@@ -7,7 +7,6 @@ import Spinnies from 'spinnies'
 import type { Logger } from 'vite'
 import { type TaksName, buildSuatus, runBuildWorkerStatus } from './utils'
 
-import treeKill from 'tree-kill'
 import copyAssets from './copyAssets'
 import { dynamicImport } from './import-esm.cjs'
 import type { Vite } from './types'
@@ -51,7 +50,9 @@ const runMainThread = async () => {
 
     if (desktopProcess) {
       desktopProcess.removeAllListeners()
-      treeKill(desktopProcess.pid!)
+
+      // 候选： fkill / pidtree
+      desktopProcess.kill()
     }
     runDesktopDelay()
 

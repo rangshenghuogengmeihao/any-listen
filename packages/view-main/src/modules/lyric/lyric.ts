@@ -22,7 +22,7 @@ export const setLyric = (lrcStr: string, extLrc: string[]) => {
 
 let sources = new Map<string, boolean>()
 let prevDisabled = false
-export const setDisabledAutoPause = (disabled: boolean, source: 'statusBarLyric' | 'titleLyric') => {
+export const setDisabledAutoPause = (disabled: boolean, source: 'statusBarLyric' | 'titleLyric' | 'mediaSessionLyric') => {
   sources.set(source, disabled)
   const currentDisabled = Array.from(sources.values()).some((e) => e)
   if (prevDisabled == currentDisabled) return
@@ -53,6 +53,9 @@ export const setDisabledAutoPause = (disabled: boolean, source: 'statusBarLyric'
       cancelNextTick: stopTimeout,
     })
   }
+}
+export const getDisabledAutoPause = () => {
+  return prevDisabled
 }
 
 export const play = (currentTime: number) => {

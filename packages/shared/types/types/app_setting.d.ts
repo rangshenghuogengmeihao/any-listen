@@ -269,6 +269,11 @@ declare global {
       'player.isShowTitleLyric': boolean
 
       /**
+       * 是否将歌词显示在媒体控制界面
+       */
+      'player.isShowMediaSessionLyric': boolean
+
+      /**
        * 播放详情页-是否缩放当前播放的歌词行
        */
       'playDetail.isZoomActiveLrc': boolean

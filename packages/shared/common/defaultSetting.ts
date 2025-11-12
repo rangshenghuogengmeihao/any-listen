@@ -37,6 +37,7 @@ const defaultSetting: AnyListen.AppSetting = {
   'player.isAutoCleanPlayedList': false,
   'player.isShowStatusBarLyric': false,
   'player.isShowTitleLyric': false,
+  'player.isShowMediaSessionLyric': false,
   'player.soundEffect.convolution.fileName': '',
   'player.soundEffect.convolution.mainGain': 10,
   'player.soundEffect.convolution.sendGain': 0,

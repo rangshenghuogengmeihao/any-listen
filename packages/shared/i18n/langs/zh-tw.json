@@ -287,6 +287,7 @@
   "settings.player.lyric_roma": "顯示歌詞羅馬音（如果可用）",
   "settings.player.lyric_trans_roma_swap": "調換歌詞翻譯與歌詞羅馬音位置",
   "settings.player.lyric_transition": "顯示歌詞翻譯（如果可用）",
+  "settings.player.media_session_lyric": "顯示媒體控制界面歌詞",
   "settings.player.play_awlrc": "播放卡拉OK歌詞（如果可用）",
   "settings.player.status_bar_lyric": "顯示狀態欄歌詞（需啟用系統托盤）",
   "settings.player.title_lyric": "顯示標題欄歌詞",

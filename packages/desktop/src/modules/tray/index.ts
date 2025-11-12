@@ -237,9 +237,10 @@ const setLyric = (lyricLineText = playerState.lyricLineText) => {
     playerState.lyricLineText = lyricLineText
   }
   if (isShowStatusBarLyric && tray) {
-    const title = playerState.play ? lyricLineText : ''
+    let title = playerState.play ? lyricLineText : ''
     if (titleInfo.title === title) return
     titleInfo.title = title
+    if (title.length > 30) title = `${title.substring(0, 30)}...`
     tray.setTitle(title)
   }
 }

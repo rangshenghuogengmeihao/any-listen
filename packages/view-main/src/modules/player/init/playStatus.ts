@@ -2,10 +2,11 @@ import { onRelease } from '@/modules/app/shared'
 import { settingState } from '@/modules/setting/store/state'
 import { i18n } from '@/plugins/i18n'
 import { setPause } from '@/plugins/player'
-import { createUnsubscriptionSet, setTitle } from '@/shared'
+import { createUnsubscriptionSet } from '@/shared'
 import { buildMusicName } from '@any-listen/common/tools'
 import { onPlayerCreated } from '../shared'
 import { setPlayerPlaying, setStatusText, skipNext } from '../store/actions'
+import { setPlayerTitle } from '../store/commit'
 import { playerEvent } from '../store/event'
 import { playerState } from '../store/state'
 
@@ -34,7 +35,7 @@ export const initPlayStatus = () => {
       unregistered.add(
         playerEvent.on('stop', () => {
           setPlayerPlaying(false)
-          setTitle(null)
+          setPlayerTitle(null)
           setStatusText(i18n.t('player__stopped'))
           // TODO
           // setPowerSaveBlocker(false)
@@ -42,7 +43,7 @@ export const initPlayStatus = () => {
       )
       unregistered.add(
         playerEvent.on('musicChanged', () => {
-          setTitle(
+          setPlayerTitle(
             playerState.musicInfo.id
               ? buildMusicName(
                   settingState.setting['download.fileName'],

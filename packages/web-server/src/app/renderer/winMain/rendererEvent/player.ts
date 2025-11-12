@@ -30,6 +30,9 @@ export const createExposePlayer = () => {
         case 'statusText':
           playerEvent.statusText(pEvent.data)
           break
+        case 'lyricText':
+          playerEvent.lyricText(pEvent.data)
+          break
         case 'picUpdated':
           playerEvent.picUpdated(pEvent.data)
           break

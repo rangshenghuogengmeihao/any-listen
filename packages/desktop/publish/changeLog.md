@@ -1,6 +1,7 @@
 ### Added
 
 - Added a **cover style** option for the *Play Details* page. Two styles are available now: **CD** and **Square**. You can change it at _Settings > Play Details Page Settings > Cover Style_.
+- Added a **"Show lyrics in title bar"** option in _Settings > Playback Settings_. Disabled by default; can be enabled via _Settings > Playback Settings > Show lyrics in title bar_.
 
 ### Improved
 
@@ -19,12 +20,13 @@
 
 ### 新增
 
-- 新增 **播放详情页封面样式** 选项，当前提供 **CD** 与 **正方形** 两种样式。可在 _设置 > 播放详情页设置 > 封面样式_ 中进行切换。
+- 新增 **播放详情页封面样式** 选项，当前提供 **CD** 与 **正方形** 两种样式。可在 _设置 > 播放详情页设置 > 封面样式_ 中切换。
+- 新增 **「显示标题栏歌词」** 设置项，默认关闭，可在 _设置 > 播放设置 > 显示标题栏歌词_ 启用。
 
 ### 优化
 
-- 优化新列表创建位置：在通过点击已有列表创建新列表时，新列表将插入到目标列表之后。
-- 优化 **WebDAV 数据读取逻辑**，提高与多种 *WebDAV* 服务的兼容性。
+- 优化新列表创建位置：通过点击已有列表创建新列表时，新列表将插入到目标列表之后。
+- 优化 **WebDAV 数据读取逻辑**，提升与多种 *WebDAV* 服务的兼容性。
 - 优化 **WebDAV 服务列表创建流程**：添加新 WebDAV 服务列表时无需手动设置密码，应用会弹窗提示设置密码并自动保存至扩展设置中。
 - 优化系统托盘菜单。
 

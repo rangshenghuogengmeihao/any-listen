@@ -1,20 +1,22 @@
 import { actions } from '@/actions'
-import { appEvent, appState } from '@/app'
+import { appEvent, appState, updateSetting } from '@/app'
 import { i18n } from '@/i18n'
 import type { WinMainEvent } from '@/renderer/winMain'
-import { isWin } from '@any-listen/nodejs/index'
+import { isMac, isWin } from '@any-listen/nodejs/index'
 import { Menu, nativeImage, Tray } from 'electron'
 import path from 'node:path'
 import { playerEvent } from '../player'
 
 let tray: Electron.Tray | null
 let isEnableTray = false
+let isShowStatusBarLyric = false
 let themeId: number
 
 const playerState = {
   empty: true,
   collect: false,
   play: false,
+  lyricLineText: '',
 }
 
 let isExistMainWindow: null | (() => boolean) = null
@@ -24,6 +26,7 @@ const watchConfigKeys = [
   'desktopLyric.enable',
   'desktopLyric.isLock',
   'desktopLyric.isAlwaysOnTop',
+  'player.isShowStatusBarLyric',
   'tray.themeId',
   'tray.enable',
 ] satisfies Array<keyof AnyListen.AppSetting>
@@ -72,6 +75,7 @@ export const destroyTray = () => {
   if (!tray) return
   tray.destroy()
   isEnableTray = false
+  isShowStatusBarLyric = false
   tray = null
 }
 
@@ -173,24 +177,24 @@ export const createMenu = () => {
   //         },
   //       }
   // )
-  // if (isMac) {
-  //   menu.push({ type: 'separator' })
-  //   menu.push(
-  //     isShowStatusBarLyric
-  //       ? {
-  //           label: i18n.t('hide_statusbar_lyric'),
-  //           click() {
-  //             updateSetting({ 'player.isShowStatusBarLyric': false })
-  //           },
-  //         }
-  //       : {
-  //           label: i18n.t('show_statusbar_lyric'),
-  //           click() {
-  //             updateSetting({ 'player.isShowStatusBarLyric': true })
-  //           },
-  //         }
-  //   )
-  // }
+  if (isMac) {
+    menu.push({ type: 'separator' })
+    menu.push(
+      isShowStatusBarLyric
+        ? {
+            label: i18n.t('tray.hide_statusbar_lyric'),
+            click() {
+              updateSetting({ 'player.isShowStatusBarLyric': false })
+            },
+          }
+        : {
+            label: i18n.t('tray.show_statusbar_lyric'),
+            click() {
+              updateSetting({ 'player.isShowStatusBarLyric': true })
+            },
+          }
+    )
+  }
 
   menu.push({ type: 'separator' })
   if (isExistMainWindow?.()) {
@@ -221,6 +225,25 @@ export const createMenu = () => {
   tray.setContextMenu(contextMenu)
 }
 
+const titleInfo = {
+  title: '',
+}
+const resetLyric = () => {
+  titleInfo.title = ''
+  tray?.setTitle('')
+}
+const setLyric = (lyricLineText = playerState.lyricLineText) => {
+  if (lyricLineText !== playerState.lyricLineText) {
+    playerState.lyricLineText = lyricLineText
+  }
+  if (isShowStatusBarLyric && tray) {
+    const title = playerState.play ? lyricLineText : ''
+    if (titleInfo.title === title) return
+    titleInfo.title = title
+    tray.setTitle(title)
+  }
+}
+
 const tipInfo = {
   defaultTip: '',
   name: '',
@@ -247,6 +270,14 @@ const init = () => {
   if (isEnableTray !== appState.appSetting['tray.enable']) {
     isEnableTray = appState.appSetting['tray.enable']
     appState.appSetting['tray.enable'] ? createTray() : destroyTray()
+  }
+  if (isShowStatusBarLyric !== appState.appSetting['player.isShowStatusBarLyric']) {
+    isShowStatusBarLyric = appState.appSetting['player.isShowStatusBarLyric']
+    if (isShowStatusBarLyric) {
+      setLyric(playerState.lyricLineText)
+    } else {
+      resetLyric()
+    }
   }
 
   setTip()
@@ -293,12 +324,15 @@ export const initTray = async () => {
   playerEvent.on('status', ([_, isPlaying]) => {
     if (playerState.play == isPlaying) return
     playerState.play = isPlaying
-    console.log('status', isPlaying)
+    setLyric()
     createMenu()
   })
   playerEvent.on('collectStatus', (collect) => {
     playerState.collect = collect
     createMenu()
+  })
+  playerEvent.on('lyricText', (text) => {
+    setLyric(text)
   })
 }
 

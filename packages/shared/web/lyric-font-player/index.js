@@ -1,5 +1,5 @@
-import LinePlayer from './line-player'
 import FontPlayer from './font-player'
+import LinePlayer from './line-player'
 
 const fontTimeExp = /<(\d+),(\d+)>/g
 
@@ -19,9 +19,9 @@ export default class Lyric {
     activeLineClassName = 'active',
     shadowContent = false,
     isVertical = false,
-    onPlay = function(line, text) { },
-    onSetLyric = function(lines, offset) { },
-    onUpdateLyric = function(lines) { },
+    onPlay = function (line, text) {},
+    onSetLyric = function (lines, offset) {},
+    onUpdateLyric = function (lines) {},
   }) {
     this.lyric = lyric
     this.extendedLyrics = extendedLyrics
@@ -118,7 +118,7 @@ export default class Lyric {
 
     this._lineFonts = []
     if (this.isLineMode) {
-      this._lines = lyricLines.map(line => {
+      this._lines = lyricLines.map((line) => {
         const fontPlayer = new FontPlayer({
           time: line.time,
           rate: this.rate,
@@ -144,7 +144,7 @@ export default class Lyric {
         }
       })
     } else {
-      this._lines = lyricLines.map(line => {
+      this._lines = lyricLines.map((line) => {
         const fontPlayer = new FontPlayer({
           time: line.time,
           rate: this.rate,
@@ -226,5 +226,9 @@ export default class Lyric {
       this.playingLineNum = 0
       this._handleLinePlayerOnPlay(num, '', this.linePlayer._currentTime())
     } else this.playingLineNum = 0
+  }
+
+  setTimeoutTools(tools) {
+    this.linePlayer.setTimeoutTools(tools)
   }
 }

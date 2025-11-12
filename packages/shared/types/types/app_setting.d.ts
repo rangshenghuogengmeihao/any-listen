@@ -259,6 +259,16 @@ declare global {
       'player.isAutoCleanPlayedList': boolean
 
       /**
+       * 是否将歌词显示在状态栏（Mac可用）
+       */
+      'player.isShowStatusBarLyric': boolean
+
+      /**
+       * 是否将歌词显示在标题栏
+       */
+      'player.isShowTitleLyric': boolean
+
+      /**
        * 播放详情页-是否缩放当前播放的歌词行
        */
       'playDetail.isZoomActiveLrc': boolean

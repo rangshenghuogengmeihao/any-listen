@@ -2,6 +2,7 @@ import { getMusicPic as getMusicPicFromRemote, getMusicUrl as getMusicUrlFromRem
 import { sendPlayerEvent, sendPlayHistoryListAction } from '@/shared/ipc/player'
 import * as commit from './commit'
 
+import { lyricEvent } from '@/modules/lyric/store/event'
 import { playerActionEvent, playHistoryListActionEvent } from '@/shared/ipc/player/event'
 import { playerEvent } from './event'
 import { pause, play, playId, seekTo, setCollectStatus, skipNext, skipPrev, togglePlay } from './playerActions'
@@ -134,44 +135,58 @@ export const removePlayHistoryList = async (data: AnyListen.IPCPlayer.PlayHistor
 
 let unregistereds = new Set<() => void>()
 export const registerLocalPlayerAction = () => {
+  let preStatus: AnyListen.IPCPlayer.PlayerStatus = 'stopped'
   unregistereds.add(
     playerEvent.on('playerPlaying', () => {
+      preStatus = 'playing'
       void sendPlayerEvent({ action: 'status', data: ['playing', playerState.playing] })
     })
   )
   unregistereds.add(
     playerEvent.on('playerPause', () => {
+      preStatus = 'paused'
       void sendPlayerEvent({ action: 'status', data: ['paused', playerState.playing] })
     })
   )
   unregistereds.add(
     playerEvent.on('playerStop', () => {
+      preStatus = 'stopped'
       void sendPlayerEvent({ action: 'status', data: ['stopped', playerState.playing] })
     })
   )
   unregistereds.add(
     playerEvent.on('playerLoadstart', () => {
+      preStatus = 'loading'
       void sendPlayerEvent({ action: 'status', data: ['loading', playerState.playing] })
     })
   )
   unregistereds.add(
     playerEvent.on('playerWaiting', () => {
+      preStatus = 'buffering'
       void sendPlayerEvent({ action: 'status', data: ['buffering', playerState.playing] })
     })
   )
   unregistereds.add(
     playerEvent.on('playerEnded', () => {
+      preStatus = 'ended'
       void sendPlayerEvent({ action: 'status', data: ['ended', playerState.playing] })
     })
   )
   unregistereds.add(
     playerEvent.on('playerError', () => {
+      preStatus = 'error'
       void sendPlayerEvent({ action: 'status', data: ['error', playerState.playing] })
     })
   )
   unregistereds.add(
     playerEvent.on('stop', () => {
+      preStatus = 'stopped'
       void sendPlayerEvent({ action: 'status', data: ['stopped', playerState.playing] })
+    })
+  )
+  unregistereds.add(
+    playerEvent.on('playStatusChanged', (state) => {
+      void sendPlayerEvent({ action: 'status', data: [preStatus, state] })
     })
   )
   unregistereds.add(
@@ -179,6 +194,13 @@ export const registerLocalPlayerAction = () => {
       void sendPlayerEvent({ action: 'statusText', data: text })
     })
   )
+  if (import.meta.env.VITE_IS_DESKTOP) {
+    unregistereds.add(
+      lyricEvent.on('lineChanged', (text) => {
+        void sendPlayerEvent({ action: 'lyricText', data: text })
+      })
+    )
+  }
   unregistereds.add(
     playerEvent.on('progressChanged', (progress) => {
       if (import.meta.env.VITE_IS_WEB) {

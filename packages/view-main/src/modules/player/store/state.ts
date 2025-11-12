@@ -5,6 +5,7 @@ export interface InitState {
   playerPlaying: boolean
   playing: boolean
   statusText: string
+  title: string | null
   loadErrorPicUrl: string
   progress: {
     nowPlayTime: number
@@ -49,6 +50,7 @@ export const playerState: InitState = {
   playerPlaying: false,
   playing: false,
   statusText: '',
+  title: null,
   loadErrorPicUrl: '',
   progress: {
     nowPlayTime: 0,

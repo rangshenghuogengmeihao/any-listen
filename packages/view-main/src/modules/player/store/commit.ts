@@ -42,6 +42,12 @@ export const setPlayMusicInfo = (info: AnyListen.Player.PlayMusicInfo | null) =>
   playerEvent.playMusicInfoChanged(info ? { ...info } : null)
 }
 
+export const setPlayerTitle = (title: string | null) => {
+  playerState.title = title
+
+  playerEvent.titleChanged(title)
+}
+
 export const setMusicInfo = (_musicInfo: Partial<AnyListen.Player.MusicInfo> | null) => {
   _musicInfo ||= {
     id: null,

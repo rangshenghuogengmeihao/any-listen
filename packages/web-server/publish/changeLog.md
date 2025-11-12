@@ -1,6 +1,7 @@
 ### Added
 
 - Added a **cover style** option for the *Play Details* page. Two styles are available now: **CD** and **Square**. You can change it at _Settings > Play Details Page Settings > Cover Style_.
+- Added a **"Show lyrics in title bar"** option in _Settings > Playback Settings_. Disabled by default; can be enabled via _Settings > Playback Settings > Show lyrics in title bar_.
 
 ### Improved
 
@@ -20,6 +21,7 @@
 ### 新增
 
 - 新增 **播放详情页封面样式** 选项，当前提供 **CD** 与 **正方形** 两种样式。可在 _设置 > 播放详情页设置 > 封面样式_ 中进行切换。
+- 新增 **「显示标题栏歌词」** 设置项，默认关闭，可在 _设置 > 播放设置 > 显示标题栏歌词_ 启用。
 
 ### 优化
 

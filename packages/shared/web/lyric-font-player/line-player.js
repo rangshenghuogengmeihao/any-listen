@@ -213,11 +213,15 @@ export default class LinePlayer {
     }
   }
 
-  setPlaybackRate(rate) {
-    this._rate = rate
+  replay() {
     if (!this.lines.length) return
     if (!this.isPlay) return
     this.play(this._currentTime())
+  }
+
+  setPlaybackRate(rate) {
+    this._rate = rate
+    this.replay()
   }
 
   setLyric(lyric, extendedLyrics) {
@@ -226,5 +230,22 @@ export default class LinePlayer {
     this.lyric = lyric
     this.extendedLyrics = extendedLyrics
     this._init()
+  }
+
+  setTimeoutTools(tools) {
+    timeoutTools.clear()
+    if (tools) {
+      timeoutTools.setTimeout = tools.setTimeout
+      timeoutTools.clearTimeout = tools.clearTimeout
+      timeoutTools.nextTick = tools.nextTick
+      timeoutTools.cancelNextTick = tools.cancelNextTick
+    } else {
+      timeoutTools.setTimeout = window.setTimeout.bind(window)
+      timeoutTools.clearTimeout = window.clearTimeout.bind(window)
+      timeoutTools.nextTick = window.requestAnimationFrame.bind(window)
+      timeoutTools.cancelNextTick = window.cancelAnimationFrame.bind(window)
+    }
+
+    this.replay()
   }
 }

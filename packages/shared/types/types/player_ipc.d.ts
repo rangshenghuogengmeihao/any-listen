@@ -71,6 +71,7 @@ declare namespace AnyListen {
       | IPCAction<'playbackRate', number>
       | IPCAction<'status', Status>
       | IPCAction<'statusText', string>
+      | IPCAction<'lyricText', string>
       | IPCAction<'picUpdated', string | null>
       | IPCAction<'lyricUpdated', Music.LyricInfo>
       | IPCAction<'lyricOffsetUpdated', number>

@@ -59,7 +59,7 @@ declare namespace AnyListen {
       maxPlayTimeStr: string
     }
 
-    type PlayerStatus = 'playing' | 'paused' | 'stoped' | 'loading' | 'buffering' | 'ended' | 'error'
+    type PlayerStatus = 'playing' | 'paused' | 'stopped' | 'loading' | 'buffering' | 'ended' | 'error'
 
     /** 播放器实时状态 / 用户期望的播放状态 */
     type Status = [PlayerStatus, boolean]

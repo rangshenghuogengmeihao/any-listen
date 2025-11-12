@@ -313,7 +313,7 @@ export const stopRunExtension = async (extension: AnyListen.Extension.Extension)
   extensionEvent.stoping(extension.id)
   await destroyContext(extension.id)
   extension.loaded = false
-  extensionEvent.stoped(extension.id)
+  extensionEvent.stopped(extension.id)
   return false
 }
 

@@ -146,7 +146,7 @@ export const registerLocalPlayerAction = () => {
   )
   unregistereds.add(
     playerEvent.on('playerStop', () => {
-      void sendPlayerEvent({ action: 'status', data: ['stoped', playerState.playing] })
+      void sendPlayerEvent({ action: 'status', data: ['stopped', playerState.playing] })
     })
   )
   unregistereds.add(
@@ -167,6 +167,11 @@ export const registerLocalPlayerAction = () => {
   unregistereds.add(
     playerEvent.on('playerError', () => {
       void sendPlayerEvent({ action: 'status', data: ['error', playerState.playing] })
+    })
+  )
+  unregistereds.add(
+    playerEvent.on('stop', () => {
+      void sendPlayerEvent({ action: 'status', data: ['stopped', playerState.playing] })
     })
   )
   unregistereds.add(

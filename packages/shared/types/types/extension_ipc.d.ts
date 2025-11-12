@@ -29,7 +29,7 @@ declare namespace AnyListen {
       | IPCAction<'loadError', EventExtensionLoadError>
       | IPCAction<'loaded', EventExtensionLoaded>
       | IPCAction<'stoping', string>
-      | IPCAction<'stoped', string>
+      | IPCAction<'stopped', string>
       | IPCAction<'listAdd', Extension.Extension>
       | IPCAction<'listRemove', string>
       | IPCAction<'listUpdate', Extension.Extension>

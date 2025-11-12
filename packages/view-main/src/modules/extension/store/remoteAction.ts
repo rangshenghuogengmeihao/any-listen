@@ -71,7 +71,7 @@ export const registerRemoteExtensionEvent = () => {
       case 'stoping':
         stopExt(action.data)
         break
-      case 'stoped':
+      case 'stopped':
         commit.setExtensionStop(action.data)
         break
       case 'loadError':

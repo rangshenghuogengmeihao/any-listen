@@ -35,7 +35,7 @@ export const initPlayStatus = () => {
         playerEvent.on('stop', () => {
           setPlayerPlaying(false)
           setTitle(null)
-          setStatusText(i18n.t('player__stoped'))
+          setStatusText(i18n.t('player__stopped'))
           // TODO
           // setPowerSaveBlocker(false)
         })

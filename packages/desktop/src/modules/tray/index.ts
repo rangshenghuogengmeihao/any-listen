@@ -1,14 +1,21 @@
 import { actions } from '@/actions'
-import { appEvent, appState, updateSetting } from '@/app'
+import { appEvent, appState } from '@/app'
 import { i18n } from '@/i18n'
 import type { WinMainEvent } from '@/renderer/winMain'
 import { isWin } from '@any-listen/nodejs/index'
 import { Menu, nativeImage, Tray } from 'electron'
 import path from 'node:path'
+import { playerEvent } from '../player'
 
 let tray: Electron.Tray | null
 let isEnableTray = false
 let themeId: number
+
+const playerState = {
+  empty: true,
+  collect: false,
+  play: false,
+}
 
 let isExistMainWindow: null | (() => boolean) = null
 let isShowMainWindow: null | (() => boolean) = null
@@ -19,7 +26,6 @@ const watchConfigKeys = [
   'desktopLyric.isAlwaysOnTop',
   'tray.themeId',
   'tray.enable',
-  'common.langId',
 ] satisfies Array<keyof AnyListen.AppSetting>
 
 const themeList = [
@@ -54,8 +60,8 @@ export const createTray = () => {
   // 托盘
   tray = new Tray(getTrayImage(themeId))
 
-  tray.setToolTip(i18n.t('app_name'))
-  createMenu()
+  // tray.setToolTip(i18n.t('app_name'))
+  // createMenu()
   tray.setIgnoreDoubleClickEvents(true)
   tray.on('click', () => {
     actions.exec('winMain.showWindow')
@@ -69,9 +75,124 @@ export const destroyTray = () => {
   tray = null
 }
 
+const createPlayerMenu = () => {
+  let menu: Electron.MenuItemConstructorOptions[] = []
+  menu.push(
+    playerState.play
+      ? {
+          label: i18n.t('player__pause'),
+          click() {
+            void actions.exec('winMain.pause')
+          },
+        }
+      : {
+          label: i18n.t('player__play'),
+          click() {
+            void actions.exec('winMain.play')
+          },
+        }
+  )
+  menu.push({
+    label: i18n.t('player__prev'),
+    click() {
+      void actions.exec('winMain.prev')
+    },
+  })
+  menu.push({
+    label: i18n.t('player__next'),
+    click() {
+      void actions.exec('winMain.next')
+    },
+  })
+  menu.push(
+    playerState.collect
+      ? {
+          label: i18n.t('player__uncollect'),
+          click() {
+            void actions.exec('player.uncollectMusic')
+          },
+        }
+      : {
+          label: i18n.t('player__collect'),
+          click() {
+            void actions.exec('player.collectMusic')
+          },
+        }
+  )
+  return menu
+}
+
 export const createMenu = () => {
   if (!tray) return
-  let menu = []
+  let menu: Electron.MenuItemConstructorOptions[] = createPlayerMenu()
+  if (playerState.empty) for (const m of menu) m.enabled = false
+
+  // menu.push({ type: 'separator' })
+  // menu.push(
+  //   appState.appSetting['desktopLyric.enable']
+  //     ? {
+  //         label: i18n.t('desktop_lyric__hide'),
+  //         click() {
+  //           updateSetting({ 'desktopLyric.enable': false })
+  //         },
+  //       }
+  //     : {
+  //         label: i18n.t('desktop_lyric__show'),
+  //         click() {
+  //           updateSetting({ 'desktopLyric.enable': true })
+  //         },
+  //       }
+  // )
+  // menu.push(
+  //   appState.appSetting['desktopLyric.isLock']
+  //     ? {
+  //         label: i18n.t('desktop_lyric__unlock'),
+  //         click() {
+  //           updateSetting({ 'desktopLyric.isLock': false })
+  //         },
+  //       }
+  //     : {
+  //         label: i18n.t('desktop_lyric__lock'),
+  //         click() {
+  //           updateSetting({ 'desktopLyric.isLock': true })
+  //         },
+  //       }
+  // )
+  // menu.push(
+  //   appState.appSetting['desktopLyric.isAlwaysOnTop']
+  //     ? {
+  //         label: i18n.t('desktop_lyric__top_off'),
+  //         click() {
+  //           updateSetting({ 'desktopLyric.isAlwaysOnTop': false })
+  //         },
+  //       }
+  //     : {
+  //         label: i18n.t('desktop_lyric__top_on'),
+  //         click() {
+  //           updateSetting({ 'desktopLyric.isAlwaysOnTop': true })
+  //         },
+  //       }
+  // )
+  // if (isMac) {
+  //   menu.push({ type: 'separator' })
+  //   menu.push(
+  //     isShowStatusBarLyric
+  //       ? {
+  //           label: i18n.t('hide_statusbar_lyric'),
+  //           click() {
+  //             updateSetting({ 'player.isShowStatusBarLyric': false })
+  //           },
+  //         }
+  //       : {
+  //           label: i18n.t('show_statusbar_lyric'),
+  //           click() {
+  //             updateSetting({ 'player.isShowStatusBarLyric': true })
+  //           },
+  //         }
+  //   )
+  // }
+
+  menu.push({ type: 'separator' })
   if (isExistMainWindow?.()) {
     const isShow = isShowMainWindow!()
     menu.push(
@@ -90,51 +211,6 @@ export const createMenu = () => {
           }
     )
   }
-  menu.push(
-    appState.appSetting['desktopLyric.enable']
-      ? {
-          label: i18n.t('desktop_lyric__hide'),
-          click() {
-            updateSetting({ 'desktopLyric.enable': false })
-          },
-        }
-      : {
-          label: i18n.t('desktop_lyric__show'),
-          click() {
-            updateSetting({ 'desktopLyric.enable': true })
-          },
-        }
-  )
-  menu.push(
-    appState.appSetting['desktopLyric.isLock']
-      ? {
-          label: i18n.t('desktop_lyric__unlock'),
-          click() {
-            updateSetting({ 'desktopLyric.isLock': false })
-          },
-        }
-      : {
-          label: i18n.t('desktop_lyric__lock'),
-          click() {
-            updateSetting({ 'desktopLyric.isLock': true })
-          },
-        }
-  )
-  menu.push(
-    appState.appSetting['desktopLyric.isAlwaysOnTop']
-      ? {
-          label: i18n.t('desktop_lyric__top_off'),
-          click() {
-            updateSetting({ 'desktopLyric.isAlwaysOnTop': false })
-          },
-        }
-      : {
-          label: i18n.t('desktop_lyric__top_on'),
-          click() {
-            updateSetting({ 'desktopLyric.isAlwaysOnTop': true })
-          },
-        }
-  )
   menu.push({
     label: i18n.t('quit'),
     click() {
@@ -143,6 +219,24 @@ export const createMenu = () => {
   })
   const contextMenu = Menu.buildFromTemplate(menu)
   tray.setContextMenu(contextMenu)
+}
+
+const tipInfo = {
+  defaultTip: '',
+  name: '',
+  singer: '',
+}
+const setTip = () => {
+  if (!tray) return
+
+  let tip: string
+  if (tipInfo.name) {
+    if (tipInfo.name.length > 20) tipInfo.name = `${tipInfo.name.substring(0, 20)}...`
+    if (tipInfo.singer && tipInfo.singer.length > 20) tipInfo.singer = `${tipInfo.singer.substring(0, 20)}...`
+
+    tip = `${tipInfo.defaultTip}\n${i18n.t('tray.music_name')}${tipInfo.name}${tipInfo.singer ? `\n${i18n.t('tray.music_singer')}${tipInfo.singer}` : ''}`
+  } else tip = tipInfo.defaultTip
+  tray.setToolTip(tip)
 }
 
 const init = () => {
@@ -154,16 +248,57 @@ const init = () => {
     isEnableTray = appState.appSetting['tray.enable']
     appState.appSetting['tray.enable'] ? createTray() : destroyTray()
   }
+
+  setTip()
   createMenu()
 }
 
 export const initTray = async () => {
+  tipInfo.defaultTip = i18n.t('app_name')
   appEvent.on('updated_config', (keys) => {
     if (!watchConfigKeys.some((key) => keys.includes(key))) return
     init()
   })
   appEvent.on('inited', () => {
     init()
+  })
+  appEvent.on('locale_change', () => {
+    tipInfo.defaultTip = i18n.t('app_name')
+    init()
+  })
+  playerEvent.on('musicInfoUpdated', (info) => {
+    if (info.id !== undefined) {
+      const empty = info.id == null
+      if (playerState.empty !== empty) {
+        playerState.empty = empty
+        if (empty) {
+          playerState.collect = false
+          playerState.play = false
+        }
+        createMenu()
+      }
+    }
+    let updateTip = false
+    if (info.name != null) {
+      updateTip ||= true
+      tipInfo.name = info.name
+      tipInfo.singer = ''
+    }
+    if (info.singer != null) {
+      updateTip ||= true
+      tipInfo.singer = info.singer
+    }
+    if (updateTip) setTip()
+  })
+  playerEvent.on('status', ([_, isPlaying]) => {
+    if (playerState.play == isPlaying) return
+    playerState.play = isPlaying
+    console.log('status', isPlaying)
+    createMenu()
+  })
+  playerEvent.on('collectStatus', (collect) => {
+    playerState.collect = collect
+    createMenu()
   })
 }
 

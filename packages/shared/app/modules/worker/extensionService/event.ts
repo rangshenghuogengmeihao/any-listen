@@ -68,9 +68,9 @@ export class Event extends _Event {
     this.extensionEvent({ action: 'stoping', data: id })
   }
 
-  stoped(id: string) {
-    this.emitEvent('stoped', id)
-    this.extensionEvent({ action: 'stoped', data: id })
+  stopped(id: string) {
+    this.emitEvent('stopped', id)
+    this.extensionEvent({ action: 'stopped', data: id })
   }
 
   listAdd(extension: AnyListen.Extension.Extension) {

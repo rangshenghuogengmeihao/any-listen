@@ -16,7 +16,7 @@ export const initTitleLyric = () => {
   const setLyric = (lyric = lrc, force = false) => {
     if (lrc != lyric) lrc = lyric
     if (!enabled) return
-    const text = playerState.playing ? lrc || ' ' : null
+    const text = playerState.playing ? lrc || '...' : null
     if (preText === text && !force) return
     preText = text
     lyricEvent.titleLyricChanged(text)

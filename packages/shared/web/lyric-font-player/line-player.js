@@ -9,6 +9,7 @@ const tagRegMap = {
   offset: 'offset',
   by: 'by',
 }
+const awlrcTimeRxp = /<\d+,\d+>/g
 
 const timeoutTools = new TimeoutTools()
 
@@ -88,7 +89,8 @@ export default class LinePlayer {
       if (result) {
         const timeField = result[0]
         const text = line.replace(timeFieldExp, '').trim()
-        if (text) {
+        const plantText = text.replace(awlrcTimeRxp, '').trim()
+        if (text && plantText && plantText != '//') {
           const times = timeField.match(timeExp)
           if (times == null) continue
           for (let time of times) {

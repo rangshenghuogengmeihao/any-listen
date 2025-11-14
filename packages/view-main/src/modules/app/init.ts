@@ -32,9 +32,10 @@ export const initApp = () => {
   )
   window.addEventListener('worker-initialized-main', mainWorkerResolve!)
   lyricEvent.on('titleLyricChanged', (text) => {
+    if (!settingState.setting['player.isShowTitleLyric']) return
     if (text == null) {
       setTitle(playerState.title)
-    } else if (settingState.setting['player.isShowTitleLyric']) {
+    } else {
       setTitle(text)
     }
   })

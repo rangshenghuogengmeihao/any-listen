@@ -147,9 +147,10 @@ export const initMediaSessionInfo = () => {
       })
       unregistered.add(
         lyricEvent.on('titleLyricChanged', (text) => {
+          if (!settingState.setting['player.isShowMediaSessionLyric']) return
           if (text == null) {
             updateMediaSessionInfo()
-          } else if (settingState.setting['player.isShowMediaSessionLyric']) {
+          } else {
             updateMediaSessionInfo(text)
           }
         })

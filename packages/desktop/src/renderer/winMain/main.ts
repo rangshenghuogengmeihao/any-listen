@@ -77,7 +77,6 @@ export const createWindow = () => {
    * Initial window options
    */
   const options: Electron.BrowserWindowConstructorOptions = {
-    title: 'Any Listen',
     height: windowSizeInfo.height,
     useContentSize: true,
     width: windowSizeInfo.width,

@@ -7,15 +7,15 @@ import { getDisabledAutoPause, getDisabledAutoPauseSize, setDisabledAutoPause } 
 import { lyricEvent } from './store/event'
 
 export const initTitleLyric = () => {
-  let lrc = ''
+  let lrc: string | null = null
   let preText: string | null = null
   let enabled = false
   const resetLyric = () => {
     preText = null
   }
-  const setLyric = (lyric = lrc, force = false) => {
+  const setLyric = (lyric: string | null = lrc, force = false) => {
     if (lrc != lyric) lrc = lyric
-    if (!enabled) return
+    if (!enabled || lyric == null) return
     const text = playerState.playing ? lrc || '...' : null
     if (preText === text && !force) return
     preText = text
@@ -50,6 +50,12 @@ export const initTitleLyric = () => {
     }
   })
   const unsub2 = lyricEvent.on('lineChanged', (text, line) => {
+    text = text.trim()
+    if (!text && line <= 0) {
+      lrc = null
+      resetLyric()
+      return
+    }
     setLyric(text)
   })
   const unsub3 = playerEvent.on('playStatusChanged', () => {

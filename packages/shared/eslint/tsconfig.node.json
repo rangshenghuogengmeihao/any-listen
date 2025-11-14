@@ -5,6 +5,7 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "allowJs": true,
     "resolveJsonModule": true,
+    "esModuleInterop": true,
     "skipLibCheck": false,
     "module": "ESNext",
     "moduleResolution": "Node",

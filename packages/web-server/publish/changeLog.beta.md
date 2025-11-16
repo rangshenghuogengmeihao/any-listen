@@ -1,17 +1,9 @@
-### Improved
-
-- Improved the logic for displaying lyrics in the title bar.
-
 ### Fixed
 
-- Fixed an issue where the lyrics in the title bar displayed abnormally when the lyrics were empty.
+- Fixed an issue where **Karaoke lyrics** displayed abnormally in older browsers.
 
 ---
 
-### 优化
-
-- 优化标题栏歌词显示逻辑
-
 ### 修复
 
-- 修复标题栏歌词在歌词为空时显示异常的问题
+- 修复在低版本浏览器下 **卡拉OK歌词** 显示异常的问题

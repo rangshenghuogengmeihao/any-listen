@@ -16,6 +16,7 @@
 
 - Fixed an issue where residual callbacks were not properly unregistered when observing changes to local lists.
 - Fixed an issue where internal extension logs did not update in real time.
+- Fixed an issue where **Karaoke lyrics** displayed abnormally in older browsers.
 
 ---
 
@@ -37,3 +38,4 @@
 
 - 修复本地列表变更监听时残留回调未正确注销的问题。
 - 修复内部扩展日志未实时更新的问题。
+- 修复在低版本浏览器下 **卡拉OK歌词** 显示异常的问题。

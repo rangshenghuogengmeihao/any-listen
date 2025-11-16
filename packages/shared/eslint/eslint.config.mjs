@@ -127,6 +127,7 @@ export const typescript = {
     ...typescriptRule,
   },
 }
+
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   // love,

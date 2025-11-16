@@ -11,10 +11,12 @@
   let {
     item,
     offset = 0,
+    maxheight,
     onhide,
     onmount,
   }: {
     offset?: number
+    maxheight: string
     item: NotifyItem
     onhide: () => void
     onmount: (height: number) => void
@@ -70,6 +72,7 @@
   role="alert"
   bind:this={domContent}
   style:transform
+  style:max-height={maxheight}
   transition:fly|global={{ y: 30 }}
   onoutroend={item.onafterleave}
   onmouseenter={() => {
@@ -80,7 +83,7 @@
     addAutoCloseTimer()
   }}
 >
-  <div class="content" class:select={item.selectText}>
+  <div class="content scroll" class:select={item.selectText} style:max-height={`calc(${maxheight} - 1rem)`}>
     {#if extensionName}
       <span>[{extensionName}]</span>
     {/if}{item.message}
@@ -117,8 +120,6 @@
     // transform: scale(1);
     line-height: 1.2;
     color: var(--color-font);
-    word-wrap: break-word;
-    white-space: pre-wrap;
     background: var(--color-content-background);
     border-radius: @radius-border;
     box-shadow: 0 1px 4px rgb(0 0 0 / 20%);
@@ -128,6 +129,8 @@
     .content {
       flex: auto;
       min-width: 0;
+      word-wrap: break-word;
+      white-space: pre-wrap;
     }
 
     .select {

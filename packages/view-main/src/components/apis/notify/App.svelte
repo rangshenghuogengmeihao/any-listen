@@ -2,10 +2,19 @@
   import { generateId } from '@/shared'
   import Item from './Item.svelte'
   import type { NotifyItem } from './shared'
+  import { onMount } from 'svelte'
+  import { onDomSizeChanged } from '@any-listen/web'
 
   let notifys = $state.raw<NotifyItem[]>([])
   let queue: NotifyItem[] = []
   let offsets = $state<number[]>([0, 0, 0])
+  let maxItemHeight = $state(`${(document.getElementById('root')?.clientHeight ?? 500) * 0.7}px`)
+
+  onMount(() => {
+    return onDomSizeChanged(document.getElementById('root')!, (w, h) => {
+      maxItemHeight = `${h * 0.7}px`
+    })
+  })
 
   export const show = (message: string, autoCloseTime = 3, selectText = false, extId = '', onafterleave?: () => void) => {
     const item = {
@@ -53,6 +62,7 @@
       <Item
         item={notify}
         offset={offsets.slice(idx + 1).reduce((p, cur) => p + cur, 0)}
+        maxheight={maxItemHeight}
         onhide={() => {
           const idx = notifys.indexOf(notify)
           notifys = notifys.toSpliced(idx, 1)

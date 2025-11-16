@@ -16,6 +16,9 @@ export const initNotify = () => {
 
 export const showNotify = (message?: string, duration = 3, textSelect?: boolean) => {
   if (!message) return
+  if (message.length > 1000) {
+    message = `${message.substring(0, 1000)}...`
+  }
   app.show(message, duration, textSelect)
 }
 

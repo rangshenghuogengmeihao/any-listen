@@ -5,7 +5,7 @@ import { debounce } from '@any-listen/common/utils'
 import { Arch, buildConfig, replaceLib, runDesktop } from '@any-listen/desktop'
 import Spinnies from 'spinnies'
 import type { Logger } from 'vite'
-import { type TaksName, buildSuatus, runBuildWorkerStatus } from './utils'
+import { type TaskName, buildSuatus, runBuildWorkerStatus } from './utils'
 
 import copyAssets from './copyAssets'
 import { dynamicImport } from './import-esm.cjs'
@@ -65,7 +65,7 @@ const runMainThread = async () => {
   // spinners.add('renderer-scripts', { text: 'renderer-scripts compiling' })
   spinners.add('desktop', { text: 'desktop compiling' })
   spinners.add('extension-preload', { text: 'extension-preload compiling' })
-  const handleResult = (name: TaksName) => {
+  const handleResult = (name: TaskName) => {
     return (success: boolean) => {
       if (success) {
         spinners.succeed(name, { text: `${name} compile success!` })

@@ -1,15 +1,15 @@
 import type { ChildProcessWithoutNullStreams } from 'node:child_process'
 import colors from 'picocolors'
 // import del from 'del'
-import type { Logger } from 'vite'
-import { type TaksName, runBuildWorker, runBuildWorkerStatus, buildSuatus } from './utils'
-import { runServer, buildConfig } from '@any-listen/web-server'
 import { DEV_SERVER_PORTS } from '@any-listen/common/constants'
+import { buildConfig, runServer } from '@any-listen/web-server'
 import Spinnies from 'spinnies'
+import type { Logger } from 'vite'
+import { type TaskName, buildSuatus, runBuildWorker, runBuildWorkerStatus } from './utils'
 
+import copyAssets from './copyAssets'
 import { dynamicImport } from './import-esm.cjs'
 import type { Vite } from './types'
-import copyAssets from './copyAssets'
 
 let logger: Logger
 
@@ -52,7 +52,7 @@ const runMainThread = async () => {
   spinners.add('extension-preload', { text: 'extension-preload compiling' })
   // spinners.add('renderer-lyric', { text: 'renderer-lyric compiling' })
   spinners.add('web-server', { text: 'web-server compiling' })
-  const handleResult = (name: TaksName) => {
+  const handleResult = (name: TaskName) => {
     return (success: boolean) => {
       if (success) {
         spinners.succeed(name, { text: `${name} compile success!` })

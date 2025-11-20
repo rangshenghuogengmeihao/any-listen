@@ -2,7 +2,7 @@ import { deleteSync } from 'del'
 import path from 'node:path'
 import colors from 'picocolors'
 import Spinnies from 'spinnies'
-import { type TaksName, runBuildWorkerStatus } from './utils'
+import { type TaskName, runBuildWorkerStatus } from './utils'
 // import rendererConfig from './configs/renderer'
 import copyAssets from './copyAssets'
 import { dynamicImport } from './import-esm.cjs'
@@ -25,7 +25,7 @@ const runMainThread = async () => {
   spinners.add('view-main', { text: 'view-main compiling' })
   spinners.add('desktop', { text: 'desktop compiling' })
   spinners.add('extension-preload', { text: 'extension-preload compiling' })
-  const handleResult = (name: TaksName) => {
+  const handleResult = (name: TaskName) => {
     return (success: boolean) => {
       if (success) {
         spinners.succeed(name, { text: `${name} compile success!` })

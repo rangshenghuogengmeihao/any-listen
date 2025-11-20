@@ -6,7 +6,7 @@ import { dynamicImport } from './import-esm.cjs'
 import type { Vite } from './types'
 
 export type BuildSuatus = 'success' | 'error' | 'updated'
-export type TaksName = 'desktop' | 'web-server' | 'web-preload' | 'view-main' | 'extension-preload'
+export type TaskName = 'desktop' | 'web-server' | 'web-preload' | 'view-main' | 'extension-preload'
 export type Target = 'desktop' | 'web' | 'mobile'
 
 /**
@@ -135,7 +135,7 @@ export const createBuildServer = async (config: UserConfig, onUpdated: () => voi
  * @param onUpdated new build event
  * @returns is success
  */
-export const runBuildWorker = async (taskName: TaksName, onUpdated: () => void) =>
+export const runBuildWorker = async (taskName: TaskName, onUpdated: () => void) =>
   new Promise<{ status: boolean; reload: () => void }>((resolve) => {
     const worker = new Worker(path.resolve(__dirname, './worker.ts'), {
       execArgv: ['--require', 'ts-node/register'],
@@ -171,6 +171,6 @@ export const buildSuatus = async (config: UserConfig, onUpdated: () => void) => 
   return build(config, onUpdated).then(({ status }) => status)
 }
 
-export const runBuildWorkerStatus = async (taskName: TaksName, onUpdated: () => void) => {
+export const runBuildWorkerStatus = async (taskName: TaskName, onUpdated: () => void) => {
   return runBuildWorker(taskName, onUpdated).then(({ status }) => status)
 }

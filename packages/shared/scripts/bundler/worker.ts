@@ -1,5 +1,5 @@
 import { type MessagePort, parentPort } from 'node:worker_threads'
-import { type TaksName, type Target, build } from './utils'
+import { type Target, type TaskName, build } from './utils'
 
 import { DEV_SERVER_PORTS } from '@any-listen/common/constants'
 import type { UserConfig } from 'vite'
@@ -30,7 +30,7 @@ let buildResult: {
   reload: () => void
 }
 
-parentPort.on('message', async ({ port, taskName, target }: { port?: MessagePort; taskName: TaksName; target: Target }) => {
+parentPort.on('message', async ({ port, taskName, target }: { port?: MessagePort; taskName: TaskName; target: Target }) => {
   if (!port) {
     buildResult.reload()
     return

@@ -43,13 +43,11 @@ export const initSetting = () => {
           if (keys.includes('common.isShowAnimation')) {
             document.body.classList.toggle('no-animation', !setting['common.isShowAnimation'])
           }
-          if (keys.includes('common.font')) {
-            if (appState.isFullscreen) return
+          if (keys.includes('common.font') && !appState.isFullscreen) {
             if (setting['common.font']) document.documentElement.style.fontFamily = setting['common.font']
             else document.documentElement.style.removeProperty('font-family')
           }
-          if (keys.includes('common.fontSize')) {
-            if (appState.isFullscreen) return
+          if (keys.includes('common.fontSize') && !appState.isFullscreen) {
             document.documentElement.style.fontSize = `${setting['common.fontSize']}px`
           }
           if (import.meta.env.VITE_IS_WEB) handleConfigChange(keys, setting)

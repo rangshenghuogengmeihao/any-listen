@@ -1,9 +1,9 @@
-### Added
+### Improved
 
-- Added a **Font Settings** section under _Settings > Basic Settings > Font Settings_.
+- Optimized the font selection logic so you can configure up to two fonts at once.
 
 ---
 
-### 新增
+### 优化
 
-- 新增 **字体设置**，位于 _设置 > 基本设置 > 字体设置_。
+- 优化字体选择逻辑，现在允许最多选择两种字体。

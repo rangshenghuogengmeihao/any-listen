@@ -9,10 +9,21 @@
   import { getSystemFonts } from '@/shared/ipc/app'
 
   let font = useSettingValue('common.font')
+  let fonts = $derived.by(() => {
+    if (!font.val) return ['', '']
+    let [f1 = '', f2 = ''] = font.val.split(',')
+    return [f1.trim(), f2.trim()]
+  })
   let systemFontList = $state.raw<Array<{ value: string; label: string }>>([])
   let fontList = $derived([{ value: '', label: $t('settings.basic.font_family_default') }, ...systemFontList])
   let fontSize = useSettingValue('common.fontSize')
-  const fontSizeList = [14, 15, 16, 17, 18, 19, 20, 21, 22]
+  const fontSizeList = [14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+  const updateFonts = (font1: string, font2: string) => {
+    let font: string[] = []
+    if (font1) font.push(font1)
+    if (font2) font.push(font2)
+    void updateSetting({ 'common.font': font.join(', ') })
+  }
 
   onMount(() => {
     if (import.meta.env.VITE_IS_DESKTOP) {
@@ -39,12 +50,24 @@
             --selection-width="11rem"
             itemkey="value"
             itemname="label"
-            value={font.val}
+            value={fonts[0]}
             list={fontList}
             onchange={(val) => {
-              void updateSetting({ 'common.font': val })
+              updateFonts(val, fonts[1])
             }}
           />
+          {#if font.val}
+            <Selection
+              --selection-width="11rem"
+              itemkey="value"
+              itemname="label"
+              value={fonts[1]}
+              list={fontList}
+              onchange={(val) => {
+                updateFonts(fonts[0], val)
+              }}
+            />
+          {/if}
         {:else}
           <Input
             value={font.val}

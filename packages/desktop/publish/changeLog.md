@@ -1,43 +1,43 @@
 ### Added
 
-- Added a **cover style** option for the *Play Details* page. Now supports **CD** and **Square** styles. You can switch styles in _Settings > Play Details Page Settings > Cover Style_.
-- Added a **"Show lyrics in status bar"** option (MacOS only), located in _Settings > Playback Settings_. Disabled by default; can be enabled via _Settings > Playback Settings > Show lyrics in status bar_.
-- Added a **"Show lyrics in title bar"** option in _Settings > Playback Settings_. Disabled by default; can be enabled via _Settings > Playback Settings > Show lyrics in title bar_.
-- Added a **"Show lyrics in media control bar"** option in _Settings > Playback Settings_. Disabled by default; can be enabled via _Settings > Playback Settings > Show lyrics in media control bar_.
-- Added a **Font Settings** section under _Settings > Basic Settings > Font Settings_.
+- Added a **Cover Style** option for the Now Playing page under _Settings > Now Playing Page Settings > Cover Style_, offering **CD** and **Square** layouts.
+- Added a **Show Status Bar Lyrics** toggle (macOS only) under _Settings > Playback Settings_. Disabled by default.
+- Added a **Show Title Bar Lyrics** toggle under _Settings > Playback Settings_. Disabled by default.
+- Added a **Show Media Control Bar Lyrics** toggle under _Settings > Playback Settings_. Disabled by default.
+- Added **Font Settings** under _Settings > General_.
 
 ### Improved
 
-- Optimized the position for new list creation: when creating a new list by clicking an existing list, the new list will be inserted immediately after the target list.
-- Improved **WebDAV data reading logic** for better compatibility with various *WebDAV* services.
-- Enhanced the **WebDAV service list creation** process: when adding a new WebDAV service list, you no longer need to set the password manually. The app will prompt you to set a password and automatically save it to extension settings.
-- Improved the system tray menu.
+- Improved the insertion position when creating a playlist via an existing playlist so the new list is placed immediately after the target.
+- Improved WebDAV data reading logic for better compatibility with more WebDAV services.
+- Streamlined WebDAV service list creation so the app prompts for a password and saves it automatically to extension settings.
+- Improved the system tray menu experience.
 
 ### Fixed
 
-- Fixed an issue where the update reminder did not reappear after an update was downloaded.
-- Fixed an issue where residual callbacks were not properly unregistered when observing changes to local lists.
-- Fixed an issue where internal extension logs did not update in real time.
+- Fixed update reminders not appearing after the download completes.
+- Fixed lingering callbacks not being deregistered when observing local list changes.
+- Fixed internal extension logs not refreshing in real time.
 
 ---
 
 ### 新增
 
-- 新增 **「播放详情页封面样式」** 选项，现支持 **CD** 与 **正方形** 两种样式，可在 _设置 > 播放详情页设置 > 封面样式_ 中切换。
-- 新增 **「显示状态栏歌词」** 选项（仅限 MacOS 版本），位于 _设置 > 播放设置_，默认关闭，可在 _设置 > 播放设置 > 显示状态栏歌词_ 启用。
-- 新增 **「显示标题栏歌词」** 选项，位于 _设置 > 播放设置_，默认关闭，可在 _设置 > 播放设置 > 显示标题栏歌词_ 启用。
-- 新增 **「显示媒体控制栏歌词」** 选项，位于 _设置 > 播放设置_，默认关闭，可在 _设置 > 播放设置 > 显示媒体控制栏歌词_ 启用。
-- 新增 **字体设置**，位于 _设置 > 基本设置 > 字体设置_。
+- 新增 **播放详情页封面样式** 选项，位于 _设置 > 播放详情页设置 > 封面样式_，可选择 **CD** 或 **正方形** 样式。
+- 新增 **「显示状态栏歌词」** 开关（仅限 macOS 版本），位于 _设置 > 播放设置_，默认关闭。
+- 新增 **「显示标题栏歌词」** 开关，位于 _设置 > 播放设置_，默认关闭。
+- 新增 **「显示媒体控制栏歌词」** 开关，位于 _设置 > 播放设置_，默认关闭。
+- 新增 **「字体设置」**，位于 _设置 > 基本设置_。
 
 ### 优化
 
-- 优化新建列表的插入位置：通过点击已有列表创建新列表时，新列表将插入到目标列表之后。
-- 优化 **WebDAV 数据读取逻辑**，提升与多种 *WebDAV* 服务的兼容性。
-- 优化 **WebDAV 服务列表创建流程**：添加新 WebDAV 服务列表时无需手动设置密码，应用会弹窗提示设置密码并自动保存至扩展设置中。
-- 优化系统托盘菜单。
+- 优化通过点击已有列表创建新列表时的插入位置，新列表会立即插入到目标列表之后。
+- 优化 WebDAV 数据读取逻辑，改进与更多 WebDAV 服务的兼容性。
+- 优化 WebDAV 服务列表创建流程，现在应用会弹窗提示设置密码并自动保存到扩展设置中。
+- 优化系统托盘菜单体验。
 
 ### 修复
 
-- 修复更新下载完成后，更新提醒未再次弹出的问题。
-- 修复本地列表变更监听时残留回调未正确注销的问题。
-- 修复内部扩展日志未能实时更新的问题。
+- 修复更新下载完成后更新提醒不再弹出的情况。
+- 修复监听本地列表变更时残留回调未被注销的问题。
+- 修复内部扩展日志无法实时刷新的问题。

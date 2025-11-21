@@ -32,6 +32,7 @@ export type ExposeClientFunctions = Omit<
   | 'openDevTools'
   | 'openUrl'
   | 'messageBoxConfirm'
+  | 'getSystemFonts'
 >
 
 let isInitialized = false

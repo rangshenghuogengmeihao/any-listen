@@ -5,6 +5,7 @@ import { windowSizeList } from '@any-listen/common/constants'
 import type { Component } from 'svelte'
 import About from './About.svelte'
 import ExtensionGHMirrorHosts from './ExtensionGHMirrorHosts.svelte'
+import Font from './Font.svelte'
 import LoginDevices from './LoginDevices.svelte'
 import Network from './Network.svelte'
 import Update from './Update.svelte'
@@ -95,21 +96,11 @@ export const settings: SettingListSection[] = [
             }
           : undefined,
       },
-      import.meta.env.VITE_IS_DESKTOP
-        ? {
-            field: 'common.fontSize',
-            name: 'settings__basic_font_size',
-            type: 'radio',
-            enum: [
-              { value: 14, name: 'settings__basic_font_size_14px' },
-              { value: 15, name: 'settings__basic_font_size_15px' },
-              { value: 16, name: 'settings__basic_font_size_16px' },
-              { value: 17, name: 'settings__basic_font_size_17px' },
-              { value: 18, name: 'settings__basic_font_size_18px' },
-              { value: 19, name: 'settings__basic_font_size_19px' },
-            ],
-          }
-        : null,
+      {
+        name: 'settings.basic.font',
+        type: 'component',
+        component: Font,
+      },
       {
         field: 'common.langId',
         name: 'settings__basic_lang',

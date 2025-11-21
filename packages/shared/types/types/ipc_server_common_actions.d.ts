@@ -62,4 +62,6 @@ export declare type ServerCommonActions = WarpPromiseRecord<{
   downloadUpdate: () => void
   /** 重启更新 */
   restartUpdate: () => void
+  /** 获取系统字体列表 */
+  getSystemFonts: () => Promise<string[]>
 }>

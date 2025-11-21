@@ -91,5 +91,8 @@ export const createClientApp = (main: MainCall) => {
     async restartUpdate() {
       return main.restartUpdate()
     },
+    async getSystemFonts() {
+      return main.getSystemFonts()
+    },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

@@ -65,7 +65,7 @@
   })
 </script>
 
-<Modal bind:visible bgclose teleport="#view" width="65%" maxwidth="900px" maxheight="80%">
+<Modal bind:visible bgclose teleport="#view" width="65%" maxwidth="56rem" maxheight="80%">
   <div class="header">
     <h2>{listinfo.name}</h2>
   </div>

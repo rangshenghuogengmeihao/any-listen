@@ -68,7 +68,7 @@
 <Modal
   bind:visible
   teleport="#root"
-  minheight="140px"
+  minheight="8.75rem"
   bgclose={false}
   closebtn={false}
   title={extensionName}

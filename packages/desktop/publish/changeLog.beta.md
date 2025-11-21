@@ -1,17 +1,9 @@
-### Improved
+### Added
 
-- Improved the logic for displaying lyrics in the title bar.
-
-### Fixed
-
-- Fixed an issue where the lyrics in the title bar displayed abnormally when the lyrics were empty.
+- Added a **Font Settings** section under _Settings > Basic Settings > Font Settings_.
 
 ---
 
-### 优化
+### 新增
 
-- 优化标题栏歌词显示逻辑
-
-### 修复
-
-- 修复标题栏歌词在歌词为空时显示异常的问题
+- 新增 **字体设置**，位于 _设置 > 基本设置 > 字体设置_。

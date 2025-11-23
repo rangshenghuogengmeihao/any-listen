@@ -1,5 +1,5 @@
 import type { i18n } from '../../i18n'
-import type { createLogTools } from '../shared'
+import type { createBoxs, createConfigurationStore, createLogTools } from '../shared'
 
 export interface ExtensionContext {
   resourceAction?: <T extends keyof AnyListen.IPCExtension.ResourceAction>(
@@ -13,23 +13,15 @@ export interface ExtensionContext {
 }
 
 export type Logcat = Awaited<ReturnType<typeof createLogTools>>
+export type Boxs = Awaited<ReturnType<typeof createBoxs>>
+export type Configs = Awaited<ReturnType<typeof createConfigurationStore>>
 
 export type ExtensionHostContext = {
   logcat: Logcat
   i18n: typeof i18n
-} & Pick<
-  AnyListen.IPCExtension.PreloadIPCActions,
-  | 'showMessageBox'
-  | 'showInputBox'
-  | 'showOpenBox'
-  | 'showSaveBox'
-  | 'closeMessageBox'
-  | 'getItems'
-  | 'setItems'
-  | 'removeItems'
-  | 'clearItems'
-  | 'getConfigs'
-  | 'setConfigs'
-  | 'createProxyUrl'
-  | 'writeProxyCache'
->
+} & Boxs &
+  Configs &
+  Pick<
+    AnyListen.IPCExtension.PreloadIPCActions,
+    'getItems' | 'setItems' | 'removeItems' | 'clearItems' | 'getConfigs' | 'createProxyUrl' | 'writeProxyCache'
+  >

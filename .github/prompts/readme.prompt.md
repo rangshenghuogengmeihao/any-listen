@@ -1,5 +1,5 @@
 ---
-mode: agent
+agent: agent
 ---
 
 根据以下要求将 ${workspaceFolder}/docs/README_zh.md 翻译为其他语言版本：

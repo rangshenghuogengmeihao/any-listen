@@ -1,13 +1,10 @@
 import { jsBrowser, typescript, typescriptParser } from '@any-listen/eslint/eslint.config.mjs'
-import eslintPluginSvelte from 'eslint-plugin-svelte'
+import svelte from 'eslint-plugin-svelte'
 import svelteParser from 'svelte-eslint-parser'
 import svelteConfig from './svelte.config.js'
 // import { typescriptRule } from '@any-listen/eslint/eslint.config.mjs'
 /** @type {import('eslint').Linter.Config[]} */
-export default [
-  // {
-  //   files: ['**/*.{js,mjs,cjs,ts,svelte}'],
-  // },
+const config = [
   jsBrowser,
   {
     ...typescript,
@@ -17,21 +14,21 @@ export default [
     languageOptions: {
       parserOptions: {
         parser: typescriptParser,
-        project: './tsconfig.json',
+        // project: './tsconfig.json',
       },
     },
   },
-  ...eslintPluginSvelte.configs['flat/recommended'],
+  ...svelte.configs.recommended,
   {
-    files: ['**/*.svelte', '*.svelte', '**/*.svelte.ts', '*.svelte.ts', '**/*.svelte.js', '*.svelte.js'],
+    files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
     languageOptions: {
       parser: svelteParser,
       parserOptions: {
         projectService: true,
         svelteConfig,
-        sourceType: 'module',
+        // sourceType: 'module',
         parser: typescriptParser,
-        project: './tsconfig.json',
+        // project: './tsconfig.json',
         extraFileExtensions: ['.svelte'],
       },
     },
@@ -45,18 +42,6 @@ export default [
       '@typescript-eslint/no-confusing-void-expression': 'off',
     },
   },
-  // {
-  //   files: ['**/*.svelte', '*.svelte'],
-  //   languageOptions: {
-  //     parser: svelteParser,
-  //     parserOptions: {
-  //       svelteConfig,
-  //       sourceType: 'module',
-  //       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  //       parser: typescriptParser,
-  //       project: './tsconfig.json',
-  //       extraFileExtensions: ['.svelte'],
-  //     },
-  //   },
-  // },
 ]
+
+export default config

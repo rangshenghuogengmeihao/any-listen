@@ -181,5 +181,3 @@ export const listProviderAction = async <T extends keyof LPA>(
 }
 
 export { extensionEvent, extensionState }
-
-export { syncUserList } from '@any-listen/app/modules/extension'

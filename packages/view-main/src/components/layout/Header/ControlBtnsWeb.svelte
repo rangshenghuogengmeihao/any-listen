@@ -14,7 +14,7 @@
     tabindex="0"
     role="button"
     href="/extenstion"
-    use:link
+    {@attach link()}
     class="btn min"
     class:active={$location == '/extenstion'}
     aria-label={$t('min')}
@@ -27,7 +27,7 @@
     tabindex="0"
     role="button"
     href="/settings"
-    use:link
+    {@attach link()}
     class="btn min"
     class:active={$location == '/settings'}
     aria-label={$t('min')}

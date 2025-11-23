@@ -5,13 +5,16 @@ import { checkAllowedExt } from './shared'
 import { proxyServerState } from './state'
 
 const verifyOptions = async (url: string, opts: Options) => {
-  await request(url, {
+  const resp = await request(url, {
     ...opts,
     headers: {
       ...(opts.headers ?? {}),
       Range: 'bytes=0-1',
     },
   })
+  if (!resp.statusCode || resp.statusCode < 200 || resp.statusCode >= 300) {
+    throw new Error(`verify proxy request failed: [${url}] ${resp.statusCode}`)
+  }
 }
 
 export const generateName = (url: string) => {

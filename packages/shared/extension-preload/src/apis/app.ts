@@ -26,20 +26,32 @@ const buildKey = async <T>(run: (key: string) => Promise<T>, signal?: AbortSigna
     keys.delete(key)
   })
 }
+
+// TODO verify options
 export const app: AnyListen_API.App = {
   async showMessage(message, { signal, ...options } = {}) {
     return buildKey(
       async (key) => {
-        return hostContext.hostFuncs.showMessageBox(key, { ...options, title: message })
+        return hostContext.hostFuncs.showMessageBox(key, { ...options, detail: message })
       },
       signal as AbortSignal | undefined
     )
   },
-  // TODO
-  async showFormDialog({ signal, ...options }: AnyListen_API.FormDialogOptions) {
+  async showInputBox({ signal, validateInput, ...options }) {
     return buildKey(
       async (key) => {
-        // return hostContext.hostFuncs.showInputBox(key, options)
+        return hostContext.hostFuncs.showInputBox(key, {
+          ...options,
+          validateInput: validateInput
+            ? async (value: string) => {
+                let val = await validateInput(value)
+                if (typeof val === 'string' && val.length > 1024) {
+                  val = `${val.substring(0, 1021)}...`
+                }
+                return val
+              }
+            : undefined,
+        })
       },
       signal as AbortSignal | undefined
     )

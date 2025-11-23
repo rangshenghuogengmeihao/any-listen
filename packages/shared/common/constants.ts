@@ -1,6 +1,6 @@
 export const URL_SCHEME_RXP = /^anylisten:\/\//
 
-export const NATIVE_VERSION = 4
+export const NATIVE_VERSION = 5
 
 export const DEV_SERVER_PORTS = {
   'view-main': 9200,
@@ -119,6 +119,7 @@ export const IPC_CODE = {
   missingAuthCode: 'Missing auth code',
   getServiceIdFailed: 'Get service id failed',
   connectServiceFailed: 'Connect service failed',
+  abnormalDisconnection: 'Abnormal disconnection',
   connecting: 'Connecting...',
   unknownServiceAddress: 'Unknown service address',
   lowServiceVersion: 'Web server version too low, please upgrade server to latest',
@@ -210,3 +211,5 @@ export const API_PREFIX = '/api'
 export const SINGERS_RXP = /[、&_;；/,，|]/
 
 export const PROXY_SERVER_PATH = '/p_static'
+
+export const CANCELED_ERROR_MSG = 'canceled'

@@ -14,7 +14,7 @@
 <style lang="less">
   .info {
     flex: auto;
-    width: var(--content-with);
+    width: var(--content-width);
     // padding-bottom: 15px;
     min-height: 0;
     margin-top: 15px;

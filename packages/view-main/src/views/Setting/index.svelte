@@ -31,10 +31,8 @@
       .settings-item {
         padding-right: 10px;
         + .settings-item {
-          :global {
-            .settings-item-title-container {
-              margin-top: 14px;
-            }
+          .settings-item-title-container {
+            margin-top: 14px;
           }
         }
       }

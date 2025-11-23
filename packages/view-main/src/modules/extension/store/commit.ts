@@ -49,7 +49,7 @@ export const setExtensionEnabled = (id: string, enabled: boolean) => {
   extensionEvent.listChanged()
 }
 
-export const setExtensionStop = (id: string) => {
+export const setExtensionStopped = (id: string) => {
   const tagretExtIndex = extensionState.extensionList.findIndex((ext) => ext.id == id)
   if (tagretExtIndex < 0) return
   const tagretExt = extensionState.extensionList[tagretExtIndex]

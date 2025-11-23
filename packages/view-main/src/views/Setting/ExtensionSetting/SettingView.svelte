@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar'
+  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar.svelte'
   import SettingItem from './SettingItem.svelte'
 
   let {
@@ -14,7 +14,7 @@
 </script>
 
 <div class="settings-list-container">
-  <div class="settings-list" use:verticalScrollbar>
+  <div class="settings-list" {@attach verticalScrollbar()}>
     <h3 class="settings-title">{name}</h3>
     {#each list as item (item.field)}
       <SettingItem {id} {item} />

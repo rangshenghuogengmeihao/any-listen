@@ -1,3 +1,4 @@
+import { isValidLyric } from '@any-listen/common/tools'
 import { parseLyrics } from '@any-listen/nodejs/lrcTool'
 import { createLocalMusicInfo, getLocalMusicFileLyric, getLocalMusicFilePic } from './shared/music'
 
@@ -21,7 +22,7 @@ export const getMusicFileLyric = async (
   filePath: string
 ): Promise<Pick<AnyListen.Music.LyricInfo, 'awlyric' | 'lyric' | 'rlyric' | 'tlyric'> | null> => {
   const lyric = await getLocalMusicFileLyric(filePath)
-  if (!lyric) return null
+  if (!lyric || (!isValidLyric(lyric) && !/(?:^|\n)\[awlrc:\w+/.test(lyric))) return null
   return parseLyrics(lyric)
 }
 

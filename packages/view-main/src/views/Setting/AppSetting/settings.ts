@@ -5,6 +5,7 @@ import { windowSizeList } from '@any-listen/common/constants'
 import type { Component } from 'svelte'
 import About from './About.svelte'
 import ExtensionGHMirrorHosts from './ExtensionGHMirrorHosts.svelte'
+import Font from './Font.svelte'
 import LoginDevices from './LoginDevices.svelte'
 import Network from './Network.svelte'
 import Update from './Update.svelte'
@@ -95,21 +96,11 @@ export const settings: SettingListSection[] = [
             }
           : undefined,
       },
-      import.meta.env.VITE_IS_DESKTOP
-        ? {
-            field: 'common.fontSize',
-            name: 'settings__basic_font_size',
-            type: 'radio',
-            enum: [
-              { value: 14, name: 'settings__basic_font_size_14px' },
-              { value: 15, name: 'settings__basic_font_size_15px' },
-              { value: 16, name: 'settings__basic_font_size_16px' },
-              { value: 17, name: 'settings__basic_font_size_17px' },
-              { value: 18, name: 'settings__basic_font_size_18px' },
-              { value: 19, name: 'settings__basic_font_size_19px' },
-            ],
-          }
-        : null,
+      {
+        name: 'settings.basic.font',
+        type: 'component',
+        component: Font,
+      },
       {
         field: 'common.langId',
         name: 'settings__basic_lang',
@@ -163,19 +154,36 @@ export const settings: SettingListSection[] = [
         name: 'settings.player.lyric_trans_roma_swap',
         type: 'boolean',
       },
-      // t('settings.player.lyric_trans_roma_swap')
+      // t('settings.player.media_session_lyric')
       {
         field: 'player.isPlayAwlrc',
         name: 'settings.player.play_awlrc',
         type: 'boolean',
       },
+      {
+        field: 'player.isShowTitleLyric',
+        name: 'settings.player.title_lyric',
+        type: 'boolean',
+      },
+      {
+        field: 'player.isShowMediaSessionLyric',
+        name: 'settings.player.media_session_lyric',
+        type: 'boolean',
+      },
+      import.meta.env.VITE_IS_MAC
+        ? {
+            field: 'player.isShowStatusBarLyric',
+            name: 'settings.player.status_bar_lyric',
+            type: 'boolean',
+          }
+        : null,
     ],
   },
   {
     id: 'playDetail',
     name: 'settings.play_detail',
     list: [
-      // t('settings.play_detail.style_font_weight')
+      // t('settings.play_detail.cover_style_square')
       {
         field: 'playDetail.isDynamicBackground',
         name: 'settings.play_detail.dynamic_background',
@@ -195,6 +203,15 @@ export const settings: SettingListSection[] = [
         field: 'playDetail.style.fontWeight',
         name: 'settings.play_detail.style_font_weight',
         type: 'boolean',
+      },
+      {
+        field: 'playDetail.coverStyle',
+        name: 'settings.play_detail.cover_style',
+        type: 'radio',
+        enum: [
+          { value: 'cd', name: 'settings.play_detail.cover_style_cd' },
+          { value: 'square', name: 'settings.play_detail.cover_style_square' },
+        ] satisfies Array<{ value: AnyListen.AppSetting['playDetail.coverStyle']; name: keyof Message }>,
       },
       {
         field: 'playDetail.style.align',

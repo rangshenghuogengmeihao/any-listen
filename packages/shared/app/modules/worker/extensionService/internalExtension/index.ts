@@ -1,10 +1,9 @@
 import { createCommon } from '../extensionApis/common'
-import { createConfigurationStore } from '../extensionApis/configuration'
 import { createMusicUtils } from '../extensionApis/musicUtils'
 import { createStore } from '../extensionApis/storage'
 import { i18n } from '../i18n'
 import { extensions } from './extensions'
-import { createLogTools } from './shared'
+import { createBoxs, createConfigurationStore, createLogTools } from './shared'
 import { internalExtensionContextState } from './state'
 
 export { buildExtensionI18nMessage, getExtensionList } from './extensions'
@@ -18,7 +17,7 @@ export const loadExtension = async (extension: AnyListen.Extension.Extension) =>
   const extContext = await setup(extension, {
     logcat,
     i18n,
-    ...createCommon(extension),
+    ...createBoxs(createCommon(extension)),
     ...createStore(extension.dataDirectory),
     ...createConfigurationStore(extension),
     ...createMusicUtils(extension),

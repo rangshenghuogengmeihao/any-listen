@@ -1,6 +1,6 @@
-import { buildUrlPath, log, request, toSha256 } from './utils'
-import { getAuthKey, setAuthKey } from './data'
 import { IPC_CODE } from '@any-listen/common/constants'
+import { getAuthKey, setAuthKey } from './data'
+import { buildUrlPath, log, request, toSha256 } from './utils'
 import type { KeyInfo, UrlInfo } from './ws'
 
 // const hello = async(urlInfo: UrlInfo) => request(`${urlInfo.httpProtocol}//${urlInfo.hostPath}/${API_PREFIX}/hello`)
@@ -76,7 +76,7 @@ const keyAuth = async (urlInfo: UrlInfo, keyInfo: KeyInfo) => {
   })
 }
 
-const auth = async (urlInfo: UrlInfo, serverId: string, authCode: string) => {
+const auth = async (urlInfo: UrlInfo, serverId: string, authCode?: string) => {
   if (authCode) return codeAuth(urlInfo, serverId, authCode)
   const keyInfo = await getAuthKey(serverId)
   if (!keyInfo) throw new Error(IPC_CODE.missingAuthCode)
@@ -84,7 +84,7 @@ const auth = async (urlInfo: UrlInfo, serverId: string, authCode: string) => {
   return keyInfo
 }
 
-export default async (urlInfo: UrlInfo, authCode: string) => {
+export default async (urlInfo: UrlInfo, authCode?: string) => {
   console.log('connect: ', urlInfo.href, authCode)
   // console.log(buildUrlPath(urlInfo, '/hello'))
   // if (!await hello(urlInfo)) throw new Error(IPC_CODE.connectServiceFailed)

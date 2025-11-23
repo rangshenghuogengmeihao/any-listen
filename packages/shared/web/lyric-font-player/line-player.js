@@ -9,6 +9,7 @@ const tagRegMap = {
   offset: 'offset',
   by: 'by',
 }
+const awlrcTimeRxp = /<\d+,\d+>/g
 
 const timeoutTools = new TimeoutTools()
 
@@ -88,7 +89,8 @@ export default class LinePlayer {
       if (result) {
         const timeField = result[0]
         const text = line.replace(timeFieldExp, '').trim()
-        if (text) {
+        const plantText = text.replace(awlrcTimeRxp, '').trim()
+        if (text && plantText && plantText != '//') {
           const times = timeField.match(timeExp)
           if (times == null) continue
           for (let time of times) {
@@ -213,11 +215,15 @@ export default class LinePlayer {
     }
   }
 
-  setPlaybackRate(rate) {
-    this._rate = rate
+  replay() {
     if (!this.lines.length) return
     if (!this.isPlay) return
     this.play(this._currentTime())
+  }
+
+  setPlaybackRate(rate) {
+    this._rate = rate
+    this.replay()
   }
 
   setLyric(lyric, extendedLyrics) {
@@ -226,5 +232,22 @@ export default class LinePlayer {
     this.lyric = lyric
     this.extendedLyrics = extendedLyrics
     this._init()
+  }
+
+  setTimeoutTools(tools) {
+    timeoutTools.clear()
+    if (tools) {
+      timeoutTools.setTimeout = tools.setTimeout
+      timeoutTools.clearTimeout = tools.clearTimeout
+      timeoutTools.nextTick = tools.nextTick
+      timeoutTools.cancelNextTick = tools.cancelNextTick
+    } else {
+      timeoutTools.setTimeout = window.setTimeout.bind(window)
+      timeoutTools.clearTimeout = window.clearTimeout.bind(window)
+      timeoutTools.nextTick = window.requestAnimationFrame.bind(window)
+      timeoutTools.cancelNextTick = window.cancelAnimationFrame.bind(window)
+    }
+
+    this.replay()
   }
 }

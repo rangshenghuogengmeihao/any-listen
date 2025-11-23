@@ -2,7 +2,7 @@
   import { onMount, type Snippet, tick } from 'svelte'
   import { debounce, handleScroll } from './utils'
   import type { MouseEventHandler } from 'svelte/elements'
-  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar'
+  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar.svelte'
 
   let {
     row,
@@ -240,7 +240,7 @@
 <div
   bind:this={domScrollContainer}
   class={containerclass}
-  use:verticalScrollbar={{ offset: scrollbaroffset, scrollbarWidth: scrollbarwidth }}
+  {@attach verticalScrollbar({ offset: scrollbaroffset, scrollbarWidth: scrollbarwidth })}
   tabindex="0"
   role="listbox"
   style="position: relative; display: block; height: 100%; overflow-y: auto;"

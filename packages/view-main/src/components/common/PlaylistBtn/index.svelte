@@ -11,7 +11,7 @@
 </script>
 
 <PopupBtn
-  height="500px"
+  height="32rem"
   aria-label={$t('player__list')}
   onvisible={(visible) => {
     void tick().then(() => {

@@ -1,6 +1,7 @@
 import Lyric from '@any-listen/web/lyric-font-player'
 import { setLines, setTempOffset, setText } from './store/action'
 // import { setStatusText } from '@/modules/player/store/actions'
+import { runTimeout, stopTimeout } from '@/shared/browser/tools'
 import { settingState } from '../setting/store/state'
 import type { Line } from './store/state'
 
@@ -18,6 +19,48 @@ export const setPlaybackRate = (rate: number) => {
 export const setLyric = (lrcStr: string, extLrc: string[]) => {
   lrc?.setLyric(lrcStr, extLrc)
 }
+
+let sources = new Set<string>()
+let prevDisabled = false
+export const setDisabledAutoPause = (disabled: boolean, source: 'statusBarLyric' | 'titleLyric' | 'mediaSessionLyric') => {
+  sources[disabled ? 'add' : 'delete'](source)
+  const currentDisabled = sources.size > 0
+  if (prevDisabled == currentDisabled) return
+  prevDisabled = currentDisabled
+  if (!currentDisabled) {
+    lrc?.setTimeoutTools()
+    return
+  }
+  if (import.meta.env.VITE_IS_DESKTOP) {
+    // For desktop env, use the nodejs timer functions
+    lrc?.setTimeoutTools({
+      setTimeout: window.__anylisten_node_env__!.setTimeout,
+      clearTimeout: window.__anylisten_node_env__!.clearTimeout,
+      nextTick: (handler: () => void) => {
+        return window.__anylisten_node_env__!.setTimeout(handler, 60)
+      },
+      cancelNextTick: window.__anylisten_node_env__!.clearTimeout,
+    })
+  }
+  if (import.meta.env.VITE_IS_WEB) {
+    // For web env, use the worker timer functions
+    lrc?.setTimeoutTools({
+      setTimeout: runTimeout,
+      clearTimeout: stopTimeout,
+      nextTick: (handler: () => void) => {
+        return runTimeout(handler, 60)
+      },
+      cancelNextTick: stopTimeout,
+    })
+  }
+}
+export const getDisabledAutoPause = () => {
+  return prevDisabled
+}
+export const getDisabledAutoPauseSize = () => {
+  return sources.size
+}
+
 export const play = (currentTime: number) => {
   lrc?.play(currentTime)
 }

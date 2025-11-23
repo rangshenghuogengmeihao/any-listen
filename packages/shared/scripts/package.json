@@ -72,8 +72,7 @@
     "del": "^8.0.1",
     "picocolors": "^1.1.1",
     "spinnies": "github:lyswhut/spinnies.git#233305c58694aa3b053e3ab9af9049993f918b9d",
-    "tree-kill": "^1.2.2",
     "ts-node": "^10.9.2",
-    "vite": "^7.1.9"
+    "vite": "^7.2.4"
   }
 }

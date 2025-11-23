@@ -259,6 +259,21 @@ declare global {
       'player.isAutoCleanPlayedList': boolean
 
       /**
+       * 是否将歌词显示在状态栏（Mac可用）
+       */
+      'player.isShowStatusBarLyric': boolean
+
+      /**
+       * 是否将歌词显示在标题栏
+       */
+      'player.isShowTitleLyric': boolean
+
+      /**
+       * 是否将歌词显示在媒体控制界面
+       */
+      'player.isShowMediaSessionLyric': boolean
+
+      /**
        * 播放详情页-是否缩放当前播放的歌词行
        */
       'playDetail.isZoomActiveLrc': boolean
@@ -292,6 +307,11 @@ declare global {
        * 播放详情页-是否使用动态背景
        */
       'playDetail.isDynamicBackground': boolean
+
+      /**
+       * 播放详情页-封面样式
+       */
+      'playDetail.coverStyle': 'cd' | 'square'
 
       /**
        * 是否启用桌面歌词

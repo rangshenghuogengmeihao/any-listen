@@ -37,7 +37,7 @@
         aria-selected={$location == item.to}
         href={item.to}
         aria-label={item.name}
-        use:link
+        {@attach link()}
       >
         <div class="menu-icon">
           <svg viewBox={item.iconSize}>

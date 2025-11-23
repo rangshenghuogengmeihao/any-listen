@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { windowDarg } from '@/shared/browser/widnow'
+  import { windowDarg } from '@/shared/browser/widnow.svelte'
   import { onDomSizeChanged } from '@any-listen/web'
   import { onMount } from 'svelte'
   let contentDom = $state<HTMLElement>()
@@ -36,7 +36,7 @@
   </div>
 {/if}
 {#if import.meta.env.VITE_IS_WEB}
-  <div class="aside-logo" use:windowDarg bind:this={contentDom}>
+  <div class="aside-logo" {@attach windowDarg} bind:this={contentDom}>
     {@render logo()}
   </div>
 {/if}

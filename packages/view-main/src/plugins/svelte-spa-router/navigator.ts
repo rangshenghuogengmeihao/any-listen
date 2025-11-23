@@ -1,5 +1,5 @@
-import { derived, readable } from 'svelte/store'
 import { tick } from 'svelte'
+import { derived, readable } from 'svelte/store'
 
 export interface Location {
   /** Location (page/view), for example `/book` */
@@ -197,7 +197,7 @@ const updateLink = (node: HTMLAnchorElement, opts: LinkActionOpts) => {
   let href = opts.href ?? node.getAttribute('href')
 
   // Destination must start with '/' or '#/'
-  if (href && href.startsWith('/')) {
+  if (href?.startsWith('/')) {
     // Add # to the href attribute
     href = `#${href}`
   } else if (!href || href.length < 2 || !href.startsWith('#/')) {
@@ -230,28 +230,23 @@ const linkOpts = (val?: string | LinkActionOpts): LinkActionOpts => {
  *
  * For example:
  *
- * ````html
- * <a href="/books" use:link>View books</a>
+ * ````svelte
+ * <a href="/books" {@attach link()}>View books</a>
  * ````
  *
- * @param node - The target node (automatically set by Svelte). Must be an anchor tag (`<a>`) with a href attribute starting in `/`
  * @param opts - Options object. For legacy reasons, we support a string too which will be the value for opts.href
+ * @param node - The target node (automatically set by Svelte). Must be an anchor tag (`<a>`) with a href attribute starting in `/`
  */
-export const link = (node: HTMLAnchorElement, opts?: string | LinkActionOpts) => {
-  opts = linkOpts(opts)
+export const link = (opts?: string | LinkActionOpts) => {
+  return (node: HTMLAnchorElement) => {
+    opts = linkOpts(opts)
 
-  // Only apply to <a> tags
-  if (!node.tagName || node.tagName.toLowerCase() != 'a') {
-    throw Error('Action "link" can only be used with <a> tags')
-  }
+    // Only apply to <a> tags
+    if (!node.tagName || node.tagName.toLowerCase() != 'a') {
+      throw Error('Action "link" can only be used with <a> tags')
+    }
 
-  updateLink(node, opts)
-
-  return {
-    update(updated: string | LinkActionOpts) {
-      updated = linkOpts(updated)
-      updateLink(node, updated)
-    },
+    updateLink(node, opts)
   }
 }
 

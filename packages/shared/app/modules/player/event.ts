@@ -99,6 +99,10 @@ export class Event extends _Event {
     this.emitEvent('statusText', status)
   }
 
+  lyricText(text: string) {
+    this.emitEvent('lyricText', text)
+  }
+
   collectStatus(status: boolean) {
     this.emitEvent('collectStatus', status)
   }

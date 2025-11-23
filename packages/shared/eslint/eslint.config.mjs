@@ -52,6 +52,7 @@ export const baseRule = {
   'max-lines': 'off',
   'no-param-reassign': 'off',
   'no-plusplus': 'off',
+  radix: 'off',
 }
 export const typescriptRule = {
   ...baseRule,
@@ -126,6 +127,7 @@ export const typescript = {
     ...typescriptRule,
   },
 }
+
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   // love,

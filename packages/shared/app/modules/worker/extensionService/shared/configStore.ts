@@ -22,7 +22,7 @@ export const getConfig = async (extension: AnyListen.Extension.Extension) => {
   return store.getAll<Record<string, unknown>>()
 }
 
-export const saveConfig = async (extension: AnyListen.Extension.Extension, config: Record<string, any>) => {
+export const saveConfig = async (extension: AnyListen.Extension.Extension, config: Record<string, unknown>) => {
   const store = getStore(extension)
   store.override(config)
 }

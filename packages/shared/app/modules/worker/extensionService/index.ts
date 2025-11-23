@@ -174,7 +174,7 @@ void exposeWorker<
   extensionEvent.on('loaded', () => {
     updateResourceListDeounce()
   })
-  extensionEvent.on('stoped', () => {
+  extensionEvent.on('stopped', () => {
     updateResourceListDeounce()
   })
   extensionEvent.on('listAdd', () => {

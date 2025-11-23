@@ -1,6 +1,11 @@
 // import { createUnsubscriptionSet } from '@/shared'
+import { setTitle } from '@/shared'
 import { keyboardEvent } from '../hotkey/keyboard'
+import { lyricEvent } from '../lyric/store/event'
+import { playerEvent } from '../player/store/event'
+import { playerState } from '../player/store/state'
 import { settingEvent } from '../setting/store/event'
+import { settingState } from '../setting/store/state'
 import { onConnected, onRelease } from './shared'
 import { getMachineId, sendInitedEvent, setMachineId, setWorkerInitPromise } from './store/action'
 import { appEvent } from './store/event'
@@ -20,8 +25,30 @@ export const initApp = () => {
     void sendInitedEvent()
   })
   let mainWorkerResolve: () => void
-  setWorkerInitPromise(new Promise((resolve) => (mainWorkerResolve = resolve)))
+  setWorkerInitPromise(
+    new Promise((resolve) => {
+      mainWorkerResolve = resolve
+    })
+  )
   window.addEventListener('worker-initialized-main', mainWorkerResolve!)
+  lyricEvent.on('titleLyricChanged', (text) => {
+    if (!settingState.setting['player.isShowTitleLyric']) return
+    if (text == null) {
+      setTitle(playerState.title)
+    } else {
+      setTitle(text)
+    }
+  })
+  playerEvent.on('titleChanged', (title) => {
+    setTitle(title)
+  })
+  settingEvent.on('updated', (keys, settings) => {
+    if (keys.includes('player.isShowTitleLyric')) {
+      if (!settings['player.isShowTitleLyric']) {
+        setTitle(playerState.title)
+      }
+    }
+  })
 
   document.documentElement.addEventListener(
     'contextmenu',

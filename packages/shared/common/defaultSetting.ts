@@ -35,6 +35,9 @@ const defaultSetting: AnyListen.AppSetting = {
   'player.waitPlayEndStopTime': '',
   'player.autoSkipOnError': true,
   'player.isAutoCleanPlayedList': false,
+  'player.isShowStatusBarLyric': false,
+  'player.isShowTitleLyric': false,
+  'player.isShowMediaSessionLyric': false,
   'player.soundEffect.convolution.fileName': '',
   'player.soundEffect.convolution.mainGain': 10,
   'player.soundEffect.convolution.sendGain': 0,
@@ -59,6 +62,7 @@ const defaultSetting: AnyListen.AppSetting = {
   'playDetail.style.fontWeight': true,
   'playDetail.isDelayScroll': true,
   'playDetail.isDynamicBackground': true,
+  'playDetail.coverStyle': 'cd',
 
   'desktopLyric.enable': false,
   'desktopLyric.isLock': false,

@@ -68,6 +68,11 @@ declare global {
 
       type ClientIPC = ClientAllActions
       type ServerIPC = ServerAllActions
+
+      interface NodeEnv {
+        setTimeout: (callback: () => void, delay: number) => number
+        clearTimeout: (id: number) => void
+      }
     }
   }
 }

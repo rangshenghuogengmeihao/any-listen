@@ -238,12 +238,10 @@ export const setPlayMusicInfo = (info: AnyListen.Player.PlayMusicInfo | null, in
   if (oldInfo) {
     if (oldInfo.playLater) {
       void removePlayListMusic([oldInfo.itemId])
-    } else {
-      if (settingState.setting['player.togglePlayMethod'] == 'random') {
-        if (!oldInfo.played) void setPlayListMusicPlayed([oldInfo.itemId])
-        if (oldInfo.listId == info?.listId && oldHistoryIdx < 0 && playerState.playHistoryList.at(-1)?.id != oldInfo.itemId) {
-          void addPlayHistoryList([{ id: oldInfo.itemId, time: Date.now() }])
-        }
+    } else if (settingState.setting['player.togglePlayMethod'] == 'random') {
+      if (!oldInfo.played) void setPlayListMusicPlayed([oldInfo.itemId])
+      if (oldInfo.listId == info?.listId && oldHistoryIdx < 0 && playerState.playHistoryList.at(-1)?.id != oldInfo.itemId) {
+        void addPlayHistoryList([{ id: oldInfo.itemId, time: Date.now() }])
       }
     }
   }

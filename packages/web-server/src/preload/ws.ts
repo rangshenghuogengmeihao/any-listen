@@ -101,7 +101,7 @@ const heartbeatTools = {
     }
 
     if (this.isError) {
-      await handleAuth(client.data.urlInfo, client.data.keyInfo.serverId).catch((err: Error) => {
+      await handleAuth(client.data.urlInfo).catch((err: Error) => {
         console.log(err)
         if (err.message == IPC_CODE.msgAuthFailed) {
           wsEvent.logout()
@@ -110,7 +110,7 @@ const heartbeatTools = {
       })
     }
 
-    const waitTime = Math.min(2000 + Math.floor(this.failedNum / 2) * this.stepMs, 30000)
+    const waitTime = Math.min(2000 + Math.floor(this.failedNum / 2) * this.stepMs, 60000)
 
     // sendSyncStatus({
     //   status: false,
@@ -125,7 +125,7 @@ const heartbeatTools = {
         status: false,
         message: `Try reconnnect... (${this.failedNum})`,
       })
-      connect(this.exposeObj!, client.data.urlInfo, client.data.keyInfo, client.data.winType)
+      void connect(this.exposeObj!, client.data.urlInfo, client.data.keyInfo, client.data.winType)
     }, waitTime)
   },
   clearTimeout() {
@@ -222,152 +222,172 @@ const heartbeatTools = {
 }
 
 // let listSyncPromise: Promise<void>
-export const connect = (
+export const connect = async (
   exposeObj: AnyListen.IPC.ClientICPCommonActions<IPCSocket>,
   urlInfo: UrlInfo,
   keyInfo: KeyInfo,
   winType: AnyListen.IPC.WinType
 ) => {
-  client = new WebSocket(buildUrlPath(urlInfo, `/socket?m=${encodeURIComponent(keyInfo.token)}&t=${winType}`, true)) as IPCSocket
-  client.data = {
-    keyInfo,
-    urlInfo,
-    winType,
-  }
-  heartbeatTools.connect(client, exposeObj)
+  let pending = true
+  return new Promise<void>((resolve, reject) => {
+    client = new WebSocket(
+      buildUrlPath(urlInfo, `/socket?m=${encodeURIComponent(keyInfo.token)}&t=${winType}`, true)
+    ) as IPCSocket
+    client.data = {
+      keyInfo,
+      urlInfo,
+      winType,
+    }
 
-  let closeEvents: Array<(err: Error) => void | Promise<void>> = []
-  let disconnected = true
+    let closeEvents: Array<(err: Error) => void | Promise<void>> = []
+    let disconnected = true
 
-  const message2read = createMessage2Call<AnyListen.IPC.ServerCommonActions>({
-    exposeObj,
-    timeout: 0,
-    isSendErrorStack: true,
-    sendMessage(data) {
-      if (disconnected) throw new Error('disconnected')
-      void encryptMsg(keyInfo, JSON.stringify(data))
-        .then((data) => {
-          client?.send(data)
-        })
-        .catch((err) => {
-          log.error('encrypt msg error: ', err)
-          client?.close(IPC_CLOSE_CODE.failed)
-        })
-    },
-    onCallBeforeParams(rawArgs) {
-      return [client, ...rawArgs]
-    },
-    onError(error, path, groupName) {
-      const name = groupName ?? ''
-      log.error(`call ${name} ${path.join('.')} error:`, error)
-      // if (groupName == null) return
-      // client?.close(IPC_CLOSE_CODE.failed)
+    const message2read = createMessage2Call<AnyListen.IPC.ServerCommonActions>({
+      exposeObj,
+      timeout: 0,
+      isSendErrorStack: true,
+      sendMessage(data) {
+        if (disconnected) throw new Error('disconnected')
+        void encryptMsg(keyInfo, JSON.stringify(data))
+          .then((data) => {
+            client?.send(data)
+          })
+          .catch((err) => {
+            log.error('encrypt msg error: ', err)
+            client?.close(IPC_CLOSE_CODE.failed)
+          })
+      },
+      onCallBeforeParams(rawArgs) {
+        return [client, ...rawArgs]
+      },
+      onError(error, path, groupName) {
+        const name = groupName ?? ''
+        log.error(`call ${name} ${path.join('.')} error:`, error)
+        // if (groupName == null) return
+        // client?.close(IPC_CLOSE_CODE.failed)
+        // sendSyncStatus({
+        //   status: false,
+        //   message: error.message,
+        // })
+      },
+    })
+
+    client.remote = message2read.remote
+    client.remoteQueueTheme = message2read.createRemoteGroup('theme', { queue: true, timeout: 0 })
+    client.remoteQueuePlayer = message2read.createRemoteGroup('player', { queue: true, timeout: 0 })
+    client.remoteQueueList = message2read.createRemoteGroup('list', { queue: true, timeout: 0 })
+    client.remoteQueueDislike = message2read.createRemoteGroup('dislike', { queue: true, timeout: 0 })
+    client.remoteQueueExtension = message2read.createRemoteGroup('extension', { queue: true, timeout: 0 })
+    client.remoteExtension = message2read.createRemoteGroup('extension', { timeout: 60_000 })
+
+    client.addEventListener('message', ({ data }) => {
+      if (data == 'ping') return
+      if (typeof data === 'string') {
+        void decryptMsg(keyInfo, data)
+          .then((data) => {
+            let syncData: unknown
+            try {
+              syncData = JSON.parse(data)
+            } catch (err) {
+              log.error('parse msg error: ', err)
+              client?.close(IPC_CLOSE_CODE.failed)
+              return
+            }
+            message2read.message(syncData)
+          })
+          .catch((error) => {
+            log.error('decrypt msg error: ', error)
+            client?.close(IPC_CLOSE_CODE.failed)
+          })
+      }
+    })
+    client.onClose = function (handler: (typeof closeEvents)[number]) {
+      closeEvents.push(handler)
+      return () => {
+        closeEvents.splice(closeEvents.indexOf(handler), 1)
+      }
+    }
+    client.logout = async function () {
+      heartbeatTools.disconnect()
+      await removeAuthKey(keyInfo.serverId)
+      client?.close(IPC_CLOSE_CODE.logout)
+      // wsEvent.logout()
+    }
+
+    const initMessage = 'Wait syncing...'
+    client.addEventListener('open', () => {
+      pending = false
+      resolve()
+      log.info('connect')
+      // const store = getStore()
+      // global.lxKeyInfo = keyInfo
+      client!.isReady = false
+      // client!.moduleReadys = {
+      //   list: false,
+      //   dislike: false,
+      // }
+      disconnected = false
+      wsEvent.connected(client!)
       // sendSyncStatus({
       //   status: false,
-      //   message: error.message,
+      //   message: initMessage,
       // })
-    },
-  })
-
-  client.remote = message2read.remote
-  client.remoteQueueTheme = message2read.createRemoteGroup('theme', { queue: true, timeout: 0 })
-  client.remoteQueuePlayer = message2read.createRemoteGroup('player', { queue: true, timeout: 0 })
-  client.remoteQueueList = message2read.createRemoteGroup('list', { queue: true, timeout: 0 })
-  client.remoteQueueDislike = message2read.createRemoteGroup('dislike', { queue: true, timeout: 0 })
-  client.remoteQueueExtension = message2read.createRemoteGroup('extension', { queue: true, timeout: 0 })
-  client.remoteExtension = message2read.createRemoteGroup('extension', { timeout: 60_000 })
-
-  client.addEventListener('message', ({ data }) => {
-    if (data == 'ping') return
-    if (typeof data === 'string') {
-      void decryptMsg(keyInfo, data)
-        .then((data) => {
-          let syncData: unknown
-          try {
-            syncData = JSON.parse(data)
-          } catch (err) {
-            log.error('parse msg error: ', err)
-            client?.close(IPC_CLOSE_CODE.failed)
-            return
-          }
-          message2read.message(syncData)
-        })
-        .catch((error) => {
-          log.error('decrypt msg error: ', error)
-          client?.close(IPC_CLOSE_CODE.failed)
-        })
-    }
-  })
-  client.onClose = function (handler: (typeof closeEvents)[number]) {
-    closeEvents.push(handler)
-    return () => {
-      closeEvents.splice(closeEvents.indexOf(handler), 1)
-    }
-  }
-  client.logout = async function () {
-    heartbeatTools.disconnect()
-    await removeAuthKey(keyInfo.serverId)
-    client?.close(IPC_CLOSE_CODE.logout)
-    // wsEvent.logout()
-  }
-
-  const initMessage = 'Wait syncing...'
-  client.addEventListener('open', () => {
-    log.info('connect')
-    // const store = getStore()
-    // global.lxKeyInfo = keyInfo
-    client!.isReady = false
-    // client!.moduleReadys = {
-    //   list: false,
-    //   dislike: false,
-    // }
-    disconnected = false
-    wsEvent.connected(client!)
-    // sendSyncStatus({
-    //   status: false,
-    //   message: initMessage,
-    // })
-  })
-  client.addEventListener('close', ({ code }) => {
-    const err = new Error('closed')
-    try {
-      for (const handler of closeEvents) void handler(err)
-    } catch (err) {
-      log.error((err as Error | null)?.message)
-    }
-    closeEvents = []
-    disconnected = true
-    message2read.destroy()
-    switch (code) {
-      case IPC_CLOSE_CODE.normal:
-        // case IPC_CLOSE_CODE.failed:
-        sendSyncStatus({
-          status: false,
-          message: '',
-        })
-        break
-      case IPC_CLOSE_CODE.failed:
-        if (!status.message || status.message == initMessage) {
+    })
+    client.addEventListener('close', ({ code }) => {
+      const err = new Error('closed')
+      try {
+        for (const handler of closeEvents) void handler(err)
+      } catch (err) {
+        log.error((err as Error | null)?.message)
+      }
+      closeEvents = []
+      disconnected = true
+      message2read.destroy()
+      switch (code) {
+        case IPC_CLOSE_CODE.normal:
+          // case IPC_CLOSE_CODE.failed:
           sendSyncStatus({
             status: false,
-            message: 'failed',
+            message: '',
           })
-        }
-        break
-      case IPC_CLOSE_CODE.logout:
-        void removeAuthKey(keyInfo.serverId)
-        wsEvent.logout()
-        sendSyncStatus({
-          status: false,
-          message: 'logout',
-        })
-        break
-    }
-    wsEvent.disconnected()
-    console.log('closed')
-  })
-  client.addEventListener('error', (event) => {
-    console.error(event)
+          break
+        case IPC_CLOSE_CODE.failed:
+          if (!status.message || status.message == initMessage) {
+            sendSyncStatus({
+              status: false,
+              message: 'Failed',
+            })
+          }
+          break
+        case IPC_CLOSE_CODE.logout:
+          void removeAuthKey(keyInfo.serverId)
+          wsEvent.logout()
+          sendSyncStatus({
+            status: false,
+            message: 'Logout',
+          })
+          break
+        case 1006:
+          sendSyncStatus({
+            status: false,
+            message: 'Abnormal disconnection',
+          })
+          if (pending) {
+            reject(new Error(IPC_CODE.abnormalDisconnection))
+            pending = false
+            client = null
+            heartbeatTools.disconnect()
+          }
+          break
+      }
+      wsEvent.disconnected()
+      console.log('closed')
+    })
+    client.addEventListener('error', (event) => {
+      console.error(event)
+    })
+
+    heartbeatTools.connect(client, exposeObj)
   })
 }
 

@@ -16,7 +16,7 @@
   import { showNotify } from '../notify'
   import { i18n, t } from '@/plugins/i18n'
   import { useSettingValue } from '@/modules/setting/reactive.svelte'
-  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar'
+  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar.svelte'
   import { parseMarkdown, parseMarkdowns } from '@/shared/tools'
   /* eslint svelte/no-at-html-tags: "off" */
 
@@ -146,7 +146,7 @@
 
 {#snippet versionSnippet()}
   <div class="version-modal-content">
-    <div class="select info" use:verticalScrollbar>
+    <div class="select info" {@attach verticalScrollbar()}>
       <div class="current">
         <h3>{$t('update_modal.current_version')}{versionInfo.val.version}</h3>
         <h3>
@@ -179,7 +179,7 @@
   </div>
 {/snippet}
 
-<Modal teleport="#root" bind:visible maxwidth="72%" {onafterleave} minheight="0">
+<Modal teleport="#root" bind:visible maxwidth="72%" {onafterleave} minheight="0" bgclose={false}>
   {#if versionInfo.val.isLatest}
     <main class="version-modal-main">
       <h2>{$t('update_modal.latest_title')}</h2>
@@ -200,7 +200,7 @@
     <main class="version-modal-main">
       <h2>{$t('update_modal.unknown_title')}</h2>
       <div class="version-modal-content">
-        <div class="select info" use:verticalScrollbar>
+        <div class="select info" {@attach verticalScrollbar()}>
           <div class="current">
             <h3>{$t('update_modal.current_version')}{versionInfo.val.version}</h3>
             <div class="desc">

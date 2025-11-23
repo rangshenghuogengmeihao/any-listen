@@ -14,3 +14,18 @@ export const parseMarkdown = async (content: string) => {
 export const parseMarkdowns = async (contents: string[]) => {
   return Promise.all(contents.map(async (content) => parseMarkdown(content)))
 }
+
+const timers = new Map<string, number>()
+export const runTimeout = (id: string, cb: () => void, delay?: number) => {
+  const timer = setTimeout(() => {
+    timers.delete(id)
+    cb()
+  }, delay)
+  timers.set(id, timer)
+}
+export const stopTimeout = (id: string) => {
+  const timer = timers.get(id)
+  if (!timer) return
+  clearTimeout(timer)
+  timers.delete(id)
+}

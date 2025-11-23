@@ -34,11 +34,17 @@ export const showMessageBox = async (
     release()
   })
   await tick()
-  return (app.show(extId, options.buttons ?? buildDefaultButtons(), options.title, options.detail) as Promise<number>).finally(
-    () => {
-      key = ''
-      unsub()
-      unsub2()
-    }
-  )
+  return (
+    app.show(
+      extId,
+      options.buttons ?? buildDefaultButtons(),
+      options.title,
+      options.detail,
+      options.textSelect
+    ) as Promise<number>
+  ).finally(() => {
+    key = ''
+    unsub()
+    unsub2()
+  })
 }

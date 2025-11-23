@@ -2,7 +2,6 @@ import { appEvent, appState } from '@/app'
 import { workers } from '@/worker'
 import { musicListEvent, sendMusicListAction } from '@any-listen/app/modules/musicList'
 import {
-  getPlayInfo as getPlayInfoRaw,
   initPlayer as initPlayerModule,
   playerEvent,
   setPlayInfo,
@@ -10,6 +9,8 @@ import {
   setPlayTime,
 } from '@any-listen/app/modules/player'
 import { LIST_IDS } from '@any-listen/common/constants'
+import { checkCollect, getPlayerMusic } from './shared'
+// import { playerState } from './state'
 
 const registerProgressSave = () => {
   const handler = async (progress: AnyListen.IPCPlayer.Progress) => {
@@ -67,9 +68,6 @@ const updateLatestPlayList = async (info: AnyListen.Player.PlayMusicInfo) => {
   }
 }
 
-const checkCollect = async (minfo: AnyListen.Player.PlayMusicInfo) => {
-  return minfo.listId == LIST_IDS.LOVE ? true : workers.dbService.checkListExistMusic(LIST_IDS.LOVE, minfo.musicInfo.id)
-}
 export const initPlayer = async () => {
   initPlayerModule(workers.dbService, appState.dataPath)
   let prevCollectStatus = false
@@ -146,6 +144,17 @@ export const initPlayer = async () => {
     }
   })
 
+  // playerEvent.on('musicInfoUpdated', async (info) => {
+  //   for (const [key, value] of Object.entries(info) as EntriesObject<typeof info>) {
+  //     // @ts-expect-error
+  //     playerState.status[key] = value
+  //   }
+  // })
+  // playerEvent.on('progress', async (info) => {
+  //   playerState.status.duration = info.maxPlayTime
+  //   playerState.status.progress = info.nowPlayTime
+  // })
+
   musicListEvent.on('list_music_changed', async (ids) => {
     if (!ids.includes(LIST_IDS.LOVE)) return
     void getPlayerMusic().then(async (music) => {
@@ -173,32 +182,8 @@ export const initPlayer = async () => {
 //   workers.dbService.updateMetadataPlayCount(count)
 // }
 
-export const getPlayInfo = async (): Promise<AnyListen.IPCPlayer.PlayInfo> => {
-  const playInfo = await getPlayInfoRaw()
-  const [[list, isCollect], { listId, isOnline }, historyList] = await Promise.all([
-    workers.dbService.getPlayList().then(async (list) => {
-      const minfo = list[playInfo.index]
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (!minfo) return [list, false] as const
-      return [list, await checkCollect(minfo)] as const
-    }),
-    workers.dbService.queryMetadataPlayListInfo(),
-    workers.dbService.queryMetadataPlayHistoryList(),
-  ])
-  return {
-    info: playInfo,
-    list,
-    listId,
-    isOnline,
-    historyList,
-    isCollect,
-  }
-}
-
-export const getPlayerMusic = async (): Promise<AnyListen.Player.PlayMusicInfo | null> => {
-  const playInfo = await getPlayInfoRaw()
-  const list = await workers.dbService.getPlayList()
-  return list[playInfo.index] ?? null
-}
-
 export { playerEvent }
+
+export * from './shared'
+
+export * as playerActions from './actions'

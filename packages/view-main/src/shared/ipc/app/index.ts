@@ -70,3 +70,7 @@ export const downloadUpdate: AnyListen.IPC.ServerIPC['downloadUpdate'] = async (
 export const restartUpdate: AnyListen.IPC.ServerIPC['restartUpdate'] = async () => {
   return ipc.restartUpdate()
 }
+
+export const getSystemFonts: AnyListen.IPC.ServerIPC['getSystemFonts'] = async () => {
+  return ipc.getSystemFonts()
+}

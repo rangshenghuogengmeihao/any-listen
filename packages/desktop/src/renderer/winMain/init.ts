@@ -65,6 +65,12 @@ export const initWinMain = () => {
   winMainEvent.on('inited', () => {
     winMainReadyEvent.emit()
   })
+  winMainEvent.on('hide', () => {
+    void rendererIPC.winShow(false)
+  })
+  winMainEvent.on('show', () => {
+    void rendererIPC.winShow(true)
+  })
   themeEvent.on('theme_change', (theme) => {
     void rendererIPC.themeChanged(theme)
   })

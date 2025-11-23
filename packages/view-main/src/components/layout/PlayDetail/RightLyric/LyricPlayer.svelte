@@ -158,8 +158,12 @@
           > span {
             font-size: 1em;
             background-color: @unplay-font-color;
+            /* stylelint-disable-next-line value-no-vendor-prefix */
+            background-image: -webkit-linear-gradient(top, @played-color, @played-color);
             background-image: linear-gradient(to bottom, @played-color, @played-color);
             background-repeat: no-repeat;
+            /* stylelint-disable-next-line property-no-vendor-prefix */
+            -webkit-background-clip: text;
             background-clip: text;
             background-size: 0 100%;
             transition: @transition-normal;

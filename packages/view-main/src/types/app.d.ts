@@ -35,6 +35,7 @@ declare interface Window {
   testData: any
 
   __anylisten_ipc_init__?: AnyListen.IPC.ConnectIPCSrivice
+  __anylisten_node_env__?: AnyListen.IPC.NodeEnv
 
   setTheme: (colors: Record<string, string>) => void
   setLang: (lang?: string) => void

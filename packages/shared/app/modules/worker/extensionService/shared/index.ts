@@ -203,10 +203,10 @@ const verifyManifest = async (extensionPath: string, manifest: AnyListen.Extensi
   formatManifest(manifest)
   manifest.icon = manifest.icon ? await buildPath(extensionPath, manifest.icon).catch(() => '') : ''
   if (manifest.icon) {
-    if (!availableIcons.includes(path.extname(manifest.icon).toLowerCase())) {
-      manifest.icon = ''
-    } else {
+    if (availableIcons.includes(path.extname(manifest.icon).toLowerCase())) {
       manifest.icon = await extensionState.remoteFuncs.createExtensionIconPublicPath(manifest.icon)
+    } else {
+      manifest.icon = ''
     }
   }
   manifest.main = await buildPath(extensionPath, manifest.main)
@@ -313,7 +313,7 @@ export const stopRunExtension = async (extension: AnyListen.Extension.Extension)
   extensionEvent.stoping(extension.id)
   await destroyContext(extension.id)
   extension.loaded = false
-  extensionEvent.stoped(extension.id)
+  extensionEvent.stopped(extension.id)
   return false
 }
 
@@ -337,13 +337,11 @@ export const downloadExtension = async (url: string, manifest?: AnyListen.Extens
         await copyFile(url, tempPath)
         return tempPath
       }
-    } else {
-      if (await checkPath(url)) {
-        if (extensionState.tempDir == dirname(url)) return url
-        const tempPath = joinPath(extensionState.tempDir, basename(url))
-        await copyFile(url, tempPath)
-        return tempPath
-      }
+    } else if (await checkPath(url)) {
+      if (extensionState.tempDir == dirname(url)) return url
+      const tempPath = joinPath(extensionState.tempDir, basename(url))
+      await copyFile(url, tempPath)
+      return tempPath
     }
     throw new Error(`Unable to read the path: ${url}`)
   }
@@ -478,7 +476,10 @@ export const updateResourceList = () => {
       for (const res of ext.contributes.resource) {
         for (const action of res.resource) {
           let list = resourceList.resources[action]
-          if (!list) resourceList.resources[action] = list = []
+          if (!list) {
+            list = []
+            resourceList.resources[action] = list
+          }
           list.push({
             extensionId: ext.id,
             id: res.id,

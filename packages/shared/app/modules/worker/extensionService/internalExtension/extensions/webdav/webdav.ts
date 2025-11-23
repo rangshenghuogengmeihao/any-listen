@@ -1,11 +1,12 @@
 import { createCache } from '@any-listen/common/cache'
 import { getMimeType } from '@any-listen/common/mime'
 import { isLikelyGarbage } from '@any-listen/common/utils'
-import { basename, extname } from '@any-listen/nodejs'
+import { basename, extname, sleep } from '@any-listen/nodejs'
 import { decodeString } from '@any-listen/nodejs/char'
 import { parseBufferMetadata } from '@any-listen/nodejs/music'
 import { WebDAVClient } from '@any-listen/nodejs/webdav-client'
 import { hostContext, logcat } from './shared'
+import { savePassword } from './utils'
 
 const cache = createCache({ max: 10, ttl: 60 * 1000 })
 
@@ -23,6 +24,9 @@ export const createWebDAVClient = (options: WebDAVClientOptions) => {
     baseUrl: options.url,
     username: options.username,
     password: options.password,
+    onError(err) {
+      logcat.error('WebDAVClient', err)
+    },
   })
 }
 
@@ -37,9 +41,52 @@ export const buildWebDAVError = (options: WebDAVClientOptions, err: Error) => {
   return err
 }
 
+export const setPassword = async (options: WebDAVClientOptions) => {
+  const password = await hostContext.showInputBox({
+    placeholder: hostContext.i18n.t('exts.webdav.form.input.password_placeholder'),
+    // password: true,
+    title: hostContext.i18n.t('exts.webdav.form.input.password_title'),
+    prompt: options.password
+      ? hostContext.i18n.t('exts.webdav.form.error.invalid_password_prompt')
+      : hostContext.i18n.t('exts.webdav.form.error.no_password_prompt'),
+    async validateInput(value) {
+      const webDAVClient = createWebDAVClient({ ...options, password: value })
+      return webDAVClient
+        .ls(options.path)
+        .then(() => {
+          return null
+        })
+        .catch(async (err: Error) => {
+          const msg = err.message
+          if (msg.startsWith('401')) {
+            if (!value) return hostContext.i18n.t('exts.webdav.form.error.no_password_prompt')
+            return hostContext.i18n.t('exts.webdav.form.error.invalid_password_prompt')
+          }
+          return null
+        })
+    },
+  })
+  await savePassword(options.url, options.username, password).catch((err) => {
+    logcat.error('setPassword error', err)
+    throw err
+  })
+  options.password = password
+}
+
 export const testDir = async (options: WebDAVClientOptions) => {
   const webDAVClient = createWebDAVClient(options)
-  await webDAVClient.ls(options.path).catch((err: Error) => {
+  await webDAVClient.ls(options.path).catch(async (err: Error) => {
+    const msg = err.message
+    if (msg.startsWith('401')) {
+      if ((await setPassword(options).catch(() => 1)) !== 1) {
+        await sleep(500)
+        return testDir(options)
+      }
+      if (!options.password) {
+        throw Error(hostContext.i18n.t('exts.webdav.form.error.test_no_password'))
+      }
+      throw Error(hostContext.i18n.t('exts.webdav.form.error.test_invalid_password'))
+    }
     throw buildWebDAVError(options, err)
   })
 }
@@ -103,7 +150,7 @@ export const parseMusicMetadata = async (options: WebDAVClientOptions, path: str
       return null
     }
   }
-  const data = await webDAVClient.getPartial(path, fileSize - 32 * 1024, fileSize - 1) // last 32k
+  const data = await webDAVClient.getPartial(path, fileSize - 32 * 1024) // last 32k
   const metaTail = await parseBufferMetadata(data, mimeType).catch(() => {
     // logcat.error('parseBufferMetadata error', err)
     return null
@@ -113,19 +160,21 @@ export const parseMusicMetadata = async (options: WebDAVClientOptions, path: str
   return null
 }
 
-const checkFile = async (webDAVClient: WebDAVClient, path: string) => {
-  return webDAVClient
-    .getHead(path)
-    .then(() => true)
-    .catch(() => false)
-}
+// const checkFile = async (webDAVClient: WebDAVClient, path: string) => {
+//   return webDAVClient
+//     .getPartial(path, 0, 1)
+//     .then(() => true)
+//     .catch(() => false)
+// }
 
 export const getMusicUrl = async (options: WebDAVClientOptions, path: string) => {
   if (!path || typeof path !== 'string') throw new Error('invalid path')
   const webDAVClient = createWebDAVClient(options)
-  if (!(await checkFile(webDAVClient, path))) throw new Error('file not exists')
   const [url, reqOpts] = webDAVClient.getRequestOptions(path)
-  return hostContext.createProxyUrl(url, reqOpts)
+  return hostContext.createProxyUrl(url, reqOpts).catch((err) => {
+    logcat.error('create proxy url error', err)
+    throw err
+  })
 }
 
 const tryPicExt = ['.jpg', '.jpeg', '.png'] as const
@@ -133,7 +182,9 @@ const getDirCoverPic = async (webDAVClient: WebDAVClient, path: string) => {
   const filePath = new RegExp(`\\${extname(path)}$`)
   for await (const ext of tryPicExt) {
     const picPath = path.replace(filePath, ext)
-    if (await checkFile(webDAVClient, picPath)) return picPath
+    const [url, reqOpts] = webDAVClient.getRequestOptions(picPath)
+    const picUrl = await hostContext.createProxyUrl(url, reqOpts).catch(() => null)
+    if (picUrl) return picPath
   }
   return null
 }
@@ -141,17 +192,17 @@ const getDirNamePic = async (webDAVClient: WebDAVClient, path: string) => {
   const filePath = new RegExp(`\\${extname(path)}$`)
   for await (const ext of tryPicExt) {
     const picPath = path.replace(filePath, ext)
-    if (await checkFile(webDAVClient, picPath)) return picPath
+    const [url, reqOpts] = webDAVClient.getRequestOptions(picPath)
+    const picUrl = await hostContext.createProxyUrl(url, reqOpts).catch(() => null)
+    if (picUrl) return picPath
   }
   return null
 }
 export const getMusicPic = async (options: WebDAVClientOptions, path: string) => {
   const webDAVClient = createWebDAVClient(options)
   let pic = await getDirNamePic(webDAVClient, path)
-  if (pic) {
-    const [url, reqOpts] = webDAVClient.getRequestOptions(pic)
-    return hostContext.createProxyUrl(url, reqOpts)
-  }
+  if (pic) return pic
+
   const mimeType = getMimeType(basename(path))
   const metaHead = await handleParseMetadata(webDAVClient, path, mimeType, true)
   if (metaHead?.pic) {
@@ -164,25 +215,18 @@ export const getMusicPic = async (options: WebDAVClientOptions, path: string) =>
   }
 
   pic = await getDirCoverPic(webDAVClient, path)
-  if (pic) {
-    const [url, reqOpts] = webDAVClient.getRequestOptions(pic)
-    return hostContext.createProxyUrl(url, reqOpts)
-  }
+  if (pic) return pic
   throw new Error('get pic failed')
 }
 
 export const getMusicLyric = async (options: WebDAVClientOptions, path: string) => {
   const webDAVClient = createWebDAVClient(options)
   const lrcPath = path.replace(new RegExp(`\\${extname(path)}$`), '.lrc')
-  if (await checkFile(webDAVClient, lrcPath)) {
-    const data = await webDAVClient.get(lrcPath).catch((err) => {
-      logcat.error('get lrc file error', err)
-      return null
-    })
-    if (data) {
-      const lrc = await decodeString(data)
-      if (lrc && !isLikelyGarbage(lrc)) return lrc
-    }
+
+  const data = await webDAVClient.get(lrcPath).catch(() => null)
+  if (data) {
+    const lrc = await decodeString(data)
+    if (lrc && !isLikelyGarbage(lrc)) return lrc
   }
 
   const mimeType = getMimeType(basename(path))

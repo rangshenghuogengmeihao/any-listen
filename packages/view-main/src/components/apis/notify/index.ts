@@ -16,6 +16,9 @@ export const initNotify = () => {
 
 export const showNotify = (message?: string, duration = 3, textSelect?: boolean) => {
   if (!message) return
+  if (message.length > 1000) {
+    message = `${message.substring(0, 1000)}...`
+  }
   app.show(message, duration, textSelect)
 }
 
@@ -36,7 +39,7 @@ export const showNotifyBox = async (extId: string, key: string, options: AnyList
   })
   const id = app.show(options.detail, 3, options.textSelect, extId, () => {
     onHide(0)
-  }) as string
+  })
   let onHide: (value: number) => void
   let onError: (err: Error) => void
   return new Promise<number>((resolve, reject) => {

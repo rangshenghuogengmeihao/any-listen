@@ -5,6 +5,7 @@
   import { extI18n } from '@/modules/extension/i18n'
   import { openUrl } from '@/shared/ipc/app'
   import { isUrl } from '@/shared'
+  import { CANCELED_ERROR_MSG } from '@any-listen/common/constants'
 
   let {
     onafterleave,
@@ -57,7 +58,7 @@
   }
   export const hide = () => {
     visible = false
-    promise?.[1](new Error('cancel'))
+    promise?.[1](new Error(CANCELED_ERROR_MSG))
   }
 
   // $effect(() => {
@@ -68,7 +69,7 @@
 <Modal
   bind:visible
   teleport="#root"
-  minheight="140px"
+  minheight="8.75rem"
   bgclose={false}
   closebtn={false}
   title={extensionName}

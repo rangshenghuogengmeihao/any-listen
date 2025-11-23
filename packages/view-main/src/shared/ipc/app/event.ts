@@ -6,6 +6,8 @@ export const settingChangedEvent = new SingleEvent<
 
 export const deeplinkEvent = new SingleEvent<[deeplink: string]>()
 
+export const winShowEvent = new SingleEvent<[show: boolean]>()
+
 export const updateInfoEvent = new SingleEvent<[info: AnyListen.IPCCommon.UpdateInfo]>()
 
 export const closeMessageBoxEvent = new SingleEvent<[key: string]>()

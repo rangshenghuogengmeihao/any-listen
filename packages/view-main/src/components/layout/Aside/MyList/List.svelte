@@ -4,8 +4,8 @@
   import { useListItemHeight } from '@/modules/app/reactive.svelte'
   import type { Position } from '@/components/base/Menu.svelte'
   import { getAllList } from '@/modules/musicLibrary/store/actions'
-  import { scrollPointerEvents } from '@/shared/compositions/scrollPointerEvents'
-  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar'
+  import { scrollPointerEvents } from '@/shared/compositions/scrollPointerEvents.svelte'
+  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar.svelte'
   import { defaultLists, useUserList } from '@/modules/musicLibrary/reactive.svelte'
   import type { ComponentExports } from 'svelte'
   // import { sortable } from '@/shared/compositions/sortable'
@@ -32,8 +32,8 @@
     <div
       class="list-container"
       role="list"
-      use:scrollPointerEvents
-      use:verticalScrollbar={{ offset: '0.15rem', scrollbarWidth: '0.4rem' }}
+      {@attach scrollPointerEvents}
+      {@attach verticalScrollbar({ offset: '0.15rem', scrollbarWidth: '0.4rem' })}
       oncontextmenu={(event) => {
         event.preventDefault()
         event.stopPropagation()

@@ -202,7 +202,7 @@
   bgclose={false}
   {onafterleave}
   width="65%"
-  maxwidth="900px"
+  maxwidth="56rem"
   maxheight="80%"
   onclose={() => {
     onsubmit({ canceled: true, filePaths: [] })

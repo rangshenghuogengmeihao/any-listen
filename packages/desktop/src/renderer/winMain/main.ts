@@ -1,10 +1,9 @@
 import { appState } from '@/app'
-import { getPlayerMusic } from '@/modules/player'
+import { collectMusic, uncollectMusic } from '@/modules/player'
 import { themeState } from '@/modules/theme'
 import { encodePath } from '@/shared/electron'
 import { openDevTools as handleOpenDevTools, throttle } from '@/shared/utils'
-import { musicListEvent } from '@any-listen/app/modules/musicList'
-import { DEV_SERVER_PORTS, LIST_IDS } from '@any-listen/common/constants'
+import { DEV_SERVER_PORTS } from '@any-listen/common/constants'
 import { getPlatform, isLinux, isWin } from '@any-listen/nodejs/index'
 import { BrowserWindow, Notification, dialog, session } from 'electron'
 import path from 'node:path'
@@ -36,9 +35,6 @@ const winEvent = () => {
   //   browserWindow.webContents.send('restore')
   // })
   browserWindow.on('focus', () => {
-    // TODO
-    // sendFocus()
-    // rendererIPC.
     winMainEvent.focus()
   })
 
@@ -264,29 +260,10 @@ export const setThumbarButtons = throttle(
       createTaskBarButtons(taskBarButtonFlags, (action) => {
         switch (action) {
           case 'collect':
-            void getPlayerMusic().then((music) => {
-              if (!music) return
-              void musicListEvent.listAction({
-                action: 'list_music_add',
-                data: {
-                  id: LIST_IDS.LOVE,
-                  musicInfos: [music.musicInfo],
-                  addMusicLocationType: appState.appSetting['list.addMusicLocationType'],
-                },
-              })
-            })
+            void collectMusic()
             break
           case 'unCollect':
-            void getPlayerMusic().then((music) => {
-              if (!music) return
-              void musicListEvent.listAction({
-                action: 'list_music_remove',
-                data: {
-                  listId: LIST_IDS.LOVE,
-                  ids: [music.musicInfo.id],
-                },
-              })
-            })
+            void uncollectMusic()
             break
           default:
             void rendererIPC.playerAction({ action })

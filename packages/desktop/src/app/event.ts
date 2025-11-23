@@ -40,8 +40,8 @@ export class Event extends _Event {
     this.emitEvent('locale_change', locale)
   }
 
-  proxy_changed(host: string, port: string) {
-    this.emitEvent('proxy_changed', host, port)
+  proxy_changed(host: string, port: string, electronProxy: Electron.ProxyConfig) {
+    this.emitEvent('proxy_changed', host, port, electronProxy)
   }
 }
 

@@ -101,7 +101,7 @@
   .select {
     position: relative;
     display: inline-block;
-    width: 300px;
+    width: var(--selection-width, 300px);
     font-size: 12px;
 
     &.active {

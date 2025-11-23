@@ -3,7 +3,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import colors from 'picocolors'
 import Spinnies from 'spinnies'
-import { type TaksName, runBuildWorkerStatus } from './utils'
+import { type TaskName, runBuildWorkerStatus } from './utils'
 // import rendererConfig from './configs/renderer'
 import copyAssets from './copyAssets'
 import { dynamicImport } from './import-esm.cjs'
@@ -34,7 +34,7 @@ const runMainThread = async () => {
   spinners.add('web-preload', { text: 'web-preload compiling' })
   spinners.add('extension-preload', { text: 'extension-preload compiling' })
   spinners.add('web-server', { text: 'web-server compiling' })
-  const handleResult = (name: TaksName) => {
+  const handleResult = (name: TaskName) => {
     return (success: boolean) => {
       if (success) {
         spinners.succeed(name, { text: `${name} compile success!` })

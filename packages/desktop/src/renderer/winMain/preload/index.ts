@@ -11,6 +11,8 @@ import { createClientPlayer, createExposePlayer } from './player'
 import { createClientSoundEffect } from './soundEffect'
 import { createClientTheme, createExposeTheme } from './theme'
 
+import './env'
+
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
 
 export type ExposeFunctions = AnyListen.IPC.ClientIPCActions<Electron.IpcRendererEvent>

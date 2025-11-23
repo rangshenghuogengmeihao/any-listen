@@ -1,4 +1,4 @@
-FROM node:lts-slim AS base
+FROM node:22-slim AS base
 
 FROM base AS builder
 
@@ -32,30 +32,28 @@ RUN pnpm build:web
 FROM base AS final
 WORKDIR /server
 
-RUN npm r npm -g
 RUN apt-get update && \
-    apt-get install -y tzdata && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends tzdata && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    rm -rf /usr/local/lib/node_modules/npm \
+           /usr/local/lib/node_modules/corepack \
+           /usr/local/bin/npm \
+           /usr/local/bin/npx \
+           /usr/local/bin/corepack
 
-COPY --from=builder ./source-code/build ./
+RUN groupadd -g 1001 algroup && useradd -u 1001 -g algroup -m anylisten
+RUN mkdir -p /server/data && chown anylisten:algroup /server/data
 
-# VOLUME /server/data
+COPY --from=builder --chown=anylisten:algroup ./source-code/build ./
+
 ENV DATA_PATH="/server/data"
 
-# https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
-# ENV TZ=Asia/Shanghai
-EXPOSE 9500
 ENV NODE_ENV="production"
 ENV PORT="9500"
 ENV BIND_IP="0.0.0.0"
-# ENV PROXY_HEADER 'x-real-ip'
-# ENV SERVER_NAME 'My Sync Server'
-# ENV MAX_SNAPSHOT_NUM '10'
-# ENV LIST_ADD_MUSIC_LOCATION_TYPE 'top'
-# ENV LX_USER_user1 '123.123'
-# ENV LX_USER_user2 '{ "password": "123.456", "maxSnapshotNum": 10, "list.addMusicLocationType": "top" }'
-# ENV CONFIG_PATH '/server/config.js'
-# ENV LOG_PATH '/server/logs'
-# ENV DATA_PATH '/server/data'
+
+EXPOSE 9500
+
+USER anylisten
 
 CMD [ "node", "index.cjs" ]

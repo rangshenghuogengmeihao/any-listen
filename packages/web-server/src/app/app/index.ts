@@ -123,7 +123,7 @@ export const initAppEnv = async () => {
   initCommon({
     getSettings: () => appState.appSetting,
     showMessageBox: async (key, options) => {
-      return boxTools.showBox(key, options.modal === true, async (socket) => {
+      return boxTools.showBox(key, '', options.modal === true, async (socket) => {
         return socket.remote.showMessageBox(key, '', options)
       })
     },

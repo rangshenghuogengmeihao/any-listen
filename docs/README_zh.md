@@ -26,6 +26,14 @@
 
 参考 [https://github.com/lyswhut/lx-music-sync-server](https://github.com/lyswhut/lx-music-sync-server) 的部署方式，配置文件说明见下方。
 
+### 特性
+
+- 添加并播放本地歌曲（普通列表、本地列表）
+- 添加并播放 WebDAV 上的歌曲（远程列表）
+- 在线匹配歌曲信息（封面、歌词，需到扩展管理安装对应扩展）
+- 实验性音效
+- 卡拉OK歌词、标题栏歌词
+
 ---
 
 **使用示例：**

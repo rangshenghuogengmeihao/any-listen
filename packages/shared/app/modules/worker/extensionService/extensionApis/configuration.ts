@@ -7,7 +7,7 @@ export const createConfigurationStore = (extension: AnyListen.Extension.Extensio
       const store = await getConfig(extension)
       return keys.map((k) => store[k]) as string[]
     },
-    async setConfigs(datas: Record<string, any>) {
+    async setConfigs(datas: Record<string, unknown>) {
       await updateExtensionSettings(extension.id, datas)
     },
   }

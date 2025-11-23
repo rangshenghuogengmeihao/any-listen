@@ -80,6 +80,10 @@ class Event extends _Event {
     this.emitEvent('statusTextChanged', text)
   }
 
+  titleChanged(text: InitState['title']) {
+    this.emitEvent('titleChanged', text)
+  }
+
   playStatusChanged(state: InitState['playing']) {
     this.emitEvent('playStatusChanged', state)
   }

@@ -61,7 +61,7 @@ export const createContext = async (extension: AnyListen.Extension.Extension) =>
     const rawFn = context[name]
     // @ts-expect-error
     context[name] = (_key, ...args: unknown[]) => {
-      if (_key != key) throw new Error('host call illegal')
+      if (_key != key || !contextState.vmContexts.has(extension.id)) throw new Error('host call illegal')
       // @ts-expect-error
       return rawFn(...args)
     }
@@ -71,7 +71,7 @@ export const createContext = async (extension: AnyListen.Extension.Extension) =>
     {
       ...context,
       __ext_host_call__(_key, action, data) {
-        if (key != _key) throw new Error('host call illegal')
+        if (key != _key || !contextState.vmContexts.has(extension.id)) throw new Error('host call illegal')
         if (action == 'message') {
           // console.log('mssage', data)
           msg2call.message(data)

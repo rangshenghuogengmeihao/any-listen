@@ -7,7 +7,9 @@ import { getCurrentTime as getPlayerCurrentTime } from '@/plugins/player'
 import { createUnsubscriptionSet } from '@/shared'
 import * as desktopLyric from './desktopLyric'
 import * as lyric from './lyric'
+import { initMacStatusBarLyric } from './macStatusBarLyric'
 import { lyricState } from './store/state'
+import { initTitleLyric } from './titleLyric'
 
 const getCurrentTime = () => {
   return getPlayerCurrentTime() * 1000
@@ -91,6 +93,8 @@ export const initLyric = () => {
     unregistered.register((subscriptions) => {
       subscriptions.add(lyric.initLyric())
       subscriptions.add(desktopLyric.initDesktopLyric())
+      subscriptions.add(initTitleLyric())
+      if (import.meta.env.VITE_IS_MAC) subscriptions.add(initMacStatusBarLyric())
       subscriptions.add(playerEvent.on('lyricUpdated', setLyric))
       subscriptions.add(playerEvent.on('setLyricOffset', setLyricOffset))
       subscriptions.add(playerEvent.on('setPlaybackRate', setPlaybackRate))

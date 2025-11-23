@@ -125,10 +125,11 @@
     <div
       class={['popup', { top: isShowTop, active: anim }]}
       style={popupStyle}
-      aria-hidden={!anim}
+      inert={!anim}
       onclick={(e) => {
         e.stopPropagation()
       }}
+      role="presentation"
       {onmouseenter}
       {onmouseleave}
       ontransitionend={handleTransitionEnd}

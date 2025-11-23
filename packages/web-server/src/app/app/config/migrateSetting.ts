@@ -3,7 +3,7 @@ import { compareVersions } from '@any-listen/common/utils'
 export const migrateSetting = (setting: Record<string, unknown>): Partial<AnyListen.AppSetting> => {
   setting = { ...setting }
 
-  setting['extension.ghMirrorHosts'] = global.anylisten.config['extension.ghMirrorHosts']
+  setting['extension.ghMirrorHosts'] = global.anylisten.config['extension.ghMirrorHosts'].join('\n')
   if (global.anylisten.config.httpProxy) {
     const [host, port] = global.anylisten.config.httpProxy.split(':')
     setting['network.proxy.enable'] = true

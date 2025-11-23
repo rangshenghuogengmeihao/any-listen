@@ -8,7 +8,7 @@
     "@any-listen/nodejs": "workspace:@shared/nodejs@*",
     "@any-listen/theme": "workspace:@shared/theme@*",
     "@any-listen/web": "workspace:@shared/web@*",
-    "better-sqlite3": "^12.4.1",
+    "better-sqlite3": "^12.4.6",
     "iconv-lite": "^0.7.0",
     "jschardet": "^3.1.4",
     "jsonschema": "^1.5.0",
@@ -20,6 +20,6 @@
     "@any-listen/types": "workspace:@shared/types@*",
     "@types/better-sqlite3": "^7.6.13",
     "@types/tar": "^6.1.13",
-    "vite": "^7.1.9"
+    "vite": "^7.2.4"
   }
 }

@@ -1,17 +1,17 @@
-### Improved
+### Added
 
-- Optimized the position for creating new lists: when creating a new list by clicking on an existing list, the new list will be inserted right after the target list.
+- Added a **Font Settings** section under _Settings > Basic Settings > Font Settings_.
 
 ### Fixed
 
-- Fixed the issue where residual callbacks were not properly unregistered when monitoring changes to local lists.
+- Fixed an issue where **Karaoke lyrics** displayed abnormally in older browsers.
 
 ---
 
-### 优化
+### 新增
 
-- 优化新列表创建位置，创建列表时若点击某个列表来创建新列表时，新列表将插入到目标列表位置之后
+- 新增 **字体设置**，位于 _设置 > 基本设置 > 字体设置_。
 
 ### 修复
 
-- 修复本地列表监听变更时的残留回调注销问题
+- 修复在低版本浏览器下 **卡拉OK歌词** 显示异常的问题

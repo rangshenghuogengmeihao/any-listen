@@ -29,7 +29,7 @@ declare namespace AnyListen {
       | IPCAction<'loadError', EventExtensionLoadError>
       | IPCAction<'loaded', EventExtensionLoaded>
       | IPCAction<'stoping', string>
-      | IPCAction<'stoped', string>
+      | IPCAction<'stopped', string>
       | IPCAction<'listAdd', Extension.Extension>
       | IPCAction<'listRemove', string>
       | IPCAction<'listUpdate', Extension.Extension>
@@ -265,7 +265,12 @@ declare namespace AnyListen {
 
       /** 显示消息弹窗 */
       showMessageBox: (key: string, extensionId: string, options: IPCCommon.MessageDialogOptions) => Promise<number>
-      showInputBox: (key: string, extensionId: string, options: IPCCommon.InputDialogOptions) => Promise<unknown>
+      showInputBox: (
+        key: string,
+        extensionId: string,
+        options: Omit<IPCCommon.InputDialogOptions, 'validateInput'>,
+        validateInput: IPCCommon.InputDialogOptions['validateInput']
+      ) => Promise<string>
       showOpenBox: (key: string, extensionId: string, options: IPCCommon.OpenDialogOptions) => Promise<unknown>
       showSaveBox: (key: string, extensionId: string, options: IPCCommon.SaveDialogOptions) => Promise<unknown>
       closeMessageBox: (key: string) => Promise<void>
@@ -314,7 +319,7 @@ declare namespace AnyListen {
     // extension worker funcs, exposed to extension vm
     interface PreloadIPCActions {
       showMessageBox: (key: string, options: IPCCommon.MessageDialogOptions) => Promise<number>
-      // showInputBox: (key: string, options: IPCCommon.InputDialogOptions) => Promise<string | undefined>
+      showInputBox: (key: string, options: IPCCommon.InputDialogOptions) => Promise<string | undefined>
       showOpenBox: (key: string, options: IPCCommon.OpenDialogOptions) => Promise<unknown>
       showSaveBox: (key: string, options: IPCCommon.SaveDialogOptions) => Promise<unknown>
       closeMessageBox: (key: string) => void

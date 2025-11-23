@@ -1,7 +1,6 @@
 import { setRootOffset } from '@/modules/app/store/action'
 import { appState } from '@/modules/app/store/state'
 import { windowSizeList } from '@any-listen/common/constants'
-import type { Action } from 'svelte/action'
 
 export const handleConfigChange = (keys: Array<keyof AnyListen.AppSetting>, setting: Partial<AnyListen.AppSetting>) => {
   if (keys.includes('common.windowSizeId')) {
@@ -13,7 +12,7 @@ export const handleConfigChange = (keys: Array<keyof AnyListen.AppSetting>, sett
   }
 }
 
-export const windowDarg: Action = (dom: HTMLElement) => {
+export const windowDarg = (dom: HTMLElement) => {
   const msEvent = {
     isMsDown: false,
     msDownX: 0,
@@ -78,14 +77,12 @@ export const windowDarg: Action = (dom: HTMLElement) => {
     document.body.style.width = '1020px'
     document.body.style.height = '670px'
   }
-  return {
-    destroy() {
-      dom.removeEventListener('mousedown', handleMouseDown)
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-      dom.removeEventListener('touchstart', handleTouchDown)
-      document.removeEventListener('touchmove', handleTouchMove)
-      document.removeEventListener('touchend', handleMouseUp)
-    },
+  return () => {
+    dom.removeEventListener('mousedown', handleMouseDown)
+    document.removeEventListener('mousemove', handleMouseMove)
+    document.removeEventListener('mouseup', handleMouseUp)
+    dom.removeEventListener('touchstart', handleTouchDown)
+    document.removeEventListener('touchmove', handleTouchMove)
+    document.removeEventListener('touchend', handleMouseUp)
   }
 }

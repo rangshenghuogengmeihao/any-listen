@@ -2,6 +2,7 @@ import { extensionEvent } from '@/app/modules/extension'
 import { getAllUserLists, getListMusics, sendMusicListAction } from '@any-listen/app/modules/musicList'
 import { checkProxyCache, createProxy, writeProxyCache } from '@any-listen/app/modules/proxyServer'
 import type { Options } from '@any-listen/nodejs/request'
+import { createProxyCallback } from 'message2call'
 import { createExtensionIconPublicPath, removeExtensionIconPublicPath } from '../fileSystem'
 import { getPlayInfo, playerEvent } from '../player'
 import { boxTools } from './clientTools'
@@ -54,22 +55,27 @@ export const exposedFuncs: AnyListen.IPCExtension.MainIPCActions = {
   },
 
   async showMessageBox(key, extId, options) {
-    return boxTools.showBox(key, options.modal === true, async (socket) => {
+    return boxTools.showBox(key, extId, options.modal === true, async (socket) => {
       return socket.remote.showMessageBox(key, extId, options)
     })
   },
-  async showInputBox(key, extId, options) {
-    return boxTools.showBox(key, true, async (socket) => {
-      return socket.remote.showInputBox(key, extId, options)
-    })
+  async showInputBox(key, extId, options, _validateInput) {
+    const validateInput = _validateInput ? createProxyCallback(_validateInput) : undefined
+    return boxTools
+      .showBox(key, extId, true, async (socket) => {
+        return socket.remote.showInputBox(key, extId, options, validateInput)
+      })
+      .finally(() => {
+        validateInput?.releaseProxy()
+      })
   },
   async showOpenBox(key, extId, options) {
-    return boxTools.showBox(key, true, async (socket) => {
+    return boxTools.showBox(key, extId, true, async (socket) => {
       return socket.remote.showOpenBox(key, extId, options)
     })
   },
   async showSaveBox(key, extId, options) {
-    return boxTools.showBox(key, true, async (socket) => {
+    return boxTools.showBox(key, extId, true, async (socket) => {
       return socket.remote.showSaveBox(key, extId, options)
     })
   },

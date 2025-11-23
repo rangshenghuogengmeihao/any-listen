@@ -275,16 +275,17 @@ export default class FontPlayer {
       for (let i = 0; i <= this.curFontNum; i++) this._handlePlayFont(this.fonts[i], 0, true)
       this._refresh()
       return
-    } else if (this.curFontNum == 0) {
-      this.curFontNum--
-      if (this.isPlay) {
-        this.waitPlayTimeout.start(() => {
-          if (!this.isPlay) return
-          this._refresh()
-        }, -driftTime)
-      }
-      return
     }
+    //  else if (this.curFontNum == 0) {
+    //   this.curFontNum--
+    //   if (this.isPlay) {
+    //     this.waitPlayTimeout.start(() => {
+    //       if (!this.isPlay) return
+    //       this._refresh()
+    //     }, -driftTime)
+    //   }
+    //   return
+    // }
 
     this.curFontNum = this._findcurFontNum(currentTime, this.curFontNum) - 1
     for (let i = 0; i <= this.curFontNum; i++) this._handlePlayFont(this.fonts[i], 0, true)

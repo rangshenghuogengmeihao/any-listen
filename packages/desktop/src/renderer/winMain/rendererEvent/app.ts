@@ -1,5 +1,6 @@
 import { appState, updateSetting } from '@/app'
 import { clipboardReadText, clipboardWriteText, exitApp, openDirInExplorer, openUrl } from '@/shared/electron'
+import { getFonts } from '@/shared/fontManage'
 import type { ExposeFunctions } from '.'
 import { checkUpdate, downloadUpdate, restartUpdate } from '../autoUpdate'
 import { winMainEvent } from '../event'
@@ -63,6 +64,9 @@ export const createExposeApp = () => {
     },
     async restartUpdate(event) {
       await restartUpdate()
+    },
+    async getSystemFonts(event) {
+      return getFonts()
     },
   } satisfies Partial<ExposeFunctions>
 }

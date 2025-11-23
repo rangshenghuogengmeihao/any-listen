@@ -6,7 +6,10 @@ export const callPreload = <T extends keyof AnyListen.ExtensionVM.PreloadCallAct
   data: AnyListen.ExtensionVM.PreloadCallActions[T]
 ) => {
   const targetContext = contextState.vmContexts.get(extId)
-  if (!targetContext) throw new Error(`context not found: ${extId}`)
+  if (!targetContext) {
+    console.warn(`context not found: ${extId}`)
+    return
+  }
   targetContext.vmContext.__ext_preload__!(targetContext.key, action, JSON.stringify(data))
 }
 

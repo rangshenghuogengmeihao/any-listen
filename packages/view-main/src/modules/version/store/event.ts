@@ -25,6 +25,10 @@ class Event extends _Event {
   downloaded() {
     this.emitEvent('downloaded')
   }
+
+  error(preStatus: AnyListen.UpdateStatus, message: string) {
+    this.emitEvent('error', preStatus, message)
+  }
 }
 
 type EventMethods = Omit<Event, keyof _Event | 'emitEvent'>

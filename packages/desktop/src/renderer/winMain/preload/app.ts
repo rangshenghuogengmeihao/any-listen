@@ -12,12 +12,15 @@ export const createExposeApp = (client: ClientCall) => {
     async createDesktopLyricProcess(event) {
       return client.createDesktopLyricProcess(event.ports)
     },
+    async winShow(event, show) {
+      return client.winShow(show)
+    },
 
     async showMessageBox(event, key, extId, options) {
       return client.showMessageBox(key, extId, options)
     },
-    async showInputBox(event, key, extId, options) {
-      return client.showInputBox(key, extId, options)
+    async showInputBox(event, key, extId, options, validateInput) {
+      return client.showInputBox(key, extId, options, validateInput)
     },
     async showOpenBox(event, key, extId, options) {
       return client.showOpenBox(key, extId, options)
@@ -87,6 +90,9 @@ export const createClientApp = (main: MainCall) => {
     },
     async restartUpdate() {
       return main.restartUpdate()
+    },
+    async getSystemFonts() {
+      return main.getSystemFonts()
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

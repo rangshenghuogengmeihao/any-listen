@@ -25,7 +25,7 @@ const updateProgressShow = (isShow: boolean) => {
             newMode = 'normal'
             break
           case 'loading':
-          case 'stoped':
+          case 'stopped':
           case 'ended':
           case 'paused':
           case 'buffering':

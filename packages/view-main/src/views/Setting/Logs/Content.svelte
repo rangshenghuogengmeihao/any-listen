@@ -1,6 +1,6 @@
 <script lang="ts">
   import { tick } from 'svelte'
-  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar'
+  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar.svelte'
   import { highlightCode } from '@/shared/highlight'
   import '@/assets/styles/highlight.less'
   /* eslint svelte/no-at-html-tags: "off" */
@@ -31,7 +31,7 @@
 <div class="log-main">
   <div
     class="log-content"
-    use:verticalScrollbar={{ offset: '0' }}
+    {@attach verticalScrollbar({ offset: '0' })}
     bind:this={domLogContent}
     onscroll={(event) => {
       const target = event.target as HTMLElement

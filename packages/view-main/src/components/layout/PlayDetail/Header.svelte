@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { windowDarg } from '@/shared/browser/widnow'
+  import { windowDarg } from '@/shared/browser/widnow.svelte'
   import { t } from '@/plugins/i18n'
   import { setShowPlayDetail } from '@/modules/playDetail/store/commit'
   import { onMount } from 'svelte'
@@ -66,7 +66,7 @@
   </div>
 {/if}
 {#if import.meta.env.VITE_IS_WEB}
-  <div class="header" class:fullscreen={isFullscreen} use:windowDarg>
+  <div class="header" class:fullscreen={isFullscreen} {@attach windowDarg}>
     {@render content()}
   </div>
 {/if}

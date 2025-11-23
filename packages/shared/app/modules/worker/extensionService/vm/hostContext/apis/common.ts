@@ -7,8 +7,8 @@ export const createCommon = (extension: AnyListen.Extension.Extension) => {
       const data = await extensionState.remoteFuncs.showMessageBox(key, extension.id, cloneData(options))
       return cloneData(data)
     },
-    async showInputBox(key: string, options: AnyListen.IPCCommon.InputDialogOptions) {
-      const data = await extensionState.remoteFuncs.showInputBox(key, extension.id, cloneData(options))
+    async showInputBox(key: string, { validateInput, ...options }: AnyListen.IPCCommon.InputDialogOptions) {
+      const data = await extensionState.remoteFuncs.showInputBox(key, extension.id, cloneData(options), validateInput)
       return cloneData(data)
     },
     async showOpenBox(key: string, options: AnyListen.IPCCommon.OpenDialogOptions) {

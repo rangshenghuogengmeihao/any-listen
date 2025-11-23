@@ -15,7 +15,7 @@ import { createExposeTheme, createServerTheme } from './theme'
 
 export type ExposeServerFunctions = Omit<
   AnyListen.IPC.ClientIPCActions,
-  'hotKeyDown' | 'showMessageBox' | 'showInputBox' | 'showOpenBox' | 'showSaveBox'
+  'winShow' | 'hotKeyDown' | 'showMessageBox' | 'showInputBox' | 'showOpenBox' | 'showSaveBox'
 >
 
 export type ExposeClientFunctions = Omit<
@@ -32,6 +32,7 @@ export type ExposeClientFunctions = Omit<
   | 'openDevTools'
   | 'openUrl'
   | 'messageBoxConfirm'
+  | 'getSystemFonts'
 >
 
 let isInitialized = false

@@ -121,7 +121,7 @@ export const restartExtension = async (id: string) => {
   if (targetExtension.loaded) {
     extensionEvent.stoping(id)
     await stopRunExtension(targetExtension)
-    extensionEvent.stoped(id)
+    extensionEvent.stopped(id)
   }
   await startExtension(id)
 }

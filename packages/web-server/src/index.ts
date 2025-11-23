@@ -93,6 +93,9 @@ if (envParams.PROXY_HEADER) {
   global.anylisten.config['upstreamProxy.enabled'] = true
   global.anylisten.config['upstreamProxy.header'] = envParams.PROXY_HEADER
 }
+if (global.anylisten.config['upstreamProxy.enabled']) {
+  global.anylisten.config['upstreamProxy.header'] = global.anylisten.config['upstreamProxy.header'].toLowerCase()
+}
 if (envParams.LOGIN_PWD) global.anylisten.config.password = envParams.LOGIN_PWD
 if (envParams.ALLOW_PUBLIC_DIR) {
   global.anylisten.config.allowPublicDir = envParams.ALLOW_PUBLIC_DIR.split(',')

@@ -6,6 +6,218 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.5.0](https://github.com/any-listen/any-listen-desktop/compare/v0.4.1...v0.5.0) - 2026-02-16
+
+<!--- @lang: en-us -->
+
+Happy New Year! Let's keep working hard in the days ahead.
+
+### Added
+
+- Added **Song list sort options**: **File Created Time**, **File Updated Time**, and **File Size**. These sorting options are available in both the _Local List_ and _WebDAV List_.
+- Added **Fullscreen Mode**: Press F11 to toggle fullscreen; press Esc to exit fullscreen ([#118](https://github.com/any-listen/any-listen/issues/118)).
+- Added a **Delayed Metadata Parsing** option for _Local_ and _WebDAV_ lists. Songs are added to lists quickly and their titles temporarily display the filename; metadata (tags) are parsed on demand ([#111](https://github.com/any-listen/any-listen/issues/111)).
+- Added **List Reordering** for _My Lists_. When the lists area is focused, hold Ctrl (Command on macOS) to enter reordering mode, then drag lists to rearrange their order.
+- Added a **Pause on Output Device Change** option under _Settings > Playback Settings_. Disabled by default.
+
+### Improved
+
+- Improved local list song-adding performance by adopting an **"add-first-then-parse"** strategy, significantly speeding up list population.
+- Improved the **Now Playing** page cover display ([#122](https://github.com/any-listen/any-listen/issues/122)).
+- Improved the tooltip display for the **control buttons** ([#127](https://github.com/any-listen/any-listen/issues/127)).
+
+### Fixed
+
+- Fixed an issue where the **Update Popup** failed to correctly parse historical changelog entries.
+- Fixed incorrect playback history when playing songs queued as **Play Later**.
+- Fixed incorrect storage of playback history in _Shuffle_ playback mode.
+- Fixed an issue where local songs with identical filenames could display incorrect cover art ([#125](https://github.com/any-listen/any-listen/issues/125)).
+- Fixed an issue where the playback queue was not managed correctly when playing songs from the **Play Later** queue ([#131](https://github.com/any-listen/any-listen/issues/131)).
+
+---
+
+<!--- @lang: zh-cn -->
+
+大家新年快乐，让我们在接下来的日子里继续努力~！
+
+### 新增
+
+- 新增 **歌曲列表排序方式**：**文件创建时间**、**文件更新时间**、**文件大小**。这些排序方式可在 _本地列表_ 与 _WebDAV 列表_ 使用。
+- 新增 **全屏模式**：按 F11 可切换全屏，按 Esc 可退出全屏（[#118](https://github.com/any-listen/any-listen/issues/118)）。
+- 新增 **延迟解析歌曲信息** 选项，适用于 _本地列表_ 与 _WebDAV 列表_。歌曲会被快速添加到列表，名称将暂时显示为文件名；歌曲标签信息将在需要时才解析（[#111](https://github.com/any-listen/any-listen/issues/111)）。
+- 新增 **我的列表顺序调整** 功能：在列表区域获得焦点时，按住 Ctrl（macOS 上为 Command）即可进入顺序调整模式，拖动列表以调整顺序。
+- 新增 **输出设备改变时暂停播放** 选项，位于 _设置 > 播放设置_，默认关闭。
+
+### 优化
+
+- 优化本地列表歌曲添加性能，采用 **“先添加再解析”** 策略，显著提升添加速度。
+- 优化 **播放详情页** 封面显示（[#122](https://github.com/any-listen/any-listen/issues/122)）。
+- 优化 **控制按钮** 的工具提示文本显示效果（[#127](https://github.com/any-listen/any-listen/issues/127)）。
+
+### 修复
+
+- 修复 **更新弹窗** 无法正确解析历史更新日志的问题。
+- 修复在播放 **稍后播放** 队列中的歌曲时，播放历史记录不正确的问题。
+- 修复在 _随机播放_ 模式下播放记录存储不正确的问题。
+- 修复了同名本地歌曲可能显示错误封面的问题（[#125](https://github.com/any-listen/any-listen/issues/125)）。
+- 修复在播放 **稍后播放** 队列中的歌曲时，播放队列管理不正确的问题（[#131](https://github.com/any-listen/any-listen/issues/131)）。
+
+## [0.4.1](https://github.com/any-listen/any-listen-desktop/compare/v0.4.0...v0.4.1) - 2026-01-07
+
+<!--- @lang: en-us -->
+
+### Added
+
+- Added an option to control whether deleted files are moved to the **Recycle Bin** when deleting. Enabled by default and configurable under _Settings > Other Settings_ ([#107](https://github.com/any-listen/any-listen/issues/107)).
+
+### Improved
+
+- Added a confirmation dialog before bulk deleting local or remote (WebDAV) song files ([#107](https://github.com/any-listen/any-listen/issues/107)).
+
+### Fixed
+
+- Fixed an issue where files in local or remote lists could be unexpectedly deleted when the **"Sync deletions"** option was enabled during list synchronization ([#107](https://github.com/any-listen/any-listen/issues/107)).
+
+### Changed
+
+- Local lists with the **"Sync removals"** option enabled will now move removed local song files to the Recycle Bin by default ([#107](https://github.com/any-listen/any-listen/issues/107)).
+
+---
+
+<!--- @lang: zh-cn -->
+
+### 新增
+
+- 新增一个用于控制删除时是否将文件移动到 **回收站** 的选项，默认启用，可在 _设置 > 其他设置_ 中更改（[#107](https://github.com/any-listen/any-listen/issues/107)）。
+
+### 优化
+
+- 在批量删除本地或远程（WebDAV）歌曲文件之前新增二次确认弹窗（[#107](https://github.com/any-listen/any-listen/issues/107)）。
+
+### 修复
+
+- 修复在同步列表数据时，启用 **“同步删除”** 选项后，本地列表或远程列表的文件可能被意外删除的问题（[#107](https://github.com/any-listen/any-listen/issues/107)）。
+
+### 变更
+
+- 启用了 **“同步移除歌曲”** 选项的本地列表在移除本地文件时，默认会将其移动到回收站（[#107](https://github.com/any-listen/any-listen/issues/107)）。
+
+## [0.4.0](https://github.com/any-listen/any-listen-desktop/compare/v0.3.0...v0.4.0) - 2026-01-01
+
+<!--- @lang: en-us -->
+
+### Added
+
+- Added a **Scan Subdirectories** option for the _WebDAV List_, supporting up to five directory levels.
+- Added a **Remove Remote Songs** option for the _WebDAV List_. When enabled, removing a track from the list will also delete the corresponding remote file.
+- Added a **Remove Local Songs** option for the _Local List_. When enabled, removing a track from the list will also delete the corresponding local file.
+- Added an **Enable Cache** toggle for _WebDAV Tracks_, disabled by default. You can enable it at _Settings > Extension Settings > WebDAV_.
+- Added an **Enable Debug Logs** toggle in the _WebDAV_ extension settings. You can enable it at _Settings > Extension Settings > WebDAV_.
+- Added a **Clear Output** button on the _Logs Output_ page to clear the current output logs.
+- Added **Resource Cache Management**, available under _Settings > Other Settings_, to view and clear cached resource sizes.
+- Added **Song Data Cache Management**, available under _Settings > Other Settings_, to view and clear cached song metadata.
+- Added **Disliked Songs Management**, available under _Settings > Other Settings_, to manage songs marked as disliked.
+
+### Improved
+
+- Improved **WebDAV track parsing** performance for faster metadata extraction.
+- Improved the **tray icon** behavior: on non-Windows platforms, clicking the tray icon no longer shows the main window ([#103](https://github.com/any-listen/any-listen/issues/103)).
+- Improved the update popup's changelog display: it now shows the changelog in the user's selected language; if a translation for that language is not available, it falls back to English.
+
+### Fixed
+
+- Fixed the **tray menu** language not updating immediately after switching the app language ([#88](https://github.com/any-listen/any-listen/issues/88)).
+- Fixed an issue where scanning for songs could fail when the _WebDAV List_ directory was empty or set to `/` while **Include Subdirectories** was selected.
+- Fixed an issue where scanning subdirectories in the _WebDAV List_ could fail in certain cases.
+- Fixed an issue where album cover links would not refresh after becoming invalid.
+- Fixed an issue where the settings dropdown position could be calculated incorrectly.
+- Fixed an issue that prevented reading directories on some WebDAV services ([#102](https://github.com/any-listen/any-listen/issues/102)).
+
+### Changed
+
+- By default, _WebDAV Tracks_ are no longer cached. Caching can be enabled manually in the WebDAV extension settings.
+
+---
+
+<!--- @lang: zh-cn -->
+
+### 新增
+
+- 在 _WebDAV 列表_ 中新增 **扫描子目录** 选项，最多支持 5 层目录。
+- 在 _WebDAV 列表_ 中新增 **移除远程歌曲** 选项，启用后从列表中移除歌曲时会同时删除对应的远程文件。
+- 在 _本地列表_ 中新增 **移除本地歌曲** 选项，启用后从列表中移除歌曲时会同时删除对应的本地文件。
+- 在 _WebDAV 歌曲_ 中新增 **启用缓存** 开关（默认关闭）。可在 _设置 > 扩展设置 > WebDAV_ 中手动开启。
+- 在 _WebDAV 扩展设置_ 中新增 **启用调试日志** 开关，可在 _设置 > 扩展设置 > WebDAV_ 中开启。
+- 在 _日志输出_ 界面新增 **清空输出** 按钮，用于清空当前的输出日志。
+- 新增 **资源缓存管理** 功能，位于 _设置 > 其他设置_，可查看并清理已缓存的资源大小。
+- 新增 **歌曲数据缓存管理** 功能，位于 _设置 > 其他设置_，可查看并清理已缓存的歌曲元数据。
+- 新增 **不喜欢的歌曲管理** 功能，位于 _设置 > 其他设置_，用于管理被标记为“不喜欢”的歌曲。
+
+### 优化
+
+- 优化 **WebDAV 歌曲解析** 性能，加快元数据读取速度。
+- 优化 **托盘图标** 行为：在非 Windows 系统中，点击托盘图标时不再显示主窗口（[#103](https://github.com/any-listen/any-listen/issues/103)）。
+- 优化 **更新弹窗** 中的更新日志显示：现在会根据用户所选语言显示对应语言的更新日志；若未提供该语言的翻译，则回退为英语。
+
+### 修复
+
+- 修复切换语言后 **托盘菜单** 语言无法立即更新的问题（[#88](https://github.com/any-listen/any-listen/issues/88)）。
+- 修复当 _WebDAV 列表_ 目录为空或设置为 `/` 且勾选 **包含子目录** 时导致歌曲扫描失败的问题。
+- 修复 _WebDAV 列表_ 在某些情况下扫描子目录失败的问题。
+- 修复歌曲封面链接失效后未能刷新显示的问题。
+- 修复设置界面下拉框位置计算异常的问题。
+- 修复在某些 WebDAV 服务上无法读取目录的问题（[#102](https://github.com/any-listen/any-listen/issues/102)）。
+
+### 变更
+
+- 默认不再缓存 _WebDAV 歌曲_，如需缓存可在 WebDAV 扩展设置中手动开启。
+
+## [0.3.0](https://github.com/any-listen/any-listen-desktop/compare/v0.2.0...v0.3.0) - 2025-11-28
+
+### Added
+
+- Added a **Cover Style** option for the Now Playing page under _Settings > Now Playing Page Settings > Cover Style_, offering **CD** and **Square** layouts.
+- Added a **Show Status Bar Lyrics** toggle (macOS only) under _Settings > Playback Settings_. Disabled by default.
+- Added a **Show Title Bar Lyrics** toggle under _Settings > Playback Settings_. Disabled by default.
+- Added a **Show Media Control Bar Lyrics** toggle under _Settings > Playback Settings_. Disabled by default.
+- Added **Font Settings** under _Settings > General_.
+
+### Improved
+
+- Improved the insertion position when creating a playlist via an existing playlist so the new list is placed immediately after the target.
+- Improved WebDAV data reading logic for better compatibility with more WebDAV services.
+- Streamlined WebDAV service list creation so the app prompts for a password and saves it automatically to extension settings.
+- Improved the system tray menu experience.
+
+### Fixed
+
+- Fixed update reminders not appearing after the download completes.
+- Fixed lingering callbacks not being deregistered when observing local list changes.
+- Fixed internal extension logs not refreshing in real time.
+
+---
+
+### 新增
+
+- 新增 **播放详情页封面样式** 选项，位于 _设置 > 播放详情页设置 > 封面样式_，可选择 **CD** 或 **正方形** 样式。
+- 新增 **「显示状态栏歌词」** 开关（仅限 macOS 版本），位于 _设置 > 播放设置_，默认关闭。
+- 新增 **「显示标题栏歌词」** 开关，位于 _设置 > 播放设置_，默认关闭。
+- 新增 **「显示媒体控制栏歌词」** 开关，位于 _设置 > 播放设置_，默认关闭。
+- 新增 **「字体设置」**，位于 _设置 > 基本设置_。
+
+### 优化
+
+- 优化通过点击已有列表创建新列表时的插入位置，新列表会立即插入到目标列表之后。
+- 优化 WebDAV 数据读取逻辑，改进与更多 WebDAV 服务的兼容性。
+- 优化 WebDAV 服务列表创建流程，现在应用会弹窗提示设置密码并自动保存到扩展设置中。
+- 优化系统托盘菜单体验。
+
+### 修复
+
+- 修复更新下载完成后更新提醒不再弹出的情况。
+- 修复监听本地列表变更时残留回调未被注销的问题。
+- 修复内部扩展日志无法实时刷新的问题。
+
 ## [0.2.0](https://github.com/any-listen/any-listen-desktop/compare/v0.1.0...v0.2.0) - 2025-09-30
 
 ### Added

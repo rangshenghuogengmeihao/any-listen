@@ -1,6 +1,7 @@
 import { jsBrowser, typescript, typescriptParser } from '@any-listen/eslint/eslint.config.mjs'
 import svelte from 'eslint-plugin-svelte'
 import svelteParser from 'svelte-eslint-parser'
+
 import svelteConfig from './svelte.config.js'
 // import { typescriptRule } from '@any-listen/eslint/eslint.config.mjs'
 /** @type {import('eslint').Linter.Config[]} */
@@ -14,7 +15,6 @@ const config = [
     languageOptions: {
       parserOptions: {
         parser: typescriptParser,
-        // project: './tsconfig.json',
       },
     },
   },
@@ -28,7 +28,6 @@ const config = [
         svelteConfig,
         // sourceType: 'module',
         parser: typescriptParser,
-        // project: './tsconfig.json',
         extraFileExtensions: ['.svelte'],
       },
     },
@@ -40,6 +39,7 @@ const config = [
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
       '@typescript-eslint/no-confusing-void-expression': 'off',
+      '@typescript-eslint/no-useless-default-assignment': 'off',
     },
   },
 ]

@@ -1,4 +1,5 @@
 import path from 'node:path'
+
 import type { UserConfig } from 'vite'
 
 const isProd = process.env.NODE_ENV == 'production'
@@ -40,7 +41,7 @@ export const buildConfig = (mode: string): UserConfig => {
       //   dynamicRequireTargets: ['*.js'],
       //   ignoreDynamicRequires: true,
       // },
-      rollupOptions: {
+      rolldownOptions: {
         input: {
           'view-main.ipc': path.join(projectPath, 'src/app/renderer/winMain/preload/index.ts'),
         },

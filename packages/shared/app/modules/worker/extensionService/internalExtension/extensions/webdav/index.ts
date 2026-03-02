@@ -8,13 +8,20 @@ export const pkg: AnyListen.Extension.Manifest = {
   version: '0.0.1',
   contributes: {
     settings: [
-      // {
-      //   field: 'test1',
-      //   name: 't(exts.webdav.test1.name)',
-      //   description: 't(exts.webdav.test1.description)',
-      //   type: 'input',
-      //   default: '',
-      // },
+      {
+        field: 'enabledCache',
+        name: 't(exts.webdav.cache.name)',
+        description: 't(exts.webdav.cache.description)',
+        type: 'boolean',
+        default: false,
+      },
+      {
+        field: 'enabledDebugLog',
+        name: 't(exts.webdav.debugLog.name)',
+        description: 't(exts.webdav.debugLog.description)',
+        type: 'boolean',
+        default: false,
+      },
       {
         field: 'servers',
         name: 't(exts.webdav.servers.name)',
@@ -45,6 +52,7 @@ export const pkg: AnyListen.Extension.Manifest = {
         id: 'webdav',
         name: 't(exts.webdav.name)',
         description: 't(exts.webdav.description)',
+        fileSortable: true,
         form: [
           {
             field: 'url',
@@ -66,6 +74,24 @@ export const pkg: AnyListen.Extension.Manifest = {
             description: 't(exts.webdav.form.directory.description)',
             type: 'input',
             default: '',
+          },
+          {
+            field: 'includeSubDir',
+            name: 't(exts.webdav.form.include_sub_dir.name)',
+            description: 't(exts.webdav.form.include_sub_dir.description)',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            field: 'enabledRemove',
+            name: 't(exts.webdav.form.enabled_remove.name)',
+            description: 't(exts.webdav.form.enabled_remove.description)',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            type: 'lazzyParseMeta',
+            default: false,
           },
         ],
       },

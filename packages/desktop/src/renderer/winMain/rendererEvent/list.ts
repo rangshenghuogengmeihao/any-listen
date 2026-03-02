@@ -6,10 +6,13 @@ import {
   getListMusics,
   getListScrollInfo,
   getMusicExistListIds,
+  parseMusicMetadata,
   saveListScrollPosition,
   sendMusicListAction,
+  sortListMusics,
   syncUserList,
 } from '@any-listen/app/modules/musicList'
+
 import type { ExposeFunctions } from '.'
 
 // 暴露给前端的方法
@@ -45,6 +48,12 @@ export const createExposeList = () => {
     },
     async syncUserList(event, id) {
       return syncUserList(id)
+    },
+    async parseMusicMetadata(event, listId, musicInfo) {
+      return parseMusicMetadata(listId, musicInfo)
+    },
+    async sortListMusics(event, id, list, type) {
+      return sortListMusics(id, list, type)
     },
   } satisfies Partial<ExposeFunctions>
 }

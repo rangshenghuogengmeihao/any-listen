@@ -16,6 +16,10 @@ export const sendInitedEvent = async () => {
   return ipc.inited()
 }
 
+export const setSystemThemeMode = async (isDark: boolean) => {
+  return ipc.setSystemThemeMode(isDark)
+}
+
 export const minWindow = async () => {
   return ipc.minWindow()
 }
@@ -24,6 +28,9 @@ export const closeWindow = async () => {
 }
 export const closeWindowForce = async () => {
   return ipc.closeWindow(true)
+}
+export const fullscreenWindow = async (isFull: boolean) => {
+  return ipc.fullscreenWindow(isFull)
 }
 export const showOpenDialog: AnyListen.IPC.ServerIPC['showOpenDialog'] = async (opts) => {
   if (import.meta.env.VITE_IS_WEB) {
@@ -73,4 +80,11 @@ export const restartUpdate: AnyListen.IPC.ServerIPC['restartUpdate'] = async () 
 
 export const getSystemFonts: AnyListen.IPC.ServerIPC['getSystemFonts'] = async () => {
   return ipc.getSystemFonts()
+}
+
+export const getCacheSize: AnyListen.IPC.ServerIPC['getCacheSize'] = async () => {
+  return ipc.getCacheSize()
+}
+export const clearCache: AnyListen.IPC.ServerIPC['clearCache'] = async () => {
+  return ipc.clearCache()
 }

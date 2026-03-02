@@ -1,5 +1,7 @@
-import type { IPCSocket } from '@/preload/ws'
 import { createProxyCallback } from 'message2call'
+
+import type { IPCSocket } from '@/preload/ws'
+
 import type { ClientCall, ExposeFunctions } from '.'
 
 // 暴露给后端的方法
@@ -47,6 +49,12 @@ export const createClientList = (ipcSocket: IPCSocket) => {
     },
     async syncUserList(id) {
       return ipcSocket.remoteQueueList.syncUserList(id)
+    },
+    async parseMusicMetadata(listId, musicInfo) {
+      return ipcSocket.remoteQueueList.parseMusicMetadata(listId, musicInfo)
+    },
+    async sortListMusics(id, list, type) {
+      return ipcSocket.remoteQueueList.sortListMusics(id, list, type)
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

@@ -1,18 +1,33 @@
 import { isLikelyGarbage } from '@any-listen/common/utils'
-import { checkFile, checkPath, dirname, extname, getFileStats, joinPath, readFile } from '@any-listen/nodejs'
+import {
+  checkFile,
+  dirname,
+  extname,
+  extnameRaw,
+  getFileStats,
+  joinPath,
+  removeFile as nodeRemoveFile,
+  readFile,
+  sleep,
+} from '@any-listen/nodejs'
 import { decodeString } from '@any-listen/nodejs/char'
-import { getFileLyric, getFilePic, parseFileMetadata } from '@any-listen/nodejs/music'
+import { buildFileMetadata, getFileLyric, getFilePic } from '@any-listen/nodejs/music'
+
+let removeFile = nodeRemoveFile
+export const setRemoveFile = (func: (filePath: string) => Promise<void>) => {
+  removeFile = func
+}
 
 export const checkDownloadFileAvailable = async (musicInfo: AnyListen.Download.ListItem, savePath: string): Promise<boolean> => {
   return (
     musicInfo.isComplate &&
     !musicInfo.metadata.fileName.endsWith('.ape') &&
-    ((await checkPath(musicInfo.metadata.filePath)) || (await checkPath(joinPath(savePath, musicInfo.metadata.fileName))))
+    ((await checkFile(musicInfo.metadata.filePath)) || (await checkFile(joinPath(savePath, musicInfo.metadata.fileName))))
   )
 }
 
 export const checkLocalFileAvailable = async (musicInfo: AnyListen.Music.MusicInfoLocal): Promise<boolean> => {
-  return checkPath(musicInfo.meta.filePath)
+  return checkFile(musicInfo.meta.filePath)
 }
 
 /**
@@ -32,15 +47,30 @@ export const checkMusicFileAvailable = async (musicInfo: AnyListen.Music.MusicIn
 
 export const getDownloadFilePath = async (musicInfo: AnyListen.Download.ListItem, savePath: string): Promise<string> => {
   if (musicInfo.isComplate && !musicInfo.metadata.fileName.endsWith('.ape')) {
-    if (await checkPath(musicInfo.metadata.filePath)) return musicInfo.metadata.filePath
+    if (await checkFile(musicInfo.metadata.filePath)) return musicInfo.metadata.filePath
     const path = joinPath(savePath, musicInfo.metadata.fileName)
-    if (await checkPath(path)) return path
+    if (await checkFile(path)) return path
   }
   return ''
 }
 
 export const getLocalFilePath = async (musicInfo: AnyListen.Music.MusicInfoLocal): Promise<string> => {
-  return (await checkPath(musicInfo.meta.filePath)) ? musicInfo.meta.filePath : ''
+  return (await checkFile(musicInfo.meta.filePath)) ? musicInfo.meta.filePath : ''
+}
+
+export const removeMusicFile = async (path: string) => {
+  if (!path) return
+  try {
+    await removeFile(path)
+  } catch (err) {
+    console.error(`Remove file error: ${path}`, err)
+    await sleep(500)
+    try {
+      await removeFile(path)
+    } catch (err) {
+      console.error(`Remove file error retry failed: ${path}`, err)
+    }
+  }
 }
 
 /**
@@ -62,12 +92,16 @@ export const getMusicFilePath = async (musicInfo: AnyListen.Music.MusicInfo, sav
 /**
  * 创建本地音乐信息对象
  * @param path 文件路径
+ * @param parseMetadata 是否解析元数据
  * @returns
  */
-export const createLocalMusicInfo = async (path: string): Promise<AnyListen.Music.MusicInfoLocal | null> => {
-  let result = await parseFileMetadata(path)
+export const createLocalMusicInfo = async (
+  path: string,
+  parseMetadata: boolean
+): Promise<AnyListen.Music.MusicInfoLocal | null> => {
+  let result = await buildFileMetadata(path, parseMetadata)
   if (!result) return null
-  const { name, singer, interval, albumName, sizeStr, ext, bitrateLabel, year } = result
+  const { unparsed, name, singer, interval, albumName, sizeStr, ext, bitrateLabel, year } = result
 
   const now = Date.now()
 
@@ -79,6 +113,7 @@ export const createLocalMusicInfo = async (path: string): Promise<AnyListen.Musi
     interval,
     meta: {
       musicId: path,
+      unparsed,
       albumName,
       filePath: path,
       picUrl: '',
@@ -92,6 +127,25 @@ export const createLocalMusicInfo = async (path: string): Promise<AnyListen.Musi
     },
   } satisfies AnyListen.Music.MusicInfoLocal
 }
+export const parseLocalMusicInfoMetadata = async (path: string) => {
+  let result = await buildFileMetadata(path, true)
+  if (!result) return null
+  const { name, singer, interval, albumName, sizeStr, ext, bitrateLabel, year } = result
+  return {
+    name,
+    singer,
+    interval,
+    meta: {
+      unparsed: false,
+      albumName,
+      ext,
+      bitrateLabel,
+      sizeStr,
+      year,
+      updateTime: Date.now(),
+    },
+  }
+}
 
 const tryPicExt = ['.jpg', '.jpeg', '.png'] as const
 /**
@@ -99,7 +153,7 @@ const tryPicExt = ['.jpg', '.jpeg', '.png'] as const
  * @param path 路径
  */
 export const getLocalMusicFilePic = async (path: string) => {
-  const filePath = new RegExp(`\\${extname(path)}$`)
+  const filePath = new RegExp(`\\${extnameRaw(path)}$`)
   for await (const ext of tryPicExt) {
     const picPath = path.replace(filePath, ext)
     if (await checkFile(picPath)) return picPath

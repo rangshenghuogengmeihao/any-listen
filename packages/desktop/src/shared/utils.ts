@@ -1,6 +1,8 @@
+import fs from 'node:fs'
+
+import { checkFile } from '@any-listen/nodejs/index'
+
 import { log } from '@/shared/log'
-import { checkPath } from '@any-listen/nodejs/index'
-import fs from 'fs'
 export * from '@any-listen/common/utils'
 export * from '@any-listen/nodejs/index'
 
@@ -9,7 +11,7 @@ export * from '@any-listen/nodejs/index'
  * @returns
  */
 export const parseDataFile = async <T>(filePath: string): Promise<T | null> => {
-  if (await checkPath(filePath)) {
+  if (await checkFile(filePath)) {
     try {
       return JSON.parse((await fs.promises.readFile(filePath)).toString()) as T
     } catch (err) {

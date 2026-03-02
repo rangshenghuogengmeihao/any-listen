@@ -1,4 +1,5 @@
 import path from 'node:path'
+
 import type { UserConfig } from 'vite'
 // import dts from 'vite-plugin-dts'
 
@@ -45,7 +46,7 @@ export const buildConfig = (target: Target): UserConfig => {
         : {
             buildDelay: 500,
           },
-      rollupOptions: {
+      rolldownOptions: {
         input: {
           'extension-preload': path.join(projectPath, 'src/index.ts'),
         },

@@ -1,10 +1,13 @@
+import path from 'node:path'
+
+import { isMac, isWin } from '@any-listen/nodejs/index'
+import { Menu, nativeImage, Tray } from 'electron'
+
 import { actions } from '@/actions'
 import { appEvent, appState, updateSetting } from '@/app'
 import { i18n } from '@/i18n'
 import type { WinMainEvent } from '@/renderer/winMain'
-import { isMac, isWin } from '@any-listen/nodejs/index'
-import { Menu, nativeImage, Tray } from 'electron'
-import path from 'node:path'
+
 import { playerEvent } from '../player'
 
 let tray: Electron.Tray | null
@@ -23,9 +26,9 @@ let isExistMainWindow: null | (() => boolean) = null
 let isShowMainWindow: null | (() => boolean) = null
 
 const watchConfigKeys = [
-  'desktopLyric.enable',
-  'desktopLyric.isLock',
-  'desktopLyric.isAlwaysOnTop',
+  // 'desktopLyric.enable',
+  // 'desktopLyric.isLock',
+  // 'desktopLyric.isAlwaysOnTop',
   'player.isShowStatusBarLyric',
   'tray.themeId',
   'tray.enable',
@@ -66,9 +69,11 @@ export const createTray = () => {
   // tray.setToolTip(i18n.t('app_name'))
   // createMenu()
   tray.setIgnoreDoubleClickEvents(true)
-  tray.on('click', () => {
-    actions.exec('winMain.showWindow')
-  })
+  if (isWin) {
+    tray.on('click', () => {
+      actions.exec('winMain.showWindow')
+    })
+  }
 }
 
 export const destroyTray = () => {

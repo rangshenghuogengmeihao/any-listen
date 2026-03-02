@@ -2,16 +2,18 @@ import fs from 'node:fs'
 import http from 'node:http'
 import path from 'node:path'
 
-import { ENV_PARAMS } from '@/shared/constants'
-import { DEV_SERVER_PORTS } from '@any-listen/common/constants'
-import defaultConfig from './shared/defaultConfig'
-
 import { createCache } from '@any-listen/common/cache'
+import { DEV_SERVER_PORTS } from '@any-listen/common/constants'
 import { formatExtensionGHMirrorHosts } from '@any-listen/common/tools'
+import { extname } from '@any-listen/nodejs'
+
+import { ENV_PARAMS } from '@/shared/constants'
+
 import { printLogo } from './app/shared/utils'
 import { destroySockets, onUpgrade } from './modules/ipc/websocket'
 import { createServerApp } from './server'
 import { initServerData } from './shared/data'
+import defaultConfig from './shared/defaultConfig'
 import { initLogger, startupLog } from './shared/log4js'
 import { checkAndCreateDir, exit, nodeProcess } from './shared/utils'
 
@@ -64,7 +66,7 @@ const mergeConfigFileEnv = (config: Partial<Record<ENV_PARAMS_Value_Type, string
 const margeConfig = (p: string) => {
   let config: Partial<AnyListen.Config>
   try {
-    config = /\.c?js/.test(path.extname(p))
+    config = /\.c?js$/.test(extname(p))
       ? // eslint-disable-next-line @typescript-eslint/no-require-imports
         (require(p) as AnyListen.Config)
       : (JSON.parse(fs.readFileSync(p).toString()) as AnyListen.Config)

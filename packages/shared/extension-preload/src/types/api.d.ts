@@ -1,3 +1,6 @@
+type WithUndefined<T extends readonly unknown[]> = {
+  [K in keyof T]: T[K] | undefined
+}
 declare namespace AnyListen {
   interface IPCActionBase<A> {
     action: A
@@ -182,6 +185,8 @@ declare namespace AnyListen {
       deviceId: string
       path: string
       includeSubDir: boolean
+      enabledRemove?: boolean
+      usePolling?: boolean
     }
     interface UserListInfoByOnlineMeta extends UserListInfoBaseMeta {
       extensionId: string
@@ -413,6 +418,7 @@ declare namespace AnyListen {
     interface ListActionMusicRemove {
       listId: string
       ids: string[]
+      sync?: boolean
     }
 
     type ListActionMusicUpdate = Array<{
@@ -530,13 +536,14 @@ declare namespace AnyListen {
     /** 播放器实时状态 / 用户期望的播放状态 */
     type Status = [PlayerStatus, boolean]
     type PlayerEvent =
-      | IPCAction<'musicChanged', { index: number; historyIndex: number }>
-      | IPCAction<'musicInfoUpdated', Player.MusicInfo>
-      | IPCAction<'playInfoUpdated', Player.PlayInfo>
+      | IPCAction<'musicChanged', { index: number; historyIndex: number; lastTrackId?: string | null }>
+      | IPCAction<'musicInfoUpdated', Partial<Player.MusicInfo>>
+      | IPCAction<'playInfoUpdated', Partial<Player.PlayInfo>>
       | IPCAction<'progress', Progress>
       | IPCAction<'playbackRate', number>
       | IPCAction<'status', Status>
       | IPCAction<'statusText', string>
+      | IPCAction<'lyricText', string>
       | IPCAction<'picUpdated', string | null>
       | IPCAction<'lyricUpdated', Music.LyricInfo>
       | IPCAction<'lyricOffsetUpdated', number>
@@ -1028,12 +1035,12 @@ declare global {
       encode: (data: string, encoding: string) => Uint8Array
     }
     interface Configuration {
-      getConfigs: (key: string[]) => Promise<string[]>
+      getConfigs: <T extends unknown[] = []>(keys: string[]) => Promise<WithUndefined<T>>
       setConfigs: (datas: Array<[string, string]>) => Promise<void>
       onConfigChanged: (callback: (keys: string[], configuration: Record<string, unknown>) => void) => () => void
     }
     interface MusicUtils {
-      createProxyUrl: (url: string, options: RequestOptions) => Promise<string>
+      createProxyUrl: (url: string, options: RequestOptions, enabledCache?: boolean) => Promise<string>
       writeProxyCache: (fileName: string, data: Uint8Array) => Promise<string>
     }
     interface API {

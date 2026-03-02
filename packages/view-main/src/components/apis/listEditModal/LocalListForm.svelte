@@ -24,6 +24,7 @@
       deviceId: '',
       path: '',
       includeSubDir: false,
+      lazzyParseMeta: false,
       createTime: 0,
       updateTime: 0,
       desc: '',
@@ -117,6 +118,40 @@
       }}
       label={$t('edit_list_modal.local_list_form.path_include_sub_dir')}
     />
+    <p class="tip">{$t('edit_list_modal.local_list_form.path_include_sub_dir_tip')}</p>
+  </FormItem>
+  <FormItem>
+    <Checkbox
+      id="path_enabled_remove"
+      checked={listInfo.meta.enabledRemove || false}
+      onchange={(checked) => {
+        listInfo.meta.enabledRemove = checked
+      }}
+      label={$t('edit_list_modal.local_list_form.path_enabled_remove')}
+    />
+    <p class="tip">{$t('edit_list_modal.local_list_form.path_enabled_remove_tip')}</p>
+  </FormItem>
+  <FormItem>
+    <Checkbox
+      id="lazzy_parse_meta"
+      checked={listInfo.meta.lazzyParseMeta || false}
+      onchange={(checked) => {
+        listInfo.meta.lazzyParseMeta = checked
+      }}
+      label={$t('edit_list_modal.lazzy_parse_meta')}
+    />
+    <p class="tip">{$t('edit_list_modal.lazzy_parse_meta_tip')}</p>
+  </FormItem>
+  <FormItem>
+    <Checkbox
+      id="use_polling"
+      checked={listInfo.meta.usePolling || false}
+      onchange={(checked) => {
+        listInfo.meta.usePolling = checked
+      }}
+      label={$t('edit_list_modal.local_list_form.use_polling')}
+    />
+    <p class="tip">{$t('edit_list_modal.local_list_form.use_polling_tip')}</p>
   </FormItem>
 </main>
 
@@ -138,8 +173,8 @@
     // color: var(--color-primary);
   }
   .tip {
-    padding-left: 19px;
-    font-size: 13px;
-    color: var(--color-font-label);
+    // padding-left: 19px;
+    font-size: 12px;
+    opacity: 0.7;
   }
 </style>

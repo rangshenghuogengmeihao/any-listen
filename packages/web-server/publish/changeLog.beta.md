@@ -1,17 +1,13 @@
-### Added
-
-- Added a **Font Settings** section under _Settings > Basic Settings > Font Settings_.
+<!--- @lang: en-us -->
 
 ### Fixed
 
-- Fixed an issue where **Karaoke lyrics** displayed abnormally in older browsers.
+- Fixed an issue where song information in the **Playback History** list didn't update when the song in the original list was changed.
 
 ---
 
-### 新增
-
-- 新增 **字体设置**，位于 _设置 > 基本设置 > 字体设置_。
+<!--- @lang: zh-cn -->
 
 ### 修复
 
-- 修复在低版本浏览器下 **卡拉OK歌词** 显示异常的问题
+- 修复**播放历史列表**中的歌曲信息在原始列表歌曲更新时未随之更新的问题。

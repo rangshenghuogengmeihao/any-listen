@@ -1,43 +1,33 @@
+<!--- @lang: en-us -->
+
 ### Added
 
-- Added a **Cover Style** option for the Now Playing page under _Settings > Now Playing Page Settings > Cover Style_, offering **CD** and **Square** layouts.
-- Added a **Show Status Bar Lyrics** toggle (macOS only) under _Settings > Playback Settings_. Disabled by default.
-- Added a **Show Title Bar Lyrics** toggle under _Settings > Playback Settings_. Disabled by default.
-- Added a **Show Media Control Bar Lyrics** toggle under _Settings > Playback Settings_. Disabled by default.
-- Added **Font Settings** under _Settings > General_.
-
-### Improved
-
-- Improved the insertion position when creating a playlist via an existing playlist so the new list is placed immediately after the target.
-- Improved WebDAV data reading logic for better compatibility with more WebDAV services.
-- Streamlined WebDAV service list creation so the app prompts for a password and saves it automatically to extension settings.
-- Improved the system tray menu experience.
+- Added the **“Taoism”** theme. When enabled, the application will switch between your previously selected light‑color theme and the **“Blackout”** theme according to the system’s light/dark mode. ([#136](https://github.com/any-listen/any-listen/issues/136))
+- Added a **“Use Polling to Watch for File Changes”** option in _Local List Settings_ to address issues reading from mounted remote drives ([#142](https://github.com/any-listen/any-listen/issues/142)).
 
 ### Fixed
 
-- Fixed update reminders not appearing after the download completes.
-- Fixed lingering callbacks not being deregistered when observing local list changes.
-- Fixed internal extension logs not refreshing in real time.
+- Fixed an issue where artist tag information in `wav` files was parsed as garbled text ([#132](https://github.com/any-listen/any-listen/issues/132)).
+- Fixed an issue where a **WebDAV list** could only add up to 1 000 songs ([#134](https://github.com/any-listen/any-listen/issues/134)).
+- Fixed playback or file‑reading failures caused by **file extension case sensitivity** ([#141](https://github.com/any-listen/any-listen/issues/141)).
+- Fixed **WebDAV metadata** read errors.
+- Fixed a conflict between playback cover and playlist song cover loading logic.
+- Fixed an issue where song information in the **Playback History** list didn't update when the song in the original list was changed.
 
 ---
 
+<!--- @lang: zh-cn -->
+
 ### 新增
 
-- 新增 **播放详情页封面样式** 选项，位于 _设置 > 播放详情页设置 > 封面样式_，可选择 **CD** 或 **正方形** 样式。
-- 新增 **「显示状态栏歌词」** 开关（仅限 macOS 版本），位于 _设置 > 播放设置_，默认关闭。
-- 新增 **「显示标题栏歌词」** 开关，位于 _设置 > 播放设置_，默认关闭。
-- 新增 **「显示媒体控制栏歌词」** 开关，位于 _设置 > 播放设置_，默认关闭。
-- 新增 **「字体设置」**，位于 _设置 > 基本设置_。
-
-### 优化
-
-- 优化通过点击已有列表创建新列表时的插入位置，新列表会立即插入到目标列表之后。
-- 优化 WebDAV 数据读取逻辑，改进与更多 WebDAV 服务的兼容性。
-- 优化 WebDAV 服务列表创建流程，现在应用会弹窗提示设置密码并自动保存到扩展设置中。
-- 优化系统托盘菜单体验。
+- 新增 **“道法自然”主题**。勾选该主题时，应用会根据当前系统的亮/暗模式，在之前选定的亮色主题与 **“黑灯瞎火”** 主题之间切换。([#136](https://github.com/any-listen/any-listen/issues/136))
+- 本地列表设置新增 **“使用轮询监听文件变动”** 选项，用于解决挂载的远程驱动器读取问题 ([#142](https://github.com/any-listen/any-listen/issues/142))。
 
 ### 修复
 
-- 修复更新下载完成后更新提醒不再弹出的情况。
-- 修复监听本地列表变更时残留回调未被注销的问题。
-- 修复内部扩展日志无法实时刷新的问题。
+- 修复 `wav` 文件的艺术家标签信息解析为乱码的问题（[#132](https://github.com/any-listen/any-listen/issues/132)）。
+- 修复 **WebDAV 列表** 最多只能添加 1000 首歌曲的问题（[#134](https://github.com/any-listen/any-listen/issues/134)）。
+- 修复由于 **文件扩展名大小写敏感** 导致的播放或文件读取失败的问题（[#141](https://github.com/any-listen/any-listen/issues/141)）。
+- 修复 **WebDAV 元数据** 读取错误。
+- 修复播放封面与列表内歌曲封面加载逻辑冲突的问题。
+- 修复**播放历史列表**中的歌曲信息在原始列表歌曲更新时未随之更新的问题。

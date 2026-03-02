@@ -1,6 +1,9 @@
+import fs from 'node:fs/promises'
+
+import { buildPublicPath } from '@any-listen/common/tools'
 import { checkAndCreateDir, checkFile, extname, joinPath, toSha256 } from '@any-listen/nodejs'
 import { request, type Options } from '@any-listen/nodejs/request'
-import fs from 'node:fs/promises'
+
 import { checkAllowedExt } from './shared'
 import { proxyServerState } from './state'
 
@@ -23,18 +26,19 @@ export const generateName = (url: string) => {
   const ext = extname(url)
   if (ext && !checkAllowedExt(ext)) throw new Error('Not allowed file type')
 
-  return (toSha256(url) + ext).toLocaleLowerCase()
+  return (toSha256(url) + ext).toLowerCase()
 }
 
-export const createProxy = async (url: string, reqOptions: Options) => {
+export const createProxy = async (url: string, reqOptions: Options, enabledCache?: boolean) => {
   await verifyOptions(url, reqOptions)
 
   const name = generateName(url)
   proxyServerState.proxyMap.set(name, {
     requestOptions: reqOptions,
     url,
+    enabledCache,
   })
-  return `${proxyServerState.proxyBaseUrl}/${name}`
+  return buildPublicPath(proxyServerState.proxyBaseUrl, name)
 }
 
 export const checkProxyCache = async (url: string) => {
@@ -46,7 +50,7 @@ export const writeProxyCache = async (fileName: string, data: Uint8Array) => {
   const name = generateName(fileName)
   const filePath = joinPath(proxyServerState.cacheDir, name)
   await fs.writeFile(filePath, data)
-  return `${proxyServerState.proxyBaseUrl}/${name}`
+  return buildPublicPath(proxyServerState.proxyBaseUrl, name)
 }
 
 export const initProxyServer = async (proxyBaseUrl: string, cacheDir: string) => {

@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
+import { onPlayHistoryListAction, onPlayListAction } from '@any-listen/app/modules/player'
+
 import { getPlayInfo, playerEvent } from '@/app/modules/player'
 import { broadcast } from '@/modules/ipc/websocket'
-import { onPlayHistoryListAction, onPlayListAction } from '@any-listen/app/modules/player'
+
 import type { ExposeClientFunctions, ExposeServerFunctions } from '.'
 
 // 暴露给前端的方法
@@ -13,7 +15,7 @@ export const createExposePlayer = () => {
     async playerEvent(event, pEvent): Promise<void> {
       switch (pEvent.action) {
         case 'musicChanged':
-          playerEvent.musicChanged(pEvent.data.index, pEvent.data.historyIndex)
+          playerEvent.musicChanged(pEvent.data.index, pEvent.data.historyIndex, pEvent.data.lastTrackId)
           break
         case 'musicInfoUpdated':
           playerEvent.musicInfoUpdated(pEvent.data)

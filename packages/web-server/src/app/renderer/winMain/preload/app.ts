@@ -1,4 +1,5 @@
 import type { IPCSocket } from '@/preload/ws'
+
 import type { ClientCall, ExposeFunctions } from '.'
 
 // 暴露给后端的方法
@@ -53,9 +54,12 @@ export const createClientApp = (ipcSocket: IPCSocket) => {
     async inited() {
       return ipcSocket.remote.inited()
     },
-    async minWindow() {
-      // return ipcSocket.remote.minWindow()
+    async setSystemThemeMode(isDark) {
+      return ipcSocket.remote.setSystemThemeMode(isDark)
     },
+    // async minWindow() {
+    //   return ipcSocket.remote.minWindow()
+    // },
     async closeWindow(isForce) {
       await ipcSocket.logout()
       if (isForce) window.close()
@@ -102,6 +106,12 @@ export const createClientApp = (ipcSocket: IPCSocket) => {
     },
     async restartUpdate() {
       return ipcSocket.remote.restartUpdate()
+    },
+    async getCacheSize() {
+      return ipcSocket.remote.getCacheSize()
+    },
+    async clearCache() {
+      return ipcSocket.remote.clearCache()
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

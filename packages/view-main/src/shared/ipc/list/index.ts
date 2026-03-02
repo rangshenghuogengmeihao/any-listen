@@ -41,6 +41,14 @@ export const syncUserList: AnyListen.IPC.ServerIPC['syncUserList'] = async (id) 
   return ipc.syncUserList(id)
 }
 
+export const parseMusicMetadata: AnyListen.IPC.ServerIPC['parseMusicMetadata'] = async (listId, musicInfo) => {
+  return ipc.parseMusicMetadata(listId, musicInfo)
+}
+
+export const sortListMusics: AnyListen.IPC.ServerIPC['sortListMusics'] = async (id, list, type) => {
+  return ipc.sortListMusics(id, list, type)
+}
+
 // export const importLocalFile: AnyListen.IPC.ServerIPC['importLocalFile'] = async(listId) => {
 //   return ipc.importLocalFile(listId)
 // }

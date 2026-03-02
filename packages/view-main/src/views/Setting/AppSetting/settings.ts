@@ -1,13 +1,20 @@
-import { showNotify } from '@/components/apis/notify'
-import { getThemeList } from '@/modules/theme/store/action'
-import { i18n, langList, type Message } from '@/plugins/i18n'
 import { windowSizeList } from '@any-listen/common/constants'
 import type { Component } from 'svelte'
+
+import { showNotify } from '@/components/apis/notify'
+import { updateSetting } from '@/modules/setting/store/action'
+import { settingState } from '@/modules/setting/store/state'
+import { getThemeList } from '@/modules/theme/store/action'
+import { i18n, langList, type Message } from '@/plugins/i18n'
+
 import About from './About.svelte'
+import DislikedList from './DislikedList.svelte'
 import ExtensionGHMirrorHosts from './ExtensionGHMirrorHosts.svelte'
 import Font from './Font.svelte'
 import LoginDevices from './LoginDevices.svelte'
+import MusicCache from './MusicCache.svelte'
 import Network from './Network.svelte'
+import ResourceCache from './ResourceCache.svelte'
 import Update from './Update.svelte'
 
 interface SettingBase<T = unknown> {
@@ -15,6 +22,7 @@ interface SettingBase<T = unknown> {
   name: keyof Message
   description?: keyof Message
   onChnaged?: (value: T) => void
+  onUpdate?: (value: T) => void
 }
 export interface EnumItem {
   name: keyof Message
@@ -73,9 +81,22 @@ export const settings: SettingListSection[] = [
         type: 'radio',
         async asyncEnum() {
           // t('settings__basic_window_size_tip')
-          const themeList = await getThemeList()
+          const themeList = (await getThemeList()).themes.map((t) => ({ name: `theme_${t.id}` as keyof Message, value: t.id }))
           // console.log(themeList)
-          return themeList.themes.map((t) => ({ name: `theme_${t.id}` as keyof Message, value: t.id }))
+          return [...themeList, { name: 'theme_auto', value: 'auto' }]
+        },
+        onUpdate(value) {
+          if (value === 'auto') {
+            void updateSetting({
+              'theme.id': value,
+              'theme.lightId': settingState.setting['theme.id'] === 'black' ? undefined : settingState.setting['theme.id'],
+            })
+          } else {
+            void updateSetting({
+              'theme.id': value as string,
+              'theme.lightId': value === 'black' ? undefined : (value as string),
+            })
+          }
         },
       },
       {
@@ -154,7 +175,7 @@ export const settings: SettingListSection[] = [
         name: 'settings.player.lyric_trans_roma_swap',
         type: 'boolean',
       },
-      // t('settings.player.media_session_lyric')
+      // t('settings.player.media_device_changed_pause_play')
       {
         field: 'player.isPlayAwlrc',
         name: 'settings.player.play_awlrc',
@@ -170,6 +191,13 @@ export const settings: SettingListSection[] = [
         name: 'settings.player.media_session_lyric',
         type: 'boolean',
       },
+      import.meta.env.VITE_IS_DESKTOP
+        ? {
+            field: 'player.isMediaDeviceChangedPausePlay',
+            name: 'settings.player.media_device_changed_pause_play',
+            type: 'boolean',
+          }
+        : null,
       import.meta.env.VITE_IS_MAC
         ? {
             field: 'player.isShowStatusBarLyric',
@@ -250,6 +278,56 @@ export const settings: SettingListSection[] = [
     ],
   },
   {
+    id: 'other',
+    name: 'settings.other',
+    list: [
+      import.meta.env.VITE_IS_DESKTOP && import.meta.env.VITE_IS_MAC
+        ? null
+        : {
+            field: 'common.transparentWindow',
+            name: 'settings.common.transparent_window',
+            description: 'settings.common.transparent_window_desc',
+            type: 'boolean',
+          },
+      // t('settings.common.enable_trash_desc')
+      import.meta.env.VITE_IS_DESKTOP
+        ? {
+            field: 'common.enableTrash',
+            name: 'settings.common.enable_trash',
+            description: 'settings.common.enable_trash_desc',
+            type: 'boolean',
+          }
+        : null,
+      import.meta.env.VITE_IS_DESKTOP
+        ? {
+            field: 'tray.themeId',
+            name: 'settings.tray.theme_id',
+            type: 'radio',
+            enum: [
+              { value: 0, name: 'settings.tray.theme_id_light' },
+              { value: 2, name: 'settings.tray.theme_id_dark' },
+              { value: 1, name: 'settings.tray.theme_id_origin' },
+            ] satisfies Array<{ value: AnyListen.AppSetting['tray.themeId']; name: keyof Message }>,
+          }
+        : null,
+      {
+        name: 'settings.other.resource_cache',
+        type: 'component',
+        component: ResourceCache,
+      },
+      {
+        name: 'settings.other.music_cache',
+        type: 'component',
+        component: MusicCache,
+      },
+      {
+        name: 'settings.other.dislike_list',
+        type: 'component',
+        component: DislikedList,
+      },
+    ],
+  },
+  {
     id: 'update',
     name: 'settings.update',
     list: [
@@ -293,7 +371,7 @@ export const settings: SettingListSection[] = [
 ]
 
 if (import.meta.env.VITE_IS_WEB) {
-  settings.splice(settings.length - 2, 0, {
+  settings.splice(settings.length - 3, 0, {
     id: 'security',
     name: 'settings__security',
     list: [
@@ -301,34 +379,6 @@ if (import.meta.env.VITE_IS_WEB) {
         name: 'settings__security_login_devices',
         type: 'component',
         component: LoginDevices,
-      },
-    ],
-  })
-}
-
-// t('settings.common.transparent_window_desc')
-if (import.meta.env.VITE_IS_DESKTOP) {
-  settings.splice(settings.length - 2, 0, {
-    id: 'other',
-    name: 'settings.other',
-    list: [
-      import.meta.env.VITE_IS_MAC
-        ? null
-        : {
-            field: 'common.transparentWindow',
-            name: 'settings.common.transparent_window',
-            description: 'settings.common.transparent_window_desc',
-            type: 'boolean',
-          },
-      {
-        field: 'tray.themeId',
-        name: 'settings.tray.theme_id',
-        type: 'radio',
-        enum: [
-          { value: 0, name: 'settings.tray.theme_id_light' },
-          { value: 2, name: 'settings.tray.theme_id_dark' },
-          { value: 1, name: 'settings.tray.theme_id_origin' },
-        ] satisfies Array<{ value: AnyListen.AppSetting['tray.themeId']; name: keyof Message }>,
       },
     ],
   })

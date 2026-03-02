@@ -1,18 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 // import { checkMusicFileAvailable } from '@renderer/utils/music'
 
+import { LIST_IDS } from '@any-listen/common/constants'
+import { createPlayMusicInfoList } from '@any-listen/common/tools'
+import { getRandom } from '@any-listen/common/utils'
+import { checkPicUrl } from '@any-listen/web'
+
 import { addInfo } from '@/modules/dislikeList/actions'
-import { addListMusics, removeListMusics } from '@/modules/musicLibrary/store/actions'
+import { addListMusics, parseMusicMetadata, removeListMusics, updateListMusic } from '@/modules/musicLibrary/store/actions'
 import { settingState } from '@/modules/setting/store/state'
 import { i18n } from '@/plugins/i18n'
 import { getSrc, isEmpty, releasePlayer, setPause, setPlay, setResource, setStop } from '@/plugins/player'
 import { parseInterval } from '@/shared'
-import { LIST_IDS } from '@any-listen/common/constants'
-import { createPlayMusicInfoList } from '@any-listen/common/tools'
-import { getRandom } from '@any-listen/common/utils'
+
 import * as commit from './commit'
 import { playerEvent } from './event'
-import { removePlayListMusic, setPlayListMusic, setPlayListMusicPlayed, setPlayListMusicUnplayedAll } from './listRemoteAction'
+import { setPlayListMusic, setPlayListMusicPlayed, setPlayListMusicUnplayedAll } from './listRemoteAction'
 import { addPlayHistoryList, getMusicLyric, getMusicPic, getMusicUrl, setPlayHistoryList } from './playerRemoteAction'
 import { playerState } from './state'
 
@@ -57,30 +60,30 @@ const diffCurrentMusicInfo = (curMusicInfo: AnyListen.Music.MusicInfo): boolean 
   )
 }
 
-let cancelDelayRetry: (() => void) | null = null
-const delayRetry = async (musicInfo: AnyListen.Music.MusicInfo, isRefresh = false): Promise<string | null> => {
-  // if (cancelDelayRetry) cancelDelayRetry()
-  return new Promise<string | null>((resolve, reject) => {
-    const time = getRandom(2, 6)
-    commit.setStatusText(i18n.t('player__geting_url_delay_retry', { time }))
-    const tiemout = setTimeout(() => {
-      getMusicPlayUrl(musicInfo, isRefresh, true)
-        .then((result) => {
-          cancelDelayRetry = null
-          resolve(result)
-        })
-        .catch(async (err: Error) => {
-          cancelDelayRetry = null
-          reject(err)
-        })
-    }, time * 1000)
-    cancelDelayRetry = () => {
-      clearTimeout(tiemout)
-      cancelDelayRetry = null
-      resolve(null)
-    }
-  })
-}
+// let cancelDelayRetry: (() => void) | null = null
+// const delayRetry = async (musicInfo: AnyListen.Music.MusicInfo, isRefresh = false): Promise<string | null> => {
+//   // if (cancelDelayRetry) cancelDelayRetry()
+//   return new Promise<string | null>((resolve, reject) => {
+//     const time = getRandom(2, 6)
+//     commit.setStatusText(i18n.t('player__geting_url_delay_retry', { time }))
+//     const tiemout = setTimeout(() => {
+//       getMusicPlayUrl(musicInfo, isRefresh, true)
+//         .then((result) => {
+//           cancelDelayRetry = null
+//           resolve(result)
+//         })
+//         .catch(async (err: Error) => {
+//           cancelDelayRetry = null
+//           reject(err)
+//         })
+//     }, time * 1000)
+//     cancelDelayRetry = () => {
+//       clearTimeout(tiemout)
+//       cancelDelayRetry = null
+//       resolve(null)
+//     }
+//   })
+// }
 const getMusicPlayUrl = async (
   musicInfo: AnyListen.Music.MusicInfo,
   isRefresh = false,
@@ -116,7 +119,7 @@ const getMusicPlayUrl = async (
 export const setMusicUrl = (musicInfo: AnyListen.Music.MusicInfo, isRefresh?: boolean) => {
   // if (settingState.setting['player.autoSkipOnError']) addLoadTimeout()
   if (!playerState.playing || !diffCurrentMusicInfo(musicInfo)) return
-  if (cancelDelayRetry) cancelDelayRetry()
+  // if (cancelDelayRetry) cancelDelayRetry()
   gettingUrlId = musicInfo.id
   void getMusicPlayUrl(musicInfo, isRefresh)
     .then((url) => {
@@ -190,57 +193,86 @@ const buildPlayerMusicInfo = (musicInfo: AnyListen.Music.MusicInfo | AnyListen.D
     album: '',
   }
 }
+const loadImageUrl = async (info: AnyListen.Player.PlayMusicInfo, refresh?: boolean) => {
+  return getMusicPic({ musicInfo: info.musicInfo, listId: info.listId, isRefresh: refresh })
+    .then(({ url }) => {
+      if (info.musicInfo.id != playerState.playMusicInfo?.musicInfo.id) return
+      commit.setMusicInfo({ pic: url })
+      playerEvent.picUpdated(url)
+      return url
+    })
+    .catch(() => {
+      if (info.musicInfo.id != playerState.playMusicInfo?.musicInfo.id) return
+      commit.setMusicInfo({ pic: null })
+      playerEvent.picUpdated(null)
+    })
+}
+const setMetadata = async (info: AnyListen.Player.PlayMusicInfo) => {
+  if (info.musicInfo.meta.unparsed) {
+    const newInfo = await parseMusicMetadata(info.listId, info.musicInfo)
+    // console.log(newInfo)
+    if (newInfo) {
+      info.musicInfo = newInfo
+      commit.setMusicInfo(buildPlayerMusicInfo(info.musicInfo))
+      void updateListMusic(info.listId, newInfo)
+    }
+  }
+  void loadImageUrl(info).then((url) => {
+    if (!url) return
+    void checkPicUrl(url).catch(() => {
+      if (info.musicInfo.id != playerState.playMusicInfo?.musicInfo.id) return
+      void loadImageUrl(info, true)
+    })
+  })
+
+  void getMusicLyric({ musicInfo: info.musicInfo })
+    .then((lyricInfo) => {
+      if (info.musicInfo.id != playerState.playMusicInfo?.musicInfo.id) return
+      commit.setMusicInfo({
+        lrc: lyricInfo.info.lyric,
+        tlrc: lyricInfo.info.tlyric,
+        awlrc: lyricInfo.info.awlyric,
+        rlrc: lyricInfo.info.rlyric,
+      })
+      playerEvent.lyricUpdated(lyricInfo.info)
+    })
+    .catch((err) => {
+      console.log(err)
+      if (info.musicInfo.id != playerState.playMusicInfo?.musicInfo.id) return
+      commit.setStatusText(i18n.t('lyric__load_error'))
+    })
+}
 export const setPlayMusicInfo = (info: AnyListen.Player.PlayMusicInfo | null, index?: number | null, historyListIndex = -1) => {
   const oldInfo = playerState.playMusicInfo
   const oldHistoryIdx = playerState.playInfo.historyIndex
   if (info) {
     commit.setPlayMusicInfo(info)
     commit.setMusicInfo(buildPlayerMusicInfo(info.musicInfo))
-    void getMusicPic({ musicInfo: info.musicInfo, listId: info.listId })
-      .then(({ url }) => {
-        if (info.musicInfo.id != playerState.playMusicInfo?.musicInfo.id) return
-        commit.setMusicInfo({ pic: url })
-        playerEvent.picUpdated(url)
-      })
-      .catch(() => {
-        if (info.musicInfo.id != playerState.playMusicInfo?.musicInfo.id) return
-        commit.setMusicInfo({ pic: null })
-        playerEvent.picUpdated(null)
-      })
-
-    void getMusicLyric({ musicInfo: info.musicInfo })
-      .then((lyricInfo) => {
-        if (info.musicInfo.id != playerState.playMusicInfo?.musicInfo.id) return
-        commit.setMusicInfo({
-          lrc: lyricInfo.info.lyric,
-          tlrc: lyricInfo.info.tlyric,
-          awlrc: lyricInfo.info.awlyric,
-          rlrc: lyricInfo.info.rlyric,
-        })
-        playerEvent.lyricUpdated(lyricInfo.info)
-      })
-      .catch((err) => {
-        console.log(err)
-        if (info.musicInfo.id != playerState.playMusicInfo?.musicInfo.id) return
-        commit.setStatusText(i18n.t('lyric__load_error'))
-      })
+    void setMetadata(info)
     playerEvent.setProgress(0, parseInterval(info.musicInfo.interval))
     const idx = index == null ? playerState.playList.findIndex((m) => m.itemId == info.itemId) : index
     historyListIndex =
       historyListIndex >= 0 && info.itemId == playerState.playHistoryList[historyListIndex]?.id ? historyListIndex : -1
-    commit.updatePlayIndex(idx, historyListIndex)
-    playerEvent.musicChanged(idx, historyListIndex)
+    if (info.playLater) {
+      commit.updatePlayIndex(idx, historyListIndex)
+      playerEvent.musicChanged(idx, historyListIndex)
+    } else {
+      commit.updatePlayIndex(idx, historyListIndex, info.musicInfo.id)
+      playerEvent.musicChanged(idx, historyListIndex, info.musicInfo.id)
+    }
   } else {
     commit.setPlayMusicInfo(null)
     commit.setMusicInfo(null)
-    commit.updatePlayIndex(-1, -1)
+    commit.updatePlayIndex(-1, -1, null)
   }
   if (oldInfo) {
-    if (oldInfo.playLater) {
-      void removePlayListMusic([oldInfo.itemId])
-    } else if (settingState.setting['player.togglePlayMethod'] == 'random') {
+    if (!oldInfo.playLater && settingState.setting['player.togglePlayMethod'] == 'random') {
       if (!oldInfo.played) void setPlayListMusicPlayed([oldInfo.itemId])
-      if (oldInfo.listId == info?.listId && oldHistoryIdx < 0 && playerState.playHistoryList.at(-1)?.id != oldInfo.itemId) {
+      if (
+        oldInfo.listId == playerState.playInfo?.listId &&
+        oldHistoryIdx < 0 &&
+        playerState.playHistoryList.at(-1)?.id != oldInfo.itemId
+      ) {
         void addPlayHistoryList([{ id: oldInfo.itemId, time: Date.now() }])
       }
     }
@@ -402,7 +434,7 @@ export const getNextPlayMusicInfo = async (): Promise<AnyListen.Player.PlayMusic
     const curItemId = playerState.playMusicInfo?.itemId
     const unPlayedList = playList.filter((m) => !m.played && m.itemId != curItemId)
     let nextPlayMusicInfo: AnyListen.Player.PlayMusicInfo
-    let isEnd = false
+    let isEnd: boolean
     if (unPlayedList.length) {
       nextPlayMusicInfo = unPlayedList[getRandom(0, unPlayedList.length)]
       isEnd = false
@@ -481,8 +513,6 @@ export const skipNext = async (isAutoSktp = false): Promise<void> => {
     return
   }
 
-  let nextIndex = playerState.playInfo.index
-
   let togglePlayMethod = settingState.setting['player.togglePlayMethod']
   if (togglePlayMethod == 'random') {
     if (randomNextMusicInfo.info) {
@@ -523,6 +553,9 @@ export const skipNext = async (isAutoSktp = false): Promise<void> => {
         togglePlayMethod = 'listLoop'
     }
   }
+  let nextIndex = playerState.playInfo.lastTrackId
+    ? playList.findIndex((m) => m.musicInfo.id == playerState.playInfo.lastTrackId)
+    : -1
   switch (togglePlayMethod) {
     case 'listLoop':
       nextIndex = nextIndex == playList.length - 1 ? 0 : nextIndex + 1
@@ -533,10 +566,12 @@ export const skipNext = async (isAutoSktp = false): Promise<void> => {
     case 'singleLoop':
       break
     default:
-      nextIndex = -1
       return
   }
-  if (nextIndex < 0) return
+  if (nextIndex < 0) {
+    if (!playerState.playerPlaying) commit.setPlaying(false)
+    return
+  }
 
   handlePlayMusicInfo(playList[nextIndex])
 }
@@ -578,8 +613,6 @@ export const skipPrev = async (isAutoSktp = false): Promise<void> => {
     return
   }
 
-  let nextIndex = playerState.playInfo.index
-
   let togglePlayMethod = settingState.setting['player.togglePlayMethod']
   if (togglePlayMethod == 'random') {
     if (playerState.playHistoryList.length) {
@@ -606,6 +639,15 @@ export const skipPrev = async (isAutoSktp = false): Promise<void> => {
         togglePlayMethod = 'listLoop'
     }
   }
+  let nextIndex: number
+  if (playerState.playInfo.lastTrackId) {
+    nextIndex = playList.findIndex((m) => m.musicInfo.id == playerState.playInfo.lastTrackId)
+    if (playerState.playMusicInfo?.playLater) {
+      if (nextIndex === playList.length - 1) nextIndex = 0
+      else nextIndex += 1
+    }
+  } else nextIndex = -1
+
   switch (togglePlayMethod) {
     case 'listLoop':
     case 'list':
@@ -614,7 +656,6 @@ export const skipPrev = async (isAutoSktp = false): Promise<void> => {
     case 'singleLoop':
       break
     default:
-      nextIndex = -1
       return
   }
   if (nextIndex < 0) return
@@ -716,6 +757,6 @@ export const release = async () => {
   stop()
   commit.setPlayMusicInfo(null)
   commit.setMusicInfo(null)
-  commit.updatePlayIndex(-1, -1)
+  commit.updatePlayIndex(-1, -1, null)
   await releasePlayer()
 }

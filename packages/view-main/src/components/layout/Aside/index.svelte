@@ -30,12 +30,10 @@
     // background-color: @color-theme-sidebar;
     // background-color: @color-aside-background;
     // border-right: 2px solid var(--color-primary);
-    // -webkit-app-region: drag;
     // -webkit-user-select: none;
     background-color: var(--color-app-background);
 
     // &.fullscreen {
-    //   // -webkit-app-region: no-drag;
     //   .logo {
     //     display: none;
     //   }
@@ -46,7 +44,7 @@
     // }
   }
 
-  :global(html.mac .aside) {
+  :global(html.desktop.mac .aside) {
     padding-top: calc(env(titlebar-area-height, 30px) + 4px);
   }
 

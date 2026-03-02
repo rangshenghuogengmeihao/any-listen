@@ -1,6 +1,13 @@
 import { isValidLyric } from '@any-listen/common/tools'
 import { parseLyrics } from '@any-listen/nodejs/lrcTool'
-import { createLocalMusicInfo, getLocalMusicFileLyric, getLocalMusicFilePic } from './shared/music'
+
+import {
+  createLocalMusicInfo,
+  getLocalMusicFileLyric,
+  getLocalMusicFilePic,
+  parseLocalMusicInfoMetadata,
+  removeMusicFile,
+} from './shared/music'
 
 interface PicBuffer {
   format: string
@@ -29,16 +36,47 @@ export const getMusicFileLyric = async (
 /**
  * 创建本地列表音乐信息
  * @param filePaths 文件路径
+ * @param parseMetadata 是否解析元数据
  */
-export const createLocalMusicInfos = async (filePaths: string[]): Promise<AnyListen.Music.MusicInfoLocal[]> => {
+export const createLocalMusicInfos = async (
+  filePaths: string[],
+  parseMetadata: boolean
+): Promise<AnyListen.Music.MusicInfoLocal[]> => {
   const list: AnyListen.Music.MusicInfoLocal[] = []
   for await (const path of filePaths) {
-    const musicInfo = await createLocalMusicInfo(path)
+    const musicInfo = await createLocalMusicInfo(path, parseMetadata)
     if (!musicInfo) continue
     list.push(musicInfo)
   }
 
   return list
 }
+
+export const parseLocalMusicInfosMetadata = async (msuicInfos: AnyListen.Music.MusicInfoLocal[]) => {
+  const list: AnyListen.Music.MusicInfoLocal[] = []
+  for await (const info of msuicInfos) {
+    const metaInfo = await parseLocalMusicInfoMetadata(info.meta.filePath)
+    if (!metaInfo) continue
+    const { meta, ...base } = metaInfo
+    list.push({
+      ...info,
+      ...base,
+      meta: {
+        ...info.meta,
+        ...meta,
+      },
+    })
+  }
+
+  return list
+}
+
+export const removeMusicFiles = async (paths: string[]) => {
+  for (const path of paths) {
+    await removeMusicFile(path)
+  }
+}
+
+export { parseLocalMusicInfoMetadata } from './shared/music'
 
 export { scanFolderMusics, stopFolderMusicsScan } from './scanMusics'

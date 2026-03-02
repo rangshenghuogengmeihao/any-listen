@@ -1,8 +1,12 @@
 <script lang="ts">
+  import { useIsFullscreen } from '@/modules/app/reactive.svelte'
   import { t } from '@/plugins/i18n'
+  import { setMaximized } from '@/shared/browser/widnow.svelte'
   // import { link, location } from '@/plugins/routes'
   import { closeWindow } from '@/shared/ipc/app'
   // import { isFullscreen } from '@/store'
+
+  const fullscreenState = useIsFullscreen()
 
   const handleClose = () => {
     void closeWindow()
@@ -36,7 +40,21 @@
       <use xlink:href="#icon-setting-control" />
     </svg>
   </a> -->
-  <button type="button" class="btn close" aria-label={$t('logout')} onclick={handleClose}>
+  <button
+    type="button"
+    class="btn fullscreen"
+    data-click-hide
+    aria-pressed={fullscreenState.isFullscreen}
+    aria-label={fullscreenState.isFullscreen ? $t('maximized_exit') : $t('maximized')}
+    onclick={() => {
+      setMaximized(!fullscreenState.isFullscreen)
+    }}
+  >
+    <svg version="1.1" height="60%" viewBox="0 0 24 24">
+      <use xlink:href={fullscreenState.isFullscreen ? '#icon-window-restore' : '#icon-window-maximize'} />
+    </svg>
+  </button>
+  <button type="button" class="btn close" data-click-hide aria-label={$t('logout')} onclick={handleClose}>
     <svg version="1.1" height="60%" viewBox="0 0 24 24">
       <use xlink:href="#icon-logout" />
     </svg>
@@ -49,7 +67,6 @@
     flex: none;
     align-self: flex-start;
     height: 30px;
-    -webkit-app-region: no-drag;
 
     .btn {
       position: relative;
@@ -69,6 +86,7 @@
       //   background-color: var(--color-button-background-hover);
       // }
       &:hover {
+        background-color: var(--color-button-background-hover);
         // &.min {
         //   background-color: var(--color-button-background-hover);
         // }

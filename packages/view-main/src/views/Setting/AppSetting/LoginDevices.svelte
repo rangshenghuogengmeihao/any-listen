@@ -23,10 +23,12 @@
 
   const removeSession = async (id: string) => {
     await removeLoginDevice(id)
-    list = list.toSpliced(
-      list.findIndex((l) => l.clientId == id),
+    const newList = [...list]
+    newList.splice(
+      newList.findIndex((l) => l.clientId == id),
       1
     )
+    list = newList
     iniList()
   }
   onMount(() => {
@@ -35,7 +37,7 @@
 </script>
 
 <TitleContent name={$t('settings__security_login_devices')}>
-  <div class="settings-login-devices">
+  <div class="settings-item-content settings-login-devices">
     {#each list as item (item.clientId)}
       <div class="list-item">
         <div class="content">
@@ -84,7 +86,6 @@
     display: flex;
     flex-flow: column nowrap;
     gap: 16px;
-    margin-left: 16px;
     font-size: 14px;
   }
   .list-item {

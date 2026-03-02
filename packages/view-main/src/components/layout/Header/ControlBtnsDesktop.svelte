@@ -40,7 +40,7 @@
   })
 </script>
 
-<div class="control" bind:this={domBtns}>
+<div class="control no-drag" bind:this={domBtns}>
   <!-- <a
     tabindex="0"
     role="button"
@@ -67,12 +67,12 @@
       <use xlink:href="#icon-setting-control" />
     </svg>
   </a> -->
-  <button type="button" class="btn min" aria-label={$t('min')} onclick={minWindow}>
+  <button type="button" class="btn min" data-click-hide aria-label={$t('min')} onclick={minWindow}>
     <svg version="1.1" class="svg" viewBox="0 0 24 24">
       <use xlink:href="#icon-window-minimize-2" />
     </svg>
   </button>
-  <button type="button" class="btn close" aria-label={$t('close')} onclick={closeWindow}>
+  <button type="button" class="btn close" data-click-hide aria-label={$t('close')} onclick={closeWindow}>
     <svg version="1.1" class="svg" viewBox="0 0 24 24">
       <use xlink:href="#icon-window-close-2" />
     </svg>
@@ -85,7 +85,6 @@
     flex: none;
     align-self: flex-start;
     height: 30px;
-    -webkit-app-region: no-drag;
 
     .btn {
       position: relative;

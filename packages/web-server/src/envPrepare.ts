@@ -1,19 +1,28 @@
-import { NATIVE_VERSION } from '@any-listen/common/constants'
-import { basename, checkAndCreateDir, checkPath, getNativeName, removeFile, removePath, renamePath } from '@any-listen/nodejs'
-import { simpleDownload } from '@any-listen/nodejs/download'
 import os from 'node:os'
 import path from 'node:path'
+
+import { NATIVE_VERSION } from '@any-listen/common/constants'
+import {
+  basename,
+  checkAndCreateDir,
+  checkFile,
+  getNativeName,
+  removeFileIgnoreError,
+  removePath,
+  renamePath,
+} from '@any-listen/nodejs'
+import { simpleDownload } from '@any-listen/nodejs/download'
 
 const nativeName = getNativeName()
 const nativeLibPath = path.join(__dirname, `../native/${nativeName}`)
 const tempDir = path.join(os.tmpdir(), `any_listen_native_lib`)
 
 const downloadNativeLib = async (filePath: string) => {
-  if (await checkPath(filePath)) return
+  if (await checkFile(filePath)) return
   const fileNmae = basename(filePath)
   const url = `https://github.com/any-listen/any-listen-web-server-native-lib/releases/download/v${NATIVE_VERSION}/${fileNmae}`
   const tempFilePath = `${filePath}.tmp`
-  await removeFile(tempFilePath)
+  await removeFileIgnoreError(tempFilePath).catch(() => {})
   console.log('\nDownloading native lib from:', url)
   console.log('Save to:', filePath)
   console.log('\nPlease wait, it may take a while')
@@ -44,7 +53,7 @@ const unpackNativeLib = async (filePath: string) => {
 }
 
 export const envPrepare = async () => {
-  if (await checkPath(nativeLibPath)) return
+  if (await checkFile(nativeLibPath)) return
   console.log('Native lib not found, will download it')
 
   await checkAndCreateDir(tempDir)

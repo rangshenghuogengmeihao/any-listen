@@ -1,8 +1,9 @@
-import { encodePath } from '@/shared/electron'
-import { basename } from '@/shared/utils'
-import { workers } from '@/worker'
 import { getLocalFilePath } from '@any-listen/app/modules/music/utils'
 import { writeProxyCache } from '@any-listen/app/modules/proxyServer'
+
+import { encodePath } from '@/shared/electron'
+import { workers } from '@/worker'
+
 import { buildLyricInfo, getCachedLyricInfo } from './shared'
 
 export const getMusicUrl = async ({
@@ -49,7 +50,7 @@ export const getMusicPicUrl = async ({
         }
       }
       return {
-        url: await writeProxyCache(`${basename(musicInfo.meta.filePath)}.${pic.format}`, pic.data),
+        url: await writeProxyCache(`${musicInfo.meta.filePath}.${pic.format}`, pic.data),
         isFromCache: false,
       }
     }

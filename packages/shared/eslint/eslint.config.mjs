@@ -1,9 +1,9 @@
 import pluginJs from '@eslint/js'
-import love from 'eslint-config-love'
-import globals from 'globals'
 // import { typescriptRule } from './eslintrc.base.mjs'
 // import tseslint from "typescript-eslint";
 import typescriptParser from '@typescript-eslint/parser'
+import love from 'eslint-config-love'
+import globals from 'globals'
 
 export { typescriptParser }
 export const baseRule = {
@@ -40,6 +40,7 @@ export const baseRule = {
   'prefer-template': 'error',
   yoda: 'error',
   'no-console': 'off',
+  'no-await-in-loop': 'off',
   'promise/avoid-new': 'off',
   // 'no-magic-numbers': 'off',
   // 'prefer-destructuring': 'off',
@@ -52,6 +53,9 @@ export const baseRule = {
   'max-lines': 'off',
   'no-param-reassign': 'off',
   'no-plusplus': 'off',
+  'prefer-named-capture-group': 'off',
+  '@eslint-community/eslint-comments/require-description': 'off',
+  'require-unicode-regexp': 'off',
   radix: 'off',
 }
 export const typescriptRule = {
@@ -73,6 +77,7 @@ export const typescriptRule = {
   '@typescript-eslint/no-unsafe-assignment': 'off',
   '@typescript-eslint/no-unnecessary-type-conversion': 'off',
   '@typescript-eslint/no-explicit-any': 'warn',
+  '@typescript-eslint/strict-void-return': 'off',
 
   '@typescript-eslint/no-confusing-void-expression': [
     'error',
@@ -141,7 +146,6 @@ export default [
     languageOptions: {
       parserOptions: {
         parser: typescriptParser,
-        project: './tsconfig.json',
       },
     },
   },

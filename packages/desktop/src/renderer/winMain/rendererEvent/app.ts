@@ -1,10 +1,22 @@
+import { clearCache, getCacheSize } from '@any-listen/app/cache'
+
 import { appState, updateSetting } from '@/app'
 import { clipboardReadText, clipboardWriteText, exitApp, openDirInExplorer, openUrl } from '@/shared/electron'
 import { getFonts } from '@/shared/fontManage'
+
 import type { ExposeFunctions } from '.'
 import { checkUpdate, downloadUpdate, restartUpdate } from '../autoUpdate'
 import { winMainEvent } from '../event'
-import { closeWindow, minimize, showOpenDialog, showSaveDialog, toggleDevTools } from '../main'
+import {
+  clearCache as clearAppCache,
+  closeWindow,
+  getCacheSize as getAppCacheSize,
+  minimize,
+  setFullScreen,
+  showOpenDialog,
+  showSaveDialog,
+  toggleDevTools,
+} from '../main'
 
 // 暴露给前端的方法
 export const createExposeApp = () => {
@@ -30,6 +42,9 @@ export const createExposeApp = () => {
         return
       }
       closeWindow()
+    },
+    async fullscreenWindow(event, isFull) {
+      setFullScreen(isFull)
     },
 
     async showOpenDialog(event, opts) {
@@ -67,6 +82,13 @@ export const createExposeApp = () => {
     },
     async getSystemFonts(event) {
       return getFonts()
+    },
+    async getCacheSize() {
+      const sizes = await Promise.all([getAppCacheSize(), getCacheSize()])
+      return sizes.reduce((a, b) => a + b, 0)
+    },
+    async clearCache() {
+      await Promise.all([clearAppCache(), clearCache()])
     },
   } satisfies Partial<ExposeFunctions>
 }

@@ -1,4 +1,5 @@
 import _Event, { type EventType } from '@any-listen/nodejs/Event'
+
 import type { DBSeriveTypes } from '../worker/utils'
 
 let dbService: DBSeriveTypes
@@ -71,8 +72,8 @@ export class Event extends _Event {
     this.emitEvent('playerEvent', event)
   }
 
-  musicChanged(index: number, historyIndex: number) {
-    this.emitEvent('musicChanged', index, historyIndex)
+  musicChanged(index: number, historyIndex: number, lastTrackId?: string | null) {
+    this.emitEvent('musicChanged', index, historyIndex, lastTrackId)
   }
 
   musicInfoUpdated(info: Partial<AnyListen.Player.MusicInfo>) {

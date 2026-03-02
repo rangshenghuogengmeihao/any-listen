@@ -1,5 +1,8 @@
-import { workers } from '@/worker'
 import type { DOMPurify } from 'dompurify'
+
+import { workers } from '@/worker'
+
+import { runTimeout, stopTimeout } from './browser/tools'
 
 export const sanitizeHtml = (DOMPurify: DOMPurify, str?: string) => {
   if (!str || typeof str !== 'string') return ''
@@ -58,3 +61,11 @@ export const parseMarkdowns = async (contents: string[]) => {
     return null
   }
 }
+
+export const setTimeoutBg = (import.meta.env.VITE_IS_DESKTOP ? window.__anylisten_node_env__!.setTimeout : runTimeout) as (
+  callback: () => void,
+  delay?: number
+) => number
+export const clearTimeoutBg = (import.meta.env.VITE_IS_DESKTOP ? window.__anylisten_node_env__!.clearTimeout : stopTimeout) as (
+  id: number
+) => void

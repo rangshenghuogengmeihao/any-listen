@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { broadcast } from '@/modules/ipc/websocket'
 import {
   addFolderMusics,
   cancelAddFolderMusics,
@@ -9,10 +8,15 @@ import {
   getListScrollInfo,
   getMusicExistListIds,
   onMusicListAction,
+  parseMusicMetadata,
   saveListScrollPosition,
   sendMusicListAction,
+  sortListMusics,
   syncUserList,
 } from '@any-listen/app/modules/musicList'
+
+import { broadcast } from '@/modules/ipc/websocket'
+
 import type { ExposeClientFunctions, ExposeServerFunctions } from '.'
 
 // 暴露给前端的方法
@@ -47,6 +51,12 @@ export const createExposeList = () => {
     },
     async syncUserList(event, id) {
       return syncUserList(id)
+    },
+    async parseMusicMetadata(event, listId, musicInfo) {
+      return parseMusicMetadata(listId, musicInfo)
+    },
+    async sortListMusics(event, id, list, type) {
+      return sortListMusics(id, list, type)
     },
   } satisfies Partial<ExposeClientFunctions>
 }

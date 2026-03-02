@@ -40,14 +40,21 @@ declare global {
         enum: string[]
         enumName: string[]
       }
+      interface LazzyParseMeta {
+        type: 'lazzyParseMeta'
+        default: boolean
+      }
       type FormValue<T extends FormItems> = T & { value?: T['default'] }
       type FormValueItem = FormValue<FormInput> | FormValue<FormBoolean> | FormValue<FormSelection>
       type FormItems = FormInput | FormBoolean | FormSelection
+      type ListProviderFormValueItem = FormValueItem | (LazzyParseMeta & { value?: boolean })
+      type ListProviderFormItems = FormItems | LazzyParseMeta
       interface ListProvider {
         id: string
         name: string
         description: string
-        form: FormItems[]
+        fileSortable?: boolean
+        form: ListProviderFormItems[]
       }
 
       interface Manifest {

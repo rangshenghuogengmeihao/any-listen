@@ -1,6 +1,7 @@
 import { execSync, spawn } from 'node:child_process'
 import { builtinModules } from 'node:module'
 import path from 'node:path'
+
 import type { UserConfig } from 'vite'
 
 export { buildConfig as buildPreloadConfig } from './vite.config.web'
@@ -25,6 +26,8 @@ export const runServer = (onLog: (data: Buffer, color: 'red' | 'blue') => void) 
     cwd: projectPath,
     env: {
       NODE_OPTIONS: '--enable-source-maps',
+      // reference https://maxschmitt.me/posts/error-spawn-node-enoent-node-js-child-process
+      PATH: process.env.PATH,
     },
   })
 
@@ -55,13 +58,12 @@ export const buildConfig = (mode: string): UserConfig => {
       console.error('Working directory is not clean')
       process.exit(1)
     }
-  } catch {
-    /* empty */
+  } catch (err) {
     if (process.env.IS_CI) {
       const commitId = process.env.GIT_COMMIT_ID
       const commitDate = process.env.GIT_COMMIT_DATE
       if (!commitId || !commitDate) {
-        throw new Error('GIT_COMMIT_ID and GIT_COMMIT_DATE environment variables are required in CI')
+        throw new Error('GIT_COMMIT_ID and GIT_COMMIT_DATE environment variables are required in CI', { cause: err })
       }
       gitInfo.commit_id = commitId
       gitInfo.commit_date = commitDate
@@ -77,6 +79,7 @@ export const buildConfig = (mode: string): UserConfig => {
     resolve: {
       alias: {
         '@': path.join(projectPath, 'src'),
+        'node:sqlite': path.join(projectPath, 'build-config/sqlite.js'),
       },
       conditions: ['module', 'node', 'default', 'development|production'],
       mainFields: ['module', 'jsnext:main', 'jsnext'],
@@ -104,11 +107,11 @@ export const buildConfig = (mode: string): UserConfig => {
         // dynamicRequireTargets: ['*.js'],
         ignoreDynamicRequires: true,
       },
-      rollupOptions: {
+      rolldownOptions: {
         external: [
           // /node_modules/,
           // 'better-sqlite3',
-          ...builtinModules.flatMap((m) => [m, `node:${m}`]),
+          ...builtinModules.flatMap((m) => [m, `node:${m}`]).filter((m) => m != 'node:sqlite'),
         ],
         input: {
           index: path.join(projectPath, 'src/index.ts'),

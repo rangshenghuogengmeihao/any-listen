@@ -1,12 +1,13 @@
+import { extensionEvent, extensionState, initExtensionModule } from '@any-listen/app/modules/extension'
+import { musicListEvent } from '@any-listen/app/modules/musicList'
+import { workers } from '@any-listen/app/modules/worker'
+import { DEFAULT_LANG, EXTENSION, STORE_NAMES } from '@any-listen/common/constants'
+import { checkAndCreateDir, joinPath, readFile } from '@any-listen/nodejs'
+
 import { appEvent, appState } from '@/app/app'
 import { playerEvent } from '@/app/modules/player'
 import { startExtensionServiceWorker } from '@/app/worker'
 import { extensionLog } from '@/shared/log4js'
-import { extensionEvent, extensionState, initExtensionModule } from '@any-listen/app/modules/extension'
-import { musicListEvent } from '@any-listen/app/modules/musicList'
-import { workers } from '@any-listen/app/modules/worker'
-import { EXTENSION, STORE_NAMES } from '@any-listen/common/constants'
-import { checkAndCreateDir, joinPath, readFile } from '@any-listen/nodejs'
 
 const handleExtensionLog = (info: AnyListen.LogInfo) => {
   switch (info.type) {
@@ -27,7 +28,7 @@ const handleExtensionLog = (info: AnyListen.LogInfo) => {
 
 const setupExtension = async () => {
   await workers.extensionService.setExtensionState({
-    locale: appState.appSetting['common.langId'] ?? 'en-us',
+    locale: appState.appSetting['common.langId'] ?? DEFAULT_LANG,
     'proxy.host': appState.proxy.host,
     'proxy.port': appState.proxy.port,
     clientType: 'web',
@@ -60,11 +61,6 @@ export const initExtension = async () => {
     }
   })
   appEvent.on('updated_config', (keys, setting) => {
-    if (keys.includes('common.langId')) {
-      try {
-        void workers.extensionService.updateLocale(setting['common.langId'] ?? 'zh-cn')
-      } catch {}
-    }
     if (keys.includes('extension.onlineExtensionHost')) {
       try {
         void workers.extensionService.updateOnlineExtensionListHost(setting['extension.onlineExtensionHost']!)
@@ -75,6 +71,11 @@ export const initExtension = async () => {
     //     void workers.extensionService.updateGHMirrorHosts(setting['extension.ghMirrorHosts']!)
     //   } catch {}
     // }
+  })
+  appEvent.on('locale_change', (locale) => {
+    try {
+      void workers.extensionService.updateLocale(locale)
+    } catch {}
   })
   appEvent.on('proxy_changed', (host, port) => {
     try {
@@ -189,6 +190,10 @@ export const getResourceList = async () => {
 
 export const getExtensionLastLogs = async (id?: string) => {
   return workers.extensionService.getExtensionLastLogs(id)
+}
+
+export const clearExtensionLogs = async (id?: string) => {
+  return workers.extensionService.clearExtensionLogs(id)
 }
 
 export const getAllExtensionSettings = async () => {

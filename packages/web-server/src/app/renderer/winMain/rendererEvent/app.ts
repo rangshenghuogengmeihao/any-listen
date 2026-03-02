@@ -1,8 +1,11 @@
-import { appState, updateSetting } from '@/app/app'
+import { clearCache, getCacheSize } from '@any-listen/app/cache'
+
+import { appState, setSystemMode, updateSetting } from '@/app/app'
 import { fileSystemAction } from '@/app/modules/fileSystem'
 import { socketEvent } from '@/modules/ipc/event'
 import { broadcast } from '@/modules/ipc/websocket'
 import { getClientInfos } from '@/shared/data'
+
 import type { ExposeClientFunctions, ExposeServerFunctions } from '.'
 import { checkUpdate, downloadUpdate, restartUpdate } from '../autoUpdate'
 
@@ -19,6 +22,9 @@ export const createExposeApp = () => {
     async inited(event) {
       event.isInited = true
       socketEvent.new_socket_inited(event)
+    },
+    async setSystemThemeMode(event, isDark) {
+      setSystemMode(isDark)
     },
     async getMachineId(event) {
       return appState.machineId
@@ -56,6 +62,12 @@ export const createExposeApp = () => {
     },
     async restartUpdate(event) {
       await restartUpdate()
+    },
+    async getCacheSize(event) {
+      return getCacheSize()
+    },
+    async clearCache(event) {
+      await clearCache()
     },
   } satisfies Partial<ExposeClientFunctions>
 }

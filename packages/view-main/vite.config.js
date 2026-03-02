@@ -1,12 +1,14 @@
-import { svelte, vitePreprocess } from '@sveltejs/vite-plugin-svelte'
 import fs from 'node:fs'
 import path from 'node:path'
 import { env } from 'node:process'
 import { fileURLToPath } from 'node:url'
+
+import { svelte, vitePreprocess } from '@sveltejs/vite-plugin-svelte'
 import pxtorem from 'postcss-pxtorem'
 import { sveltePreprocess } from 'svelte-preprocess'
 import { defaultClientConditions, defineConfig } from 'vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+
 import { createHtmlPlugin } from './build-config/html.plugin.js'
 // import type { UserConfig } from 'vite'
 
@@ -155,7 +157,7 @@ export const buildConfig = (target, port = 9200, ipcScript) => {
         : {
             buildDelay: 500,
           },
-      rollupOptions: {
+      rolldownOptions: {
         // input: {
         //   'view-main': 'index.html',
         // },
@@ -232,10 +234,10 @@ export const buildConfig = (target, port = 9200, ipcScript) => {
     },
     worker: {
       format: 'iife',
-      rollupOptions: {
+      rolldownOptions: {
         output: {
           entryFileNames: '[name][hash].js',
-          inlineDynamicImports: true,
+          // codeSplitting: true,
           format: 'iife',
           // experimentalMinChunkSize: 50_000,
         },

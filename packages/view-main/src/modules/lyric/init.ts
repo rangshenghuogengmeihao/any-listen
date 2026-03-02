@@ -5,6 +5,7 @@ import { settingEvent } from '@/modules/setting/store/event'
 import { settingState } from '@/modules/setting/store/state'
 import { getCurrentTime as getPlayerCurrentTime } from '@/plugins/player'
 import { createUnsubscriptionSet } from '@/shared'
+
 import * as desktopLyric from './desktopLyric'
 import * as lyric from './lyric'
 import { initMacStatusBarLyric } from './macStatusBarLyric'
@@ -93,8 +94,8 @@ export const initLyric = () => {
     unregistered.register((subscriptions) => {
       subscriptions.add(lyric.initLyric())
       subscriptions.add(desktopLyric.initDesktopLyric())
+      if (import.meta.env.VITE_IS_MAC) subscriptions.add(initMacStatusBarLyric()) // 需在 initTitleLyric 之前初始化
       subscriptions.add(initTitleLyric())
-      if (import.meta.env.VITE_IS_MAC) subscriptions.add(initMacStatusBarLyric())
       subscriptions.add(playerEvent.on('lyricUpdated', setLyric))
       subscriptions.add(playerEvent.on('setLyricOffset', setLyricOffset))
       subscriptions.add(playerEvent.on('setPlaybackRate', setPlaybackRate))

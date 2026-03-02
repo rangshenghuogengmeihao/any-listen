@@ -1,41 +1,31 @@
 {
   "name": "any-listen",
   "version": "0.1.0",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
+    "build": "pnpm build:desktop",
+    "build:desktop": "pnpm -F @shared/scripts build:desktop:win",
+    "build:dir": "pnpm -F @shared/scripts build:desktop:dir",
+    "build:theme": "pnpm -F @shared/theme build:theme",
+    "build:web": "pnpm -F @shared/scripts build:web",
+    "ckdep": "pnpm -F @shared/deps-update check",
+    "cldep": "rm -rf node_modules && pnpm -r exec rm -rf node_modules",
     "dev": "pnpm dev:desktop",
     "dev:desktop": "pnpm -F @shared/scripts dev:desktop",
     "dev:web": "pnpm -F @shared/scripts dev:web",
-    "build:theme": "pnpm -F @shared/theme build:theme",
-    "build": "pnpm build:desktop",
-    "build:dir": "pnpm -F @shared/scripts build:desktop:dir",
-    "build:desktop": "pnpm -F @shared/scripts build:desktop:win",
-    "build:web": "pnpm -F @shared/scripts build:web",
-    "ckdep": "pnpm -F @shared/deps-update check",
     "pub": "pnpm pub:desktop",
     "pub:desktop": "pnpm -F @shared/publish pub desktop",
     "pub:web": "pnpm -F @shared/publish pub web-server",
-    "cldep": "rm -rf node_modules && pnpm -r exec rm -rf node_modules"
+    "fmt": "oxfmt"
+  },
+  "devDependencies": {
+    "@any-listen/eslint": "workspace:@shared/eslint@^",
+    "oxfmt": "^0.35.0"
   },
   "engines": {
     "node": ">=22.12.0 || ^20.19.0"
   },
-  "workspaces": [
-    "packages/*"
-  ],
-  "pnpm": {
-    "ignoredBuiltDependencies": [],
-    "onlyBuiltDependencies": [
-      "better-sqlite3",
-      "electron",
-      "esbuild",
-      "svelte-preprocess"
-    ]
-  },
-  "devDependencies": {
-    "@any-listen/eslint": "workspace:@shared/eslint@^",
-    "prettier": "^3.6.2",
-    "prettier-plugin-organize-imports": "^4.3.0",
-    "prettier-plugin-packagejson": "^2.5.19"
-  },
-  "packageManager": "pnpm@10.22.0+sha512.bf049efe995b28f527fd2b41ae0474ce29186f7edcb3bf545087bd61fbbebb2bf75362d1307fda09c2d288e1e499787ac12d4fcb617a974718a6051f2eee741c"
+  "packageManager": "pnpm@10.30.1+sha512.3590e550d5384caa39bd5c7c739f72270234b2f6059e13018f975c313b1eb9fefcc09714048765d4d9efe961382c312e624572c0420762bdc5d5940cdf9be73a"
 }

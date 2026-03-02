@@ -1,7 +1,8 @@
-import electron from 'electron'
 import { execSync, spawn } from 'node:child_process'
 import { builtinModules } from 'node:module'
 import path from 'node:path'
+
+import electron from 'electron'
 import type { UserConfig } from 'vite'
 
 const isProd = process.env.NODE_ENV == 'production'
@@ -54,7 +55,7 @@ let external = [
   // 'better-sqlite3',
   'font-list',
   // 'electron-font-manager',
-  ...builtinModules.flatMap((m) => [m, `node:${m}`]),
+  ...builtinModules.flatMap((m) => [m, `node:${m}`]).filter((m) => m != 'node:sqlite'),
 ]
 // if (!isProd) external = [...external, 'undici']
 
@@ -64,16 +65,22 @@ export const buildConfig = (mode: string): UserConfig => {
     commit_date: '',
   }
   try {
-    if (!execSync('git status --porcelain').toString().trim()) {
+    let isClean = !execSync('git status --porcelain').toString().trim()
+    if (process.env.BUILD_WIN7) {
+      console.warn('BUILD_WIN7 is set, skipping git status check.')
+      console.log('Workspace status:', execSync('git status --porcelain').toString().trim())
+      isClean = true
+    }
+    if (isClean) {
       gitInfo.commit_id = execSync('git log -1 --pretty=format:"%H"').toString().trim()
       gitInfo.commit_date = execSync('git log -1 --pretty=format:"%ad" --date=iso-strict').toString().trim()
     } else if (process.env.IS_CI) {
       console.error('Working directory is not clean')
       process.exit(1)
     }
-  } catch {
+  } catch (err) {
     if (process.env.IS_CI) {
-      throw new Error('Getting git commit info failed.')
+      throw new Error('Getting git commit info failed.', { cause: err })
     }
   }
 
@@ -86,6 +93,7 @@ export const buildConfig = (mode: string): UserConfig => {
     resolve: {
       alias: {
         '@': path.join(projectPath, 'src'),
+        'node:sqlite': path.join(projectPath, 'build-config/sqlite.js'),
       },
       conditions: ['module', 'node', 'default', 'development|production'],
       mainFields: ['module', 'jsnext:main', 'jsnext'],
@@ -113,7 +121,7 @@ export const buildConfig = (mode: string): UserConfig => {
         // dynamicRequireTargets: ['*.js'],
         ignoreDynamicRequires: true,
       },
-      rollupOptions: {
+      rolldownOptions: {
         external,
         input: {
           main: path.join(projectPath, `src/${isProd ? 'index.ts' : 'index-dev.ts'}`),

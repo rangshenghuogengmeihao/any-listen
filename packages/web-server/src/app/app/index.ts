@@ -1,11 +1,14 @@
+import { initCommon } from '@any-listen/app/common'
+import { initDeviceId } from '@any-listen/app/common/deviceId'
+import { DEFAULT_LANG } from '@any-listen/common/constants'
+import { parseEnvParams } from '@any-listen/nodejs/env'
+
 import { setProxyByHost } from '@/app/shared/request'
 import { startCheckUpdateTimeout, update } from '@/app/shared/update'
 import { socketEvent } from '@/modules/ipc/event'
-import { appLog } from '@/shared/log4js'
+import { appLog, logger } from '@/shared/log4js'
 import { checkAndCreateDir, removePath } from '@/shared/utils'
-import { initCommon } from '@any-listen/app/common'
-import { initDeviceId } from '@any-listen/app/common/deviceId'
-import { parseEnvParams } from '@any-listen/nodejs/env'
+
 import { version } from '../../../package.json' with { type: 'json' }
 import { i18n } from '../i18n'
 import { boxTools } from '../modules/extension/clientTools'
@@ -54,6 +57,9 @@ const listenerAppEvent = () => {
     appEvent.proxy_changed(host, port)
   }
   appEvent.on('updated_config', (keys, setting) => {
+    if (keys.includes('common.langId')) {
+      appEvent.locale_change(setting['common.langId'] ?? DEFAULT_LANG)
+    }
     if (
       keys.includes('network.proxy.enable') ||
       (appState.appSetting['network.proxy.enable'] && keys.some((k) => k.includes('network.proxy.')))
@@ -128,6 +134,7 @@ export const initAppEnv = async () => {
       })
     },
     translate: (key, val) => i18n.t(key, val),
+    logger,
   })
 }
 
@@ -144,6 +151,12 @@ export const updateSetting = (setting: Partial<AnyListen.AppSetting>) => {
 
 export const sendInitedEvent = () => {
   appEvent.inited()
+}
+
+export const setSystemMode = (shouldUseDarkColors: boolean) => {
+  if (appState.shouldUseDarkColors == shouldUseDarkColors) return
+  appState.shouldUseDarkColors = shouldUseDarkColors
+  appEvent.system_theme_change(shouldUseDarkColors)
 }
 
 export * as appActions from './actions'

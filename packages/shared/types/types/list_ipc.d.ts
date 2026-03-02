@@ -63,6 +63,8 @@ declare namespace AnyListen {
     interface ListActionMusicRemove {
       listId: string
       ids: string[]
+      /** 是否是同步操作导致的歌曲移除 */
+      sync?: boolean
     }
 
     type ListActionMusicUpdate = Array<{
@@ -129,6 +131,8 @@ declare namespace AnyListen {
       addFolderMusics: (listId: string, filePaths: string[], onEnd: (errorMessage?: string | null) => void) => string
       cancelAddFolderMusics: (taskId: string) => void
       syncUserList: (id: string) => Promise<void>
+      parseMusicMetadata: (listId: string, musicInfo: Music.MusicInfo) => Promise<Music.MusicInfo | null>
+      sortListMusics: (listId: string, list: Music.MusicInfo[], type: List.SortFileType) => Promise<string[]>
     }>
     type ServerIPCActions<Socket = undefined> = IPC.WarpIPCHandlerActions<Socket, ServerActions>
 

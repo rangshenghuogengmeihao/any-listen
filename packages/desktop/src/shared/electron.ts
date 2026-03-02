@@ -1,4 +1,5 @@
 import { app, clipboard, shell } from 'electron'
+
 import { isUrl } from './utils'
 
 /**
@@ -53,4 +54,8 @@ export const buildElectronProxyConfig = (host: string, port: string): Electron.P
     : {
         mode: 'direct',
       }
+}
+
+export const trashItem = async (filePath: string) => {
+  await shell.trashItem(filePath)
 }

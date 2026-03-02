@@ -3,7 +3,8 @@ import { singerFormat } from '@any-listen/common/tools'
 import { formatPlayTime, isLikelyGarbage, sizeFormate } from '@any-listen/common/utils'
 import type { IAudioMetadata } from 'music-metadata'
 import type { IComment } from 'music-metadata/lib/type'
-import { basename, checkPath, extname, getFileStats } from './index'
+
+import { basename, checkFile, extname, getFileStats } from './index'
 
 export const bitrateFormat = (formate: IAudioMetadata['format']) => {
   if (formate.lossless) {
@@ -46,16 +47,45 @@ const getMetadataLyric = (metadata: IAudioMetadata | null) => {
 }
 
 /**
+ * get artist for wav file
+ * https://github.com/any-listen/any-listen/issues/132
+ * @param metadata
+ * @returns
+ */
+const getWavFileArtist = (metadata: IAudioMetadata) => {
+  if (!metadata.common.artists?.length) return ''
+  if (metadata.common.artists.length > 1) {
+    const { exif, ...infos } = metadata.native
+    const artists: string[] = []
+    for (const info of Object.values(infos)) {
+      for (const ust of info) {
+        if (ust.id === 'IART') {
+          if (typeof ust.value == 'string') artists.push(ust.value)
+        } else if (ust.id === 'TPE1') {
+          if (typeof ust.value == 'string') artists.push(ust.value)
+        }
+      }
+    }
+    if (artists.length) return singerFormat(artists.join(';'))
+  } else if (metadata.common.artist) return singerFormat(metadata.common.artist)
+  return ''
+}
+const getArtist = (ext: string, metadata: IAudioMetadata) => {
+  if (ext === 'wav') return getWavFileArtist(metadata)
+  return metadata.common.artists?.length ? singerFormat(metadata.common.artists.join(';')) : ''
+}
+
+/**
  * 解析音频文件的元数据
  */
-export const parseBufferMetadata = async (buffer: Buffer, mimeType: string) => {
+export const parseBufferMetadata = async (buffer: Buffer, mimeType: string, ext: string) => {
   const { parseBuffer, selectCover } = await import('music-metadata')
   const metadata = await parseBuffer(buffer, mimeType, { skipPostHeaders: true, duration: false })
   // console.log(metadata)
   let name = (metadata.common.title || '').trim()
   const isLikelyNameGarbage = isLikelyGarbage(name)
   if (isLikelyNameGarbage) name = ''
-  let singer = isLikelyNameGarbage ? '' : metadata.common.artists?.length ? singerFormat(metadata.common.artists.join(';')) : ''
+  let singer = isLikelyNameGarbage ? '' : getArtist(ext, metadata)
   let albumName = isLikelyNameGarbage ? '' : (metadata.common.album?.trim() ?? '')
   let interval = metadata.format.duration && metadata.format.duration > 2 ? formatPlayTime(metadata.format.duration) : null
 
@@ -72,7 +102,7 @@ export const parseBufferMetadata = async (buffer: Buffer, mimeType: string) => {
 }
 
 export const parseFileMetadata = async (path: string) => {
-  if (!(await checkPath(path))) return null
+  if (!(await checkFile(path))) return null
   const { parseFile } = await import('music-metadata')
 
   let metadata
@@ -80,8 +110,9 @@ export const parseFileMetadata = async (path: string) => {
     metadata = await parseFile(path, {
       skipCovers: true,
     })
-  } catch {
-    // console.log(err)
+  } catch (err) {
+    console.log(`Error parsing file metadata: ${path}`)
+    console.error(err)
     return null
   }
 
@@ -90,13 +121,14 @@ export const parseFileMetadata = async (path: string) => {
   const isLikelyNameGarbage = isLikelyGarbage(name)
   if (isLikelyNameGarbage) name = ''
   name ||= basename(path, ext)
-  let singer = isLikelyNameGarbage ? '' : metadata.common.artists?.length ? singerFormat(metadata.common.artists.join(';')) : ''
+  let singer = isLikelyNameGarbage ? '' : getArtist(ext.replace(/^\./, ''), metadata)
   let interval = metadata.format.duration && metadata.format.duration > 2 ? formatPlayTime(metadata.format.duration) : null
   let albumName = isLikelyNameGarbage ? '' : (metadata.common.album?.trim() ?? '')
 
   let sizeStr = sizeFormate((await getFileStats(path))?.size ?? 0)
 
   return {
+    unparsed: false,
     name,
     singer,
     interval,
@@ -105,6 +137,22 @@ export const parseFileMetadata = async (path: string) => {
     ext: ext.replace(/^\./, ''),
     bitrateLabel: bitrateFormat(metadata.format),
     year: metadata.common.year ?? 0,
+  }
+}
+export const buildFileMetadata = async (path: string, parseMetadata = true) => {
+  if (parseMetadata) return parseFileMetadata(path)
+  const ext = extname(path)
+  const name = basename(path, ext)
+  return {
+    unparsed: true,
+    name,
+    singer: '',
+    interval: null,
+    albumName: '',
+    sizeStr: sizeFormate((await getFileStats(path))?.size ?? 0),
+    ext: ext.replace(/^\./, ''),
+    bitrateLabel: '',
+    year: 0,
   }
 }
 
@@ -118,7 +166,7 @@ let prevFileInfo: {
 const getFileMetadata = async (path: string) => {
   if (prevFileInfo.path == path) return prevFileInfo.promise
   prevFileInfo.path = path
-  return (prevFileInfo.promise = checkPath(path).then(async (isExist) => {
+  return (prevFileInfo.promise = checkFile(path).then(async (isExist) => {
     return isExist
       ? import('music-metadata')
           .then(async ({ parseFile }) => parseFile(path))
@@ -148,5 +196,5 @@ export const getFileLyric = async (path: string) => {
 
 const musicExtensions = MEDIA_FILE_TYPES.map((ext) => `.${ext}`)
 export const isMusicFile = (filePath: string): boolean => {
-  return musicExtensions.includes(extname(filePath).toLowerCase())
+  return musicExtensions.includes(extname(filePath))
 }

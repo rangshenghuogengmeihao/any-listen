@@ -1,5 +1,6 @@
 import { setGHMirrorHosts } from '@any-listen/nodejs/mirrorReuqest'
 import { setProxyByHost } from '@any-listen/nodejs/request'
+
 import { exposeWorker } from '../utils/worker'
 import { registerErrorHandler } from './errorHandler'
 import { extensionEvent } from './event'
@@ -27,7 +28,13 @@ import {
   resetOnlineData,
 } from './onlineExtension'
 import { resetI18n } from './onlineExtension/i18n'
-import { buildExtensionSettings, getExtensionLastLogs, updateExtensionSettings, updateResourceListDeounce } from './shared'
+import {
+  buildExtensionSettings,
+  clearExtensionLogs,
+  getExtensionLastLogs,
+  updateExtensionSettings,
+  updateResourceListThrottle,
+} from './shared'
 import { extensionState } from './state'
 import { listProviderAction, resourceAction, updateI18nMessage, updateLocale } from './vm'
 
@@ -128,6 +135,9 @@ const extension = {
   async getExtensionLastLogs(extId?: string) {
     return getExtensionLastLogs(extId)
   },
+  async clearExtensionLogs(extId?: string) {
+    await clearExtensionLogs(extId)
+  },
   async getAllExtensionSettings() {
     return buildExtensionSettings()
   },
@@ -172,10 +182,10 @@ void exposeWorker<
     void remote.onExtensionEvent(action)
   })
   extensionEvent.on('loaded', () => {
-    updateResourceListDeounce()
+    updateResourceListThrottle()
   })
   extensionEvent.on('stopped', () => {
-    updateResourceListDeounce()
+    updateResourceListThrottle()
   })
   extensionEvent.on('listAdd', () => {
     extensionState.extensionSettings = null

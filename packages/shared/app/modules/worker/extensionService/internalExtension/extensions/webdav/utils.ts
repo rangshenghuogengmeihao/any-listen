@@ -1,9 +1,10 @@
 import { generateId, isUrl } from '@any-listen/common/utils'
-import { hostContext } from './shared'
+
+import { hostContext, logcat } from './shared'
 import type { WebDAVClientOptions } from './webdav'
 
 const getServers = async () => {
-  let config = (await hostContext.getConfigs(['servers']))[0] || ''
+  let config = (await hostContext.getConfigs<[string]>(['servers']))[0] || ''
   const randomStr = generateId()
   return config
     .trim()
@@ -35,6 +36,16 @@ const saveServers = async (servers: Array<{ url: string; username: string; passw
 const getPassword = async (url: string, username: string) => {
   const servers = await getServers()
   return servers.find((server) => server.url === url && server.username === username)?.password || ''
+}
+
+export const getEnabledCache = async () => {
+  const enabledCache = (await hostContext.getConfigs<[boolean]>(['enabledCache']))[0]
+  return enabledCache == true
+}
+
+export const getEnabledDebugLog = async () => {
+  const enabledDebugLog = (await hostContext.getConfigs<[boolean]>(['enabledDebugLog']))[0]
+  return enabledDebugLog == true
 }
 
 export const savePassword = async (url: string, username: string, password: string) => {
@@ -79,4 +90,11 @@ export const getWebDAVOptionsByMusicInfo = async (musicInfo: AnyListen.Music.Mus
   options.password = await getPassword(options.url, options.username)
   options.path = musicInfo.meta.path
   return options
+}
+
+export const debugLog = async (logMessage: string) => {
+  try {
+    if (!(await getEnabledDebugLog())) return
+    logcat.debug('WebDAVClient', logMessage)
+  } catch {}
 }

@@ -1,14 +1,18 @@
-import { appEvent, appState } from '@/app'
-import { workers } from '@/worker'
 import { musicListEvent, sendMusicListAction } from '@any-listen/app/modules/musicList'
 import {
+  getPlayMusicInfo,
   initPlayer as initPlayerModule,
   playerEvent,
   setPlayInfo,
   setPlayMusic,
+  setPlayMusicInfo,
   setPlayTime,
 } from '@any-listen/app/modules/player'
 import { LIST_IDS } from '@any-listen/common/constants'
+
+import { appEvent, appState } from '@/app'
+import { workers } from '@/worker'
+
 import { checkCollect, getPlayerMusic } from './shared'
 // import { playerState } from './state'
 
@@ -71,10 +75,11 @@ const updateLatestPlayList = async (info: AnyListen.Player.PlayMusicInfo) => {
 export const initPlayer = async () => {
   initPlayerModule(workers.dbService, appState.dataPath)
   let prevCollectStatus = false
-  playerEvent.on('musicChanged', async (index, historyIndex) => {
-    void setPlayMusic(index, historyIndex)
-
+  playerEvent.on('musicChanged', async (index, historyIndex, lastTrackId) => {
+    void setPlayMusic(index, historyIndex, lastTrackId)
+    const prevMusic = getPlayMusicInfo()
     const targetMusic = await getPlayerMusic()
+    setPlayMusicInfo(targetMusic)
     if (targetMusic) {
       void updateLatestPlayList(targetMusic)
       void checkCollect(targetMusic).then((isCollect) => {
@@ -87,9 +92,12 @@ export const initPlayer = async () => {
       // await musicListEvent.list_update_play_count(targetMusic.listId, targetMusic.musicInfo.name, targetMusic.musicInfo.singer)
       // workers.dbService.updateMetadataPlayCount()
     }
+    if (prevMusic?.playLater) {
+      void playerEvent.playListAction({ action: 'remove', data: [prevMusic.itemId] })
+    }
   })
   playerEvent.on('playInfoUpdated', (info) => {
-    void setPlayInfo(info.duration, info.index)
+    void setPlayInfo(info.duration, info.index, info.lastTrackId)
   })
   let unregistered: (() => void) | null = null
   if (appState.appSetting['player.isSavePlayTime']) unregistered = registerProgressSave()

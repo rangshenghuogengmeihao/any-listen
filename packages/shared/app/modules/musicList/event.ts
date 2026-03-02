@@ -1,7 +1,14 @@
+import { LIST_IDS } from '@any-listen/common/constants'
 import _Event, { type EventType } from '@any-listen/nodejs/Event'
-import { verifyListCreate, verifyListDelete, verifyListUpdate } from '../extension/listProvider'
+
+import { verifyListCreate, verifyListDelete, verifyListUpdate, verifyMusicRemove } from '../extension/listProvider'
 import type { DBSeriveTypes } from '../worker/utils'
-import { verifyLocalListCreate, verifyLocalListDelete, verifyLocalListUpdate } from './localListProvider'
+import {
+  verifyLocalListCreate,
+  verifyLocalListDelete,
+  verifyLocalListMusicRemove,
+  verifyLocalListUpdate,
+} from './localListProvider'
 
 let dbService: DBSeriveTypes
 
@@ -235,9 +242,38 @@ export class Event extends _Event {
    * @param listId
    * @param listId 列表Id
    * @param ids 要删除歌曲的id
+   * @param isSync 是否为同步操作
    * @param isRemote 是否属于远程操作
    */
-  async list_music_remove(listId: string, ids: string[], isRemote = false) {
+  async list_music_remove(listId: string, ids: string[], isSync = false, isRemote = false) {
+    if (!isSync && !isRemote) {
+      switch (listId) {
+        case LIST_IDS.DEFAULT:
+        case LIST_IDS.LOVE:
+        case LIST_IDS.LAST_PLAYED:
+          break
+        default: {
+          const listInfo = await dbService.getUserListById(listId)
+          if (!listInfo) throw new Error('list not found')
+          switch (listInfo.type) {
+            case 'local':
+              await verifyLocalListMusicRemove(
+                listInfo,
+                (await dbService.getListMusicsByIds(listId, ids)) as AnyListen.Music.MusicInfoLocal[]
+              )
+              break
+            case 'remote':
+              await verifyMusicRemove(
+                listInfo,
+                (await dbService.getListMusicsByIds(listId, ids)) as AnyListen.Music.MusicInfoOnline[]
+              )
+              break
+            default:
+              break
+          }
+        }
+      }
+    }
     await dbService.musicsRemove(listId, ids)
     this.emitEvent('list_music_remove', listId, ids, isRemote)
     this.list_music_changed([listId])
@@ -252,6 +288,10 @@ export class Event extends _Event {
   async list_music_update(musicInfos: AnyListen.IPCList.ListActionMusicUpdate, isRemote = false) {
     await dbService.musicsUpdate(musicInfos)
     this.emitEvent('list_music_update', musicInfos, isRemote)
+    this.list_changed()
+    const updatedInfo = await dbService.musicsUpdateLastPlayedList(musicInfos)
+    if (!updatedInfo.length) return
+    this.emitEvent('list_music_update', updatedInfo, isRemote)
     this.list_changed()
   }
 
@@ -274,9 +314,9 @@ export class Event extends _Event {
    * @param listId
    * @param musicInfo
    */
-  async list_music_base_info_update(listId: string, musicInfo: AnyListen.Music.MusicInfo) {
-    const newInfo = await dbService.musicBaseInfoUpdate(listId, musicInfo)
-    const info: AnyListen.IPCList.ListActionMusicUpdate = [{ id: listId, musicInfo: newInfo || musicInfo }]
+  async list_music_base_info_update(listId: string, musicInfos: AnyListen.Music.MusicInfo[]) {
+    const newInfos = await dbService.musicBaseInfosUpdate(listId, musicInfos)
+    const info: AnyListen.IPCList.ListActionMusicUpdate = newInfos.map((musicInfo) => ({ id: listId, musicInfo }))
     this.emitEvent('list_music_update', info, false)
     this.list_changed()
     this.emitEvent('listAction', { action: 'list_music_update', data: info })
@@ -344,7 +384,7 @@ export class Event extends _Event {
         await this.list_music_move(action.data.fromId, action.data.toId, action.data.musicInfos, action.data.addMusicLocationType)
         break
       case 'list_music_remove':
-        await this.list_music_remove(action.data.listId, action.data.ids)
+        await this.list_music_remove(action.data.listId, action.data.ids, action.data.sync)
         break
       case 'list_music_update':
         await this.list_music_update(action.data)

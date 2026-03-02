@@ -35,7 +35,11 @@ export const createDBServiceWorker = (onInited: () => void): DBSeriveTypes => {
   return msg2call.remote
 }
 
-export const createUtilServiceWorker = (onInited: () => void): UtilSeriveTypes => {
+export interface UtilServiceWorkerExposedFuncs {
+  logger: AnyListen.Logger
+  removeFile?: (filePath: string) => Promise<void>
+}
+export const createUtilServiceWorker = (onInited: () => void, exposedFuncs: UtilServiceWorkerExposedFuncs): UtilSeriveTypes => {
   const worker: Worker = new Worker(path.join(__dirname, './util-service.worker'))
   const subChannel = new MessageChannel()
 
@@ -44,6 +48,7 @@ export const createUtilServiceWorker = (onInited: () => void): UtilSeriveTypes =
       inited() {
         onInited()
       },
+      ...exposedFuncs,
     },
     isSendErrorStack: true,
     timeout: 0,

@@ -1,9 +1,13 @@
 <script lang="ts">
-  import { windowDarg } from '@/shared/browser/widnow.svelte'
+  import { setMaximized, windowDarg } from '@/shared/browser/widnow.svelte'
   import { t } from '@/plugins/i18n'
-  import { setShowPlayDetail } from '@/modules/playDetail/store/commit'
+  import { setShowPlayDetail } from '@/modules/playDetail/store/action'
   import { onMount } from 'svelte'
   import { appEvent } from '@/modules/app/store/event'
+  import { useIsFullscreen } from '@/modules/app/reactive.svelte'
+  import { setFullScreen } from '@/modules/app/store/action'
+
+  const fullscreenState = useIsFullscreen()
 
   let domBtns = $state<HTMLDivElement>()
 
@@ -42,13 +46,44 @@
 </script>
 
 {#snippet content()}
-  <div bind:this={domBtns} class="control-btn">
+  <div bind:this={domBtns} class="control-btn no-drag">
+    {#if import.meta.env.VITE_IS_DESKTOP}
+      {#if fullscreenState.isFullscreen}
+        <button
+          type="button"
+          class="fullscreen"
+          data-click-hide
+          aria-label={$t('fullscreen_exit')}
+          onclick={() => {
+            setFullScreen(false)
+          }}
+        >
+          <svg version="1.1" height="60%" viewBox="0 0 24 24">
+            <use xlink:href="#icon-window-fullscreen-exit" />
+          </svg>
+        </button>
+      {/if}
+    {/if}
+    {#if import.meta.env.VITE_IS_WEB}
+      <button
+        type="button"
+        class="fullscreen"
+        data-click-hide
+        aria-label={fullscreenState.isFullscreen ? $t('maximized_exit') : $t('maximized')}
+        onclick={() => {
+          setMaximized(!fullscreenState.isFullscreen)
+        }}
+      >
+        <svg version="1.1" height="60%" viewBox="0 0 24 24">
+          <use xlink:href={fullscreenState.isFullscreen ? '#icon-window-restore' : '#icon-window-maximize'} />
+        </svg>
+      </button>
+    {/if}
     <button
       type="button"
       class="hide"
-      data-ignore-tip
+      data-click-hide
       aria-label={$t('play_detail.hide_tip')}
-      title={$t('play_detail.hide_tip')}
       onclick={() => {
         setShowPlayDetail(false)
       }}
@@ -61,7 +96,7 @@
 {/snippet}
 
 {#if import.meta.env.VITE_IS_DESKTOP}
-  <div class="header" class:fullscreen={isFullscreen}>
+  <div class="header drag" class:fullscreen={isFullscreen}>
     {@render content()}
   </div>
 {/if}
@@ -74,7 +109,6 @@
 <style lang="less">
   :global(.fullscreen) {
     .header {
-      -webkit-app-region: no-drag;
       align-self: flex-start;
       // .control-btn {
       //   .close,
@@ -93,14 +127,12 @@
     flex: 0 0 @height-toolbar;
     align-self: flex-start;
     width: 100%;
-    -webkit-app-region: drag;
 
     .control-btn {
       position: absolute;
       top: 0;
       right: 0;
       display: flex;
-      -webkit-app-region: no-drag;
 
       button {
         position: relative;

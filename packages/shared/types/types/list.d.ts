@@ -13,6 +13,9 @@ declare namespace AnyListen {
       deviceId: string
       path: string
       includeSubDir: boolean
+      lazzyParseMeta?: boolean
+      enabledRemove?: boolean
+      usePolling?: boolean
     }
     interface UserListInfoByOnlineMeta extends UserListInfoBaseMeta {
       extensionId: string
@@ -24,6 +27,7 @@ declare namespace AnyListen {
     interface UserListInfoByRemoteMeta extends UserListInfoBaseMeta {
       extensionId: string
       source: string
+      lazzyParseMeta?: boolean
       syncTime: number
       [key: string]: unknown
     }
@@ -86,6 +90,8 @@ declare namespace AnyListen {
         isAutoUpdate: boolean
       }
     >
+
+    type SortFileType = 'ctime_desc' | 'ctime_asc' | 'mtime_desc' | 'mtime_asc' | 'size_asc' | 'size_desc'
 
     // type ListSaveType = 'myList' | 'downloadList'
     // type ListSaveInfo = {

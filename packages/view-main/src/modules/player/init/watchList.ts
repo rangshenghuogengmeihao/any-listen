@@ -1,3 +1,5 @@
+import { createPlayMusicInfo } from '@any-listen/common/tools'
+
 import { onRelease } from '@/modules/app/shared'
 import { dislikeListEvent } from '@/modules/dislikeList/store/event'
 import { dislikeListState } from '@/modules/dislikeList/store/state'
@@ -6,7 +8,7 @@ import { musicLibraryEvent } from '@/modules/musicLibrary/store/event'
 import { onSettingChanged } from '@/modules/setting/shared'
 import { arrPush, createUnsubscriptionSet, generateId, throttle } from '@/shared'
 import { workers } from '@/worker'
-import { createPlayMusicInfo } from '@any-listen/common/tools'
+
 import { onPlayerCreated } from '../shared'
 import {
   setDislikeIds,
@@ -163,9 +165,7 @@ export const initWatchList = () => {
               // 歌曲被移除
               console.log('current music removed')
               void skipNext(true)
-            } else {
-              if (index != playerState.playInfo.index) updatePlayIndex(index)
-            }
+            } else if (index != playerState.playInfo.index) updatePlayIndex(index)
 
             checkLinkedAndApply()
 
@@ -198,6 +198,15 @@ export const initWatchList = () => {
 
       unregistered.add(musicLibraryEvent.on('listMusicChanged', handleListChangeSync))
       unregistered.add(musicLibraryEvent.on('listMusicUpdated', handleListInfoUpdateSync))
+      unregistered.add(
+        musicLibraryEvent.on('listMusicRemovedBefore', (listId, musicIds) => {
+          if (!playerState.playMusicInfo) return
+          const targetListId = playerState.playMusicInfo.listId
+          if (listId != targetListId || !musicIds.includes(playerState.playMusicInfo.musicInfo.id)) return
+          console.log('current music removed by listMusicRemovedBefore')
+          void skipNext(true)
+        })
+      )
 
       unregistered.add(
         onSettingChanged('player.togglePlayMethod', (val) => {

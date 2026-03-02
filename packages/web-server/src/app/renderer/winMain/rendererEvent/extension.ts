@@ -1,4 +1,5 @@
 import {
+  clearExtensionLogs,
   disableExtension,
   downloadAndParseExtension,
   enableExtension,
@@ -23,6 +24,7 @@ import {
   updateExtensionSettings,
 } from '@/app/modules/extension'
 import { broadcast } from '@/modules/ipc/websocket'
+
 import type { ExposeClientFunctions, ExposeServerFunctions } from '.'
 
 // 暴露给前端的方法
@@ -81,6 +83,9 @@ export const createExposeExtension = () => {
     },
     async getExtensionLastLogs(event, extId) {
       return getExtensionLastLogs(extId)
+    },
+    async clearExtensionLogs(event, extId) {
+      return clearExtensionLogs(extId)
     },
     async getAllExtensionSettings() {
       return getAllExtensionSettings()

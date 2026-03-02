@@ -1,8 +1,10 @@
 import Lyric from '@any-listen/web/lyric-font-player'
-import { setLines, setTempOffset, setText } from './store/action'
+
 // import { setStatusText } from '@/modules/player/store/actions'
-import { runTimeout, stopTimeout } from '@/shared/browser/tools'
+import { clearTimeoutBg, setTimeoutBg } from '@/shared/tools'
+
 import { settingState } from '../setting/store/state'
+import { setLines, setTempOffset, setText } from './store/action'
 import type { Line } from './store/state'
 
 let lrc: Lyric | null
@@ -22,40 +24,34 @@ export const setLyric = (lrcStr: string, extLrc: string[]) => {
 
 let sources = new Set<string>()
 let prevDisabled = false
-export const setDisabledAutoPause = (disabled: boolean, source: 'statusBarLyric' | 'titleLyric' | 'mediaSessionLyric') => {
-  sources[disabled ? 'add' : 'delete'](source)
-  const currentDisabled = sources.size > 0
+let tempDisabled = false
+export const setDisabledAutoPause = (disabled: boolean, source?: 'statusBarLyric' | 'titleLyric' | 'mediaSessionLyric') => {
+  let currentDisabled = prevDisabled
+  if (source) {
+    sources[disabled ? 'add' : 'delete'](source)
+    if (tempDisabled) currentDisabled = sources.size > 0
+  } else {
+    tempDisabled = disabled
+    if (!sources.size) return
+    currentDisabled = disabled
+  }
   if (prevDisabled == currentDisabled) return
   prevDisabled = currentDisabled
   if (!currentDisabled) {
     lrc?.setTimeoutTools()
     return
   }
-  if (import.meta.env.VITE_IS_DESKTOP) {
-    // For desktop env, use the nodejs timer functions
-    lrc?.setTimeoutTools({
-      setTimeout: window.__anylisten_node_env__!.setTimeout,
-      clearTimeout: window.__anylisten_node_env__!.clearTimeout,
-      nextTick: (handler: () => void) => {
-        return window.__anylisten_node_env__!.setTimeout(handler, 60)
-      },
-      cancelNextTick: window.__anylisten_node_env__!.clearTimeout,
-    })
-  }
-  if (import.meta.env.VITE_IS_WEB) {
-    // For web env, use the worker timer functions
-    lrc?.setTimeoutTools({
-      setTimeout: runTimeout,
-      clearTimeout: stopTimeout,
-      nextTick: (handler: () => void) => {
-        return runTimeout(handler, 60)
-      },
-      cancelNextTick: stopTimeout,
-    })
-  }
+  lrc?.setTimeoutTools({
+    setTimeout: setTimeoutBg,
+    clearTimeout: clearTimeoutBg,
+    nextTick: (handler: () => void) => {
+      return setTimeoutBg(handler, 60)
+    },
+    cancelNextTick: clearTimeoutBg,
+  })
 }
 export const getDisabledAutoPause = () => {
-  return prevDisabled
+  return sources.size > 0
 }
 export const getDisabledAutoPauseSize = () => {
   return sources.size

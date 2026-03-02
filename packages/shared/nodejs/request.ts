@@ -1,4 +1,5 @@
 import qs from 'node:querystring'
+
 import {
   FormData,
   getGlobalDispatcher,
@@ -15,7 +16,7 @@ const defaultOptions: Options = {
     'User-Agent':
       'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36',
   },
-  maxRedirect: 3,
+  maxRedirect: 5,
 } as const
 const redirectDispatcher = interceptors.redirect({ maxRedirections: defaultOptions.maxRedirect })
 const dispatchers = [

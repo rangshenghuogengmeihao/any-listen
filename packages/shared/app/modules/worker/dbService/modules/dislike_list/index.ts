@@ -1,4 +1,5 @@
 import { SPLIT_CHAR } from '@any-listen/common/constants'
+
 import { inertDislikeList, overwirteDislikeList, queryDislikeList } from './dbHelper'
 import type { DislikeInfo } from './statements'
 
@@ -52,7 +53,7 @@ const initDislikeList = (): AnyListen.Dislike.DislikeInfo => {
     names: Array.from(dislikeInfo.names),
     singerNames: Array.from(dislikeInfo.singerNames),
     musicNames: Array.from(dislikeInfo.musicNames),
-    rules: '',
+    rules: dislikeInfo.rules,
   }
 }
 

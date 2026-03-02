@@ -1,4 +1,7 @@
+import { deleteFile } from '@any-listen/app/common'
 import { startUtilServiceWorker as _startUtilServiceWorker } from '@any-listen/app/modules/worker'
+
+import { logger } from '@/shared/log'
 
 // const registerExtensionServiceEvent = () => {
 //   workers.extensionServiceWorker.on('messageerror', (err) => {
@@ -13,7 +16,13 @@ import { startUtilServiceWorker as _startUtilServiceWorker } from '@any-listen/a
 //   })
 // }
 
-export const startUtilServiceWorker = async () =>
-  new Promise<void>((resolve, reject) => {
-    void _startUtilServiceWorker(resolve).catch(reject)
+export const startUtilServiceWorker = async () => {
+  return new Promise<void>((resolve, reject) => {
+    void _startUtilServiceWorker(resolve, {
+      logger,
+      async removeFile(filePath) {
+        await deleteFile(filePath)
+      },
+    }).catch(reject)
   })
+}

@@ -1,4 +1,5 @@
 import {
+  clearExtensionLogs,
   disableExtension,
   downloadAndParseExtension,
   enableExtension,
@@ -22,6 +23,7 @@ import {
   updateExtension,
   updateExtensionSettings,
 } from '@/modules/extension'
+
 import type { ExposeFunctions } from '.'
 
 // 暴露给前端的方法
@@ -80,6 +82,9 @@ export const createExposeExtension = () => {
     },
     async getExtensionLastLogs(event, extId) {
       return getExtensionLastLogs(extId)
+    },
+    async clearExtensionLogs(event, extId) {
+      return clearExtensionLogs(extId)
     },
     async getAllExtensionSettings() {
       return getAllExtensionSettings()

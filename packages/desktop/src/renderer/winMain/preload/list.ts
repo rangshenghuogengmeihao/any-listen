@@ -1,4 +1,5 @@
 import { createProxyCallback } from 'message2call'
+
 import type { ClientCall, ExposeFunctions, MainCall } from '.'
 
 // 暴露给后端的方法
@@ -46,6 +47,12 @@ export const createClientList = (main: MainCall) => {
     },
     async syncUserList(id) {
       return main.syncUserList(id)
+    },
+    async parseMusicMetadata(listId, musicInfo) {
+      return main.parseMusicMetadata(listId, musicInfo)
+    },
+    async sortListMusics(id, list, type) {
+      return main.sortListMusics(id, list, type)
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

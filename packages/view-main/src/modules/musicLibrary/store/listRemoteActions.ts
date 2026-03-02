@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { sendListAction } from '@/shared/ipc/list'
 // import { PLAYER_EVENT_NAME } from '@/shared/ipcNames'
 import { settingState } from '@/modules/setting/store/state'
+import { sendListAction } from '@/shared/ipc/list'
 import { listActionEvent } from '@/shared/ipc/list/event'
+
 import {
   listDataOverwrite,
   listMusicAdd,
@@ -26,8 +27,10 @@ export {
   getListPrevSelectId,
   getListScrollPosition,
   getMusicExistListIds,
+  parseMusicMetadata,
   saveListPrevSelectId,
   saveListScrollPosition,
+  sortListMusics,
   syncUserList,
 } from '@/shared/ipc/list'
 

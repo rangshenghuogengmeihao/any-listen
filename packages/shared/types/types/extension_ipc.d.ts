@@ -1,3 +1,7 @@
+type WithUndefined<T extends readonly unknown[]> = {
+  [K in keyof T]: T[K] | undefined
+}
+
 declare namespace AnyListen {
   namespace IPCExtension {
     interface EventExtensionLoadError {
@@ -103,7 +107,23 @@ declare namespace AnyListen {
       createList: (params: ListProviderActionParams) => Promise<void>
       updateList: (params: ListProviderActionParams) => Promise<void>
       deleteList: (params: ListProviderActionParams) => Promise<void>
+      sortListMusics: (
+        params: BuildListProviderActionCommonParams<{
+          list: List.RemoteListInfo
+          musics: Music.MusicInfoOnline[]
+          type: List.SortFileType
+        }>
+      ) => Promise<string[]>
+      /** 从列表中移除音乐文件 */
+      removeListMusics: (
+        params: BuildListProviderActionCommonParams<{
+          list: List.RemoteListInfo
+          musics: Music.MusicInfoOnline[]
+        }>
+      ) => Promise<void>
+      /** 获取列表中的音乐文件 ID */
       getListMusicIds: (params: ListProviderActionParams) => Promise<string[]>
+      /** 通过音乐文件 ID 获取音乐信息 */
       getMusicInfoByIds: (
         params: BuildListProviderActionCommonParams<{
           list: List.RemoteListInfo
@@ -113,6 +133,7 @@ declare namespace AnyListen {
         musics: Music.MusicInfoOnline[]
         waitingParseMetadata?: boolean
       }>
+      /** 解析音乐信息元数据 */
       parseMusicInfoMetadata: (
         params: BuildListProviderActionCommonParams<Music.MusicInfoOnline>
       ) => Promise<Music.MusicInfoOnline>
@@ -225,6 +246,7 @@ declare namespace AnyListen {
       restartExtensionHost: () => void
       getResourceList: () => Extension.ResourceList
       getExtensionLastLogs: (id?: string) => LastLog[]
+      clearExtensionLogs: (id?: string) => void
       getAllExtensionSettings: () => Promise<Extension.ExtensionSetting[]>
       updateExtensionSettings: (extId: string, config: Record<string, any>) => Promise<void>
       resourceAction: <T extends keyof ResourceAction>(
@@ -248,7 +270,7 @@ declare namespace AnyListen {
       onExtensionEvent: (action: EventExtension) => Promise<void>
       // getConnectedClients: () => Promise<string[]>
       // showMessage: (message: string) => Promise<string[]>
-      createProxyUrl: (url: string, reqOptions: unknown) => Promise<string>
+      createProxyUrl: (url: string, reqOptions: unknown, enabledCache?: boolean) => Promise<string>
       checkProxyCache: (url: string) => Promise<boolean>
       writeProxyCache: (fileName: string, data: Uint8Array) => Promise<string>
 
@@ -329,7 +351,7 @@ declare namespace AnyListen {
       setItems: <T extends Array<[string, string]>>(datas: T) => Promise<void>
       removeItems: (keys: string[]) => Promise<void>
       clearItems: () => Promise<void>
-      getConfigs: (key: string[]) => Promise<string[]>
+      getConfigs: <T extends unknown[] = []>(keys: string[]) => Promise<WithUndefined<T>>
       setConfigs: (datas: Array<[string, string]>) => Promise<void>
       // getConnectedClients: () => Promise<string[]>
 
@@ -342,7 +364,7 @@ declare namespace AnyListen {
       getListMusics: (listId: string) => Promise<Music.MusicInfo[]>
       listAction: (action: IPCList.ActionList) => Promise<void>
 
-      createProxyUrl: (url: string, options: RequestOptions) => Promise<string>
+      createProxyUrl: (url: string, options: RequestOptions, enabledCache?: boolean) => Promise<string>
       writeProxyCache: (fileName: string, data: Uint8Array) => Promise<string>
     }
 

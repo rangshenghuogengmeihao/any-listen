@@ -1,14 +1,16 @@
-import { appEvent, appState } from '@/app'
 import { themeEvent, themeState } from '@any-listen/app/modules/theme'
+
+import { appEvent, appState } from '@/app'
+
 import { getAllThemes, getTheme, removeTheme as removeThemeData, saveTheme as saveThemeData } from './data'
 
 export const initTheme = async () => {
   Object.assign(themeState, getTheme())
-  const themeConfigKeys = ['theme.id', 'theme.lightId', 'theme.darkId']
+  const watchConfigKeys: Array<keyof AnyListen.AppSetting> = ['theme.id', 'theme.lightId', 'theme.darkId']
   appEvent.on('updated_config', (keys) => {
     let requireUpdate = false
     for (const key of keys) {
-      if (themeConfigKeys.includes(key)) {
+      if (watchConfigKeys.includes(key)) {
         requireUpdate = true
         break
       }

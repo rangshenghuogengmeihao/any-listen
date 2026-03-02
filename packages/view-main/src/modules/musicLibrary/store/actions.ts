@@ -1,10 +1,10 @@
-import * as commit from './commit'
-import { musicLibraryState } from './state'
-
 import { showNotify } from '@/components/apis/notify'
 import { settingState } from '@/modules/setting/store/state'
 import { i18n } from '@/plugins/i18n'
 import { generateIdSimple, throttle } from '@/shared'
+
+import * as commit from './commit'
+import { musicLibraryEvent } from './event'
 import {
   addListMusics as addListMusicsFromRemote,
   checkListExistMusic as checkListExistMusicFromRemote,
@@ -20,9 +20,10 @@ import {
   updateUserList as updateUserListFromRemote,
   updateUserListPosition as updateUserListPositionFromRemote,
 } from './listRemoteActions'
+import { musicLibraryState } from './state'
 
 export { getSubUserLists, setFetchingListStatus, setUserListInited, userListExist } from './commit'
-export { removeUserList, syncUserList, updateListMusicsPosition } from './listRemoteActions'
+export { parseMusicMetadata, removeUserList, sortListMusics, syncUserList, updateListMusicsPosition } from './listRemoteActions'
 
 /**
  * 获取所有列表
@@ -187,6 +188,7 @@ export const moveListMusics = async (fromId: string, toId: string, musicInfos: A
 }
 
 export const removeListMusics = async (listId: string, ids: string[]) => {
+  musicLibraryEvent.listMusicRemovedBefore(listId, ids)
   return removeListMusicsFromRemote({ listId, ids }).catch((err: Error) => {
     showNotify(i18n.t('lists__music_remove_failed', { err: err.message }))
     throw err

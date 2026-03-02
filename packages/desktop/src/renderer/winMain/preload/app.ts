@@ -58,6 +58,9 @@ export const createClientApp = (main: MainCall) => {
     async closeWindow(isForce) {
       return main.closeWindow(isForce)
     },
+    async fullscreenWindow(isFull) {
+      return main.fullscreenWindow(isFull)
+    },
     async showOpenDialog(opts) {
       return main.showOpenDialog(opts)
     },
@@ -93,6 +96,12 @@ export const createClientApp = (main: MainCall) => {
     },
     async getSystemFonts() {
       return main.getSystemFonts()
+    },
+    async getCacheSize() {
+      return main.getCacheSize()
+    },
+    async clearCache() {
+      return main.clearCache()
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

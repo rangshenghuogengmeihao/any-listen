@@ -1,9 +1,13 @@
-### Improved
+<!--- @lang: en-us -->
 
-- Optimized the font selection logic so you can configure up to two fonts at once.
+### Fixed
+
+- Fixed an issue where song information in the **Playback History** list didn't update when the song in the original list was changed.
 
 ---
 
-### 优化
+<!--- @lang: zh-cn -->
 
-- 优化字体选择逻辑，现在允许最多选择两种字体。
+### 修复
+
+- 修复**播放历史列表**中的歌曲信息在原始列表歌曲更新时未随之更新的问题。

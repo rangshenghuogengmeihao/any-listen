@@ -1,9 +1,12 @@
-import { getMusicPic as getMusicPicFromRemote, getMusicUrl as getMusicUrlFromRemote } from '@/shared/ipc/music'
-import { sendPlayerEvent, sendPlayHistoryListAction } from '@/shared/ipc/player'
-import * as commit from './commit'
+import { createCache } from '@any-listen/common/cache'
 
 import { lyricEvent } from '@/modules/lyric/store/event'
+import { musicLibraryEvent } from '@/modules/musicLibrary/store/event'
+import { getMusicPic as getMusicPicFromRemote, getMusicUrl as getMusicUrlFromRemote } from '@/shared/ipc/music'
+import { sendPlayerEvent, sendPlayHistoryListAction } from '@/shared/ipc/player'
 import { playerActionEvent, playHistoryListActionEvent } from '@/shared/ipc/player/event'
+
+import * as commit from './commit'
 import { playerEvent } from './event'
 import { pause, play, playId, seekTo, setCollectStatus, skipNext, skipPrev, togglePlay } from './playerActions'
 import { playerState } from './state'
@@ -12,8 +15,9 @@ export { getPlayInfo } from '@/shared/ipc/player'
 
 export { getMusicLyric } from '@/shared/ipc/music'
 
-const picCache = new Map<string, AnyListen.IPCMusic.MusicPicInfo>()
+const picCache = createCache<AnyListen.IPCMusic.MusicPicInfo>()
 const picCacheQueue: string[] = []
+const picRemoteGettingPromises = new Map<string, Promise<AnyListen.IPCMusic.MusicPicInfo>>()
 
 const checkUrl = async (url: string) => {
   return new Promise<boolean>((resolve) => {
@@ -39,42 +43,101 @@ const handleGetMusicPicFromRemote = async (info: AnyListen.IPCMusic.GetMusicPicI
   return urlInfo
 }
 
-export const getMusicPic = async (info: AnyListen.IPCMusic.GetMusicPicInfo) => {
-  if (picCache.has(info.musicInfo.id)) {
-    picCacheQueue.splice(picCacheQueue.indexOf(info.musicInfo.id), 1)
-    picCacheQueue.push(info.musicInfo.id)
-    return picCache.get(info.musicInfo.id)!
-  }
-  const urlInfo = await handleGetMusicPicFromRemote(info)
-  picCache.set(info.musicInfo.id, urlInfo)
-  picCacheQueue.push(info.musicInfo.id)
-  if (picCacheQueue.length > 100) {
-    picCache.delete(picCacheQueue.shift()!)
-  }
-  return urlInfo
-}
-
-export const getMusicPicDelay = (info: AnyListen.IPCMusic.GetMusicPicInfo, onUrl: (url: string) => void) => {
-  if (picCache.has(info.musicInfo.id)) {
-    onUrl(picCache.get(info.musicInfo.id)!.url)
-    return
-  }
-  let isCanceled = false
-  let timeout: number | null = setTimeout(() => {
-    timeout = null
-    void handleGetMusicPicFromRemote(info).then((urlInfo) => {
+const handleGetMusicPic = async (info: AnyListen.IPCMusic.GetMusicPicInfo) => {
+  if (picRemoteGettingPromises.has(info.musicInfo.id)) return picRemoteGettingPromises.get(info.musicInfo.id)!
+  const promise = handleGetMusicPicFromRemote(info)
+    .then((urlInfo) => {
       picCache.set(info.musicInfo.id, urlInfo)
       picCacheQueue.push(info.musicInfo.id)
       if (picCacheQueue.length > 100) {
         picCache.delete(picCacheQueue.shift()!)
       }
+      return urlInfo
+    })
+    .finally(() => {
+      picRemoteGettingPromises.delete(info.musicInfo.id)
+    })
+  picRemoteGettingPromises.set(info.musicInfo.id, promise)
+
+  return promise
+}
+const getPicFromCache = (id: string) => {
+  if (picCache.has(id)) {
+    picCacheQueue.splice(picCacheQueue.indexOf(id), 1)
+    picCacheQueue.push(id)
+    return picCache.get(id)!
+  }
+  return null
+}
+
+export const getMusicPic = async (info: AnyListen.IPCMusic.GetMusicPicInfo) => {
+  const cache = getPicFromCache(info.musicInfo.id)
+  if (cache) return cache
+  return handleGetMusicPic(info)
+}
+
+// const runDelayPicTimeout = (info: AnyListen.IPCMusic.GetMusicPicInfo, onUrl: (url: string) => void, isCanceled: () => boolean, ) => {
+//   let timeout: number | null = setTimeout(() => {
+//     timeout = null
+//     void handleGetMusicPicFromRemote(info).then((urlInfo) => {
+//       picCache.set(info.musicInfo.id, urlInfo)
+//       picCacheQueue.push(info.musicInfo.id)
+//       if (picCacheQueue.length > 100) {
+//         picCache.delete(picCacheQueue.shift()!)
+//       }
+//       if (isCanceled) return
+//       onUrl(urlInfo.url)
+//     })
+//   }, 1000)
+// }
+const findUpdatedMusic = (targetId: string, infos: Map<string, AnyListen.Music.MusicInfo[]>) => {
+  for (const list of infos.values()) {
+    for (const m of list) {
+      if (m.id === targetId) {
+        return m
+      }
+    }
+  }
+  return null
+}
+export const getMusicPicDelay = (info: AnyListen.IPCMusic.GetMusicPicInfo, onUrl: (url: string) => void) => {
+  const cache = getPicFromCache(info.musicInfo.id)
+  if (cache) {
+    onUrl(cache.url)
+    return
+  }
+
+  let isCanceled = false
+  const unsub = musicLibraryEvent.on('listMusicUpdated', (infos) => {
+    if (isCanceled) return
+    let targetMusic = findUpdatedMusic(info.musicInfo.id, infos)
+    if (!targetMusic) return
+    if (targetMusic.meta.picUrl) onUrl(targetMusic.meta.picUrl)
+    else if (targetMusic.meta.unparsed != info.musicInfo.meta.unparsed) {
+      // Metadata has been parsed, fetch the pic again
+      void handleGetMusicPic(info).then((urlInfo) => {
+        if (isCanceled) return
+        onUrl(urlInfo.url)
+      })
+    }
+  })
+  if (info.musicInfo.meta.unparsed) {
+    return () => {
+      unsub()
+      isCanceled = true
+    }
+  }
+  let timeout: number | null = setTimeout(() => {
+    timeout = null
+    void handleGetMusicPic(info).then((urlInfo) => {
       if (isCanceled) return
       onUrl(urlInfo.url)
     })
   }, 1000)
   return () => {
-    if (!timeout) return
+    unsub()
     isCanceled = true
+    if (!timeout) return
     clearTimeout(timeout)
   }
 }
@@ -223,8 +286,8 @@ export const registerLocalPlayerAction = () => {
     })
   )
   unregistereds.add(
-    playerEvent.on('musicChanged', (index, historyIndex) => {
-      void sendPlayerEvent({ action: 'musicChanged', data: { index, historyIndex } })
+    playerEvent.on('musicChanged', (index, historyIndex, lastTrackId) => {
+      void sendPlayerEvent({ action: 'musicChanged', data: { index, historyIndex, lastTrackId } })
     })
   )
   unregistereds.add(

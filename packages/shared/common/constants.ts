@@ -1,6 +1,6 @@
 export const URL_SCHEME_RXP = /^anylisten:\/\//
 
-export const NATIVE_VERSION = 5
+export const NATIVE_VERSION = 7
 
 export const DEV_SERVER_PORTS = {
   'view-main': 9200,
@@ -14,6 +14,7 @@ export const SPLIT_CHAR = {
   LYRIC_TYPE: '|',
 } as const
 
+export const DEFAULT_LANG = 'en-us'
 export const DEVICE_ID_NAME = 'deviceid'
 export const STORE_NAMES = {
   APP_SETTINGS: 'config',

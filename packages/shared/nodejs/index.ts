@@ -1,4 +1,3 @@
-import { NATIVE_VERSION } from '@any-listen/common/constants'
 import crypto from 'node:crypto'
 import fs from 'node:fs'
 import os from 'node:os'
@@ -6,12 +5,15 @@ import path from 'node:path'
 import timers from 'node:timers/promises'
 import { gunzip, gzip } from 'node:zlib'
 
+import { NATIVE_VERSION } from '@any-listen/common/constants'
+
 // 重命名 process 防止 vite 转换
 export const nodeProcess = process
 
 export const joinPath = (...paths: string[]): string => path.join(...paths)
 
-export const extname = (p: string): string => path.extname(p)
+export const extname = (p: string): string => path.extname(p).toLowerCase()
+export const extnameRaw = (p: string): string => path.extname(p)
 export const basename = (p: string, ext?: string): string => path.basename(p, ext)
 export const dirname = (p: string): string => path.dirname(p)
 export const isAbsolute = (p: string) => path.isAbsolute(p)
@@ -20,11 +22,12 @@ export const tmpdir = () => os.tmpdir()
 
 /**
  * 检查路径是否存在
- * @param {*} path 路径
+ * @param path 路径
+ * @param read 只检查读取
  */
-export const checkPath = async (path: string) =>
+export const checkPath = async (path: string, read = false) =>
   fs.promises
-    .access(path, fs.constants.R_OK | fs.constants.W_OK)
+    .access(path, read ? fs.constants.R_OK : fs.constants.R_OK | fs.constants.W_OK)
     .then(() => true)
     .catch(() => false)
 
@@ -71,22 +74,27 @@ export const removePath = async (path: string) =>
     if (err.code !== 'ENOENT') throw err
   })
 
-export const removeFile = async (path: string) =>
-  new Promise<void>((resolve, reject) => {
-    fs.access(path, fs.constants.F_OK, (err) => {
-      if (err) {
-        err.code == 'ENOENT' ? resolve() : reject(err)
-        return
-      }
-      fs.unlink(path, (err) => {
-        if (err) {
-          reject(err)
-          return
-        }
-        resolve()
-      })
-    })
-  })
+export const removeFile = async (path: string) => {
+  return fs.promises.unlink(path)
+}
+export const removeFileIgnoreError = async (path: string) => {
+  return fs.promises.unlink(path).catch(() => {})
+}
+// new Promise<void>((resolve, reject) => {
+//   fs.access(path, fs.constants.F_OK, (err) => {
+//     if (err) {
+//       err.code == 'ENOENT' ? resolve() : reject(err)
+//       return
+//     }
+//     fs.unlink(path, (err) => {
+//       if (err) {
+//         reject(err)
+//         return
+//       }
+//       resolve()
+//     })
+//   })
+// })
 
 export const readFile = async (path: string) => fs.promises.readFile(path)
 
@@ -218,4 +226,68 @@ export const getPlatform = (platform: NodeJS.Platform = process.platform) => {
 
 export const getNativeName = () => {
   return `${process.platform}_${process.arch}_${process.versions.modules}_v${NATIVE_VERSION}`
+}
+
+const fullyDecode = (input: string): string => {
+  let result = String(input)
+  for (let i = 0; i < 10; i++) {
+    try {
+      const decoded = decodeURIComponent(result)
+      if (decoded === result) break
+      result = decoded
+    } catch {
+      // decodeURIComponent throws a URIError on malformed sequences
+      break
+    }
+  }
+  return result
+}
+
+export const safeResolve = async (root: string, userInput: string) => {
+  // 1. Fully decode (handles double/triple encoding)
+  const decoded = fullyDecode(userInput)
+
+  // 2. Reject null bytes
+  if (decoded.includes('\0')) {
+    throw new Error('Null bytes not allowed')
+  }
+
+  // 3. Reject absolute paths
+  if (path.isAbsolute(decoded)) {
+    throw new Error('Absolute paths not allowed')
+  }
+
+  // 4. Reject Windows drive letters and UNC paths
+  if (/^[a-zA-Z]:/.test(decoded)) {
+    throw new Error('Drive letters not allowed')
+  }
+  if (decoded.startsWith('\\\\') || decoded.startsWith('//')) {
+    throw new Error('UNC paths not allowed')
+  }
+
+  // 5. Resolve to canonical path
+  const safePath = path.resolve(root, decoded)
+
+  // 6. Follow symlinks
+  const realPath = await fs.promises.realpath(safePath)
+
+  // 7. Verify path stays within root
+  if (!realPath.startsWith(root + path.sep)) {
+    throw new Error('Path traversal detected')
+  }
+
+  return realPath
+}
+
+export const normalizePath = (userInput: string) => {
+  if (typeof userInput !== 'string' || !userInput) {
+    throw new Error('Invalid input')
+  }
+  const decoded = fullyDecode(userInput)
+  if (decoded.includes('\0')) {
+    throw new Error('Null bytes not allowed')
+  }
+  const normalized = path.normalize(decoded)
+
+  return normalized
 }

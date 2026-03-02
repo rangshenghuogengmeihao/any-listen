@@ -1,25 +1,27 @@
-import { URL_SCHEME_RXP } from '@any-listen/common/constants'
-import { app, nativeTheme, screen, shell, webContents } from 'electron'
 import { existsSync, mkdirSync } from 'node:fs'
 import path from 'node:path'
-import { appEvent } from './event'
-import { appState } from './state'
+
+import { initCommon } from '@any-listen/app/common'
 // import { navigationUrlWhiteList } from '@common/config'
 import { initDeviceId } from '@any-listen/app/common/deviceId'
+import { DEFAULT_LANG, URL_SCHEME_RXP } from '@any-listen/common/constants'
+import { isUrl } from '@any-listen/common/utils'
 import { parseEnvParams } from '@any-listen/nodejs/env'
 import { checkAndCreateDir, isMac } from '@any-listen/nodejs/index'
+import { app, nativeTheme, screen, shell, webContents } from 'electron'
 
 import { i18n } from '@/i18n'
 import { rendererIPC } from '@/renderer/winMain/rendererEvent'
-import { buildElectronProxyConfig } from '@/shared/electron'
-import { log } from '@/shared/log'
+import { buildElectronProxyConfig, trashItem } from '@/shared/electron'
+import { log, logger } from '@/shared/log'
 import { setProxyByHost } from '@/shared/request'
 import { startCheckUpdateTimeout, update } from '@/shared/update'
-import { initCommon } from '@any-listen/app/common'
-import { isUrl } from '@any-listen/common/utils'
+
 import { version } from '../../package.json'
 import { setSkipTrayQuit } from './actions'
 import { getAppSetting, saveSetting } from './data'
+import { appEvent } from './event'
+import { appState } from './state'
 
 export const initState = () => {
   const envParams = parseEnvParams<AnyListen.CmdParams>()
@@ -218,6 +220,9 @@ const listenerAppEvent = () => {
     appEvent.proxy_changed(host, port, buildElectronProxyConfig(host, port))
   }
   appEvent.on('updated_config', (keys, setting) => {
+    if (keys.includes('common.langId')) {
+      appEvent.locale_change(setting['common.langId'] ?? DEFAULT_LANG)
+    }
     if (
       keys.includes('network.proxy.enable') ||
       (appState.appSetting['network.proxy.enable'] && keys.some((k) => k.includes('network.proxy.')))
@@ -226,16 +231,20 @@ const listenerAppEvent = () => {
     }
   })
   appEvent.on('inited', () => {
-    void app.setProxy(buildElectronProxyConfig(appState.proxy.host, appState.proxy.port))
+    try {
+      void app.setProxy(buildElectronProxyConfig(appState.proxy.host, appState.proxy.port))
+    } catch {}
     handleProxyChange()
     if (process.env.NODE_ENV === 'production') void startCheckUpdateTimeout()
   })
   appEvent.on('proxy_changed', (host, port, electronProxy) => {
     setProxyByHost(host, port)
-    void app.setProxy(electronProxy)
-    for (const wc of webContents.getAllWebContents()) {
-      void wc.session.setProxy(electronProxy)
-    }
+    try {
+      void app.setProxy(electronProxy)
+      for (const wc of webContents.getAllWebContents()) {
+        void wc.session.setProxy(electronProxy)
+      }
+    } catch {}
     console.log(electronProxy)
   })
   update.on('checking_for_update', () => {
@@ -296,10 +305,11 @@ export const initAppEnv = async () => {
   initCommon({
     getSettings: () => appState.appSetting,
     showMessageBox: async (key, options) => {
-      console.log(key, options)
       return rendererIPC.showMessageBox(key, '', options)
     },
     translate: (key, val) => i18n.t(key, val),
+    trashItem,
+    logger,
   })
 }
 

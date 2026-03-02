@@ -7,6 +7,8 @@ export declare type ServerCommonActions = WarpPromiseRecord<{
   minWindow: () => void
   /** 关闭窗口 */
   closeWindow: (isForce?: boolean) => void
+  /** 全屏窗口 */
+  fullscreenWindow: (isFull: boolean) => void
 
   showOpenDialog: (options: AnyListen.OpenDialogOptions) => Promise<AnyListen.OpenDialogResult>
   showSaveDialog: (options: AnyListen.SaveDialogOptions) => Promise<AnyListen.SaveDialogResult>
@@ -15,6 +17,7 @@ export declare type ServerCommonActions = WarpPromiseRecord<{
   clipboardWriteText: (text: string) => void
   openDevTools: () => void
   openUrl: (url: string) => void
+  setSystemThemeMode: (isDark: boolean) => void
 
   /** 获取机器ID */
   getMachineId: () => string
@@ -63,5 +66,9 @@ export declare type ServerCommonActions = WarpPromiseRecord<{
   /** 重启更新 */
   restartUpdate: () => void
   /** 获取系统字体列表 */
-  getSystemFonts: () => Promise<string[]>
+  getSystemFonts: () => string[]
+  /** 获取缓存大小 */
+  getCacheSize: () => number
+  /** 清理缓存 */
+  clearCache: () => void
 }>

@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
+import fs from 'node:fs'
+import path from 'node:path'
+
 import { EXTENSION } from '@any-listen/common/constants'
 import { generateId, isUrl, throttle } from '@any-listen/common/utils'
 import {
@@ -9,6 +12,7 @@ import {
   createDir,
   dirname,
   extname,
+  extnameRaw,
   getFileStats,
   isAbsolute,
   joinPath,
@@ -20,8 +24,7 @@ import { simpleDownload } from '@any-listen/nodejs/download'
 import { readLastLines } from '@any-listen/nodejs/logs'
 import { eachMirror } from '@any-listen/nodejs/mirrorReuqest'
 import { verifySignature } from '@any-listen/nodejs/sign'
-import fs from 'node:fs'
-import path from 'node:path'
+
 import { extensionEvent } from '../event'
 import { loadExtension as loadExtensionByInternalExtension } from '../internalExtension'
 import { extensionState } from '../state'
@@ -103,27 +106,27 @@ export const formatManifest = (manifest: AnyListen.Extension.Manifest) => {
           switch (s.type) {
             case 'input':
               return {
+                type: s.type,
                 field: String(s.field),
                 name: String(s.name),
                 description: String(s.description),
-                type: s.type,
                 textarea: Boolean(s.textarea),
                 default: String(s.default),
               }
             case 'boolean':
               return {
+                type: s.type,
                 field: String(s.field),
                 name: String(s.name),
                 description: String(s.description),
-                type: s.type,
                 default: Boolean(s.default),
               }
             case 'selection':
               return {
+                type: s.type,
                 field: String(s.field),
                 name: String(s.name),
                 description: String(s.description),
-                type: s.type,
                 default: String(s.default),
                 enum: s.enum.map((e) => String(e)),
                 enumName: s.enumName.map((e) => String(e)),
@@ -145,35 +148,41 @@ export const formatManifest = (manifest: AnyListen.Extension.Manifest) => {
         p.id = String(p.id)
         p.name = String(p.name)
         p.description = String(p.description)
+        if (p.fileSortable != null) p.fileSortable = Boolean(p.fileSortable)
         p.form = p.form
           .map((s) => {
             switch (s.type) {
               case 'input':
                 return {
+                  type: s.type,
                   field: String(s.field),
                   name: String(s.name),
                   description: String(s.description),
-                  type: s.type,
                   textarea: Boolean(s.textarea),
                   default: String(s.default),
                 }
               case 'boolean':
                 return {
+                  type: s.type,
                   field: String(s.field),
                   name: String(s.name),
                   description: String(s.description),
-                  type: s.type,
                   default: Boolean(s.default),
                 }
               case 'selection':
                 return {
+                  type: s.type,
                   field: String(s.field),
                   name: String(s.name),
                   description: String(s.description),
-                  type: s.type,
                   default: String(s.default),
                   enum: s.enum.map((e) => String(e)),
                   enumName: s.enumName.map((e) => String(e)),
+                }
+              case 'lazzyParseMeta':
+                return {
+                  type: s.type,
+                  default: Boolean(s.default),
                 }
               // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
               default:
@@ -188,9 +197,10 @@ export const formatManifest = (manifest: AnyListen.Extension.Manifest) => {
           .filter((s) => s != null)
 
         return {
-          id: String(p.id),
-          name: String(p.name),
-          description: String(p.description),
+          id: p.id,
+          name: p.name,
+          description: p.description,
+          fileSortable: p.fileSortable,
           form: p.form,
         }
       })
@@ -203,7 +213,7 @@ const verifyManifest = async (extensionPath: string, manifest: AnyListen.Extensi
   formatManifest(manifest)
   manifest.icon = manifest.icon ? await buildPath(extensionPath, manifest.icon).catch(() => '') : ''
   if (manifest.icon) {
-    if (availableIcons.includes(path.extname(manifest.icon).toLowerCase())) {
+    if (availableIcons.includes(extname(manifest.icon))) {
       manifest.icon = await extensionState.remoteFuncs.createExtensionIconPublicPath(manifest.icon)
     } else {
       manifest.icon = ''
@@ -381,7 +391,7 @@ const verifyExtension = async (unpackDir: string) => {
   })
   let extDir: string
   if (extBundleFilePath) {
-    extDir = extBundleFilePath.replace(new RegExp(`${path.extname(EXTENSION.extBundleFileName).replaceAll('.', '\\.')}$`), '')
+    extDir = extBundleFilePath.replace(new RegExp(`${extnameRaw(EXTENSION.extBundleFileName).replaceAll('.', '\\.')}$`), '')
     await createDir(extDir)
     const { unpack } = await import('@any-listen/nodejs/tar')
     await unpack(extBundleFilePath, extDir).catch(async (err: Error) => {
@@ -399,7 +409,7 @@ const verifyExtension = async (unpackDir: string) => {
 }
 
 export const unpackExtension = async (bundlePath: string) => {
-  if (extname(bundlePath).toLowerCase() != FILE_EXT_NAME) {
+  if (extname(bundlePath) != FILE_EXT_NAME) {
     if ((await getFileStats(bundlePath))?.isDirectory()) {
       return verifyExtension(bundlePath)
     }
@@ -496,6 +506,7 @@ export const updateResourceList = () => {
           name: provider.name,
           description: provider.description,
           form: provider.form,
+          fileSortable: provider.fileSortable,
         })
       }
     }
@@ -503,7 +514,7 @@ export const updateResourceList = () => {
   extensionState.resourceList = resourceList
   extensionEvent.resourceUpdated(resourceList)
 }
-export const updateResourceListDeounce = throttle(updateResourceList, 500)
+export const updateResourceListThrottle = throttle(updateResourceList, 500)
 
 export const buildExtensionSettings = async () => {
   if (extensionState.extensionSettings) return extensionState.extensionSettings
@@ -576,4 +587,27 @@ export const getExtensionLastLogs = async (extId?: string): Promise<AnyListen.IP
       name: ext.name,
     },
   ]
+}
+
+export const clearExtensionLogs = async (extId?: string) => {
+  if (extId == null) {
+    await Promise.all(
+      extensionState.extensions
+        .filter((ext) => ext.enabled)
+        .map(async (ext) => {
+          const logPath = joinPath(ext.dataDirectory, EXTENSION.logFileName)
+          if (await checkFile(logPath)) {
+            await fs.promises.writeFile(logPath, '')
+          }
+        })
+    )
+    return
+  }
+
+  const ext = extensionState.extensions.find((ext) => ext.id == extId)
+  if (!ext) throw new Error('extension not found')
+  const logPath = joinPath(ext.dataDirectory, EXTENSION.logFileName)
+  if (await checkFile(logPath)) {
+    await fs.promises.writeFile(logPath, '')
+  }
 }

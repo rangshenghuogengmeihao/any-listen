@@ -10,6 +10,10 @@
 
 - Improved cover loading in the song list to display previously loaded covers faster ([#156](https://github.com/any-listen/any-listen/issues/156)).
 
+### Fixed
+
+- Fixed an issue where the currently playing **Play Later** track was unexpectedly removed from the playlist when the player was reloaded.
+
 ---
 
 <!--- @lang: zh-cn -->
@@ -23,3 +27,7 @@
 ### 优化
 
 - 优化歌曲列表内封面加载机制，加快已加载过封面的显示速度 ([#156](https://github.com/any-listen/any-listen/issues/156))。
+
+### 修复
+
+- 修复正在播放的 **「稍后播放」** 歌曲在重新加载播放器时被意外从播放列表移除的问题。

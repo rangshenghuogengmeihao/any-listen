@@ -1,15 +1,13 @@
 <!--- @lang: en-us -->
 
-### Added
+### Fixed
 
-- Added an **Audio Output Device** setting under _Settings > Playback Settings_ ([#161](https://github.com/any-listen/any-listen/issues/161)).
-- Added a **Disable Song Switching** option to song switching mode ([#161](https://github.com/any-listen/any-listen/issues/161)).
+- Fixed an issue where the currently playing **Play Later** track was unexpectedly removed from the playlist when the player was reloaded.
 
 ---
 
 <!--- @lang: zh-cn -->
 
-### 新增
+### 修复
 
-- 新增 **「音频输出设备」** 设置，位于 _设置 > 播放设置_（[#161](https://github.com/any-listen/any-listen/issues/161)）。
-- 歌曲切换模式新增 **「禁用歌曲切换」** 选项（[#161](https://github.com/any-listen/any-listen/issues/161)）。
+- 修复正在播放的 **「稍后播放」** 歌曲在重新加载播放器时被意外从播放列表移除的问题。

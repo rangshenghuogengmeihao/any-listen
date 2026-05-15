@@ -39,21 +39,21 @@
     "@any-listen/i18n": "workspace:@shared/i18n@*",
     "@any-listen/nodejs": "workspace:@shared/nodejs@*",
     "@any-listen/theme": "workspace:@shared/theme@*",
-    "better-sqlite3": "^12.9.0",
-    "electron-log": "5.4.3",
-    "electron-updater": "^6.8.4",
+    "better-sqlite3": "^12.10.0",
+    "electron-log": "5.4.4",
+    "electron-updater": "^6.8.5",
     "font-list": "^2.0.2",
     "message2call": "^2.0.3"
   },
   "devDependencies": {
     "@any-listen/eslint": "workspace:@shared/eslint@*",
     "@any-listen/types": "workspace:@shared/types@*",
-    "electron": "40.9.3",
-    "electron-builder": "26.9.0",
+    "electron": "40.10.0",
+    "electron-builder": "26.10.0",
     "electron-debug": "^4.1.0",
-    "electron-to-chromium": "^1.5.349",
-    "node-abi": "^4.29.0",
-    "tar": "^7.5.13",
-    "vite": "^8.0.10"
+    "electron-to-chromium": "^1.5.355",
+    "node-abi": "^4.31.0",
+    "tar": "^7.5.15",
+    "vite": "^8.0.13"
   }
 }

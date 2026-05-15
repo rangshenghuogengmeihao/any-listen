@@ -136,6 +136,27 @@ export const utils_aes_encrypt = (
     return ''
   }
 }
+export const utils_aes_decrypt = (
+  mode: AnyListen.ExtensionVM.AES_MODE,
+  data: Uint8Array | string,
+  key: Uint8Array | string,
+  iv: Uint8Array | string,
+  encoding: AnyListen.ExtensionVM.EncryptEncoding = 'binary'
+) => {
+  // if (!verifyParams(data) || !verifyParams(key) || !verifyParams(iv)) return ''
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!AES_MODE[mode]) return ''
+  try {
+    let dataBuf = Buffer.from(typeof data == 'string' ? data : new Uint8Array(data))
+    let keyBuf = Buffer.from(typeof key == 'string' ? key : new Uint8Array(key))
+    let ivBuf = Buffer.from(typeof iv == 'string' ? iv : new Uint8Array(iv))
+    const cipher = crypto.createDecipheriv(AES_MODE[mode], keyBuf, ivBuf)
+    const result = Buffer.concat([cipher.update(dataBuf), cipher.final()]).toString(encoding)
+    return result
+  } catch (err) {
+    return ''
+  }
+}
 
 export const RSA_PADDING = {
   RSA_PKCS1_OAEP_PADDING: 'RSA_PKCS1_OAEP_PADDING',
@@ -154,6 +175,24 @@ export const utils_rsa_encrypt = (
     let keyBuf = Buffer.from(typeof key == 'string' ? key : new Uint8Array(key))
     dataBuf = Buffer.concat([Buffer.alloc(128 - dataBuf.length), dataBuf])
     return crypto.publicEncrypt({ key: keyBuf, padding: crypto.constants[RSA_PADDING[mode]] }, dataBuf).toString('base64')
+  } catch {
+    return ''
+  }
+}
+export const utils_rsa_decrypt = (
+  mode: AnyListen.ExtensionVM.RSA_PADDING,
+  data: Uint8Array | string,
+  key: Uint8Array | string,
+  encoding: AnyListen.ExtensionVM.EncryptEncoding = 'binary'
+) => {
+  // if (!verifyParams(data) || !verifyParams(key)) return ''
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!RSA_PADDING[mode]) return ''
+  try {
+    let dataBuf = Buffer.from(typeof data == 'string' ? data : new Uint8Array(data))
+    let keyBuf = Buffer.from(typeof key == 'string' ? key : new Uint8Array(key))
+    dataBuf = Buffer.concat([Buffer.alloc(128 - dataBuf.length), dataBuf])
+    return crypto.privateDecrypt({ key: keyBuf, padding: crypto.constants[RSA_PADDING[mode]] }, dataBuf).toString(encoding)
   } catch {
     return ''
   }

@@ -23,8 +23,8 @@
     itemkey="id"
     itemlabel="label"
     value={activeview}
-    onchange={(val) => {
-      void replace(`/settings?type=${val}`)
+    onchange={(item) => {
+      void replace(`/settings?type=${item.id}`)
     }}
   />
   <div id="online-header-right"></div>

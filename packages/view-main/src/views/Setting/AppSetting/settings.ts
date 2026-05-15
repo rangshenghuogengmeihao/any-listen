@@ -277,6 +277,19 @@ export const settings: SettingListSection[] = [
     ],
   },
   {
+    id: 'onlineResource',
+    // t('settings.online_resource.enable_desc')
+    name: 'settings.online_resource',
+    list: [
+      {
+        field: 'onlineResource.enable',
+        name: 'settings.online_resource.enable',
+        description: 'settings.online_resource.enable_desc',
+        type: 'boolean',
+      },
+    ],
+  },
+  {
     id: 'network',
     // t('settings.network.proxy')
     name: 'settings.network',

@@ -349,6 +349,57 @@ export const searchListMusic = (list: AnyListen.Music.MusicInfo[], text: string)
 }
 
 /**
+ * 搜索命令
+ * @param list 命令列表
+ * @param text 搜索文本
+ * @returns 搜索结果
+ */
+export const searchCommand = (list: AnyListen.Extension.Command[], text: string) => {
+  const fullMathCommandResults = new Set<AnyListen.Extension.Command>()
+  const fullMathNameResults = new Set<AnyListen.Extension.Command>()
+  const fullMathDescResults = new Set<AnyListen.Extension.Command>()
+  const textLower = text.toLowerCase()
+  for (const c of list) {
+    if (c.command?.toLowerCase().includes(textLower)) {
+      fullMathCommandResults.add(c)
+    } else if (c.name?.toLowerCase().includes(textLower)) {
+      fullMathNameResults.add(c)
+    } else if (c.description?.toLowerCase().includes(textLower)) {
+      fullMathDescResults.add(c)
+    }
+  }
+  let result: AnyListen.Extension.Command[] = []
+  let rxp = new RegExp(
+    `${text
+      .split('')
+      .map((s) => escapeRegExp(s))
+      .join('.*')}.*`,
+    'i'
+  )
+  for (const c of list) {
+    if (fullMathCommandResults.has(c) || fullMathNameResults.has(c) || fullMathDescResults.has(c)) continue
+
+    const str = `${c.command}${c.name}${c.description ? c.description : ''}`
+    if (rxp.test(str)) result.push(c)
+  }
+
+  const sortedList: Array<{ num: number; data: AnyListen.Extension.Command }> = []
+
+  for (const c of result) {
+    sortInsert(sortedList, {
+      num: similar(text, `${c.command}${c.name}${c.description ? c.description : ''}`),
+      data: c,
+    })
+  }
+  return [
+    ...fullMathCommandResults.values(),
+    ...fullMathNameResults.values(),
+    ...fullMathDescResults.values(),
+    ...sortedList.map((item) => item.data).reverse(),
+  ]
+}
+
+/**
  * 创建排序后的列表
  * @param list 原始列表
  * @param position 新位置

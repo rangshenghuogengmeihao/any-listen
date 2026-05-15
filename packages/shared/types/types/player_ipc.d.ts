@@ -14,7 +14,7 @@ declare namespace AnyListen {
     interface PlayerActionSet {
       listId: string | null
       list: Player.PlayMusicInfo[]
-      isOnline: boolean
+      source: Player.SourceType
       isSync?: boolean
     }
     interface PlayerActionAdd {
@@ -87,7 +87,7 @@ declare namespace AnyListen {
       info: SavedPlayInfo
       list: Player.PlayMusicInfo[]
       listId: string | null
-      isOnline: boolean
+      source: Player.SourceType
       historyList: PlayHistoryListItem[]
       isCollect: boolean
     }

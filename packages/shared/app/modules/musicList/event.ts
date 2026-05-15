@@ -1,7 +1,7 @@
 import { LIST_IDS } from '@any-listen/common/constants'
 import _Event, { type EventType } from '@any-listen/nodejs/Event'
 
-import { verifyListCreate, verifyListDelete, verifyListUpdate, verifyMusicRemove } from '../extension/listProvider'
+import { verifyListCreate, verifyListDelete, verifyListUpdate, verifyMusicRemove } from '../extension/remoteListProvider'
 import type { DBSeriveTypes } from '../worker/utils'
 import {
   verifyLocalListCreate,

@@ -1,8 +1,8 @@
 // import { createUnsubscriptionSet } from '@/shared'
 import { setTitle } from '@/shared'
 import { getSystemThemeIsDark, onSystemThemeModeChanged } from '@/shared/browser/tools'
-import { handleConfigChange, handleRelease, initWindowInfo } from '@/shared/browser/widnow.svelte'
-import { setSystemThemeMode } from '@/shared/ipc/app'
+import { handleConfigChange, handleRelease, initWindowInfo, setMaximized } from '@/shared/browser/widnow.svelte'
+import { closeWindow, exitApp, minWindow, setSystemThemeMode } from '@/shared/ipc/app'
 
 import { keyboardEvent } from '../hotkey/keyboard'
 import { lyricEvent } from '../lyric/store/event'
@@ -100,6 +100,38 @@ export const initApp = () => {
   keyboardEvent.on('mod+a_down', (evt) => {
     if (evt.inputing) return
     evt.event?.preventDefault()
+  })
+  appEvent.on('executeCommand', (cmd) => {
+    if (import.meta.env.VITE_IS_DESKTOP) {
+      switch (cmd) {
+        case 'minimize':
+          void minWindow()
+          break
+        case 'fullscreenToggle':
+          setFullScreen(!appState.isFullscreen)
+          break
+        case 'close':
+          void closeWindow()
+          break
+        case 'exit':
+          void exitApp()
+          break
+        default:
+          break
+      }
+    }
+    if (import.meta.env.VITE_IS_WEB) {
+      switch (cmd) {
+        case 'logout':
+          void closeWindow()
+          break
+        case 'maximizeToggle':
+          setMaximized(!appState.isFullscreen)
+          break
+        default:
+          break
+      }
+    }
   })
   if (import.meta.env.VITE_IS_DESKTOP) {
     keyboardEvent.on('f11_down', (evt) => {

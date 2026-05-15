@@ -73,6 +73,9 @@ const defaultSetting: AnyListen.AppSetting = {
   'download.savePath': '',
   'download.fileName': '%name% - %singer%',
 
+  'onlineResource.enable': false,
+  'onlineResource.tipSearchSource': '',
+
   'network.proxy.enable': false,
   'network.proxy.host': '',
   'network.proxy.port': '',

@@ -2,11 +2,14 @@
   import { type Snippet, tick } from 'svelte'
   import type { MouseEventHandler } from 'svelte/elements'
   import { t } from '@/plugins/i18n'
+  import type ListItem from './fileExplorerModal/ListItem.svelte'
 
   let {
     placeholder = 'Search for something...',
     oninput,
     onsubmit,
+    onhomebtnclick,
+    onbackbtnclick,
     onlistclick,
     oncontextmenu,
     small,
@@ -14,27 +17,36 @@
     searchicon,
   }: {
     placeholder?: string
+    onhomebtnclick?: () => void
+    onbackbtnclick?: () => void
     oninput?: (text: string) => void
     onsubmit: (text: string) => void
-    onlistclick?: (index: number, text: string) => void
+    onlistclick?: (index: number, id: string) => void
     oncontextmenu?: MouseEventHandler<HTMLInputElement>
     small?: boolean
     big?: boolean
     searchicon?: Snippet
   } = $props()
 
+  interface ListItem {
+    id: string
+    title: string
+    label?: string
+    desc?: string
+  }
+
   let domInput = $state<HTMLInputElement | null>(null)
   let domList = $state<HTMLDivElement | null>(null)
   let text = $state('')
   let isFocus = $state(false)
   let selectIndex = $state(-1)
-  let list = $state<string[]>([])
+  let list = $state<ListItem[]>([])
   let listStyle = $state('height: 0')
   let isShowList = false
 
   const showList = () => {
     isShowList = true
-    listStyle = `height: ${domList?.scrollHeight ?? 0}px`
+    listStyle = `height: ${domList?.scrollHeight ?? 0}px; max-height: ${document.body.clientHeight * 0.6}px;`
   }
   const hideList = () => {
     isShowList = false
@@ -49,7 +61,7 @@
       onsubmit(text.trim())
       return
     }
-    onlistclick?.(selectIndex, list[selectIndex])
+    onlistclick?.(selectIndex, list[selectIndex]?.id ?? '')
   }
   const handleKeyDown = () => {
     if (list.length) {
@@ -85,23 +97,37 @@
   export const setText = (_text: string) => {
     text = _text
   }
-  export const setList = (_list: string[]) => {
+  export const setList = (_list: ListItem[]) => {
     list = _list
     if (!isFocus) return
     if (selectIndex > -1) selectIndex = -1
-    if (isShowList) {
-      void tick().then(() => {
-        listStyle = `height: ${domList?.scrollHeight ?? 0}px`
-      })
-    } else {
-      showList()
-    }
+    void tick().then(() => {
+      if (isShowList) {
+        listStyle = `height: ${domList?.scrollHeight ?? 0}px; max-height: ${document.body.clientHeight * 0.6}px;`
+      } else if (list.length) {
+        showList()
+      }
+    })
   }
 </script>
 
 <div class="search-input no-drag">
   <div class={['content', { active: isFocus, small, big }]}>
     <div class="form">
+      {#if onhomebtnclick}
+        <button type="button" aria-label={$t('btn_home')} onclick={onhomebtnclick}>
+          <svg height="100%" viewBox="0 0 24 24">
+            <use xlink:href="#icon-home" />
+          </svg>
+        </button>
+      {/if}
+      {#if onbackbtnclick}
+        <button type="button" aria-label={$t('btn_back')} onclick={onbackbtnclick}>
+          <svg height="100%" viewBox="0 0 24 24">
+            <use xlink:href="#icon-back" />
+          </svg>
+        </button>
+      {/if}
       <input
         bind:this={domInput}
         bind:value={text}
@@ -112,7 +138,9 @@
         }}
         onblur={() => {
           isFocus = false
-          hideList()
+          setTimeout(() => {
+            hideList()
+          }, 80)
         }}
         oninput={(evt) => {
           text = (evt.target as HTMLInputElement).value
@@ -152,7 +180,7 @@
         {/if}
       </button>
     </div>
-    <div class="list-content" style={listStyle}>
+    <div class="list-content scroll" style={listStyle}>
       <div
         bind:this={domList}
         role="list"
@@ -166,21 +194,34 @@
             role="button"
             class="list-item"
             tabindex="0"
-            aria-label={item}
+            aria-label={item.title}
             onkeydown={(evt) => {
               if (evt.key === 'Enter') {
-                onlistclick?.(index, item)
+                onlistclick?.(index, item.id)
               }
             }}
             class:select={selectIndex === index}
             onmouseenter={() => {
               selectIndex = index
             }}
-            onclick={() => {
-              onlistclick?.(index, item)
+            onclick={(evt) => {
+              evt.stopPropagation()
+              onlistclick?.(index, item.id)
             }}
           >
-            <span>{item}</span>
+            {#if item.label}
+              <div class="list-item-label-title">
+                <p class="list-item-title">{item.title}</p>
+                <p class="list-item-label">{item.label}</p>
+              </div>
+            {:else}
+              <p class="list-item-title">
+                {item.title}
+              </p>
+            {/if}
+            {#if item.desc}
+              <p class="list-item-desc">{item.desc}</p>
+            {/if}
           </div>
         {/each}
       </div>
@@ -189,10 +230,13 @@
 </div>
 
 <style lang="less">
+  @input-height: @height-toolbar * 0.6;
   .search-input {
     position: relative;
     width: var(--width, 35%);
-    height: @height-toolbar * 0.52;
+    min-width: var(--min-width, none);
+    max-width: var(--max-width, none);
+    height: @input-height;
   }
   .content {
     position: absolute;
@@ -220,14 +264,15 @@
     .form {
       position: relative;
       display: flex;
-      height: @height-toolbar * 0.52;
+      height: @input-height;
       input {
         flex: auto;
+        min-width: 0;
         // height: @height-toolbar * .7;
         padding: 0 5px;
         overflow: hidden;
         font-size: 13.5px;
-        line-height: @height-toolbar * 0.52 + 5px;
+        // line-height: @input-height + 5px;
         outline: none;
         background-color: transparent;
         // border-bottom: 2px solid var(--color-primary);
@@ -269,17 +314,43 @@
     }
     .list-content {
       height: 0;
-      overflow: hidden;
       // background-color: @color-search-form-background;
+      max-height: 300px;
+      // overflow: auto;
       font-size: 13px;
       transition: 0.3s ease;
       transition-property: height;
       .list-item {
+        max-width: 100%;
         padding: 8px 5px;
         line-height: 1.3;
         cursor: pointer;
         transition: background-color 0.2s ease;
-        span {
+        .list-item-title {
+          .mixin-ellipsis-1();
+        }
+        .list-item-label-title {
+          display: flex;
+          justify-content: space-between;
+          max-width: 100%;
+          .list-item-title {
+            flex: none;
+            max-width: 100%;
+          }
+          .list-item-label {
+            .mixin-ellipsis-1();
+
+            flex-grow: 0;
+            flex-shrink: 1;
+            margin-left: 10px;
+            font-size: 0.9em;
+            color: var(--color-600);
+          }
+        }
+
+        .list-item-desc {
+          font-size: 0.9em;
+          color: var(--color-600);
           .mixin-ellipsis-2();
         }
 

@@ -17,7 +17,7 @@
     oncontextmenu={() => {
       let mInfo = playerState.playMusicInfo
       if (!mInfo) return
-      scrollListTo(mInfo.listId, mInfo.isOnline, mInfo.musicInfo.id)
+      scrollListTo(mInfo.listId, mInfo.source, mInfo.musicInfo)
     }}
   >
     <Image decoding="auto" loading="eager" src={pic} />

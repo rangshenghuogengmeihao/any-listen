@@ -344,6 +344,16 @@ declare global {
       'download.fileName': '%name% - %singer%' | '%singer% - %name%' | '%name%'
 
       /**
+       * 是否启用在线资源板块
+       */
+      'onlineResource.enable': boolean
+
+      /**
+       * 搜索提示词列表来源
+       */
+      'onlineResource.tipSearchSource': string
+
+      /**
        * 主题id
        */
       'theme.id': string

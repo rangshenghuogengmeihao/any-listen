@@ -6,7 +6,7 @@
   import type { ListInfo } from '../../../type'
   import { workers } from '@/worker'
   import { getListMusics } from '@/modules/musicLibrary/actions'
-  import { playMusic, removeMusic } from '../../action'
+  import { playLocalListMusic, removeMusic } from '../../action'
   import Empty from '@/components/material/Empty.svelte'
   import type { DuplicateMusicItem } from '@/worker/main/list'
   let {
@@ -53,7 +53,7 @@
 
   const handlePlay = (index: number) => {
     const { musicInfo } = duplicateList[index]
-    void playMusic(listinfo.id, musicInfo)
+    void playLocalListMusic(listinfo.id, musicInfo)
   }
 
   $effect(() => {

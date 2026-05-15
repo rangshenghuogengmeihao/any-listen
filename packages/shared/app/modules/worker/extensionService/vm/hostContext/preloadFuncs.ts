@@ -76,7 +76,7 @@ export const sendIsolateContextMessage = (extId: string, contextId: string, mess
   void targetContext.preloadFuncs.isolateContextMessage(contextId, message)
 }
 
-export const executeCommand = (extId: string, commandName: string, args: any[]) => {
+export const executeCommand = async (extId: string, commandName: string, args: any[]) => {
   const targetContext = contextState.vmContexts.get(extId)
   if (!targetContext) throw new Error(`context not found: ${extId}`)
   return targetContext.preloadFuncs.executeCommand(commandName, args)

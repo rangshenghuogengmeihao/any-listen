@@ -7,7 +7,6 @@ export interface ListMusicInfo {
   play_later: number
   id: string
   list_id: string
-  is_online: number
   name: string
   singer: string
   interval: string | null

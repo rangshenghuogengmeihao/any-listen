@@ -1,5 +1,4 @@
-import { onRelease } from '@/modules/app/shared'
-import { settingEvent } from '@/modules/setting/store/event'
+import { onConnected, onRelease } from '@/modules/app/shared'
 import { languageChangeEvent } from '@/plugins/i18n'
 import { createUnsubscriptionSet } from '@/shared'
 
@@ -44,7 +43,7 @@ const init = async () => {
 let unregistereds = createUnsubscriptionSet()
 export const initExtension = () => {
   onRelease(unregistereds.clear.bind(unregistereds))
-  settingEvent.on('inited', () => {
+  onConnected(() => {
     unregistereds.register((subscriptions) => {
       subscriptions.add(registerRemoteExtensionEvent())
       subscriptions.add(

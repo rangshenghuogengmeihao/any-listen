@@ -1,36 +1,55 @@
 <script lang="ts">
   import Header from './Header.svelte'
-  import { query } from '@/plugins/routes'
-  import { viewTypes } from './shared'
+  import { location, query } from '@/plugins/routes'
+  import { urlParamKeyMap, viewResourceMap, viewTypes } from './shared.svelte'
   import Search from './Search/Search.svelte'
   import Songlist from './Songlist/Songlist.svelte'
-  import Leaderboard from './Leaderboard/Leaderboard.svelte'
+  import TopSongs from './TopSongs/TopSongs.svelte'
   import Album from './Album/Album.svelte'
   import Singer from './Singer/Singer.svelte'
-  // import InstalledList from './InstalledList.svelte'
-  // import OnlineList from './OnlineList.svelte'
+  import { resourceList } from '@/modules/extension/reactive.svelte'
+  import Empty from '@/components/material/Empty.svelte'
+  import { setOnlineResourceLocation } from '@/modules/app/store/action'
 
-  let activeView = $derived<(typeof viewTypes)[number]>(viewTypes.find(t => t == $query.type) ?? 'search')
+  type ViewType = (typeof viewTypes)[number] | undefined
+  let activeView = $derived.by<ViewType>(() => {
+    let type = $query[urlParamKeyMap.type] as ViewType
+    type = viewTypes.find((t) => t == type)
+    const resList = Object.keys($resourceList.resources) as AnyListen.Extension.ResourceAction[]
+    if (type) {
+      const resKeys = viewResourceMap[type]
+      if (resKeys.some((r) => resList.includes(r))) {
+        return type
+      }
+    }
+    type = Object.entries(viewResourceMap).find(([, resKeys]) => {
+      return resKeys.some((r) => resList.includes(r))
+    })?.[0] as ViewType
+    if (type) return type
+  })
+
+  $effect(() => {
+    setOnlineResourceLocation([$location, { ...$query }])
+  })
 </script>
 
 <div class="view-container container">
-  <Header activeview={activeView} />
-  {#if activeView == 'search'}
-    <Search />
-  {:else if activeView == 'songlist'}
-    <Songlist />
-  {:else if activeView == 'leaderboard'}
-    <Leaderboard />
-  {:else if activeView == 'album'}
-    <Album />
-  {:else if activeView == 'singer'}
-    <Singer />
-  {/if}
-  <!-- {#if activeView == 'online'}
-    <OnlineList />
+  {#if activeView}
+    <Header activeview={activeView} />
+    {#if activeView == 'search'}
+      <Search />
+    {:else if activeView == 'songlist'}
+      <Songlist />
+    {:else if activeView == 'topSongs'}
+      <TopSongs />
+    {:else if activeView == 'album'}
+      <Album />
+    {:else if activeView == 'singer'}
+      <Singer />
+    {/if}
   {:else}
-    <InstalledList type={activeView} />
-  {/if} -->
+    <Empty />
+  {/if}
 </div>
 
 <style lang="less">

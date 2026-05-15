@@ -34,7 +34,6 @@ export {
   installExtension,
   listProviderAction,
   registerRemoteExtensionEvent,
-  resourceAction,
   restartExtension,
   restartExtensionHost,
   startExtension,

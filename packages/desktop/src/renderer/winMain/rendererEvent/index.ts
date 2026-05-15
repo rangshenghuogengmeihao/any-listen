@@ -13,6 +13,7 @@ import { createExposeHotkey } from './hotKey'
 import { createExposeList } from './list'
 import { createExposeMusic } from './music'
 import { createExposePlayer } from './player'
+import { createExposeResource } from './resource'
 import { createExposeSoundEffect } from './soundEffect'
 import { createExposeTheme } from './theme'
 
@@ -34,6 +35,7 @@ export const init = (sendEvent: (channelName: string, data: unknown) => void) =>
     ...createExposeHotkey(),
     ...createExposeList(),
     ...createExposeMusic(),
+    ...createExposeResource(),
     ...createExposeDislike(),
     ...createExposeTheme(),
     ...createExposeExtension(),

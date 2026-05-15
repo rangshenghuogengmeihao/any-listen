@@ -2,7 +2,7 @@ import { services } from '../resources/shared'
 import { findMusicByLocal, findMusicByOnline } from './tools'
 import { allowedUrl, buildExtSourceId, getExtSource } from './utils'
 
-export const searchMusicPic = async ({
+export const musicPicSearch = async ({
   extensionId,
   source,
   name,

@@ -19,7 +19,6 @@ export {
   getNewVersionInfo,
   installExtension,
   listProviderAction,
-  resourceAction,
   restartExtension,
   restartExtensionHost,
   startExtension,

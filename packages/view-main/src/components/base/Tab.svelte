@@ -1,5 +1,6 @@
-<script lang="ts" generics="T">
+<script lang="ts" generics="T, K extends keyof T = keyof T">
   import { link } from '@/plugins/routes'
+  import SvgIcon from './SvgIcon.svelte'
 
   let {
     list,
@@ -8,6 +9,8 @@
     disabled,
     itemkey,
     itemlabel,
+    itemicon,
+    min,
     value = $bindable(),
     onchange,
     href,
@@ -15,22 +18,24 @@
     list: readonly T[]
     tagname?: 'a' | 'button'
     align?: 'left' | 'center' | 'right'
+    min?: boolean
     disabled?: boolean
-    itemkey: keyof T
+    itemkey: K
     itemlabel: keyof T
-    value: T[keyof T]
+    itemicon?: keyof T
+    value?: T[keyof T]
     href?: keyof T
-    onchange?: (val: T[keyof T]) => void
+    onchange?: (val: T) => void
   } = $props()
 
-  const handleToggle = (id: T[keyof T]) => {
-    if (id == value) return
-    value = id
-    onchange?.(id)
+  const handleToggle = (item: T) => {
+    if (item[itemkey] == value) return
+    value = item[itemkey]
+    onchange?.(item)
   }
 </script>
 
-<div class={['list', align]} class:disabled role="tablist">
+<div class={['list', align]} class:disabled class:min role="tablist">
   {#if tagname == 'a' && href}
     {#each list as item (item[itemkey])}
       <a
@@ -44,10 +49,15 @@
         data-ignore-tip
         aria-selected={value == item[itemkey]}
         onclick={(evt) => {
-          handleToggle(item[itemkey])
+          handleToggle(item)
         }}
       >
-        <span class="label">{item[itemlabel]}</span>
+        <span class="label">
+          {#if itemicon}
+            <SvgIcon name={item[itemicon] as string} />
+          {/if}
+          {item[itemlabel]}
+        </span>
       </a>
     {/each}
   {:else}
@@ -61,10 +71,15 @@
         data-ignore-tip
         aria-selected={value == item[itemkey]}
         onclick={() => {
-          handleToggle(item[itemkey])
+          handleToggle(item)
         }}
       >
-        <span class="label">{item[itemlabel]}</span>
+        <span class="label">
+          {#if itemicon}
+            <SvgIcon name={item[itemicon] as string} />
+          {/if}
+          {item[itemlabel]}
+        </span>
       </button>
     {/each}
   {/if}
@@ -74,7 +89,7 @@
   .list {
     display: flex;
     flex-flow: row nowrap;
-    gap: 25px;
+    gap: 24px;
     font-size: 12px;
     // padding: 0 15px;
 
@@ -88,6 +103,9 @@
       justify-content: flex-end;
     }
 
+    &.min {
+      gap: 12px;
+    }
     &.disabled {
       pointer-events: none;
       opacity: 0.5;
@@ -95,6 +113,7 @@
   }
   .list-item {
     display: block;
+    padding: 0;
     // padding: 5px 15px;
     cursor: pointer;
     background-color: transparent;
@@ -126,7 +145,12 @@
   .label {
     position: relative;
     display: block;
-    padding: 8px 0;
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 4px;
+    align-items: center;
+    padding: 8px 1px;
+
     &::after {
       .mixin-after();
 
@@ -134,7 +158,6 @@
       left: 0;
       width: 100%;
       height: 2px;
-      background-color: transparent;
       background-color: var(--color-primary-alpha-300);
       border-radius: 20px;
       opacity: 0;

@@ -1,139 +1,130 @@
 <script lang="ts">
   import SearchInput from '@/components/material/SearchInput.svelte'
-  import { getLocation, push } from '@/plugins/routes'
+  import { tipSearch as search } from '@/modules/resource/search/tip'
+  import { getLocation, query, replace } from '@/plugins/routes'
   import { debounce } from '@/shared'
-  import type { ComponentExports } from 'svelte'
+  import { toOnline, urlParamKeyMap } from '@/views/Online/shared.svelte'
+  import { workers } from '@/worker'
+  import { onMount, untrack, type ComponentExports } from 'svelte'
+  import { t } from '@/plugins/i18n'
+  import { useCommands } from '@/modules/app/reactive.svelte'
+  import { executeCommand, getLastUsedCommands, setLastUsedCommand } from '@/modules/app/store/action'
+  import { appEvent } from '@/modules/app/store/event'
 
   let searchInput = $state<ComponentExports<typeof SearchInput> | null>(null)
-  const data: [string, string[] | null] = ['', null]
+  let currentText = ''
+  let isCommandMode = false
 
+  const commands = useCommands()
+
+  const getCommandList = async (command: string) => {
+    let cmds = [...commands.val]
+    const lastUsedCommands = getLastUsedCommands()
+    if (lastUsedCommands.length) {
+      const newCommands: AnyListen.Extension.Command[] = []
+      for (let i = cmds.length - 1; i >= 0; i--) {
+        const cmd = cmds[i]
+        const idx = lastUsedCommands.indexOf(cmd.fullCommand)
+        if (idx !== -1) {
+          cmds.splice(i, 1)
+          newCommands[idx] = cmd
+        }
+      }
+      cmds = newCommands.filter((c) => c).concat(cmds)
+    }
+    return workers.main.searchCommand(cmds, command)
+  }
   const tipSearch = debounce(async (text: string) => {
-    if (data[0] == text && data[1]) return
-    data[0] = text
+    currentText = text
     if (!text) {
-      data[1] &&= null
+      isCommandMode ||= false
+      searchInput?.setList([])
       return
     }
-    console.log('search', text)
-    // if (searchText.value === '' && prevTempSearchSource) {
-    //   tipList.value = []
-    //   music[prevTempSearchSource].tipSearch.cancelTipSearch()
-    //   return
-    // }
-    // const { temp_source } = await getSearchSetting()
-    // prevTempSearchSource ||= temp_source
-    // music[prevTempSearchSource].tipSearch
-    //   .search(searchText.value)
-    //   .then(list => {
-    //     tipList.value = list
-    //   })
-    //   .catch(() => {})
+
+    if (currentText.startsWith('>')) {
+      isCommandMode ||= true
+      const command = currentText.slice(1).trim()
+      void getCommandList(command).then((list) => {
+        if (!currentText.startsWith('>') || currentText != text) return
+        searchInput?.setList(
+          list.map((item) => ({ title: item.name, desc: item.description, label: item.command, id: item.fullCommand }))
+        )
+      })
+      return
+    }
+
+    isCommandMode &&= false
+    void search(text).then((list) => {
+      if (!currentText || currentText != text) return
+      searchInput?.setList(list.map((item) => ({ title: item, id: item })))
+    })
   }, 50)
 
   const handleSubmit = (text: string) => {
     text = text.trim()
-    // console.log('handleSubmit', text)
-    const loc = getLocation()
-    if (loc.location != '/online' || loc.query.type != 'search') {
-      if (!text) return
-      void push('/online', { type: 'search', searchType: 'music', text })
+    if (text && isCommandMode) {
+      text = text.slice(1).trim()
+      searchInput?.setList([])
+    }
+    if (!text && getLocation().query[urlParamKeyMap.type] != 'search') {
+      currentText = ''
+      searchInput?.setText('')
+      searchInput?.setList([])
       return
     }
-    void push('/online', { ...loc.query, text, page: 1 })
+    void toOnline(text)
   }
 
   const handleListClick = (index: number, text: string) => {
-    text = text.trim()
-    console.log('handleListClick', text)
+    if (isCommandMode) {
+      const command = text
+      void executeCommand(command).then(() => {
+        setLastUsedCommand(command)
+      })
+      currentText = ''
+      isCommandMode ||= false
+      searchInput?.setText('')
+      searchInput?.setList([])
+      return
+    }
+    void toOnline(text)
   }
 
-  // let prevTempSearchSource = ''
+  $effect(() => {
+    if ($query[urlParamKeyMap.type] != 'search') return
+    currentText = $query[urlParamKeyMap.query] ?? ''
+    untrack(() => {
+      searchInput?.setText(currentText)
+      if (!currentText) searchInput?.setList([])
+    })
+  })
 
-  // const route = useRoute()
-  // const router = useRouter()
-
-  // watch(() => route.name, (newValue, oldValue) => {
-  //   if (oldValue == 'Search' && newValue != 'SongListDetail') {
-  //     setTimeout(() => {
-  //       if (appSetting['odc.isAutoClearSearchInput'] && searchText.value) searchText.value = ''
-  //       if (appSetting['odc.isAutoClearSearchList']) setSearchText('')
-  //     })
-  //   }
-  // })
-
-  // watch(_searchText, (newValue, oldValue) => {
-  //   searchText.value = newValue
-  //   if (newValue !== searchText.value) searchText.value = newValue
-  // })
-  // watch(searchText, () => {
-  //   handleTipSearch()
-  // })
-
-  // const tipSearch = debounce(async() => {
-  //   if (searchText.value === '' && prevTempSearchSource) {
-  //     tipList.value = []
-  //     music[prevTempSearchSource].tipSearch.cancelTipSearch()
-  //     return
-  //   }
-  //   const { temp_source } = await getSearchSetting()
-  //   prevTempSearchSource ||= temp_source
-  //   music[prevTempSearchSource].tipSearch.search(searchText.value).then(list => {
-  //     tipList.value = list
-  //   }).catch(() => {})
-  // }, 50)
-
-  // const handleTipSearch = () => {
-  //   if (!visibleList.value && isFocused) visibleList.value = true
-  //   tipSearch()
-  // }
-
-  // const handleSearch = () => {
-  //   visibleList.value &&= false
-  //   if (!searchText.value && route.path != '/search') {
-  //     setSearchText('')
-  //     return
-  //   }
-  //   setTimeout(() => {
-  //     router.push({
-  //       path: '/search',
-  //       query: {
-  //         text: searchText.value,
-  //       },
-  //     }).catch(_ => _)
-  //   }, searchText.value ? 200 : 0)
-  // }
-
-  // const handleEvent = ({ action, data }) => {
-  //   switch (action) {
-  //     case 'focus':
-  //       isFocused = true
-  //       visibleList.value ||= true
-  //       if (searchText.value) handleTipSearch()
-  //       break
-  //     case 'blur':
-  //       isFocused = false
-  //       setTimeout(() => {
-  //         visibleList.value &&= false
-  //       }, 50)
-  //       break
-  //     case 'submit':
-  //       handleSearch()
-  //       break
-  //     case 'listClick':
-  //       searchText.value = tipList.value[data]
-  //       void nextTick(handleSearch)
-  //   }
-  // }
+  onMount(() => {
+    return appEvent.on('executeCommand', (command) => {
+      if (command != 'run') return
+      searchInput?.focus()
+      searchInput?.setText('> ')
+      tipSearch('>')
+    })
+  })
 </script>
 
-<div style="display: flex; width: 100%; pointer-events: none; opacity: 0.2;">
-  <SearchInput
-    --width="45%"
-    bind:this={searchInput}
-    oninput={(text: string) => {
-      tipSearch(text.trim())
-    }}
-    onsubmit={handleSubmit}
-    onlistclick={handleListClick}
-  />
-</div>
+<SearchInput
+  --width="56%"
+  --max-width="38rem"
+  --min-width="15rem"
+  placeholder={$t('search.placeholder')}
+  bind:this={searchInput}
+  oninput={(text: string) => {
+    tipSearch(text.trim())
+  }}
+  onsubmit={handleSubmit}
+  onlistclick={handleListClick}
+  onhomebtnclick={() => {
+    void replace('/online')
+  }}
+  onbackbtnclick={() => {
+    history.back()
+  }}
+/>

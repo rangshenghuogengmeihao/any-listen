@@ -15,7 +15,6 @@ import {
   getNewVersionInfo,
   installExtension,
   listProviderAction,
-  resourceAction,
   restartExtension,
   restartExtensionHost,
   startExtension,
@@ -97,9 +96,6 @@ export const createExposeExtension = () => {
     },
     async updateExtensionSettings(event, extId, config) {
       return updateExtensionSettings(extId, config)
-    },
-    async resourceAction(event, action, params) {
-      return resourceAction(action, params)
     },
     async listProviderAction(event, action, params) {
       return listProviderAction(action, params)

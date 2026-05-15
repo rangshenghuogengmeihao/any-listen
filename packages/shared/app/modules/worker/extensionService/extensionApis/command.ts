@@ -2,7 +2,7 @@ import { internalExtensionContextState } from '../internalExtension/state'
 import { extensionState } from '../state'
 import { executeCommand as executeExtensionCommand } from '../vm/hostContext/preloadFuncs'
 
-export const executeCommand = (fullCommand: string, args: any[]) => {
+export const executeCommand = async (fullCommand: string, args: any[]) => {
   const targetCommand = extensionState.resourceList.commands.find((c) => c.fullCommand == fullCommand)
   if (!targetCommand) throw new Error(`Command ${fullCommand} not found`)
   const context = internalExtensionContextState.contexts.get(targetCommand.extensionId)

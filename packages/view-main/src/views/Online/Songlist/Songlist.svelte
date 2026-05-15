@@ -1,10 +1,57 @@
 <script lang="ts">
+  import { getSourceId, urlParamKeyMap, useResourceList, type SourceType, type ViewType } from '../shared.svelte'
+  import { query, replace } from '@/plugins/routes'
+  import { untrack } from 'svelte'
+  import List from './list/List.svelte'
+  import Source from '../Source.svelte'
+  import Header from './list/header/Header.svelte'
 
+  let resourceList = useResourceList('songlist')
+  let sList = $derived(resourceList.val.songlist?.map((s) => ({ ...s, sId: getSourceId(s) })) ?? [])
+  let activeSource = $derived(
+    $query[urlParamKeyMap.source] ? sList.find((s) => s.sId == $query[urlParamKeyMap.source]) : undefined
+  )
+
+  const to = (source: SourceType) => {
+    // eslint-disable-next-line svelte/prefer-svelte-reactivity
+    const params = new URLSearchParams()
+    params.set(urlParamKeyMap.type, 'songlist' satisfies ViewType)
+    params.set(urlParamKeyMap.source, source.sId)
+    void replace(`/online?${params.toString()}`)
+  }
+
+  $effect(() => {
+    if (!sList.length) return
+    if (activeSource && sList.some((s) => s.sId == activeSource.sId)) return
+    const s = sList[0]
+    untrack(() => {
+      to(s)
+    })
+  })
 </script>
 
+<Header source={activeSource} />
+<div class="online-songlist-list">
+  {#if sList.length}
+    <Source
+      list={sList}
+      active={activeSource?.sId}
+      onchange={(source) => {
+        to(source)
+      }}
+    />
+  {/if}
+  {#if activeSource}
+    <List source={activeSource} />
+  {/if}
+</div>
 
 <style lang="less">
-.container {
-
-}
+  .online-songlist-list {
+    display: flex;
+    flex-flow: row nowrap;
+    height: 100%;
+    min-height: 0;
+    padding-top: 10px;
+  }
 </style>

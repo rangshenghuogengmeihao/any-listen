@@ -16,7 +16,7 @@ export const checkCollect = async (minfo: AnyListen.Player.PlayMusicInfo) => {
 
 export const getPlayInfo = async (): Promise<AnyListen.IPCPlayer.PlayInfo> => {
   const playInfo = await getPlayInfoRaw()
-  const [[list, isCollect], { listId, isOnline }, historyList] = await Promise.all([
+  const [[list, isCollect], { listId, source }, historyList] = await Promise.all([
     workers.dbService.getPlayList().then(async (list) => {
       const minfo = list[playInfo.index]
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -30,7 +30,7 @@ export const getPlayInfo = async (): Promise<AnyListen.IPCPlayer.PlayInfo> => {
     info: playInfo,
     list,
     listId,
-    isOnline,
+    source,
     historyList,
     isCollect,
   }

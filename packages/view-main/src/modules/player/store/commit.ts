@@ -38,11 +38,11 @@ export const updatePlayHistoryIndex = (historyIndex: number) => {
   playerEvent.playInfoChanged({ historyIndex })
 }
 
-export const setPlayListId = (listId: string | null, isOnline: boolean) => {
+export const setPlayListId = (listId: string | null, source: AnyListen.Player.SourceType) => {
   playerState.playInfo.listId = listId
-  playerState.playInfo.isOnline = isOnline
+  playerState.playInfo.source = source
 
-  playerEvent.playInfoChanged({ listId, isOnline })
+  playerEvent.playInfoChanged({ listId, source })
 }
 
 export const setPlayMusicInfo = (info: AnyListen.Player.PlayMusicInfo | null) => {

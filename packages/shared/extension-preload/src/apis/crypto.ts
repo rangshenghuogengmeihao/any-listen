@@ -7,10 +7,21 @@ export const crypto: AnyListen_API.Crypto = {
     if (typeof iv != 'string') iv = new Uint8Array(iv)
     return hostContext.hostFuncs.aesEncrypt(mode, data, key, iv)
   },
+  async aesDecrypt(mode, data, key, iv, encoding) {
+    if (typeof data != 'string') data = new Uint8Array(data)
+    if (typeof key != 'string') key = new Uint8Array(key)
+    if (typeof iv != 'string') iv = new Uint8Array(iv)
+    return hostContext.hostFuncs.aesDecrypt(mode, data, key, iv, encoding)
+  },
   async rsaEncrypt(mode, data, key) {
     if (typeof data != 'string') data = new Uint8Array(data)
     if (typeof key != 'string') key = new Uint8Array(key)
     return hostContext.hostFuncs.rsaEncrypt(mode, data, key)
+  },
+  async rsaDecrypt(mode, data, key, encoding) {
+    if (typeof data != 'string') data = new Uint8Array(data)
+    if (typeof key != 'string') key = new Uint8Array(key)
+    return hostContext.hostFuncs.rsaDecrypt(mode, data, key, encoding)
   },
   async randomBytes(size: number) {
     const byteArray = new Uint8Array(size)

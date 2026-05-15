@@ -15,6 +15,8 @@ declare namespace AnyListen {
       collect: boolean
     }
 
+    type SourceType = 'local' | 'songlist' | 'topSongs' | 'search' | 'album'
+
     interface PlayMusicInfo {
       /**
        * 当前信息唯一ID
@@ -29,9 +31,9 @@ declare namespace AnyListen {
        */
       listId: string
       /**
-       * 是否在线列表
+       * 列表类型
        */
-      isOnline: boolean
+      source: SourceType
       /**
        * 是否属于 “稍后播放”
        */
@@ -46,7 +48,7 @@ declare namespace AnyListen {
       duration: number
       index: number
       listId: string | null
-      isOnline: boolean
+      source: SourceType
       /** 播放列表历史索引，随机模式下使用 */
       historyIndex: number
       /** 上一首播放的歌曲ID */

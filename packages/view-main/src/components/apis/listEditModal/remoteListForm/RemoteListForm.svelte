@@ -29,6 +29,8 @@
       extensionId: '',
       source: '',
       syncTime: 0,
+      pic: '',
+      songCount: 0,
     },
   }
   let listInfo = $state<AnyListen.List.RemoteListInfo>({
@@ -52,7 +54,7 @@
           } satisfies AnyListen.Extension.FormValueItem
         }
         const ss = {
-          ...s,
+          ...(s as AnyListen.Extension.FormValueItem),
           value: listInfo.meta[s.field] as any,
           name: extI18n.t(extId, s.name),
           description: extI18n.t(extId, s.description),

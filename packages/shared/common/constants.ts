@@ -1,8 +1,8 @@
 export const URL_SCHEME_RXP = /^anylisten:\/\//
 
-export const NATIVE_VERSION = 9
+export const NATIVE_VERSION = 10
 
-export const EXTENSION_ENGINE = '1.1.2'
+export const EXTENSION_ENGINE = '1.2.0'
 
 export const DEV_SERVER_PORTS = {
   'view-main': 9200,
@@ -60,7 +60,7 @@ export const DATA_KEYS = {
   listUpdateInfo: 'listUpdateInfo',
   ignoreVersion: 'ignoreVersion',
 
-  leaderboardSetting: 'leaderboardSetting',
+  topSongsSetting: 'topSongsSetting',
   songlistSetting: 'songlistSetting',
   searchSetting: 'searchSetting',
 
@@ -68,7 +68,7 @@ export const DATA_KEYS = {
 } as const
 
 export const DEFAULT_SETTING = {
-  leaderboard: {
+  topSongs: {
     source: 'kw',
     boardId: 'kw__16',
   },

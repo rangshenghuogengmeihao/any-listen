@@ -118,7 +118,7 @@
       outline
       icon
       onclick={() => {
-        scrollListTo(info.listId, info.isOnline, info.musicInfo.id)
+        scrollListTo(info.listId, info.source, info.musicInfo)
       }}
     >
       <SvgIcon name="visit" />

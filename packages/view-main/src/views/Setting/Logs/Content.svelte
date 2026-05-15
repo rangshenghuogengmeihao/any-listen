@@ -62,7 +62,7 @@
       padding: 2px 4px;
       font-size: 12px;
       line-height: 1.5;
-      word-wrap: break-word;
+      overflow-wrap: break-word;
       white-space: pre-wrap;
       user-select: text;
     }

@@ -53,6 +53,7 @@ export {
   playId,
   playIndex,
   playList,
+  playOnlineList,
   release,
   seekTo,
   setCollectStatus,
@@ -69,11 +70,15 @@ export {
   uncollectMusic,
 } from './playerActions'
 
-export const addPlayLaterMusic = async (musicInfos: AnyListen.Music.MusicInfo[], listId: string, isOnline = false) => {
+export const addPlayLaterMusic = async (
+  musicInfos: AnyListen.Music.MusicInfo[],
+  listId: string,
+  source: AnyListen.Player.SourceType = 'local'
+) => {
   const list = createPlayMusicInfoList({
     musicInfos,
     listId,
-    isOnline,
+    source,
     playLater: true,
   })
   await addPlayListMusic({ musics: list, pos: playerState.playList.findIndex((m) => m.playLater) + 1 })

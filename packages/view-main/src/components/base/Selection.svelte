@@ -29,7 +29,7 @@
     // if (itemname == null) return value
     const item = list[activeIndex]
     if (!item) return ''
-    return item[itemname] as string
+    return item[itemname]
   })
   const handleGetOffset = () => {
     const listHeight = domList!.clientHeight

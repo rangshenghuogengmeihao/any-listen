@@ -77,14 +77,6 @@ export const updateExtensionSettings: AnyListen.IPC.ServerIPC['updateExtensionSe
   return ipc.updateExtensionSettings(extId, config)
 }
 
-type RA = AnyListen.IPCExtension.ResourceAction
-export const resourceAction = async <T extends keyof RA>(
-  action: T,
-  params: Parameters<RA[T]>[0]
-): Promise<Awaited<ReturnType<RA[T]>>> => {
-  return ipc.resourceAction(action, params)
-}
-
 type LPA = AnyListen.IPCExtension.ListProviderAction
 export const listProviderAction = async <T extends keyof LPA>(
   action: T,

@@ -12,7 +12,7 @@
     userListExist,
     sortListMusics,
   } from '@/modules/musicLibrary/store/actions'
-  import { type ComponentExports, tick } from 'svelte'
+  import { type ComponentExports, tick, untrack } from 'svelte'
   import { LIST_IDS } from '@any-listen/common/constants'
   import { resourceList } from '@/modules/extension/reactive.svelte'
   import { LIST_PIC_ICON } from '@/shared/constants'
@@ -65,21 +65,23 @@
     const id = $query.id
     if (id != currentId) {
       currentId = id
-      const musicId = $query.mid
-      if (!id) return
-      void Promise.all([getListMusics(id), getListScrollPosition(id)]).then(([_list, pos]) => {
-        list = _list
-        void tick().then(() => {
-          let idx = -1
-          if (musicId) {
-            idx = _list.findIndex((m) => m.id == musicId)
-            void replace(`/library?id=${id}`)
-          }
-          if (idx < 0) {
-            musicList?.setScrollPosition(pos)
-          } else {
-            musicList?.setScrollIndex(idx)
-          }
+      untrack(() => {
+        const musicId = $query.mid
+        if (!id) return
+        void Promise.all([getListMusics(id), getListScrollPosition(id)]).then(([_list, pos]) => {
+          list = _list
+          void tick().then(() => {
+            let idx = -1
+            if (musicId) {
+              idx = _list.findIndex((m) => m.id == musicId)
+              void replace(`/library?id=${id}`)
+            }
+            if (idx < 0) {
+              musicList?.setScrollPosition(pos)
+            } else {
+              musicList?.setScrollIndex(idx)
+            }
+          })
         })
       })
     }

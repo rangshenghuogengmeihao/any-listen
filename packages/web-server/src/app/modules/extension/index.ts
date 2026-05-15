@@ -181,7 +181,7 @@ export const getExtensionErrorMessage = async () => {
   return extensionState.crashMessage
 }
 
-export const executeCommand = async (cmd: string, args: any[]) => {
+export const executeCommand = async (cmd: string, args: any[]): Promise<unknown> => {
   return workers.extensionService.executeCommand(cmd, args)
 }
 
@@ -211,14 +211,6 @@ export const getExtensionConfigValues = async (extId: string, fields: string[]) 
 
 export const updateExtensionSettings = async (extId: string, config: Record<string, unknown>) => {
   return workers.extensionService.updateExtensionSettings(extId, config)
-}
-
-type RA = AnyListen.IPCExtension.ResourceAction
-export const resourceAction = async <T extends keyof RA>(
-  action: T,
-  params: Parameters<RA[T]>[0]
-): Promise<Awaited<ReturnType<RA[T]>>> => {
-  return workers.extensionService.resourceAction(action, params)
 }
 
 type LPA = AnyListen.IPCExtension.ListProviderAction

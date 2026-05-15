@@ -1,6 +1,6 @@
 import timers from 'node:timers'
 
-const nodeTimeout = (callback: () => void, delay: number) => {
+const nodeTimeout = (callback: () => void, delay?: number) => {
   return timers.setTimeout(callback, delay) as unknown as number
 }
 

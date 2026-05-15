@@ -1,5 +1,30 @@
 import WebEvent, { type EventType } from '@any-listen/web/Event'
 
+const desktopCommands = ['minimize', 'fullscreenToggle', 'close', 'exit'] as const
+const webCommands = ['logout', 'maximizeToggle'] as const
+const commonCommands = [
+  'play',
+  'pause',
+  'playToggle',
+  'next',
+  'previous',
+  'favorite',
+  'unfavorite',
+  'dislike',
+  'muteToggle',
+  'volumeUp',
+  'volumeDown',
+  'seekForward',
+  'seekBackward',
+] as const
+export const hiddenCommonCommands = ['run'] as const
+export const localCommands = [...(import.meta.env.VITE_IS_DESKTOP ? desktopCommands : webCommands), ...commonCommands] as Array<
+  | (typeof desktopCommands)[number]
+  | (typeof webCommands)[number]
+  | (typeof commonCommands)[number]
+  | (typeof hiddenCommonCommands)[number]
+>
+
 class Event extends WebEvent {
   emitEvent<K extends keyof EventMethods>(eventName: K, ...args: unknown[]) {
     this.emit(eventName, ...args)
@@ -43,6 +68,11 @@ class Event extends WebEvent {
 
   scrollListTo(listId: string, musicId: string) {
     this.emitEvent('scrollListTo', listId, musicId)
+  }
+
+  executeCommand(command: (typeof localCommands)[number], ...args: any[]) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    this.emitEvent('executeCommand', command, ...args)
   }
 }
 

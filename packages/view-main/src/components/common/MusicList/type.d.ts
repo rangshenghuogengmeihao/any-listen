@@ -13,5 +13,11 @@ export interface ListInfo {
   playCount?: number
   createTime?: string
   picIcon?: string
+  saveable?: boolean
+  listMeta?: {
+    extensionId: string
+    source: string
+    [key: string]: unknown
+  }
   getSortTimeFn?: () => ((list: AnyListen.Music.MusicInfo[], type: AnyListen.List.SortFileType) => Promise<string[]>) | null
 }

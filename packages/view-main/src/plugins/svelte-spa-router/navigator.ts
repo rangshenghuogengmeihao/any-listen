@@ -1,3 +1,4 @@
+import SimpleSingleEvent from '@any-listen/web/SimpleSingleEvent'
 import { tick } from 'svelte'
 import { derived, readable } from 'svelte/store'
 
@@ -12,6 +13,7 @@ const parseUrlParams = (str: string): Record<string, string> => {
   const params: Record<string, string> = {}
   if (typeof str !== 'string') return params
   const paramsArr = str.split('&')
+  if (paramsArr.length === 1 && paramsArr[0] === '') return params
   for (const param of paramsArr) {
     const [key, value] = param.split('=')
     params[key] = value ? decodeURIComponent(value) : value
@@ -81,6 +83,24 @@ export const location = derived(loc, (loc) => loc.location)
  */
 export const query = derived(loc, (loc) => loc.query)
 
+let _params: RegExpExecArray | Record<string, unknown> = {}
+const paramsEvent = new SimpleSingleEvent<[RegExpExecArray | Record<string, unknown>]>()
+export const setParams = (params: RegExpExecArray | Record<string, unknown>) => {
+  _params = params
+  paramsEvent.emit(params)
+}
+
+export const params = readable<RegExpExecArray | Record<string, unknown>>(
+  _params,
+  // eslint-disable-next-line prefer-arrow-callback
+  function start(set) {
+    set(_params)
+    return paramsEvent.on(() => {
+      set(_params)
+    })
+  }
+)
+
 /**
  * Store that returns the currently-matched params.
  * Despite this being writable, consumers should not change the value of the store.
@@ -149,7 +169,9 @@ export const replace = async (location: string, params?: Params) => {
     const newState = {
       ...history.state,
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     delete newState.__svelte_spa_router_scrollX
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     delete newState.__svelte_spa_router_scrollY
     window.history.replaceState(newState, '', dest)
   } catch (e) {
@@ -222,6 +244,7 @@ const linkOpts = (val?: string | LinkActionOpts): LinkActionOpts => {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   return (val as LinkActionOpts) || {}
 }
 
@@ -242,7 +265,8 @@ export const link = (opts?: string | LinkActionOpts) => {
     opts = linkOpts(opts)
 
     // Only apply to <a> tags
-    if (!node.tagName || node.tagName.toLowerCase() != 'a') {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (node.tagName?.toLowerCase() != 'a') {
       throw Error('Action "link" can only be used with <a> tags')
     }
 

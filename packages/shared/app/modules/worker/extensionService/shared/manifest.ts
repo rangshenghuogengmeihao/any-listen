@@ -15,7 +15,7 @@ const RESOURCE: AnyListen.Extension.ResourceAction[] = [
   'musicPicSearch',
   'songlistSearch',
   'songlist',
-  'leaderboard',
+  'topSongs',
   'albumSearch',
   'album',
   'singerSearch',

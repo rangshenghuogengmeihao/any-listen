@@ -20,6 +20,7 @@ export interface RouteDetail {
   component: Component
   /** Name of the Svelte component (only in `routeLoaded` events) */
   name: string
+  /** Parameters parsed from the URL, if the route definition contains parameters. */
   params: RegExpExecArray | Record<string, unknown> | null
 }
 

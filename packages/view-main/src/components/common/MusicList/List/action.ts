@@ -4,22 +4,58 @@ import { showSimpleConfirmModal } from '@/components/apis/dialog'
 import { addInfo } from '@/modules/dislikeList/actions'
 import { hasDislike } from '@/modules/dislikeList/store/actions'
 import { getListMusics, removeListMusics } from '@/modules/musicLibrary/actions'
-import { addPlayLaterMusic, playList, skipNext } from '@/modules/player/store/actions'
+import { addPlayLaterMusic, playList, playOnlineList, skipNext } from '@/modules/player/store/actions'
+import type { OnlineListMetaInfo } from '@/modules/player/store/playerActions'
 import { playerState } from '@/modules/player/store/state'
 import { settingState } from '@/modules/setting/store/state'
 import { i18n } from '@/plugins/i18n'
 import { clipboardWriteText, openDirInExplorer } from '@/shared/ipc/app'
 
-export const playMusic = async (listId: string, musicInfo: AnyListen.Music.MusicInfo, isClianHistory?: boolean) => {
+export const playLocalListMusic = async (listId: string, musicInfo: AnyListen.Music.MusicInfo, isClianHistory?: boolean) => {
   const list = await getListMusics(listId)
   const idx = list.findIndex((m) => m.id == musicInfo.id)
   if (idx < 0) return
   void playList(listId, list, idx, isClianHistory)
 }
 
+export const playOnlineListMusic = async (
+  listId: string,
+  list: AnyListen.Music.MusicInfo[],
+  musicInfo: AnyListen.Music.MusicInfo,
+  source: AnyListen.Player.SourceType,
+  metaInfo: OnlineListMetaInfo,
+  isClianHistory?: boolean
+) => {
+  const idx = list.findIndex((m) => m.id == musicInfo.id)
+  if (idx < 0) return
+  void playOnlineList(listId, list, idx, source, metaInfo, isClianHistory)
+}
+
+export const playMusic = async (
+  listId: string,
+  list: AnyListen.Music.MusicInfo[],
+  musicInfo: AnyListen.Music.MusicInfo,
+  source: AnyListen.Player.SourceType,
+  metaInfo?: OnlineListMetaInfo,
+  isClianHistory?: boolean
+) => {
+  if (source === 'local') {
+    await playLocalListMusic(listId, musicInfo, isClianHistory)
+  } else {
+    if (!metaInfo) throw new Error('miss metaInfo for online music')
+    await playOnlineListMusic(listId, list, musicInfo, source, metaInfo, isClianHistory)
+  }
+}
+
 let clickTime = 0
 let clickInfo: AnyListen.Music.MusicInfo | null = null
-export const musicClick = async (listId: string, musicInfo: AnyListen.Music.MusicInfo) => {
+export const musicClick = async (
+  list: AnyListen.Music.MusicInfo[],
+  listId: string,
+  musicInfo: AnyListen.Music.MusicInfo,
+  source: AnyListen.Player.SourceType,
+  metaInfo: OnlineListMetaInfo
+) => {
   if (window.performance.now() - clickTime > 400 || clickInfo !== musicInfo) {
     clickTime = window.performance.now()
     clickInfo = musicInfo
@@ -27,20 +63,22 @@ export const musicClick = async (listId: string, musicInfo: AnyListen.Music.Musi
   }
   clickTime = 0
   clickInfo = null
-  await playMusic(listId, musicInfo)
+
+  void playMusic(listId, list, musicInfo, source, metaInfo)
 }
 
 export const playMusicLater = async (
   listId: string,
   musicInfo: AnyListen.Music.MusicInfo,
   selectedList: AnyListen.Music.MusicInfo[],
+  source: AnyListen.Player.SourceType,
   removeAllSelect?: () => void
 ) => {
   if (selectedList.length) {
-    await addPlayLaterMusic(selectedList, listId)
+    await addPlayLaterMusic(selectedList, listId, source)
     removeAllSelect?.()
   } else {
-    await addPlayLaterMusic([musicInfo], listId)
+    await addPlayLaterMusic([musicInfo], listId, source)
   }
 }
 

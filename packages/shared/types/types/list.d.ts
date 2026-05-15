@@ -19,12 +19,14 @@ declare namespace AnyListen {
       enabledRemove?: boolean
       usePolling?: boolean
     }
+    type SourceType = 'songlist' | 'topSongs' | 'search' | 'album'
     interface UserListInfoByOnlineMeta extends UserListInfoBaseMeta {
       extensionId: string
       source: string
       syncId: string
       syncTime: number
-      picUrl: string | null
+      sourceType: SourceType
+      [key: string]: unknown
     }
     interface UserListInfoByRemoteMeta extends UserListInfoBaseMeta {
       extensionId: string

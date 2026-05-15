@@ -1,10 +1,11 @@
 <script lang="ts">
   import Empty from '@/components/material/Empty.svelte'
   import MusicList from '@/components/common/MusicList/MusicList.svelte'
-  import type { SourceType } from '../shared'
   import Pagination from '@/components/material/Pagination.svelte'
-  import { search } from '@/modules/extension/onlineResource/search/music/actions'
-  import { query, push } from '@/plugins/routes'
+  import { buildRequestKey, search } from '@/modules/resource/search/music/actions'
+  import { query, push, getLocation } from '@/plugins/routes'
+  import { urlParamKeyMap, type SourceType } from '../../shared.svelte'
+  import { untrack } from 'svelte'
 
   let { source }: { source?: SourceType } = $props()
   let list = $state.raw<AnyListen.Music.MusicInfoOnline[]>([])
@@ -14,33 +15,44 @@
     limit: number
     loading: boolean
     error: boolean
-  }>({ total: 0, page: 1, limit: 20, loading: false, error: false })
+    id: string
+  }>({ total: 0, page: 1, limit: 20, loading: false, error: false, id: 'search' })
   const searchInfo = {
     extId: '',
     source: '',
     text: '',
+    searchId: '',
   }
+  let requestParams: unknown[] = []
 
   const handleSearch = (page: number, text?: string) => {
-    let extId = (searchInfo.extId = source!.extensionId)
-    let sourceId = (searchInfo.source = source!.id)
+    searchInfo.extId = source!.extensionId
+    let extId = searchInfo.extId
+    searchInfo.source = source!.id
+    let sourceId = searchInfo.source
     if (text != null) searchInfo.text = text
     listInfo.page = page
-    const searchId = `${searchInfo.extId}_${searchInfo.source}_${searchInfo.text}_${listInfo.page}`
+    requestParams = [page, searchInfo.text]
+    const searchId = buildRequestKey(extId, sourceId, page, listInfo.limit, searchInfo.text)
     listInfo.loading = true
-    void search(extId, sourceId, searchInfo.text, '', page, listInfo.limit)
-      .then(({ list: _list, total }) => {
-        if (searchId != `${searchInfo.extId}_${searchInfo.source}_${searchInfo.text}_${listInfo.page}`) {
+    const { promise, total } = search(extId, sourceId, searchInfo.text, '', page, listInfo.limit)
+    listInfo.total = total
+    listInfo.id = searchId
+    void promise
+      .then(({ list: _list, total, limit, page }) => {
+        if (searchId != buildRequestKey(extId, sourceId, page, listInfo.limit, searchInfo.text)) {
           return
         }
-        listInfo.total = total
+        if (listInfo.total !== total) listInfo.total = total
+        if (listInfo.limit !== limit) listInfo.limit = limit
+        if (listInfo.page !== page) listInfo.page = page
         listInfo.error = false
         list = _list
         // console.log(_list)
       })
       .catch((err) => {
         console.log(err)
-        if (searchId != `${searchInfo.extId}_${searchInfo.source}_${searchInfo.text}_${listInfo.page}`) {
+        if (searchId != buildRequestKey(extId, sourceId, page, listInfo.limit, searchInfo.text)) {
           return
         }
         listInfo.error = true
@@ -54,12 +66,14 @@
   $effect(() => {
     if (!source) return
     let page = 1
-    if ($query.page) {
-      let p = parseInt($query.page)
+    if ($query[urlParamKeyMap.page]) {
+      let p = parseInt($query[urlParamKeyMap.page])
       if (Number.isNaN(p)) p = 1
       page = p
     }
-    handleSearch(page, $query.text || '')
+    untrack(() => {
+      handleSearch(page, $query[urlParamKeyMap.query] || '')
+    })
   })
 </script>
 
@@ -68,9 +82,16 @@
     <MusicList
       {list}
       miniheader
+      loading={listInfo.loading}
+      error={listInfo.error}
+      source="search"
       listinfo={{
         id: 'search',
         name: 'search',
+        // TODO: save list
+      }}
+      onreload={() => {
+        handleSearch(...(requestParams as [number, string]))
       }}
     />
     <div class="pagination">
@@ -79,9 +100,10 @@
         page={listInfo.page}
         limit={listInfo.limit}
         onclick={(page) => {
-          void push('/online', {
-            ...$query,
-            page,
+          const loc = getLocation()
+          void push(loc.location, {
+            ...loc.query,
+            [urlParamKeyMap.page]: page,
           })
         }}
       />

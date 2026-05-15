@@ -1,6 +1,7 @@
 import { getDocumentHidden, onVisibilityChange } from '@any-listen/web'
 
 import { onRelease } from '@/modules/app/shared'
+import { appEvent } from '@/modules/app/store/event'
 import { updateListMusic } from '@/modules/musicLibrary/store/actions'
 import { settingState } from '@/modules/setting/store/state'
 import { getCurrentTime, getDuration, onTimeupdate, setCurrentTime } from '@/plugins/player'
@@ -60,6 +61,18 @@ const clearBufferTimeout = () => {
   mediaBuffer.timeout = null
   mediaBuffer.playTime = 0
 }
+const setProgress = (time: number, maxTime?: number) => {
+  if (!playerState.musicInfo.id) return
+  console.log('setProgress', time, maxTime)
+  restorePlayTime = time
+  if (mediaBuffer.playTime) {
+    clearBufferTimeout()
+    mediaBuffer.playTime = time
+    startBuffering()
+  }
+  if (maxTime != null) setMaxPlayTime(maxTime)
+  seekTo(time)
+}
 
 let unregistered = createUnsubscriptionSet()
 export const initProgress = () => {
@@ -84,19 +97,24 @@ export const initProgress = () => {
         })
       )
       unregistered.add(
-        playerEvent.on('setProgress', (time: number, maxTime?: number) => {
-          if (!playerState.musicInfo.id) return
-          console.log('setProgress', time, maxTime)
-          restorePlayTime = time
-          if (mediaBuffer.playTime) {
-            clearBufferTimeout()
-            mediaBuffer.playTime = time
-            startBuffering()
+        appEvent.on('executeCommand', (cmd, ...args) => {
+          switch (cmd) {
+            case 'seekForward': {
+              const seekOffset = (args[0] as number | undefined) ?? 5
+              setProgress(Math.min(getCurrentTime() + seekOffset, getDuration()))
+              break
+            }
+            case 'seekBackward': {
+              const seekOffset = (args[0] as number | undefined) ?? 5
+              setProgress(Math.max(getCurrentTime() - seekOffset, 0))
+              break
+            }
+            default:
+              break
           }
-          if (maxTime != null) setMaxPlayTime(maxTime)
-          seekTo(time)
         })
       )
+      unregistered.add(playerEvent.on('setProgress', setProgress))
       unregistered.add(
         playerEvent.on('playerLoadeddata', () => {
           setMaxPlayTime(getDuration())

@@ -74,7 +74,7 @@ export const updatePlayListMusicPos = async (data: AnyListen.IPCPlayer.PlayerAct
 export const registerRemoteListAction = () => {
   const set = (info: AnyListen.IPCPlayer.PlayerActionSet) => {
     commit.setPlayListMusic(info.list)
-    commit.setPlayListId(info.listId, info.isOnline)
+    commit.setPlayListId(info.listId, info.source)
   }
   const add = (data: AnyListen.IPCPlayer.PlayerActionAdd) => {
     commit.addPlayListMusic(data.pos, data.musics)

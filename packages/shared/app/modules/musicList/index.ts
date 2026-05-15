@@ -3,7 +3,7 @@ import { arrPush, throttle } from '@any-listen/common/utils'
 
 import { getSettings } from '../../common'
 import { getDeviceId } from '../../common/deviceId'
-import { parseRemoteMusicInfoMetadata, sortRemoteUserList, syncRemoteUserList } from '../../modules/extension'
+import { parseRemoteMusicInfoMetadata, sortRemoteUserList, syncOnlineUserList, syncRemoteUserList } from '../../modules/extension'
 import { workers } from '../worker'
 import { proxyCallback, type DBSeriveTypes } from '../worker/utils'
 import { initMusicListEvent, musicListEvent } from './event'
@@ -174,7 +174,7 @@ export const updateMusicPic = async (listId: string, musicInfo: AnyListen.Music.
 export const updateMusicPicIfNeeded = (musicInfo: AnyListen.Music.MusicInfo, picUrl: string, listId?: string | null) => {
   if (!listId || !picUrl || musicInfo.meta.picUrl == picUrl) return
   musicInfo.meta.picUrl = picUrl
-  updateMusicPic(listId, musicInfo)
+  void updateMusicPic(listId, musicInfo)
 }
 
 export const updateMusicBaseInfo = async (listId: string, musicInfos: AnyListen.Music.MusicInfo[]) => {
@@ -245,8 +245,7 @@ export const syncUserList = async (id: string) => {
     case 'remote':
       return syncRemoteUserList(targetList)
     case 'online':
-      // TODO sync online list
-      throw new Error('not implemented')
+      return syncOnlineUserList(targetList)
     default:
       console.log('not sync list', targetList)
       throw new Error('not supported list type')

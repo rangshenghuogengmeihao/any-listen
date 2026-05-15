@@ -27,10 +27,6 @@ class Event extends _Event {
     this.emitEvent('setVolume', val)
   }
 
-  setVolumeIsMute(val: boolean) {
-    this.emitEvent('setVolumeIsMute', val)
-  }
-
   setPreservesPitch(val: boolean) {
     this.emitEvent('setPreservesPitch', val)
   }

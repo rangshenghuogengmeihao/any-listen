@@ -1,15 +1,23 @@
 declare namespace AnyListen {
   namespace Resource {
     interface SongListItem {
-      play_count: string
       id: string
-      author: string
       name: string
+      play_count?: string
+      author?: string
       time?: string
-      img: string
+      img?: string
       // grade: basic.favorcnt / 10,
-      desc: string | null
-      total?: string
+      desc?: string | null
+      total?: number
+    }
+    interface SongListDetailInfo {
+      name: string
+      img?: string
+      desc?: string
+      author?: string
+      play_count?: string
+      date?: string
     }
 
     interface CommonItem {
@@ -22,6 +30,30 @@ declare namespace AnyListen {
       list: CommonItem[]
     }
 
-    type BoardItem = CommonItem
+    interface TopSongsItem extends CommonItem {
+      pic?: string
+    }
+    interface TopSongsDetailInfo {
+      name: string
+      pic?: string
+      desc?: string
+      date?: string
+    }
+
+    interface MusicCommentItem {
+      id: string
+      userId?: string
+      userName: string
+      text: string
+      time?: number
+      images?: string[]
+      location?: string
+      avatar?: string
+      likedCount?: number
+      skipPage?: boolean
+      replyTotal?: number
+      reply?: MusicCommentItem[]
+      replySkipPage?: boolean
+    }
   }
 }

@@ -1,6 +1,6 @@
 import qs from 'node:querystring'
 
-import { FormData, getGlobalDispatcher, request as nodeRrequest, ProxyAgent, setGlobalDispatcher, type Dispatcher } from 'undici'
+import { FormData, getGlobalDispatcher, request as nodeRrequest, ProxyAgent, setGlobalDispatcher } from 'undici'
 
 const defaultOptions: Options = {
   timeout: 15000,
@@ -55,7 +55,7 @@ export interface Options {
   timeout?: number
   maxRedirect?: number
   signal?: AbortController['signal']
-  json?: Record<string, unknown>
+  json?: Record<string, unknown> | unknown[]
   form?: ParamsData
   binary?: Buffer | Uint8Array
   text?: string
@@ -178,7 +178,7 @@ const buildRequestDispatcher = (options: Options) => {
 }
 
 export const request = async <T = unknown>(url: string, options: Options = {}): Promise<Response<T>> => {
-  const method = (options.method?.toUpperCase() ?? 'GET') as Dispatcher.RequestOptions['method']
+  const method = options.method?.toUpperCase() ?? 'GET'
   const timeout = options.timeout ?? defaultOptions.timeout
   const [headers, body] = buildRequestBody(options)
   // console.log(url, {

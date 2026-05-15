@@ -2,7 +2,7 @@ import { dbPrepare } from '../../db'
 
 interface PlayListInfo {
   listId: null | string
-  isOnline: boolean
+  source: AnyListen.Player.SourceType
 }
 let playListInfo: PlayListInfo
 const initPlayListInfo = () => {
@@ -18,13 +18,18 @@ const initPlayListInfo = () => {
     try {
       const result = JSON.parse(data) as PlayListInfo
       if (typeof result != 'object') throw new Error('not object')
+      if ((result as unknown as { isOnline: boolean }).isOnline) {
+        // 兼容旧版本，在线列表不再保存 source 字段
+        result.source = (result as unknown as { isOnline: boolean }).isOnline ? 'songlist' : 'local'
+        delete (result as unknown as { isOnline?: boolean }).isOnline
+      }
       playListInfo = result
       return
     } catch {}
   }
   playListInfo = {
     listId: null,
-    isOnline: false,
+    source: 'local',
   }
 }
 /**
@@ -38,10 +43,10 @@ export const queryMetadataPlayListInfo = () => {
  * 保存播放列表id
  * @param id
  */
-export const saveMetadataPlayListInfo = (id: string | null, isOnline: boolean) => {
+export const saveMetadataPlayListInfo = (id: string | null, source: AnyListen.Player.SourceType) => {
   if (playListInfo.listId == id) return
   playListInfo.listId = id
-  playListInfo.isOnline = isOnline
+  playListInfo.source = source
   dbPrepare<string>(
     `
     INSERT INTO "main"."metadata" ("field_name", "field_value")

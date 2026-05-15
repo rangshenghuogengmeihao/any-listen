@@ -49,32 +49,31 @@ export const getUserLists = async () => {
   return commit.getAllList()
 }
 
-// TODO create other list
 export const createUserList = async (position: number, info: AnyListen.List.UserListInfo) => {
   switch (info.type) {
-    case 'general':
+    case 'general': {
+      const listInfo: AnyListen.List.GeneralListInfo = {
+        id: generateIdSimple(),
+        type: info.type,
+        name: info.name,
+        // TODO
+        parentId: null,
+        meta: {
+          createTime: Date.now(),
+          desc: '',
+          playCount: 0,
+          songCount: 0,
+          pic: '',
+          posTime: Date.now(),
+          updateTime: Date.now(),
+        },
+      }
       await createUserListFromRemote({
         position,
-        listInfos: [
-          {
-            id: generateIdSimple(),
-            type: info.type,
-            name: info.name,
-            // TODO
-            parentId: null,
-            meta: {
-              createTime: Date.now(),
-              desc: '',
-              playCount: 0,
-              songCount: 0,
-              pic: '',
-              posTime: Date.now(),
-              updateTime: Date.now(),
-            },
-          },
-        ],
+        listInfos: [listInfo],
       })
-      break
+      return listInfo.id
+    }
     case 'local': {
       const listInfo: AnyListen.List.LocalListInfo = {
         id: generateIdSimple(),
@@ -96,7 +95,7 @@ export const createUserList = async (position: number, info: AnyListen.List.User
         position,
         listInfos: [listInfo],
       })
-      break
+      return listInfo.id
     }
     case 'remote': {
       const listInfo = {
@@ -119,14 +118,32 @@ export const createUserList = async (position: number, info: AnyListen.List.User
         position,
         listInfos: [listInfo],
       })
-      break
+      return listInfo.id
     }
-    default:
-      break
+    case 'online': {
+      const listInfo = {
+        id: generateIdSimple(),
+        type: info.type,
+        name: info.name,
+        parentId: null,
+        meta: {
+          ...info.meta,
+          createTime: Date.now(),
+          playCount: 0,
+          songCount: 0,
+          posTime: Date.now(),
+          updateTime: Date.now(),
+        },
+      }
+      await createUserListFromRemote({
+        position,
+        listInfos: [listInfo],
+      })
+      return listInfo.id
+    }
   }
 }
 
-// TODO update other list
 export const updateUserList = async (info: AnyListen.List.UserListInfo) => {
   const targetList = musicLibraryState.userLists.find((l) => l.id === info.id)
   if (!targetList) return
@@ -171,8 +188,18 @@ export const updateUserList = async (info: AnyListen.List.UserListInfo) => {
       await updateUserListFromRemote({ lists: [listInfo] })
       break
     }
-    default:
+    case 'online': {
+      const listInfo = {
+        ...targetList,
+        name: info.name,
+        meta: {
+          ...targetList.meta,
+          updateTime: Date.now(),
+        },
+      }
+      await updateUserListFromRemote({ lists: [listInfo] })
       break
+    }
   }
 }
 

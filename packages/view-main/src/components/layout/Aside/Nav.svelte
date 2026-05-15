@@ -4,11 +4,14 @@
   import { t } from '@/plugins/i18n'
   import { LIST_IDS } from '@any-listen/common/constants'
   import { useExtensionError, useExtensionNewVersionNum } from '@/modules/extension/reactive.svelte'
+  import { toOnline, useOnlineResourceAvailable } from '@/views/Online/shared.svelte'
 
   const lastPlayedUrl = `/library?id=${LIST_IDS.LAST_PLAYED}`
 
   const newExtVerNum = useExtensionNewVersionNum()
   const extensionError = useExtensionError()
+
+  let onlineResourceAvailable = useOnlineResourceAvailable()
 
   let menus = $derived(
     [
@@ -26,13 +29,18 @@
       //   iconSize: '0 0 425.2 425.2',
       //   enable: true,
       // },
-      // {
-      //   to: '/online',
-      //   name: $t('online_resources'),
-      //   icon: '#icon-leaderboard',
-      //   iconSize: '0 0 425.22 425.2',
-      //   enable: true,
-      // },
+      {
+        to: '/online',
+        name: $t('online_resources'),
+        icon: '#icon-sound_cloud',
+        iconSize: '0 0 24 24',
+        enable: onlineResourceAvailable.val,
+        onclick: (e: MouseEvent) => {
+          e.preventDefault()
+          e.stopPropagation()
+          void toOnline()
+        },
+      },
       // {
       //   to: '/online',
       //   name: $t('list_name__love'),
@@ -51,7 +59,7 @@
         to: lastPlayedUrl,
         name: $t('list_name__last_play'),
         icon: '#icon-memories',
-        iconSize: '0 0 444.87 391.18',
+        iconSize: '0 0 24 24',
         enable: true,
       },
       // {
@@ -66,29 +74,28 @@
         to: '/settings',
         name: $t('setting'),
         icon: '#icon-settings',
-        iconSize: '0 0 493.23 436.47',
+        iconSize: '0 0 24 24',
         enable: true,
       },
       {
         to: '/extenstion',
         name: $t('extenstion'),
         icon: '#icon-puzzle',
-        iconSize: '0 0 493.23 436.47',
+        iconSize: '0 0 24 24',
         enable: true,
         hidden: true,
       },
     ].filter((m) => m.enable)
   )
 
-  let activePath = $derived(
-    $location == '/library' && $query.id == LIST_IDS.LAST_PLAYED
-      ? lastPlayedUrl
-      : menus.some((m) => m.to == $location)
-        ? $location
-        : $location == '/'
-          ? menus[0].to
-          : ''
-  )
+  let activePath = $derived.by(() => {
+    if ($location == '/library' && $query.id == LIST_IDS.LAST_PLAYED) {
+      return lastPlayedUrl
+    } else if ($location.startsWith('/online/')) {
+      return '/online'
+    }
+    return menus.some((m) => m.to == $location) ? $location : $location == '/' ? menus[0].to : ''
+  })
   // let activePath = ''
 </script>
 
@@ -100,6 +107,7 @@
   enable: boolean
   badgeNum?: number
   waringBadge?: boolean
+  onclick?: (e: MouseEvent) => void
 })}
   <li class="nav-item" role="presentation">
     <a
@@ -109,8 +117,9 @@
       data-ignore-tip
       aria-selected={activePath == item.to}
       href={item.to}
+      onclick={item.onclick}
       aria-label={item.name}
-      {@attach link()}
+      {@attach link({ disabled: !!item.onclick })}
     >
       <!-- <a class="link" class:active={activePath == item.to} role="tab" href={item.to} aria-label={item.name}> -->
       <div class="left">
@@ -141,7 +150,7 @@
     to: '/extenstion',
     name: $t('extenstion'),
     icon: '#icon-puzzle',
-    iconSize: '0 0 493.23 436.47',
+    iconSize: '0 0 24 24',
     enable: true,
     waringBadge: extensionError.val,
     badgeNum: newExtVerNum.val > 0 ? newExtVerNum.val : undefined,
@@ -171,7 +180,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 8px 8px 5px;
+    padding: 8px;
     color: var(--color-primary-font);
     text-decoration: none;
     cursor: pointer;

@@ -88,7 +88,7 @@ export interface Options {
   timeout?: number
   maxRedirect?: number
   signal?: AbortController['signal']
-  json?: Record<string, unknown>
+  json?: Record<string, unknown> | unknown[]
   form?: ParamsData
   binary?: Buffer | Uint8Array
   text?: string

@@ -58,9 +58,11 @@ const toDBMusicInfo = (musicInfos: AnyListen.Music.MusicInfo[], listId: string, 
   })
 }
 
+let rawPoss = new Map<string, number>()
 const parseList = <T extends AnyListen.List.UserListInfo>(list: QueryUserListInfo) => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { position, parent_id, song_count, ...newList } = list
+  rawPoss.set(list.id, position)
   const listInfo = {
     ...newList,
     parentId: parent_id,
@@ -130,6 +132,7 @@ const initListInfo = (force = false) => {
     }
   }
 
+  rawPoss.clear()
   userLists = queryAllUserList().map(parseList<AnyListen.List.UserListInfo>)
 
   // const lists = queryAllList()
@@ -219,7 +222,9 @@ export const createUserLists = (position: number, lists: AnyListen.List.UserList
   const parentId = lists[0].parentId
   const userLists = filterUserLists(parentId)
   if (position < 0 || position >= userLists.length) {
-    const newLists: UserListInfo[] = toDBListInfo(lists, userLists.length)
+    // 如果是最末尾，那么取最后一个列表的原始位置 + 1 作为新列表的原始位置，否则新列表的原始位置为 position
+    // 因为原始 pos 可能比 userLists.length 大，所以不能直接用 userLists.length 作为新列表的原始位置
+    const newLists: UserListInfo[] = toDBListInfo(lists, (userLists.length && (rawPoss.get(userLists.at(-1)!.id) ?? -1) + 1) || 0)
     inertUserLists(parentId, newLists)
   } else {
     const newUserLists = toDBListInfo(userLists)

@@ -267,13 +267,13 @@ export const userListsUpdatePosition = (position: number, ids: string[]) => {
 //   else targetList.meta.playCount = count
 // }
 
-export const listMusicOverwrite = (listId: string, musicInfos: AnyListen.Music.MusicInfo[]): string[] => {
+export const listMusicOverwrite = (listId: string, musicInfos: AnyListen.Music.MusicInfo[]) => {
   const isExist = musicLibraryState.allMusicList.has(listId)
   setMusicList(listId, musicInfos)
-  return isExist || listId == musicLibraryState.loveList.id ? [listId] : []
+  if (isExist) musicLibraryEvent.listMusicChanged([listId])
 }
 
-export const listMusicClear = (ids: string[]): string[] => {
+export const listMusicClear = (ids: string[]) => {
   const changedIds: string[] = []
   for (const id of ids) {
     const list = musicLibraryState.allMusicList.get(id)
@@ -281,7 +281,7 @@ export const listMusicClear = (ids: string[]): string[] => {
     setMusicList(id, [])
     changedIds.push(id)
   }
-  return changedIds
+  if (changedIds.length) musicLibraryEvent.listMusicChanged(changedIds)
 }
 
 export const listMusicAdd = (

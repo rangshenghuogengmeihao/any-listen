@@ -1,13 +1,35 @@
 <script lang="ts">
-  import type { ResourceListType } from '../../shared'
-  import { getSourceId } from '../shared'
-  import Source from '../Source.svelte'
+  import { getSourceId, urlParamKeyMap, type ResourceListType, type SourceType, type ViewType } from '../../shared.svelte'
+  import Source from '../../Source.svelte'
   import { query, replace } from '@/plugins/routes'
   import List from './List.svelte'
+  import { SvelteURLSearchParams } from 'svelte/reactivity'
+  import { untrack } from 'svelte'
 
   let { sourceList }: { sourceList: NonNullable<ResourceListType['musicSearch']> } = $props()
   let list = $derived(sourceList.map((s) => ({ ...s, sId: getSourceId(s) })))
-  let activeSource = $derived($query.source ? list.find((s) => s.sId == $query.source) : list[0])
+  let activeSource = $derived(
+    $query[urlParamKeyMap.source] ? list.find((s) => s.sId == $query[urlParamKeyMap.source]) : undefined
+  )
+
+  const to = (source: SourceType) => {
+    const params = new SvelteURLSearchParams()
+    params.set(urlParamKeyMap.type, 'search' satisfies ViewType)
+    params.set(urlParamKeyMap.queryType, $query[urlParamKeyMap.queryType] ?? '')
+    params.set(urlParamKeyMap.source, source.sId)
+    let text = $query[urlParamKeyMap.query] ?? ''
+    if (text) params.set(urlParamKeyMap.query, text)
+    void replace(`/online?${params.toString()}`)
+  }
+
+  $effect(() => {
+    if (!list.length) return
+    if (activeSource && list.some((s) => s.sId == activeSource.sId)) return
+    const s = list[0]
+    untrack(() => {
+      to(s)
+    })
+  })
 </script>
 
 <div class="online-search-music">
@@ -16,13 +38,7 @@
       {list}
       active={activeSource?.sId}
       onchange={(source) => {
-        void replace('/online', {
-          type: $query.type,
-          searchType: $query.searchType,
-          source: source.sId,
-          text: $query.text,
-          page: 1,
-        })
+        to(source)
       }}
     />
   {/if}

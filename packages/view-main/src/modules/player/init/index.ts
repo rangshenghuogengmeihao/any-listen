@@ -4,10 +4,10 @@ import { initMediaDevice } from './mediaDevice'
 // import usePlayStatus from './usePlayStatus'
 import { initMediaSessionInfo } from './mediaSessionInfo'
 import { initPlaybackRate } from './playbackRate'
+import { initPlayCmdAction } from './playCmdAction'
 import { initPlayerAudioContext } from './playerAudioContext'
 import { initPlayerEvent } from './playerEvent'
 import { initPlayErrorHandler } from './playErrorHandler'
-import { initPlayKeyboardAction } from './playKeyboardAction'
 import { initPlayStatus } from './playStatus'
 import { initPreloadNextMusic } from './preloadNextMusic'
 import { initProgress } from './progress'
@@ -25,7 +25,7 @@ export const initPlayer = () => {
   initMediaSessionInfo()
   initPlayErrorHandler()
   initPlayStatus()
-  initPlayKeyboardAction()
+  initPlayCmdAction()
   initVolume()
   initPlaybackRate()
   initProgress()

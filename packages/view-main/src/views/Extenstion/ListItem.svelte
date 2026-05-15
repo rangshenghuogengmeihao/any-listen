@@ -9,8 +9,7 @@
   import Btn from '@/components/base/Btn.svelte'
   import { showNotify } from '@/components/apis/notify'
   import { extensionState } from '@/modules/extension/store/state'
-  import { downloadAndParseExtension, updateExtension } from '@/modules/extension/store/actions'
-  import { getOnlineExtensionList } from '@/modules/extension/store/actions'
+  import { downloadAndParseExtension, updateExtension, getOnlineExtensionList } from '@/modules/extension/store/actions'
 
   let { ext }: { ext: AnyListen.Extension.Extension } = $props()
   let latest = useExtensionLatestVersion(ext.id)
@@ -99,7 +98,7 @@
     flex-flow: column nowrap;
     gap: 6px;
     min-width: 300px;
-    max-width: 440px;
+    // max-width: 440px;
     height: 100px;
     padding: 10px;
     background-color: var(--color-primary-light-200-alpha-900);

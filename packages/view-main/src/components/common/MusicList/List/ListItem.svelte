@@ -35,6 +35,7 @@
   let sourceLabel = $derived(buildSourceLabel(musicinfo))
   let picUrl = $state<null | string>(null)
   // let isPlaying = $derived(isplaylist && $playInfo.index === index)
+  const badgeTypes = ['primary', 'secondary', 'tertiary'] as const
 
   const handleClick = (event: KeyboardEvent | Event) => {
     if ('key' in event) {
@@ -96,8 +97,10 @@
   </div>
   <div class="list-item-cell auto name">
     <div class="select name" aria-label={musicinfo.name}>{musicinfo.name}</div>
-    {#if sourceLabel}
-      <Badge label={sourceLabel} opacity={0.7} />
+    {#if sourceLabel.length}
+      {#each sourceLabel as label, index (index)}
+        <Badge {label} opacity={0.7} type={badgeTypes[index % badgeTypes.length]} />
+      {/each}
     {/if}
   </div>
   <div class="list-item-cell" style="flex: 0 0 22%;">

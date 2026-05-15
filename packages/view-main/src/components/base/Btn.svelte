@@ -69,7 +69,7 @@
     justify-content: center;
     padding: 8px 15px;
     font-size: 14px;
-    color: var(--color-button-font);
+    color: var(--btn-font, var(--color-button-font));
     cursor: pointer;
     background-color: var(--color-button-background);
     border: none;

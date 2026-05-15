@@ -50,7 +50,13 @@ declare namespace AnyListen {
     }
     interface CommonListParams extends CommonParams {
       page: number
-      limit: number
+      limit?: number
+    }
+    interface CommonSearchParams extends CommonListParams {
+      keyword: string
+    }
+    interface TipSearchParams extends CommonParams {
+      keyword: string
     }
     interface LyricSearchParams extends CommonParams {
       name: string
@@ -62,7 +68,7 @@ declare namespace AnyListen {
       name: string
       artist?: string
       interval?: number
-      lyric?: string
+      lyric?: Music.LyricInfo
     }
     interface LyricDetailParams extends CommonParams {
       id: string
@@ -71,16 +77,39 @@ declare namespace AnyListen {
       name: string
       artist?: string
     }
-    interface SearchParams extends CommonListParams {
+    interface MusicSearchParams extends CommonListParams {
       name: string
       artist?: string
+      albumName?: string
     }
     interface ListDetailParams extends CommonListParams {
       id: string
     }
+    interface SonglistTagResult {
+      tags: Resource.TagGroupItem[]
+      hotTags: Resource.TagItem[]
+    }
     interface SonglistListParams extends CommonListParams {
       sort: string
       tag: string
+    }
+    interface SonglistDetailResult extends ListCommonResult<Music.MusicInfoOnline> {
+      info: Resource.SongListDetailInfo
+    }
+    interface TopSongsDateParams extends CommonParams {
+      id: string
+    }
+    interface TopSongsDetailParams extends CommonListParams {
+      id: string
+      date: string
+    }
+    interface TopSongsDetailResult extends ListCommonResult<Music.MusicInfoOnline> {
+      info: Resource.TopSongsDetailInfo
+    }
+    interface MusicCommentParams extends CommonListParams {
+      musicInfo: Music.MusicInfoOnline
+      id?: string
+      type: 'hot' | 'new' | 'reply'
     }
     interface ListCommonResult<T> {
       list: T[]
@@ -141,23 +170,24 @@ declare namespace AnyListen {
       ) => Promise<Music.MusicInfoOnline>
     }
     interface ResourceAction {
-      // tipSearch: (params: CommonParams) => Promise<string[]>
-      // hotSearch: (params: CommonParams) => Promise<string[]>
-      musicSearch: (params: SearchParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
+      tipSearch: (params: TipSearchParams) => Promise<string[]>
+      hotSearch: (params: CommonParams) => Promise<string[]>
+      musicSearch: (params: MusicSearchParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
       musicPic: (params: MusicCommonParams) => Promise<string>
       musicUrl: (params: MusicUrlParams) => Promise<MusicUrlInfo>
       musicLyric: (params: MusicCommonParams) => Promise<Music.LyricInfo>
       musicPicSearch: (params: PicSearchParams) => Promise<string[]>
       lyricSearch: (params: LyricSearchParams) => Promise<LyricSearchResult[]>
       lyricDetail: (params: LyricDetailParams) => Promise<Music.LyricInfo>
-      // songlistSearch: (params: SearchParams) => Promise<ListCommonResult<Resource.SongListItem>>
-      // songlistSorts: (params: CommonParams) => Promise<Resource.TagItem[]>
-      // songlistTags: (params: CommonParams) => Promise<Resource.TagGroupItem[]>
-      // songlist: (params: SonglistListParams) => Promise<ListCommonResult<Resource.SongListItem>>
-      // songlistDetail: (params: ListDetailParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
-      // leaderboard: (params: CommonParams) => Promise<Resource.TagGroupItem[]>
-      // leaderboardDate: (params: SonglistListParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
-      // leaderboardDetail: (params: SonglistListParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
+      songlistSearch: (params: CommonSearchParams) => Promise<ListCommonResult<Resource.SongListItem>>
+      songlistSorts: (params: CommonParams) => Promise<Resource.TagItem[]>
+      songlistTags: (params: CommonParams) => Promise<SonglistTagResult>
+      songlist: (params: SonglistListParams) => Promise<ListCommonResult<Resource.SongListItem>>
+      songlistDetail: (params: ListDetailParams) => Promise<SonglistDetailResult>
+      topSongs: (params: CommonParams) => Promise<Resource.TopSongsItem[]>
+      topSongsDate: (params: TopSongsDateParams) => Promise<Resource.TagItem[]>
+      topSongsDetail: (params: TopSongsDetailParams) => Promise<TopSongsDetailResult>
+      musicComment: (params: MusicCommentParams) => Promise<ListCommonResult<Resource.MusicCommentItem>>
     }
     // type ResourceAction = IPCActionFunc<'tipSearch', string, string[]>
     // | IPCActionFunc<'hotSearch', string, string[]>
@@ -171,9 +201,9 @@ declare namespace AnyListen {
     // | IPCActionFunc<'songListTags', string, AnyListen.Resource.TagGroupItem[]>
     // | IPCActionFunc<'songList', SonglistListParams, ListCommonResult<AnyListen.Resource.SongListItem>>
     // | IPCActionFunc<'songListDetail', ListDetailParams, ListCommonResult<AnyListen.Music.MusicInfoOnline>>
-    // | IPCActionFunc<'leaderboard', string, AnyListen.Resource.TagGroupItem[]>
-    // | IPCActionFunc<'leaderboardDate', SonglistListParams, ListCommonResult<AnyListen.Music.MusicInfoOnline>>
-    // | IPCActionFunc<'leaderboardDetail', SonglistListParams, ListCommonResult<AnyListen.Music.MusicInfoOnline>>
+    // | IPCActionFunc<'topSongs', string, AnyListen.Resource.TagGroupItem[]>
+    // | IPCActionFunc<'topSongsDate', SonglistListParams, ListCommonResult<AnyListen.Music.MusicInfoOnline>>
+    // | IPCActionFunc<'topSongsDetail', SonglistListParams, ListCommonResult<AnyListen.Music.MusicInfoOnline>>
     // | IPCActionFunc<'albumSearch', SearchParams, ListCommonResult<AnyListen.Resource.SongListItem>>
     // | IPCActionFunc<'albumSinger', SonglistListParams, ListCommonResult<AnyListen.Resource.SongListItem>>
     // | IPCActionFunc<'albumDetail', ListDetailParams, ListCommonResult<AnyListen.Music.MusicInfoOnline>>
@@ -260,10 +290,6 @@ declare namespace AnyListen {
       getAllExtensionSettings: () => Promise<Extension.ExtensionSetting[]>
       getExtensionConfigValues: (extId: string, fields: string[]) => Promise<Record<string, unknown>>
       updateExtensionSettings: (extId: string, config: Record<string, any>) => Promise<void>
-      resourceAction: <T extends keyof ResourceAction>(
-        action: T,
-        params: Parameters<ResourceAction[T]>[0]
-      ) => Promise<Awaited<ReturnType<ResourceAction[T]>>>
       listProviderAction: <T extends keyof ListProviderAction>(
         action: T,
         params: Parameters<ListProviderAction[T]>[0]
@@ -330,7 +356,7 @@ declare namespace AnyListen {
       timeout?: number
       maxRedirect?: number
       signal?: AbortController['signal']
-      json?: Record<string, unknown>
+      json?: Record<string, unknown> | unknown[]
       form?: Record<string, string | number | null | undefined | boolean>
       binary?: Uint8Array
       text?: string
@@ -420,7 +446,20 @@ declare namespace AnyListen {
         key: Uint8Array | string,
         iv: Uint8Array | string
       ) => Promise<string>
+      aesDecrypt: <T extends ExtensionVM.EncryptEncoding = 'binary'>(
+        mode: ExtensionVM.AES_MODE,
+        data: Uint8Array | string,
+        key: Uint8Array | string,
+        iv: Uint8Array | string,
+        encoding?: T
+      ) => Promise<T extends 'binary' ? Uint8Array : string>
       rsaEncrypt: (mode: ExtensionVM.RSA_PADDING, data: Uint8Array, key: Uint8Array) => Promise<string>
+      rsaDecrypt: <T extends ExtensionVM.EncryptEncoding = 'binary'>(
+        mode: ExtensionVM.RSA_PADDING,
+        data: Uint8Array,
+        key: Uint8Array,
+        encoding?: T
+      ) => Promise<T extends 'binary' ? Uint8Array : string>
       md5: (text: string | Uint8Array) => Promise<string>
       sha1: (text: string | Uint8Array) => Promise<string>
       sha256: (text: string | Uint8Array) => Promise<string>

@@ -6,6 +6,7 @@ import './list_ipc'
 import './player_ipc'
 import './sound_effect_ipc'
 import './theme_ipc'
+import './resource_ipc'
 
 // type ExcludeSendActions<Actions extends Record<string, any>> = Pick<Actions, {
 //   [K in keyof Actions]: K extends `send${string}` ? never : K
@@ -31,6 +32,7 @@ type ClientAllActions = AnyListen.IPC.ClientCommonActions &
   AnyListen.IPCExtension.ClientActions
 type ServerAllActions = AnyListen.IPC.ServerCommonActions &
   AnyListen.IPCMusic.ServerActions &
+  AnyListen.IPCResource.ServerActions &
   AnyListen.IPCTheme.ServerActions &
   AnyListen.IPCPlayer.ServerActions &
   AnyListen.IPCList.ServerActions &
@@ -57,7 +59,10 @@ declare global {
         clientCall: ClientIPC
       }) => void
       type WinType = 'main'
-      type ServerCommonActions = _ServerCommonActions & IPCMusic.ServerActions & IPCSoundEffect.ServerActions
+      type ServerCommonActions = _ServerCommonActions &
+        IPCMusic.ServerActions &
+        IPCResource.ServerActions &
+        IPCSoundEffect.ServerActions
       type ClientCommonActions = _ClientCommonActions
 
       type ClientICPCommonActions<Socket = undefined> = WarpIPCHandlerActions<Socket, ClientCommonActions>

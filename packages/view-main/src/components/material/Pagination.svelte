@@ -179,6 +179,11 @@
           }
         }
         &:first-child {
+          span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
           span,
           button {
             border-top-left-radius: @radius-border;
@@ -187,6 +192,11 @@
           // border-right: .0625rem solid @theme_line;
         }
         &:last-child {
+          span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
           span,
           button {
             border-top-right-radius: @radius-border;

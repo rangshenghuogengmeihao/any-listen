@@ -8,21 +8,21 @@ export const getMusicInfo = (musicInfo: AnyListen.Download.ListItem | AnyListen.
 export const createPlayMusicInfo = ({
   musicInfo,
   listId,
-  isOnline,
+  source,
   playLater,
   played = false,
   linked = false,
 }: {
   musicInfo: AnyListen.Music.MusicInfo
   listId: string
-  isOnline: boolean
+  source: AnyListen.Player.SourceType
   playLater: boolean
   played?: boolean
   linked?: boolean
 }): AnyListen.Player.PlayMusicInfo => ({
   itemId: linked ? `${listId}_${musicInfo.id}` : `${generateIdByPerf()}_${musicInfo.id}`,
   listId,
-  isOnline,
+  source,
   musicInfo,
   played,
   playLater,
@@ -31,14 +31,14 @@ export const createPlayMusicInfo = ({
 export const createPlayMusicInfoList = ({
   musicInfos,
   listId,
-  isOnline,
+  source,
   playLater,
   played = false,
   linked = false,
 }: {
   musicInfos: AnyListen.Music.MusicInfo[]
   listId: string
-  isOnline: boolean
+  source: AnyListen.Player.SourceType
   playLater: boolean
   played?: boolean
   linked?: boolean
@@ -48,28 +48,46 @@ export const createPlayMusicInfoList = ({
       musicInfo: m,
       listId,
       playLater,
-      isOnline,
+      source,
       linked,
       played,
     })
   )
 }
 
-export const buildMusicName = (setting: AnyListen.AppSetting['download.fileName'], name: string, singer: string) =>
-  singer ? setting.replace('%name%', name).replace('%singer%', singer) : name
-export const buildSourceLabel = (musicinfo: AnyListen.Music.MusicInfo) => {
+export const buildMusicName = (setting: AnyListen.AppSetting['download.fileName'], name: string, singer: string) => {
+  return singer ? setting.replace('%name%', name).replace('%singer%', singer) : name
+}
+
+const qualitys = ['master', 'dobly', 'flac24bit', 'flac', 'wav', '320k', '192k', '128k'] as const
+const labelMap = {
+  master: 'Mster',
+  dobly: 'Dobly',
+  flac24bit: '24bit',
+  flac: 'SQ',
+  wav: 'WAV',
+  '320k': '320K',
+  '192k': '192K',
+  '128k': '128K',
+} as const
+
+export const buildSourceLabel = (musicinfo: AnyListen.Music.MusicInfo): string[] => {
   if (musicinfo.isLocal) {
     switch (musicinfo.meta.ext) {
       case 'flac':
       case 'wav':
-        return musicinfo.meta.bitrateLabel == '16bit'
-          ? musicinfo.meta.ext.toUpperCase()
-          : `${musicinfo.meta.ext.toUpperCase()} ${musicinfo.meta.bitrateLabel}`
+        return [
+          musicinfo.meta.bitrateLabel == '16bit'
+            ? musicinfo.meta.ext.toUpperCase()
+            : `${musicinfo.meta.ext.toUpperCase()} ${musicinfo.meta.bitrateLabel}`,
+        ]
       default:
-        return musicinfo.meta.bitrateLabel?.toUpperCase() ?? ''
+        return [musicinfo.meta.bitrateLabel?.toUpperCase() ?? ''].filter((s) => s)
     }
   }
-  return musicinfo.meta.source
+  const quality = qualitys.find((q) => !!musicinfo.meta.qualitys?.[q])
+  const label = quality ? labelMap[quality] : ''
+  return [musicinfo.meta.source, label].filter((s) => s)
 }
 
 export const logFormat = (log: AnyListen.LogInfo) => {
@@ -150,4 +168,13 @@ export const singerFormat = (name: string) => {
 
 export const buildPublicPath = (basePath: string, name: string) => {
   return `${basePath.startsWith('/') ? basePath.substring(1) : basePath}/${name}`
+}
+
+export const deduplicationList = <T extends AnyListen.Music.MusicInfo>(list: T[]): T[] => {
+  const ids = new Set<string>()
+  return list.filter((s) => {
+    if (ids.has(s.id)) return false
+    ids.add(s.id)
+    return true
+  })
 }

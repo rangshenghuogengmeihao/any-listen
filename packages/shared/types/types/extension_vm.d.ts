@@ -44,6 +44,7 @@ declare global {
 
       type AES_MODE = 'CBC_128_PKCS7Padding' | 'ECB_128_NoPadding'
       type RSA_PADDING = 'RSA_PKCS1_OAEP_PADDING' | 'RSA_NO_PADDING'
+      type EncryptEncoding = 'base64' | 'binary' | 'utf-8'
       type ConverterFormatFrom = 'base64' | 'hex' | 'utf-8'
       type ConverterFormatTo = 'binary' | 'base64' | 'hex' | 'utf-8'
       type ConverterBinaryFormatTo = 'base64' | 'hex' | 'utf-8'

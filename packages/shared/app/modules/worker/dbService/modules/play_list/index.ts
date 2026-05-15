@@ -15,16 +15,28 @@ import type { ListMusicInfo, PlayedInfo } from './statements'
 
 let playList: AnyListen.Player.PlayMusicInfo[] | null = null
 
+const sourceMap: Record<number, AnyListen.Player.SourceType> = {
+  0: 'songlist',
+  1: 'local',
+  2: 'topSongs',
+  3: 'search',
+  4: 'album',
+}
+const sourceMapReverse = Object.fromEntries(Object.entries(sourceMap).map(([k, v]) => [v, Number(k)])) as Record<
+  AnyListen.Player.SourceType,
+  number
+>
+
 const toDBList = (list: AnyListen.Player.PlayMusicInfo[], offset = 0): ListMusicInfo[] => {
   return list.map((info, index) => {
     return {
       ...info.musicInfo,
-      is_local: Number(info.musicInfo.isLocal),
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      is_local: sourceMapReverse[info.source] ?? 1,
       meta: JSON.stringify(info.musicInfo.meta),
 
       item_id: info.itemId,
       list_id: info.listId,
-      is_online: Number(info.isOnline),
       played: Number(info.played),
       play_later: Number(info.playLater),
       position: offset + index,
@@ -37,7 +49,7 @@ const initListInfo = (force = false) => {
   let list = queryList().sort((a, b) => a.position - b.position)
   playList = []
   for (const info of list) {
-    const { item_id, position, list_id, is_online, play_later, played, is_local, meta, ...mInfo } = info
+    const { item_id, position, list_id, play_later, played, is_local, meta, ...mInfo } = info
     playList.push({
       musicInfo: {
         ...mInfo,
@@ -46,7 +58,7 @@ const initListInfo = (force = false) => {
       },
       itemId: item_id,
       listId: list_id,
-      isOnline: is_online == 1,
+      source: sourceMap[is_local] ?? 'local',
       played: played == 1,
       playLater: play_later == 1,
     })

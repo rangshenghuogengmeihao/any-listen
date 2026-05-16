@@ -2,13 +2,11 @@
   import { type Snippet, tick } from 'svelte'
   import type { MouseEventHandler } from 'svelte/elements'
   import { t } from '@/plugins/i18n'
-  import type ListItem from './fileExplorerModal/ListItem.svelte'
 
   let {
     placeholder = 'Search for something...',
     oninput,
     onsubmit,
-    onhomebtnclick,
     onbackbtnclick,
     onlistclick,
     oncontextmenu,
@@ -17,7 +15,6 @@
     searchicon,
   }: {
     placeholder?: string
-    onhomebtnclick?: () => void
     onbackbtnclick?: () => void
     oninput?: (text: string) => void
     onsubmit: (text: string) => void
@@ -117,13 +114,6 @@
 <div class="search-input no-drag">
   <div class={['content', { active: isActive, small, big }]}>
     <div class="form">
-      {#if onhomebtnclick}
-        <button type="button" aria-label={$t('btn_home')} onclick={onhomebtnclick}>
-          <svg height="100%" viewBox="0 0 24 24">
-            <use xlink:href="#icon-home" />
-          </svg>
-        </button>
-      {/if}
       {#if onbackbtnclick}
         <button type="button" aria-label={$t('btn_back')} onclick={onbackbtnclick}>
           <svg height="100%" viewBox="0 0 24 24">

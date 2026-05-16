@@ -3,9 +3,10 @@
   import MusicList from '@/components/common/MusicList/MusicList.svelte'
   import Pagination from '@/components/material/Pagination.svelte'
   import { buildRequestKey, search } from '@/modules/resource/search/music/actions'
-  import { query, push, getLocation } from '@/plugins/routes'
+  import { query, getLocation } from '@/plugins/routes'
   import { urlParamKeyMap, type SourceType } from '../../shared.svelte'
   import { untrack } from 'svelte'
+  import { pushRoute } from '@/modules/resource/actions'
 
   let { source }: { source?: SourceType } = $props()
   let list = $state.raw<AnyListen.Music.MusicInfoOnline[]>([])
@@ -101,7 +102,7 @@
         limit={listInfo.limit}
         onclick={(page) => {
           const loc = getLocation()
-          void push(loc.location, {
+          void pushRoute(loc.location, {
             ...loc.query,
             [urlParamKeyMap.page]: page,
           })

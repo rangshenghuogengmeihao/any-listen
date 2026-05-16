@@ -9,5 +9,9 @@ export const songlistUrlParamKeyMap = {
 export const buildSonglistDetailUrl = (meta: { id: string; sid?: string; mid?: string; s?: string }) => {
   // eslint-disable-next-line svelte/prefer-svelte-reactivity
   const query = new URLSearchParams(meta).toString()
-  return `/online/songlist?${query}`
+  return {
+    url: `/online/songlist?${query}`,
+    path: `/online/songlist`,
+    meta,
+  }
 }

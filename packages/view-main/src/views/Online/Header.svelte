@@ -3,7 +3,7 @@
   import { i18n } from '@/plugins/i18n'
   import { tabIcons, viewResourceMap, viewTypes, urlParamKeyMap } from './shared.svelte'
   import { resourceList } from '@/modules/extension/reactive.svelte'
-  import { replace } from '@/plugins/routes'
+  import { pushRoute } from '@/modules/resource/actions'
 
   let { activeview }: { activeview: (typeof viewTypes)[number] } = $props()
   const typeList = $derived.by(() => {
@@ -27,7 +27,7 @@
     value={activeview}
     min
     onchange={(item) => {
-      void replace('/online', { [urlParamKeyMap.type]: item.id })
+      void pushRoute('/online', { [urlParamKeyMap.type]: item.id })
     }}
   />
   <div id="online-header-right"></div>

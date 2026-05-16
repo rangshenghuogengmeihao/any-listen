@@ -1,11 +1,10 @@
 import { fromStore } from 'svelte/store'
 
-import { appState } from '@/modules/app/store/state'
 import { resourceList } from '@/modules/extension/reactive.svelte'
 import { extensionEvent } from '@/modules/extension/store/event'
 import { extensionState } from '@/modules/extension/store/state'
 import { useSettingValue } from '@/modules/setting/reactive.svelte'
-import { getLocation, push, query, replace } from '@/plugins/routes'
+import { query } from '@/plugins/routes'
 
 export const viewTypes = ['search', 'songlist', 'topSongs', 'album', 'singer'] as const
 export type ViewType = (typeof viewTypes)[number]
@@ -36,38 +35,6 @@ export const urlParamKeyMap = {
   type: 't',
   source: 's',
   page: 'p',
-}
-
-const buildQueryParams = (params: Record<string, string>, text?: string) => {
-  if (text != null) {
-    if (text) params[urlParamKeyMap.query] = text
-    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-    else delete params[urlParamKeyMap.query]
-
-    if (params[urlParamKeyMap.type] != 'search') {
-      params[urlParamKeyMap.type] = 'search'
-    }
-  }
-  return params
-}
-export const toOnline = async (text?: string) => {
-  const loc = getLocation()
-  if (text) {
-    if (loc.location.startsWith('/online')) {
-      const params = buildQueryParams({ ...loc.query }, text)
-      await replace('/online', params)
-    } else {
-      const params = buildQueryParams(appState.onlineResourceLocation ? { ...appState.onlineResourceLocation[1] } : {}, text)
-      await push('/online', params)
-    }
-  } else if (loc.location.startsWith('/online')) {
-    const params = buildQueryParams({ ...loc.query }, text)
-    await replace('/online', params)
-  } else {
-    const [path, query] = appState.onlineResourceLocation || ['/online', {}]
-    const params = buildQueryParams(query, text)
-    await push(path, params)
-  }
 }
 
 const isOnlineResourceAvailable = () => {

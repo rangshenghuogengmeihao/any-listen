@@ -4,7 +4,8 @@
   import { t } from '@/plugins/i18n'
   import { LIST_IDS } from '@any-listen/common/constants'
   import { useExtensionError, useExtensionNewVersionNum } from '@/modules/extension/reactive.svelte'
-  import { toOnline, useOnlineResourceAvailable } from '@/views/Online/shared.svelte'
+  import { useOnlineResourceAvailable } from '@/views/Online/shared.svelte'
+  import { toOnlineSearch } from '@/modules/resource/actions'
 
   const lastPlayedUrl = `/library?id=${LIST_IDS.LAST_PLAYED}`
 
@@ -38,7 +39,7 @@
         onclick: (e: MouseEvent) => {
           e.preventDefault()
           e.stopPropagation()
-          void toOnline()
+          void toOnlineSearch()
         },
       },
       // {

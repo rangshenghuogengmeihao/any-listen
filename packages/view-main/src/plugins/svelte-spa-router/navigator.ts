@@ -42,11 +42,10 @@ export const getLocation = (): Location => {
   return { location, query: parseUrlParams(querystring) }
 }
 
-type Params = Record<string, string | number | null | undefined>
+export type Params = Record<string, string | number | null | undefined>
 const buildParams = (params: Record<string, Params[keyof Params]>) => {
-  return Object.entries(params)
-    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v ?? ''))}`)
-    .join('&')
+  const p = new URLSearchParams(params as Record<string, string>)
+  return p.toString()
 }
 const buildQueryString = (url: string, params?: Params) => {
   if (!params) return ''

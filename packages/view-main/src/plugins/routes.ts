@@ -34,4 +34,4 @@ const routes: ComponentProps<typeof Router>['routes'] = {
 
 export default routes
 
-export { getLocation, link, location, push, query, replace } from '@/plugins/svelte-spa-router/navigator'
+export { getLocation, link, location, push, query, replace, type Params } from '@/plugins/svelte-spa-router/navigator'

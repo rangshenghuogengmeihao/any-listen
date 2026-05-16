@@ -8,5 +8,9 @@ export const topSongsUrlParamKeyMap = {
 export const buildTopSongsDetailUrl = (meta: { id: string; sid?: string; mid?: string; s?: string }) => {
   // eslint-disable-next-line svelte/prefer-svelte-reactivity
   const query = new URLSearchParams(meta).toString()
-  return `/online/topSongs?${query}`
+  return {
+    url: `/online/topSongs?${query}`,
+    path: '/online/topSongs',
+    meta,
+  }
 }

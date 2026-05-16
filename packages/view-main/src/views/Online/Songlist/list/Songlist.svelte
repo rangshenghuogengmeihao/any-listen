@@ -1,11 +1,12 @@
 <script lang="ts">
   import Pagination from '@/components/material/Pagination.svelte'
-  import { push, getLocation } from '@/plugins/routes'
+  import { getLocation } from '@/plugins/routes'
   import { urlParamKeyMap } from '../../shared.svelte'
   import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar.svelte'
   import ListItem from './ListItem.svelte'
   import Loading from '@/components/base/Loading.svelte'
   import Empty from '@/components/material/Empty.svelte'
+  import { pushRoute } from '@/modules/resource/actions'
 
   let {
     list,
@@ -42,7 +43,7 @@
         limit={listInfo.limit}
         onclick={(page) => {
           const loc = getLocation()
-          void push(loc.location, {
+          void pushRoute(loc.location, {
             ...loc.query,
             [urlParamKeyMap.page]: page,
           })

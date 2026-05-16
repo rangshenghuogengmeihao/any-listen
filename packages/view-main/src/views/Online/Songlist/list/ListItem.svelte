@@ -5,10 +5,11 @@
   import { buildSonglistDetailUrl } from '../../Songlist/shared.svelte'
 
   let { item, sId }: { item: AnyListen.Resource.SongListItem; sId: string } = $props()
+  let url = $derived.by(() => buildSonglistDetailUrl({ id: item.id, sid: sId }))
 </script>
 
 <li>
-  <a class="list-item" href={buildSonglistDetailUrl({ id: item.id, sid: sId })} {@attach link()}>
+  <a class="list-item" href={url.url} {@attach link()}>
     <div class="image">
       <Image src={item.img} alt={item.name} />
     </div>

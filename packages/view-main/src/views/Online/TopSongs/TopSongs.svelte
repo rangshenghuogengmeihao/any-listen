@@ -1,9 +1,10 @@
 <script lang="ts">
   import { getSourceId, urlParamKeyMap, useResourceList, type SourceType, type ViewType } from '../shared.svelte'
-  import { query, replace } from '@/plugins/routes'
+  import { query } from '@/plugins/routes'
   import { untrack } from 'svelte'
   import List from './list/List.svelte'
   import Source from '../Source.svelte'
+  import { replaceRoute } from '@/modules/resource/actions'
   // import Header from './list/header/Header.svelte'
 
   let resourceList = useResourceList('topSongs')
@@ -13,11 +14,10 @@
   )
 
   const to = (source: SourceType) => {
-    // eslint-disable-next-line svelte/prefer-svelte-reactivity
-    const params = new URLSearchParams()
-    params.set(urlParamKeyMap.type, 'topSongs' satisfies ViewType)
-    params.set(urlParamKeyMap.source, source.sId)
-    void replace(`/online?${params.toString()}`)
+    void replaceRoute(`/online`, {
+      [urlParamKeyMap.type]: 'topSongs' satisfies ViewType,
+      [urlParamKeyMap.source]: source.sId,
+    })
   }
 
   $effect(() => {

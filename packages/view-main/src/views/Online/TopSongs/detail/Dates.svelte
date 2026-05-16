@@ -1,11 +1,12 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import { query, replace } from '@/plugins/routes'
+  import { query } from '@/plugins/routes'
   import { t } from '@/plugins/i18n'
   import type { SourceType } from '../../shared.svelte'
   import { topSongsUrlParamKeyMap } from '../shared.svelte'
   import { getData } from '@/modules/resource/topSongs/date/actions'
   import { appEvent } from '@/modules/app/store/event'
+  import { replaceRoute } from '@/modules/resource/actions'
 
   let { source }: { source?: SourceType } = $props()
 
@@ -24,7 +25,7 @@
   })
 
   const handleToggleTag = (id: string) => {
-    void replace('/online', { ...$query, [topSongsUrlParamKeyMap.date]: id })
+    void replaceRoute('/online', { ...$query, [topSongsUrlParamKeyMap.date]: id })
     popupVisible = false
   }
 
@@ -59,7 +60,7 @@
     const date = $query[topSongsUrlParamKeyMap.date] || ''
     value = date
     if (!list.length || date == '' || (date && list.some((s) => s.id == date))) return
-    void replace('/online', { ...$query, [topSongsUrlParamKeyMap.date]: list[0].id })
+    void replaceRoute('/online', { ...$query, [topSongsUrlParamKeyMap.date]: list[0].id })
   })
 
   $effect(() => {
@@ -201,11 +202,11 @@
     padding: 10px;
   }
 
-  .type {
-    padding-top: 10px;
-    padding-bottom: 3px;
-    color: var(--color-font-label);
-  }
+  // .type {
+  //   padding-top: 10px;
+  //   padding-bottom: 3px;
+  //   color: var(--color-font-label);
+  // }
 
   .date {
     display: inline-block;

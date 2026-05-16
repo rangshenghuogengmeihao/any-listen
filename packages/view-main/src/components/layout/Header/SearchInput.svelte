@@ -1,15 +1,16 @@
 <script lang="ts">
   import SearchInput from '@/components/material/SearchInput.svelte'
   import { tipSearch as search } from '@/modules/resource/search/tip'
-  import { getLocation, query, replace } from '@/plugins/routes'
+  import { getLocation, query } from '@/plugins/routes'
   import { debounce } from '@/shared'
-  import { toOnline, urlParamKeyMap, useOnlineResourceAvailable } from '@/views/Online/shared.svelte'
+  import { urlParamKeyMap, useOnlineResourceAvailable } from '@/views/Online/shared.svelte'
   import { workers } from '@/worker'
   import { onMount, untrack, type ComponentExports } from 'svelte'
   import { t } from '@/plugins/i18n'
   import { useCommands } from '@/modules/app/reactive.svelte'
   import { executeCommand, getLastUsedCommands, setLastUsedCommand } from '@/modules/app/store/action'
   import { appEvent } from '@/modules/app/store/event'
+  import { back, toOnlineSearch } from '@/modules/resource/actions'
 
   let onlineResourceAvailable = useOnlineResourceAvailable()
 
@@ -81,7 +82,7 @@
       searchInput?.setList([])
       return
     }
-    void toOnline(text)
+    void toOnlineSearch(text)
   }
 
   const handleListClick = (index: number, text: string) => {
@@ -98,7 +99,7 @@
       searchInput?.setText('')
       return
     }
-    void toOnline(text)
+    void toOnlineSearch(text)
   }
 
   $effect(() => {
@@ -135,7 +136,7 @@
 </script>
 
 <SearchInput
-  --width="56%"
+  --width="52%"
   --max-width="38rem"
   --min-width="15rem"
   placeholder={$t('search.placeholder')}
@@ -145,14 +146,9 @@
   }}
   onsubmit={handleSubmit}
   onlistclick={handleListClick}
-  onhomebtnclick={onlineResourceAvailable.val
-    ? () => {
-        void replace('/online')
-      }
-    : undefined}
   onbackbtnclick={onlineResourceAvailable.val
     ? () => {
-        history.back()
+        back()
       }
     : undefined}
 />

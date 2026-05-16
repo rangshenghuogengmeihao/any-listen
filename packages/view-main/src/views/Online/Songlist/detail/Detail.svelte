@@ -3,11 +3,11 @@
   import MusicList from '@/components/common/MusicList/MusicList.svelte'
   import Pagination from '@/components/material/Pagination.svelte'
   import { buildRequestKey, detail } from '@/modules/resource/songlist/detail/actions'
-  import { location, query, push, replace, getLocation } from '@/plugins/routes'
+  import { location, query, getLocation } from '@/plugins/routes'
   import { tick, untrack, type ComponentExports } from 'svelte'
   import { urlParamKeyMap, useActiveSource } from '../../shared.svelte'
-  import { setOnlineResourceLocation } from '@/modules/app/store/action'
   import { saveList } from './action'
+  import { pushRoute, replaceRoute, setLastHistory } from '@/modules/resource/actions'
 
   const activeSource = useActiveSource('songlist', 'songlist')
 
@@ -62,7 +62,7 @@
             if (idx != -1) {
               musicList?.setScrollIndex(idx, false)
             }
-            void replace(`${location}?${new URLSearchParams(q).toString()}`)
+            void replaceRoute(location, q)
           })
         }
         // console.log(_list)
@@ -94,7 +94,7 @@
   })
 
   $effect(() => {
-    setOnlineResourceLocation([$location, { ...$query }])
+    setLastHistory($location, { ...$query })
   })
 </script>
 
@@ -139,7 +139,7 @@
           limit={listInfo.limit}
           onclick={(page) => {
             const loc = getLocation()
-            void push(loc.location, {
+            void pushRoute(loc.location, {
               ...loc.query,
               [urlParamKeyMap.page]: page,
             })

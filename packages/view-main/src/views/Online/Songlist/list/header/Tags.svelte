@@ -1,11 +1,12 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import { query, replace } from '@/plugins/routes'
+  import { query } from '@/plugins/routes'
   import { t } from '@/plugins/i18n'
   import type { SourceType } from '../../../shared.svelte'
   import { songlistUrlParamKeyMap } from '../../shared.svelte'
   import { getData } from '@/modules/resource/songlist/tag/actions'
   import { appEvent } from '@/modules/app/store/event'
+  import { replaceRoute } from '@/modules/resource/actions'
 
   let { source }: { source?: SourceType } = $props()
 
@@ -29,7 +30,7 @@
   })
 
   const handleToggleTag = (id: string) => {
-    void replace('/online', { ...$query, [songlistUrlParamKeyMap.tag]: id })
+    void replaceRoute('/online', { ...$query, [songlistUrlParamKeyMap.tag]: id })
     popupVisible = false
   }
 
@@ -110,7 +111,7 @@
     const tag = $query[songlistUrlParamKeyMap.tag] || ''
     value = tag
     if (!list.length || tag == '' || listSourceId != source.sId || (tag && list.some((s) => s.id == tag))) return
-    void replace('/online', { ...$query, [songlistUrlParamKeyMap.tag]: list[0].id })
+    void replaceRoute('/online', { ...$query, [songlistUrlParamKeyMap.tag]: list[0].id })
   })
 
   onMount(() => {

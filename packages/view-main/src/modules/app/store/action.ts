@@ -63,7 +63,6 @@ export const scrollListTo = (listId: string, source: AnyListen.Player.SourceType
 export {
   setFullScreen,
   setMachineId,
-  setOnlineResourceLocation,
   setRootOffset,
   // setInited,
   // setShowLogin,

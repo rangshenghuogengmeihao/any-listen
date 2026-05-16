@@ -35,7 +35,3 @@ export const setFullScreen = (isFullscreen: boolean) => {
 export const setWorkerInitPromise = (pMain: Promise<void>) => {
   appState.workerInitPromiseMain = pMain
 }
-
-export const setOnlineResourceLocation = (loc: [string, params: Record<string, string>] | null) => {
-  appState.onlineResourceLocation = loc
-}

@@ -9,7 +9,7 @@
   import Singer from './Singer/Singer.svelte'
   import { resourceList } from '@/modules/extension/reactive.svelte'
   import Empty from '@/components/material/Empty.svelte'
-  import { setOnlineResourceLocation } from '@/modules/app/store/action'
+  import { setLastHistory } from '@/modules/resource/actions'
 
   type ViewType = (typeof viewTypes)[number] | undefined
   let activeView = $derived.by<ViewType>(() => {
@@ -29,7 +29,7 @@
   })
 
   $effect(() => {
-    setOnlineResourceLocation([$location, { ...$query }])
+    setLastHistory($location, { ...$query })
   })
 </script>
 

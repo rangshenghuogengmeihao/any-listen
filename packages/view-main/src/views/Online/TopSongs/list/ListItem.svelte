@@ -4,10 +4,11 @@
   import { buildTopSongsDetailUrl } from '../../TopSongs/shared.svelte'
 
   let { item, sId }: { item: AnyListen.Resource.TopSongsItem; sId: string } = $props()
+  let url = $derived(buildTopSongsDetailUrl({ id: item.id, sid: sId }))
 </script>
 
 <li aria-label={item.name}>
-  <a class="list-item" href={buildTopSongsDetailUrl({ id: item.id, sid: sId })} {@attach link()}>
+  <a class="list-item" href={url.url} {@attach link()}>
     <div class="image">
       <Image src={item.pic} alt={item.name} />
     </div>

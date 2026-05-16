@@ -19,7 +19,6 @@ export interface InitState {
   }
   workerInitPromiseMain: Promise<void>
   os: 'windows' | 'linux' | 'mac'
-  onlineResourceLocation: [string, params: Record<string, string>] | null
 }
 
 export const appState: InitState = {
@@ -38,5 +37,4 @@ export const appState: InitState = {
   },
   workerInitPromiseMain: Promise.resolve(),
   os: window.os,
-  onlineResourceLocation: null,
 }

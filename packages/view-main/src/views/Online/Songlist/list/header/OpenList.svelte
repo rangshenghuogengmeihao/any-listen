@@ -6,9 +6,9 @@
   import type { SourceType } from '../../../shared.svelte'
   import { getSourceId, useResourceList } from '../../../shared.svelte'
   import { t } from '@/plugins/i18n'
-  import { push } from '@/plugins/routes'
   import { buildSonglistDetailUrl } from '../../shared.svelte'
   import { extT } from '@/modules/extension/i18n'
+  import { pushRoute } from '@/modules/resource/actions'
 
   let { source }: { source?: SourceType } = $props()
 
@@ -27,7 +27,8 @@
   const handleSubmit = () => {
     const id = text.trim()
     if (!id) return
-    void push(buildSonglistDetailUrl({ id, sid: selectedSourceId || source!.sId }))
+    const { path, meta } = buildSonglistDetailUrl({ id, sid: selectedSourceId || source!.sId })
+    void pushRoute(path, meta)
     visible = false
   }
 

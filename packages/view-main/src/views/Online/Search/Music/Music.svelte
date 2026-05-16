@@ -1,10 +1,10 @@
 <script lang="ts">
   import { getSourceId, urlParamKeyMap, type ResourceListType, type SourceType, type ViewType } from '../../shared.svelte'
   import Source from '../../Source.svelte'
-  import { query, replace } from '@/plugins/routes'
+  import { query, type Params } from '@/plugins/routes'
   import List from './List.svelte'
-  import { SvelteURLSearchParams } from 'svelte/reactivity'
   import { untrack } from 'svelte'
+  import { replaceRoute } from '@/modules/resource/actions'
 
   let { sourceList }: { sourceList: NonNullable<ResourceListType['musicSearch']> } = $props()
   let list = $derived(sourceList.map((s) => ({ ...s, sId: getSourceId(s) })))
@@ -13,13 +13,14 @@
   )
 
   const to = (source: SourceType) => {
-    const params = new SvelteURLSearchParams()
-    params.set(urlParamKeyMap.type, 'search' satisfies ViewType)
-    params.set(urlParamKeyMap.queryType, $query[urlParamKeyMap.queryType] ?? '')
-    params.set(urlParamKeyMap.source, source.sId)
+    const params: Params = {
+      [urlParamKeyMap.type]: 'search' satisfies ViewType,
+      [urlParamKeyMap.queryType]: $query[urlParamKeyMap.queryType] ?? '',
+      [urlParamKeyMap.source]: source.sId,
+    }
     let text = $query[urlParamKeyMap.query] ?? ''
-    if (text) params.set(urlParamKeyMap.query, text)
-    void replace(`/online?${params.toString()}`)
+    if (text) params[urlParamKeyMap.query] = text
+    void replaceRoute('/online', params)
   }
 
   $effect(() => {

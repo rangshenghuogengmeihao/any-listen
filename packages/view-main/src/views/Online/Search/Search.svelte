@@ -3,12 +3,13 @@
   import { urlParamKeyMap, useActiveType, useResourceList, type ViewType } from '../shared.svelte'
   import Tab from '@/components/base/Tab.svelte'
   import { i18n } from '@/plugins/i18n'
-  import { query, replace } from '@/plugins/routes'
+  import { query, type Params } from '@/plugins/routes'
   import Music from './Music/Music.svelte'
   import Songlist from './Songlist/Songlist.svelte'
   import Album from './Album/Album.svelte'
   import Singer from './Singer/Singer.svelte'
   import { untrack } from 'svelte'
+  import { replaceRoute } from '@/modules/resource/actions'
 
   const searchTypes = ['music', 'songlist', 'album', 'singer'] as const
   const searchTypeMap = {
@@ -37,15 +38,15 @@
   })
 
   const to = (queryType: string) => {
+    const params: Params = {
+      [urlParamKeyMap.type]: 'search' satisfies ViewType,
+      [urlParamKeyMap.queryType]: queryType,
+    }
     let activeSource = $query[urlParamKeyMap.source] ?? ''
     let text = $query[urlParamKeyMap.query] ?? ''
-    // eslint-disable-next-line svelte/prefer-svelte-reactivity
-    const params = new URLSearchParams()
-    params.set(urlParamKeyMap.type, 'search' satisfies ViewType)
-    params.set(urlParamKeyMap.queryType, queryType)
-    if (activeSource) params.set(urlParamKeyMap.source, activeSource)
-    if (text) params.set(urlParamKeyMap.query, text)
-    void replace(`/online?${params.toString()}`)
+    if (activeSource) params[urlParamKeyMap.source] = activeSource
+    if (text) params[urlParamKeyMap.query] = text
+    void replaceRoute('/online', params)
   }
 
   $effect(() => {

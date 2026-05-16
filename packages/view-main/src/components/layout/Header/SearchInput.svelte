@@ -17,6 +17,7 @@
   let searchInput = $state<ComponentExports<typeof SearchInput> | null>(null)
   let currentText = ''
   let isCommandMode = false
+  let submitted = false
 
   const commands = useCommands()
 
@@ -39,6 +40,7 @@
   }
   const tipSearch = debounce(async (text: string) => {
     currentText = text
+    submitted = false
     if (onlineResourceAvailable.val) {
       if (!text) {
         isCommandMode ||= false
@@ -54,7 +56,7 @@
       isCommandMode ||= true
       const command = currentText.slice(1).trim()
       void getCommandList(command).then((list) => {
-        if (!currentText.startsWith('>') || currentText != text) return
+        if (!currentText.startsWith('>') || currentText != text || submitted) return
         searchInput?.setList(
           list.map((item) => ({ title: item.name, desc: item.description, label: item.command, id: item.fullCommand }))
         )
@@ -64,13 +66,14 @@
 
     isCommandMode &&= false
     void search(text).then((list) => {
-      if (!currentText || currentText != text) return
+      if (!currentText || currentText != text || submitted) return
       searchInput?.setList(list.map((item) => ({ title: item, id: item })))
     })
   }, 50)
 
   const handleSubmit = (text: string) => {
     if (!onlineResourceAvailable.val) return
+    submitted = true
     text = text.trim()
     if (text && isCommandMode) {
       text = text.slice(1).trim()

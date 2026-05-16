@@ -116,12 +116,15 @@
       searchInput?.setList([])
       return
     }
-    isCommandMode ||= true
-    const command = currentText.slice(1).trim()
-    void getCommandList(command).then((list) => {
-      searchInput?.setList(
-        list.map((item) => ({ title: item.name, desc: item.description, label: item.command, id: item.fullCommand }))
-      )
+    untrack(() => {
+      isCommandMode ||= true
+      const command = currentText.slice(1).trim()
+      void getCommandList(command).then((list) => {
+        if (onlineResourceAvailable.val) return
+        searchInput?.setList(
+          list.map((item) => ({ title: item.name, desc: item.description, label: item.command, id: item.fullCommand }))
+        )
+      })
     })
   })
 

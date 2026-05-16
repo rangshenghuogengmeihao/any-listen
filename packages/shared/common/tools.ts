@@ -69,6 +69,7 @@ const labelMap: Record<AnyListen.Music.Quality, string> = {
   '192k': '192K',
   '128k': '128K',
 }
+const QUALITYS_REV = [...QUALITYS].reverse()
 
 export const buildSourceLabel = (musicinfo: AnyListen.Music.MusicInfo): string[] => {
   if (musicinfo.isLocal) {
@@ -84,7 +85,7 @@ export const buildSourceLabel = (musicinfo: AnyListen.Music.MusicInfo): string[]
         return [musicinfo.meta.bitrateLabel?.toUpperCase() ?? ''].filter((s) => s)
     }
   }
-  const quality = QUALITYS.find((q) => !!musicinfo.meta.qualitys?.[q])
+  const quality = QUALITYS_REV.find((q) => !!musicinfo.meta.qualitys?.[q])
   const label = quality ? labelMap[quality] : ''
   return [musicinfo.meta.source, label].filter((s) => s)
 }

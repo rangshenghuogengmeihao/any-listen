@@ -41,15 +41,17 @@
   let listStyle = $state('height: 0')
   let isFocus = false
   let isShowList = false
+  let maxHeight = '0'
 
   const showList = () => {
     isShowList = true
     isActive = true
-    listStyle = `height: ${domList?.scrollHeight ?? 0}px; max-height: ${document.body.clientHeight * 0.6}px;`
+    maxHeight = `${document.body.clientHeight * 0.6}px`
+    listStyle = `height: ${domList?.scrollHeight ?? 0}px; max-height: ${maxHeight};`
   }
   const hideList = () => {
     isShowList = false
-    listStyle = 'height: 0;'
+    listStyle = `height: 0; max-height: ${maxHeight};`
     void tick().then(() => {
       selectIndex = -1
       isActive = false
@@ -318,7 +320,7 @@
         padding: 8px 5px;
         line-height: 1.3;
         cursor: pointer;
-        transition: background-color 0.2s ease;
+        transition: background-color 0.3s ease;
         .list-item-title {
           .mixin-ellipsis-1();
         }

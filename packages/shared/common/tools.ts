@@ -1,4 +1,4 @@
-import { SINGERS_RXP } from './constants'
+import { QUALITYS, SINGERS_RXP } from './constants'
 import { dateFormat, generateIdByPerf } from './utils'
 
 export const getMusicInfo = (musicInfo: AnyListen.Download.ListItem | AnyListen.Music.MusicInfo) => {
@@ -59,17 +59,16 @@ export const buildMusicName = (setting: AnyListen.AppSetting['download.fileName'
   return singer ? setting.replace('%name%', name).replace('%singer%', singer) : name
 }
 
-const qualitys = ['master', 'dobly', 'flac24bit', 'flac', 'wav', '320k', '192k', '128k'] as const
-const labelMap = {
-  master: 'Mster',
-  dobly: 'Dobly',
-  flac24bit: '24bit',
+const labelMap: Record<AnyListen.Music.Quality, string> = {
+  master: 'MASTER',
+  dolby: 'ATMOS',
+  flac24bit: 'HR',
   flac: 'SQ',
   wav: 'WAV',
   '320k': '320K',
   '192k': '192K',
   '128k': '128K',
-} as const
+}
 
 export const buildSourceLabel = (musicinfo: AnyListen.Music.MusicInfo): string[] => {
   if (musicinfo.isLocal) {
@@ -85,7 +84,7 @@ export const buildSourceLabel = (musicinfo: AnyListen.Music.MusicInfo): string[]
         return [musicinfo.meta.bitrateLabel?.toUpperCase() ?? ''].filter((s) => s)
     }
   }
-  const quality = qualitys.find((q) => !!musicinfo.meta.qualitys?.[q])
+  const quality = QUALITYS.find((q) => !!musicinfo.meta.qualitys?.[q])
   const label = quality ? labelMap[quality] : ''
   return [musicinfo.meta.source, label].filter((s) => s)
 }
@@ -107,7 +106,7 @@ export const getFileType = (quality: string): AnyListen.Music.FileType => {
       return 'wav'
     case 'flac':
     case 'flac24bit':
-    case 'dobly':
+    case 'dolby':
     case 'master':
       return 'flac'
   }

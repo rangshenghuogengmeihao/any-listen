@@ -1,7 +1,7 @@
 declare namespace AnyListen {
   namespace Music {
     type Source = string
-    type Quality = '128k' | '320k' | 'flac' | 'flac24bit' | '192k' | 'wav' | 'dobly' | 'master'
+    type Quality = '128k' | '320k' | 'flac' | 'flac24bit' | '192k' | 'wav' | 'dolby' | 'master'
     type FileType = 'mp3' | 'flac' | 'wav' | 'm4a'
 
     type MusicQualityType = Partial<

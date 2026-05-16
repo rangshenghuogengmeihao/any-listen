@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
+import { QUALITYS } from '@any-listen/common/constants'
+
 import type { ListCommonResult } from '@/types/api'
 
 let actions: Partial<AnyListen.IPCExtension.ResourceAction>
@@ -6,7 +8,6 @@ export const registerResourceAction = (_actions: Partial<AnyListen_API.ResourceA
   actions = _actions
 }
 
-const QUALITYS: AnyListen.Music.Quality[] = ['128k', '192k', '320k', 'wav', 'flac', 'flac24bit', 'dobly', 'master']
 const qualityFilter = (qualitys: AnyListen.Music.MusicInfoOnline['meta']['qualitys']) => {
   return Object.fromEntries(
     (Object.entries(qualitys ?? {}) as EntriesObject<NonNullable<typeof qualitys>>)

@@ -1,5 +1,9 @@
 <!--- @lang: en-us -->
 
+### Added
+
+- Added a **Preferred Playback Quality** option under _Settings > Playback Settings_, defaulting to **128k**.
+
 ### Improved
 
 - Improved the hide animation of the **Search Box**.
@@ -12,6 +16,10 @@
 ---
 
 <!--- @lang: zh-cn -->
+
+### 新增
+
+- 新增 **「优先播放音质」** 选项，位于 _设置 > 播放设置_，默认 **128k**。
 
 ### 优化
 

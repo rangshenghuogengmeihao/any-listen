@@ -99,7 +99,7 @@ export const DOWNLOAD_STATUS = {
   COMPLETED: 'completed',
 } as const
 
-export const QUALITYS = ['flac24bit', 'flac', 'wav', 'ape', '320k', '192k', '128k'] as const
+export const QUALITYS: AnyListen.Music.Quality[] = ['128k', '192k', '320k', 'wav', 'flac', 'flac24bit', 'dolby', 'master']
 
 export const MEDIA_FILE_TYPES = ['mp3', 'flac', 'ogg', 'oga', 'wav', 'm4a'] as const
 export const PIC_FILE_TYPES = ['jpg', 'jpeg', 'gif', 'png', 'webp'] as const

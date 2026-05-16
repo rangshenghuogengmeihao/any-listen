@@ -178,7 +178,6 @@ export const settings: SettingListSection[] = [
         name: 'settings.player.lyric_trans_roma_swap',
         type: 'boolean',
       },
-      // t('settings.player.ignore_local_lyrics')
       {
         field: 'player.isPlayAwlrc',
         name: 'settings.player.play_awlrc',
@@ -211,6 +210,20 @@ export const settings: SettingListSection[] = [
             type: 'boolean',
           }
         : null,
+      // t('settings.player.music_quality_128k')
+      {
+        field: 'player.playQuality',
+        name: 'settings.player.music_quality',
+        type: 'radio',
+        enum: (
+          ['128k', '320k', 'flac', 'flac24bit', 'dolby', 'master'] satisfies Array<
+            Exclude<AnyListen.Music.Quality, 'wav' | '192k'>
+          >
+        ).map((l) => ({
+          value: l,
+          name: `settings.player.music_quality_${l}`,
+        })),
+      },
       {
         name: 'settings.player.media_device',
         type: 'component',

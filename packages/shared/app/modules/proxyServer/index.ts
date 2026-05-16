@@ -21,7 +21,7 @@ const verifyOptions = async (url: string, opts: Options) => {
 }
 
 export const generateName = (url: string) => {
-  if (url.length > 1024) throw new Error('URL too long')
+  if (url.length > 2048) throw new Error('URL too long')
 
   const ext = extname(url)
   if (ext && !checkAllowedExt(ext)) throw new Error('Not allowed file type')

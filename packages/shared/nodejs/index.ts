@@ -12,7 +12,7 @@ export const nodeProcess = process
 
 export const joinPath = (...paths: string[]): string => path.join(...paths)
 
-export const extname = (p: string): string => path.extname(p).toLowerCase()
+export const extname = (p: string): string => path.extname(p.split('?')[0]).toLowerCase()
 export const extnameRaw = (p: string): string => path.extname(p)
 export const basename = (p: string, ext?: string): string => path.basename(p, ext)
 export const dirname = (p: string): string => path.dirname(p)

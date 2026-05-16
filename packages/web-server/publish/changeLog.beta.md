@@ -6,7 +6,8 @@
 
 ### Fixed
 
-- Fixed an issue where the search box command list did not display as expected on first load.
+- Fixed an issue where the **Search Box** command list did not display as expected on first load.
+- Fixed an issue where proxy service validation failed for URLs with query parameters.
 
 ---
 
@@ -19,3 +20,4 @@
 ### 修复
 
 - 修复首次加载时 **「搜索框」** 的命令列表未按预期显示的问题。
+- 修复代理服务校验带参数 URL 异常的问题。

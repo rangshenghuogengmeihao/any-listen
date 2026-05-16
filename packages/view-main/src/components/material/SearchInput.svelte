@@ -38,21 +38,24 @@
   let domInput = $state<HTMLInputElement | null>(null)
   let domList = $state<HTMLDivElement | null>(null)
   let text = $state('')
-  let isFocus = $state(false)
+  let isActive = $state(false)
   let selectIndex = $state(-1)
   let list = $state<ListItem[]>([])
   let listStyle = $state('height: 0')
+  let isFocus = false
   let isShowList = false
 
   const showList = () => {
     isShowList = true
+    isActive = true
     listStyle = `height: ${domList?.scrollHeight ?? 0}px; max-height: ${document.body.clientHeight * 0.6}px;`
   }
   const hideList = () => {
     isShowList = false
-    listStyle = 'height: 0'
+    listStyle = 'height: 0;'
     void tick().then(() => {
       selectIndex = -1
+      isActive = false
     })
   }
   const handleSearch = () => {
@@ -112,7 +115,7 @@
 </script>
 
 <div class="search-input no-drag">
-  <div class={['content', { active: isFocus, small, big }]}>
+  <div class={['content', { active: isActive, small, big }]}>
     <div class="form">
       {#if onhomebtnclick}
         <button type="button" aria-label={$t('btn_home')} onclick={onhomebtnclick}>
@@ -247,7 +250,7 @@
     border-radius: @form-radius;
     transition:
       box-shadow 0.4s ease,
-      background-color @transition-normal;
+      background-color @transition-fast;
 
     &.active {
       background-color: var(--color-primary-light-600-alpha-100);

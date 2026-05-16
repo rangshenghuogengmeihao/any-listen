@@ -3,13 +3,15 @@
   import { tipSearch as search } from '@/modules/resource/search/tip'
   import { getLocation, query, replace } from '@/plugins/routes'
   import { debounce } from '@/shared'
-  import { toOnline, urlParamKeyMap } from '@/views/Online/shared.svelte'
+  import { toOnline, urlParamKeyMap, useOnlineResourceAvailable } from '@/views/Online/shared.svelte'
   import { workers } from '@/worker'
   import { onMount, untrack, type ComponentExports } from 'svelte'
   import { t } from '@/plugins/i18n'
   import { useCommands } from '@/modules/app/reactive.svelte'
   import { executeCommand, getLastUsedCommands, setLastUsedCommand } from '@/modules/app/store/action'
   import { appEvent } from '@/modules/app/store/event'
+
+  let onlineResourceAvailable = useOnlineResourceAvailable()
 
   let searchInput = $state<ComponentExports<typeof SearchInput> | null>(null)
   let currentText = ''
@@ -36,10 +38,15 @@
   }
   const tipSearch = debounce(async (text: string) => {
     currentText = text
-    if (!text) {
-      isCommandMode ||= false
-      searchInput?.setList([])
-      return
+    if (onlineResourceAvailable.val) {
+      if (!text) {
+        isCommandMode ||= false
+        searchInput?.setList([])
+        return
+      }
+    } else if (!currentText.startsWith('>')) {
+      text = `> ${text}`
+      currentText = text
     }
 
     if (currentText.startsWith('>')) {
@@ -62,6 +69,7 @@
   }, 50)
 
   const handleSubmit = (text: string) => {
+    if (!onlineResourceAvailable.val) return
     text = text.trim()
     if (text && isCommandMode) {
       text = text.slice(1).trim()
@@ -83,9 +91,11 @@
         setLastUsedCommand(command)
       })
       currentText = ''
-      isCommandMode ||= false
+      if (onlineResourceAvailable.val) {
+        isCommandMode ||= false
+        searchInput?.setList([])
+      }
       searchInput?.setText('')
-      searchInput?.setList([])
       return
     }
     void toOnline(text)
@@ -97,6 +107,20 @@
     untrack(() => {
       searchInput?.setText(currentText)
       if (!currentText) searchInput?.setList([])
+    })
+  })
+
+  $effect(() => {
+    if (onlineResourceAvailable.val) {
+      searchInput?.setList([])
+      return
+    }
+    isCommandMode ||= true
+    const command = currentText.slice(1).trim()
+    void getCommandList(command).then((list) => {
+      searchInput?.setList(
+        list.map((item) => ({ title: item.name, desc: item.description, label: item.command, id: item.fullCommand }))
+      )
     })
   })
 
@@ -121,10 +145,14 @@
   }}
   onsubmit={handleSubmit}
   onlistclick={handleListClick}
-  onhomebtnclick={() => {
-    void replace('/online')
-  }}
-  onbackbtnclick={() => {
-    history.back()
-  }}
+  onhomebtnclick={onlineResourceAvailable.val
+    ? () => {
+        void replace('/online')
+      }
+    : undefined}
+  onbackbtnclick={onlineResourceAvailable.val
+    ? () => {
+        history.back()
+      }
+    : undefined}
 />

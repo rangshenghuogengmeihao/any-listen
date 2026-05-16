@@ -72,12 +72,12 @@ export const createBoxs = (common: ReturnType<typeof createCommon>) => {
     },
     async showOpenDialog({ signal, ...options }: AnyListen.IPCCommon.OpenDialogOptions & { signal?: AbortSignal }) {
       return buildKey(async (key) => {
-        return common.showOpenBox(key, options) as Promise<string[]>
+        return common.showOpenBox(key, options)
       }, signal)
     },
     async showSaveDialog({ signal, ...options }: AnyListen.IPCCommon.SaveDialogOptions & { signal?: AbortSignal }) {
       return buildKey(async (key) => {
-        return common.showSaveBox(key, options) as Promise<string>
+        return common.showSaveBox(key, options)
       }, signal)
     },
   }

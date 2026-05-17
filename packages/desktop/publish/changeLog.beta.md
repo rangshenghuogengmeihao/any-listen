@@ -2,7 +2,7 @@
 
 ### Improved
 
-- Improved the display stability of the search box dropdown list.
+- Improved the stability of the search box dropdown display.
 
 ### Fixed
 
@@ -14,7 +14,7 @@
 
 ### 优化
 
-- 优化搜索框下拉列表显示稳定性。
+- 优化搜索框下拉列表的显示稳定性。
 
 ### 修复
 

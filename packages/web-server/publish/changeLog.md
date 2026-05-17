@@ -16,6 +16,7 @@
 
 - Fixed an issue where the currently playing **Play Later** track was unexpectedly removed from the playlist when the player was reloaded.
 - Fixed an issue where proxy service validation failed for URLs with query parameters.
+- Fixed an issue where extension translations were displayed incorrectly.
 
 ---
 
@@ -37,3 +38,4 @@
 
 - 修复正在播放的 **「稍后播放」** 歌曲在重新加载播放器时被意外从播放列表移除的问题。
 - 修复代理服务校验带参数 URL 异常的问题。
+- 修复扩展翻译显示问题。

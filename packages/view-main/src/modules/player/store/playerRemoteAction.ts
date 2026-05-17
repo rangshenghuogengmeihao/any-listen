@@ -179,7 +179,7 @@ export const getMusicUrl = async (info: AnyListen.IPCMusic.GetMusicUrlInfo): Pro
     let timeout: null | number = setTimeout(() => {
       timeout = null
       reject(new Error('find music timeout'))
-    }, 15_000)
+    }, 30_000)
     getMusicUrlFromRemote(info)
       .then(resolve)
       .catch(reject)

@@ -10,6 +10,7 @@ import { getMusicUrl } from '../store/playerRemoteAction'
 import { playerState } from '../store/state'
 
 let audio: HTMLAudioElement
+const PRELOAD_TIME = 15
 const initAudio = () => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (audio) return
@@ -108,7 +109,7 @@ export const initPreloadNextMusic = () => {
         onTimeupdate(() => {
           const time = getCurrentTime()
           const duration = playerState.progress.maxPlayTime
-          if (duration > 10 && duration - time < 10 && !preloadMusicInfo.info) {
+          if (duration > PRELOAD_TIME && duration - time < PRELOAD_TIME && !preloadMusicInfo.info) {
             void preloadNextMusicUrl(time)
           }
         })

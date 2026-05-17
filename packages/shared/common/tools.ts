@@ -167,7 +167,7 @@ export const singerFormat = (name: string) => {
 }
 
 export const buildPublicPath = (basePath: string, name: string) => {
-  return `${basePath.startsWith('/') ? basePath.substring(1) : basePath}/${name}`
+  return `${basePath.startsWith('/') ? '.' : ''}${basePath}/${name}`
 }
 
 export const deduplicationList = <T extends AnyListen.Music.MusicInfo>(list: T[]): T[] => {

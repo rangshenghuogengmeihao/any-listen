@@ -207,7 +207,7 @@ const verifyListCommonResult = <T>(result: ListCommonResult<T>, name: string): L
   if (typeof result.limit != 'number') throw new Error(withErrorReason(`${name} result.limit is not a number`, result.limit))
   return result
 }
-const urlRxp = /^(?:(?:https?|file):\/\/\S+|\/(?!\/)\S*)$/
+const urlRxp = /^(?:(?:https?|file):\/\/\S+|(?:\.{0,2})\/(?!\/)\S*)$/
 const verifyUrl = (url: string, name: string) => {
   if (typeof url != 'string') throw new Error(withErrorReason(`${name} url result is not a string`, url))
   if (url.length > 2048) throw new Error(withErrorReason(`${name} url is too long`, url, `length=${url.length}`))

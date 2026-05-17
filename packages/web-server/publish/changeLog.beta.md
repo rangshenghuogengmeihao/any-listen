@@ -7,6 +7,7 @@
 ### Fixed
 
 - Fixed an issue where the highest audio quality label in song lists was displayed incorrectly.
+- Fixed proxy URL format validation.
 
 ---
 
@@ -19,3 +20,4 @@
 ### 修复
 
 - 修复歌曲列表最高音质显示问题。
+- 修复代理 URL 格式校验问题。

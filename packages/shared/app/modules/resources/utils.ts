@@ -32,8 +32,8 @@ export const getExtSource = <T extends AnyListen.Extension.ResourceAction>(
   )
 }
 
-const httpRxp = /^(?:https?:\/\/|\/\w+)/
-const httpRxpWebServer = /^(?:https?:\/\/|\/?\w+)/
+const httpRxp = /^(?:(?:https?|file):\/\/\S+|(?:\.{0,2})\/(?!\/)\S*)$/
+const httpRxpWebServer = /^(?:https?:\/\/\S+|(?:\.{0,2})\/(?!\/)\S*)$/
 export const allowedUrl = (url: string) => {
   if (import.meta.env.VITE_IS_DESKTOP) return httpRxp.test(url)
   return httpRxpWebServer.test(url)

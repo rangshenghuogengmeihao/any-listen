@@ -3,6 +3,8 @@ import { QUALITYS } from '@any-listen/common/constants'
 
 import type { ListCommonResult } from '@/types/api'
 
+import { console } from './global'
+
 let actions: Partial<AnyListen.IPCExtension.ResourceAction>
 export const registerResourceAction = (_actions: Partial<AnyListen_API.ResourceAction>) => {
   actions = _actions
@@ -14,12 +16,20 @@ const qualityFilter = (qualitys: AnyListen.Music.MusicInfoOnline['meta']['qualit
       .filter(([quality]) => QUALITYS.includes(quality))
       .map(([key, data]) => {
         const dataArr = Object.entries(data!)
-        if (dataArr.length > 20) throw new Error('quality type data too much')
+        if (dataArr.length > 20) {
+          throw new Error(withErrorReason('quality type data too much', data, `key=${key}; length=${dataArr.length}`))
+        }
         for (const [key, value] of dataArr) {
-          if (typeof key != 'string' || key.length > 64) throw new Error('quality type key no match')
+          if (typeof key != 'string' || key.length > 64) {
+            throw new Error(withErrorReason('quality type key no match', key, `length=${key.length}`))
+          }
           if (typeof value == 'string') {
-            if (value.length > 2048) throw new Error('quality type value no match')
-          } else if (value != null) throw new Error('quality type value no match')
+            if (value.length > 2048) {
+              throw new Error(withErrorReason('quality type value no match', value, `length=${value.length}`))
+            }
+          } else if (value != null) {
+            throw new Error(withErrorReason('quality type value no match', value))
+          }
         }
         return [key, data]
       })
@@ -27,6 +37,57 @@ const qualityFilter = (qualitys: AnyListen.Music.MusicInfoOnline['meta']['qualit
 }
 const substrLength = (str: string, length = 128): string => {
   return str.length > length ? str.substring(0, length) : str
+}
+/**
+ * 获取值的可读类型描述。
+ *
+ * @param value 需要描述类型的任意值。
+ * @returns 统一后的类型字符串，例如 `string`、`number`、`null`、`array`、`object`。
+ */
+const getValueType = (value: unknown): string => {
+  if (value === null) return 'null'
+  if (Array.isArray(value)) return 'array'
+  return typeof value
+}
+/**
+ * 将任意值格式化为适合拼接到错误信息中的字符串。
+ *
+ * @param value 需要输出到错误信息中的值。
+ * @param length 输出的最大长度，超出会被截断，默认 256。
+ * @returns 适合日志/报错展示的字符串值。
+ *
+ * 用法：
+ * 用于错误信息里输出实际值，例如 `value=xxx`。
+ */
+const formatErrorValue = (value: unknown, length = 256): string => {
+  if (typeof value == 'string') return substrLength(value, length)
+  if (typeof value == 'number' || typeof value == 'boolean' || typeof value == 'bigint') return String(value)
+  if (typeof value == 'undefined') return 'undefined'
+  if (typeof value == 'symbol') return String(value)
+  if (typeof value == 'function') return `[function ${value.name || 'anonymous'}]`
+  try {
+    return substrLength(JSON.stringify(value), length)
+  } catch {
+    return Object.prototype.toString.call(value)
+  }
+}
+/**
+ * 生成统一格式的错误消息，自动追加值的类型、内容以及额外上下文。
+ *
+ * @param message 错误主信息，描述“为什么错”。
+ * @param value 触发错误的原始值，会自动补充 type 和 value。
+ * @param extra 可选的附加上下文，例如 index、length、expected 等。
+ * @returns 可直接传给 Error 的完整错误文本。
+ *
+ * 用法：
+ * ```
+ * throw new Error(withErrorReason('music url is not a valid url', url))
+ * throw new Error(withErrorReason('song item is null', item, `index=${index}`))
+ * ```
+ */
+const withErrorReason = (message: string, value: unknown, extra?: string): string => {
+  const reason = `type=${getValueType(value)} value=${formatErrorValue(value)}`
+  return extra ? `${message}: ${extra}; ${reason}` : `${message}: ${reason}`
 }
 const toSafeString = (value: unknown, name: string, length = 128): string => {
   switch (typeof value) {
@@ -37,13 +98,13 @@ const toSafeString = (value: unknown, name: string, length = 128): string => {
     case 'bigint':
       return substrLength(String(value), length)
     default:
-      throw new Error(`${name} is not a string`)
+      throw new Error(withErrorReason(`${name} is not a string`, value))
   }
 }
 const getRequiredString = (value: unknown, name: string, length = 128): string => {
-  if (value == null) throw new Error(`${name} is null`)
+  if (value == null) throw new Error(withErrorReason(`${name} is null`, value))
   const str = toSafeString(value, name, length)
-  if (!str.trim()) throw new Error(`${name} is empty`)
+  if (!str.trim()) throw new Error(withErrorReason(`${name} is empty`, value))
   return str
 }
 const getOptionalString = (value: unknown, length = 128): string | undefined => {
@@ -61,21 +122,22 @@ const getOptionalInt = (value: unknown, min = 0): number | undefined => {
   return Math.trunc(value)
 }
 const verifyArray = <T>(list: T[], name: string, verifyItem: (item: T, index: number) => void): T[] => {
-  if (!Array.isArray(list)) throw new Error(`${name} result is not an array`)
+  if (!Array.isArray(list)) throw new Error(withErrorReason(`${name} result is not an array`, list))
   for (let i = list.length - 1; i >= 0; i--) {
     try {
       verifyItem(list[i], i)
-    } catch {
+    } catch (e) {
+      console.warn(`verify ${name} array item error`, (e as Error).message)
       list.splice(i, 1)
     }
   }
   return list
 }
 const verifyStringArray = (arr: string[], name: string): string[] => {
-  if (!Array.isArray(arr)) throw new Error(`${name} result is not an array`)
+  if (!Array.isArray(arr)) throw new Error(withErrorReason(`${name} result is not an array`, arr))
   return arr
     .filter((s) => {
-      if (typeof s !== 'string') throw new Error(`${name} result is not a string`)
+      if (typeof s !== 'string') throw new Error(withErrorReason(`${name} result is not a string`, s))
       return !!s.trim()
     })
     .map((s) => substrLength(String(s)))
@@ -85,11 +147,11 @@ export const verifyOnlineMusicArray = (
   name: string,
   source: string
 ): AnyListen.Music.MusicInfoOnline[] => {
-  if (!Array.isArray(list)) throw new Error(`${name} result is not an array`)
+  if (!Array.isArray(list)) throw new Error(withErrorReason(`${name} result is not an array`, list))
   for (let i = list.length - 1; i >= 0; i--) {
     const musicInfo = list[i]
     try {
-      if (!musicInfo) throw new Error(`${name} result contains null item`)
+      if (!musicInfo) throw new Error(withErrorReason(`${name} result contains null item`, musicInfo, `index=${i}`))
       const id = getRequiredString(musicInfo.id, `${name} result.id`)
       const _name = getRequiredString(musicInfo.name, `${name} result.name`)
       const singer = getOptionalString(musicInfo.singer) ?? ''
@@ -100,7 +162,7 @@ export const verifyOnlineMusicArray = (
         interval = null
       }
 
-      if (!musicInfo.meta) throw new Error(`${name} result.meta is null`)
+      if (!musicInfo.meta) throw new Error(withErrorReason(`${name} result.meta is null`, musicInfo.meta, `index=${i}`))
       const meta = { ...musicInfo.meta }
       meta.albumName = getOptionalString(meta.albumName) ?? ''
       meta.createTime = 0
@@ -113,7 +175,7 @@ export const verifyOnlineMusicArray = (
       } else {
         meta.year = Math.trunc(meta.year)
       }
-      if (!meta.qualitys) throw new Error(`${name} result.meta.qualitys is null`)
+      if (!meta.qualitys) throw new Error(withErrorReason(`${name} result.meta.qualitys is null`, meta.qualitys, `index=${i}`))
       meta.qualitys = qualityFilter(meta.qualitys)
       // eslint-disable-next-line @typescript-eslint/no-base-to-string
       if (meta.filePath != null) meta.filePath = substrLength(String(meta.filePath), 2048)
@@ -131,34 +193,37 @@ export const verifyOnlineMusicArray = (
         meta,
       }
     } catch (e) {
+      console.warn(`verify ${name} array item error`, (e as Error).message)
       list.splice(i, 1)
     }
   }
   return list
 }
 const verifyListCommonResult = <T>(result: ListCommonResult<T>, name: string): ListCommonResult<T> => {
-  if (!result) throw new Error(`${name} result is null`)
-  if (!Array.isArray(result.list)) throw new Error(`${name} result.list is not an array`)
-  if (typeof result.total != 'number') throw new Error(`${name} result.total is not an number`)
-  if (typeof result.page != 'number') throw new Error(`${name} result.page is not an number`)
-  if (typeof result.limit != 'number') throw new Error(`${name} result.limit is not an number`)
+  if (!result) throw new Error(withErrorReason(`${name} result is null`, result))
+  if (!Array.isArray(result.list)) throw new Error(withErrorReason(`${name} result.list is not an array`, result.list))
+  if (typeof result.total != 'number') throw new Error(withErrorReason(`${name} result.total is not a number`, result.total))
+  if (typeof result.page != 'number') throw new Error(withErrorReason(`${name} result.page is not a number`, result.page))
+  if (typeof result.limit != 'number') throw new Error(withErrorReason(`${name} result.limit is not a number`, result.limit))
   return result
 }
-const urlRxp = /^(?:(?:https?|file):\/\/|\/\w+)/
+const urlRxp = /^(?:(?:https?|file):\/\/\S+|\/(?!\/)\S*)$/
 const verifyUrl = (url: string, name: string) => {
-  if (typeof url != 'string') throw new Error(`${name} url result is not a string`)
-  if (url.length > 2048) throw new Error(`${name} url is too long`)
-  if (!urlRxp.test(url)) throw new Error(`${name} url is not a valid url`)
+  if (typeof url != 'string') throw new Error(withErrorReason(`${name} url result is not a string`, url))
+  if (url.length > 2048) throw new Error(withErrorReason(`${name} url is too long`, url, `length=${url.length}`))
+  if (!urlRxp.test(url)) throw new Error(withErrorReason(`${name} url is not a valid url`, url))
 }
 const verifyQuality = (quality: string) => {
-  if (typeof quality != 'string') throw new Error(`quality is not a string`)
-  if (!QUALITYS.includes(quality as AnyListen.Music.Quality)) throw new Error(`quality is not a valid quality`)
+  if (typeof quality != 'string') throw new Error(withErrorReason('quality is not a string', quality))
+  if (!QUALITYS.includes(quality as AnyListen.Music.Quality)) {
+    throw new Error(withErrorReason('quality is not a valid quality', quality, `expected one of ${QUALITYS.join(', ')}`))
+  }
 }
 const verifyTipSearchAction = (result: string[]): string[] => {
   return verifyStringArray(result, 'tip search')
 }
 const verifyHotSearchAction = (result: string[]): string[] => {
-  if (!Array.isArray(result)) throw new Error('hot search result is not an array')
+  if (!Array.isArray(result)) throw new Error(withErrorReason('hot search result is not an array', result))
   return result.filter((s) => s != null).map((s) => String(s))
 }
 const verifyMusicSearchAction = (
@@ -185,7 +250,7 @@ const verifyMusicUrlAction = (result: AnyListen.IPCExtension.MusicUrlInfo): AnyL
   return result
 }
 const verifyLyricInfo = (result: AnyListen.Music.LyricInfo, name: string): AnyListen.Music.LyricInfo => {
-  if (!result) throw new Error(`${name} result is null`)
+  if (!result) throw new Error(withErrorReason(`${name} result is null`, result))
   const lyric = getRequiredString(result.lyric, `${name} lyric`, 1024 * 1024)
   const lyricName = getOptionalString(result.name) ?? ''
   const singer = getOptionalString(result.singer) ?? ''
@@ -227,7 +292,7 @@ const verifyLyricSearchAction = (
   result: AnyListen.IPCExtension.LyricSearchResult[]
 ): AnyListen.IPCExtension.LyricSearchResult[] => {
   verifyArray(result, 'lyric search', (item, index) => {
-    if (!item) throw new Error('lyric search item is null')
+    if (!item) throw new Error(withErrorReason('lyric search item is null', item, `index=${index}`))
     const id = getRequiredString(item.id, 'lyric search item id')
     const name = getRequiredString(item.name, 'lyric search item name')
     const artist = getOptionalString(item.artist)
@@ -241,7 +306,8 @@ const verifyLyricSearchAction = (
     if (item.lyric) {
       try {
         lyric = verifyLyricInfo(item.lyric, 'lyric search item lyric')
-      } catch {
+      } catch (e) {
+        console.warn('verify lyric search item lyric error', (e as Error).message)
         lyric = undefined
       }
     }
@@ -260,7 +326,7 @@ const verifyLyricAction = (result: AnyListen.Music.LyricInfo): AnyListen.Music.L
 }
 const verifySonglistItemArray = (list: AnyListen.Resource.SongListItem[], name: string): AnyListen.Resource.SongListItem[] => {
   return verifyArray(list, name, (item, index) => {
-    if (!item) throw new Error(`${name} item is null`)
+    if (!item) throw new Error(withErrorReason(`${name} item is null`, item, `index=${index}`))
     list[index] = {
       id: getRequiredString(item.id, `${name} item id`),
       name: getRequiredString(item.name, `${name} item name`),
@@ -275,7 +341,7 @@ const verifySonglistItemArray = (list: AnyListen.Resource.SongListItem[], name: 
 }
 const verifyTagItemArray = (list: AnyListen.Resource.TagItem[], name: string): AnyListen.Resource.TagItem[] => {
   return verifyArray(list, name, (item, index) => {
-    if (!item) throw new Error(`${name} item is null`)
+    if (!item) throw new Error(withErrorReason(`${name} item is null`, item, `index=${index}`))
     list[index] = {
       id: getRequiredString(item.id, `${name} item id`),
       name: getRequiredString(item.name, `${name} item name`),
@@ -284,7 +350,7 @@ const verifyTagItemArray = (list: AnyListen.Resource.TagItem[], name: string): A
 }
 const verifyTagGroupItemArray = (list: AnyListen.Resource.TagGroupItem[], name: string): AnyListen.Resource.TagGroupItem[] => {
   return verifyArray(list, name, (item, index) => {
-    if (!item) throw new Error(`${name} item is null`)
+    if (!item) throw new Error(withErrorReason(`${name} item is null`, item, `index=${index}`))
     list[index] = {
       name: getRequiredString(item.name, `${name} item name`),
       list: verifyTagItemArray(item.list, `${name} item list`),
@@ -293,7 +359,7 @@ const verifyTagGroupItemArray = (list: AnyListen.Resource.TagGroupItem[], name: 
 }
 const verifyTopSongsItemArray = (list: AnyListen.Resource.TopSongsItem[], name: string): AnyListen.Resource.TopSongsItem[] => {
   return verifyArray(list, name, (item, index) => {
-    if (!item) throw new Error(`${name} item is null`)
+    if (!item) throw new Error(withErrorReason(`${name} item is null`, item, `index=${index}`))
     list[index] = {
       id: getRequiredString(item.id, `${name} item id`),
       name: getRequiredString(item.name, `${name} item name`),
@@ -313,7 +379,7 @@ const verifySonglistSortsAction = (result: AnyListen.Resource.TagItem[]): AnyLis
   return result
 }
 const verifySonglistTagsAction = (result: AnyListen.IPCExtension.SonglistTagResult): AnyListen.IPCExtension.SonglistTagResult => {
-  if (!result) throw new Error('songlist tags result is null')
+  if (!result) throw new Error(withErrorReason('songlist tags result is null', result))
   return {
     tags: verifyTagGroupItemArray(Array.isArray(result.tags) ? result.tags : [], 'songlist tags'),
     hotTags: verifyTagItemArray(Array.isArray(result.hotTags) ? result.hotTags : [], 'songlist hot tags'),
@@ -330,7 +396,7 @@ const verifySonglistDetailInfo = (
   info: AnyListen.Resource.SongListDetailInfo,
   name: string
 ): AnyListen.Resource.SongListDetailInfo => {
-  if (!info) throw new Error(`${name} is null`)
+  if (!info) throw new Error(withErrorReason(`${name} is null`, info))
   return {
     name: getRequiredString(info.name, `${name} name`),
     img: getOptionalString(info.img, 2048),
@@ -366,7 +432,7 @@ const verifyTopSongsDetailInfo = (
   info: AnyListen.Resource.TopSongsDetailInfo,
   name: string
 ): AnyListen.Resource.TopSongsDetailInfo => {
-  if (!info) throw new Error(`${name} is null`)
+  if (!info) throw new Error(withErrorReason(`${name} is null`, info))
   return {
     name: getRequiredString(info.name, `${name} name`),
     pic: getOptionalString(info.pic, 2048),
@@ -395,7 +461,7 @@ const verifyMusicCommentArray = (
   depth = 0
 ): AnyListen.Resource.MusicCommentItem[] => {
   return verifyArray(list, name, (item, index) => {
-    if (!item) throw new Error(`${name} item is null`)
+    if (!item) throw new Error(withErrorReason(`${name} item is null`, item, `index=${index}`))
     const id = getRequiredString(item.id, `${name} item id`)
     const userId = getOptionalString(item.userId)
     const userName = getRequiredString(item.userName, `${name} item userName`)
@@ -411,7 +477,9 @@ const verifyMusicCommentArray = (
         try {
           verifyUrl(avatarValue, `${name} item avatar`)
           avatar = avatarValue
-        } catch {}
+        } catch (e) {
+          console.warn('verify avatar url error', (e as Error).message)
+        }
       }
     }
 
@@ -424,7 +492,8 @@ const verifyMusicCommentArray = (
           try {
             verifyUrl(img, `${name} item image`)
             return true
-          } catch {
+          } catch (e) {
+            console.warn('verify image url error', (e as Error).message)
             return false
           }
         })
@@ -532,8 +601,8 @@ export const onResourceAction = async <T extends keyof RA>(
   action: T,
   params: Parameters<RA[T]>[0]
 ): Promise<Awaited<ReturnType<RA[T]>>> => {
-  if (!actions) throw new Error('resource action not registered')
-  if (!actions[action]) throw new Error(`resource action ${action} not registered`)
+  if (!actions) throw new Error(withErrorReason('resource action not registered', actions))
+  if (!actions[action]) throw new Error(withErrorReason(`resource action ${String(action)} not registered`, actions[action]))
   // @ts-expect-error
   return actionHandles[action](params) as Awaited<ReturnType<RA[T]>>
 }

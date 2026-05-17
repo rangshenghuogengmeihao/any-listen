@@ -43,7 +43,7 @@
         limit={listInfo.limit}
         onclick={(page) => {
           const loc = getLocation()
-          void pushRoute(loc.location, {
+          pushRoute(loc.location, {
             ...loc.query,
             [urlParamKeyMap.page]: page,
           })

@@ -5,8 +5,8 @@
   import { buildRequestKey, search } from '@/modules/resource/search/music/actions'
   import { query, getLocation } from '@/plugins/routes'
   import { urlParamKeyMap, type SourceType } from '../../shared.svelte'
-  import { untrack } from 'svelte'
-  import { pushRoute } from '@/modules/resource/actions'
+  import { tick, untrack, type ComponentExports } from 'svelte'
+  import { pushRoute, replaceRoute } from '@/modules/resource/actions'
 
   let { source }: { source?: SourceType } = $props()
   let list = $state.raw<AnyListen.Music.MusicInfoOnline[]>([])
@@ -18,11 +18,11 @@
     error: boolean
     id: string
   }>({ total: 0, page: 1, limit: 20, loading: false, error: false, id: 'search' })
+  let musicList = $state<ComponentExports<typeof MusicList> | null>(null)
   const searchInfo = {
     extId: '',
     source: '',
     text: '',
-    searchId: '',
   }
   let requestParams: unknown[] = []
 
@@ -50,6 +50,20 @@
         listInfo.error = false
         list = _list
         // console.log(_list)
+
+        const {
+          location,
+          query: { mid, ...q },
+        } = getLocation()
+        if (mid) {
+          void tick().then(() => {
+            const idx = _list.findIndex((m) => m.id == mid)
+            if (idx != -1) {
+              musicList?.setScrollIndex(idx, false)
+            }
+            replaceRoute(location, q)
+          })
+        }
       })
       .catch((err) => {
         console.log(err)
@@ -81,13 +95,14 @@
 <div class="music-list">
   {#if source}
     <MusicList
+      bind:this={musicList}
       {list}
       miniheader
       loading={listInfo.loading}
       error={listInfo.error}
       source="search"
       listinfo={{
-        id: 'search',
+        id: listInfo.id,
         name: 'search',
         // TODO: save list
       }}
@@ -102,7 +117,7 @@
         limit={listInfo.limit}
         onclick={(page) => {
           const loc = getLocation()
-          void pushRoute(loc.location, {
+          pushRoute(loc.location, {
             ...loc.query,
             [urlParamKeyMap.page]: page,
           })

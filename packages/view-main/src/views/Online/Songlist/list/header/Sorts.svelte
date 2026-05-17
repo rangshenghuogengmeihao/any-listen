@@ -33,7 +33,7 @@
     const sort = $query[songlistUrlParamKeyMap.sort] || ''
     value = sort
     if (!list.length || listSourceId != source.sId || (sort && list.some((s) => s.id == sort))) return
-    void replaceRoute('/online', { ...$query, [songlistUrlParamKeyMap.sort]: list[0].id })
+    replaceRoute('/online', { ...$query, [songlistUrlParamKeyMap.sort]: list[0].id })
   })
 </script>
 
@@ -44,6 +44,6 @@
   {value}
   min
   onchange={(item) => {
-    void replaceRoute('/online', { ...$query, [songlistUrlParamKeyMap.sort]: item.id })
+    replaceRoute('/online', { ...$query, [songlistUrlParamKeyMap.sort]: item.id })
   }}
 />

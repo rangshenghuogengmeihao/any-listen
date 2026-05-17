@@ -10,14 +10,8 @@
   import Singer from './Singer/Singer.svelte'
   import { untrack } from 'svelte'
   import { replaceRoute } from '@/modules/resource/actions'
+  import { searchTypes, searchTypeMap } from './shared.svelte'
 
-  const searchTypes = ['music', 'songlist', 'album', 'singer'] as const
-  const searchTypeMap = {
-    musicSearch: 'music',
-    songlistSearch: 'songlist',
-    albumSearch: 'album',
-    singerSearch: 'singer',
-  } as const
   const activeType = useActiveType(searchTypes)
   const resource = useResourceList('search')
 
@@ -46,7 +40,7 @@
     let text = $query[urlParamKeyMap.query] ?? ''
     if (activeSource) params[urlParamKeyMap.source] = activeSource
     if (text) params[urlParamKeyMap.query] = text
-    void replaceRoute('/online', params)
+    replaceRoute('/online', params)
   }
 
   $effect(() => {

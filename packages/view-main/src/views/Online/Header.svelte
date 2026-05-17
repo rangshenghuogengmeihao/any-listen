@@ -27,7 +27,7 @@
     value={activeview}
     min
     onchange={(item) => {
-      void pushRoute('/online', { [urlParamKeyMap.type]: item.id })
+      pushRoute('/online', { [urlParamKeyMap.type]: item.id })
     }}
   />
   <div id="online-header-right"></div>

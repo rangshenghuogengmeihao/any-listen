@@ -14,7 +14,7 @@
   )
 
   const to = (source: SourceType) => {
-    void replaceRoute(`/online`, {
+    replaceRoute(`/online`, {
       [urlParamKeyMap.type]: 'topSongs' satisfies ViewType,
       [urlParamKeyMap.source]: source.sId,
     })

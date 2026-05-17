@@ -20,7 +20,7 @@
     }
     let text = $query[urlParamKeyMap.query] ?? ''
     if (text) params[urlParamKeyMap.query] = text
-    void replaceRoute('/online', params)
+    replaceRoute('/online', params)
   }
 
   $effect(() => {

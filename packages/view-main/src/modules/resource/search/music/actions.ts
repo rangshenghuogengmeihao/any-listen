@@ -7,7 +7,14 @@ const buildSearchKey = (extId: string, source: string, limit: number, text: stri
   return `${extId}.${source}.${limit}.${text}`
 }
 export const buildRequestKey = (extId: string, source: string, page: number, limit: number, text: string) => {
-  return `${extId}.${source}.${page}.${limit}.${text}`
+  return JSON.stringify({ extId, source, page, limit, text })
+}
+export const parseRequestKey = (params: string) => {
+  try {
+    return JSON.parse(params) as { extId: string; source: string; page: number; limit: number; text: string }
+  } catch {
+    return null
+  }
 }
 
 export const resetListInfo = (extId: string, source: string) => {

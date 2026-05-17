@@ -28,7 +28,7 @@
     const id = text.trim()
     if (!id) return
     const { path, meta } = buildSonglistDetailUrl({ id, sid: selectedSourceId || source!.sId })
-    void pushRoute(path, meta)
+    pushRoute(path, meta)
     visible = false
   }
 

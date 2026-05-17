@@ -25,7 +25,7 @@
   })
 
   const handleToggleTag = (id: string) => {
-    void replaceRoute('/online', { ...$query, [topSongsUrlParamKeyMap.date]: id })
+    replaceRoute('/online', { ...$query, [topSongsUrlParamKeyMap.date]: id })
     popupVisible = false
   }
 
@@ -60,7 +60,7 @@
     const date = $query[topSongsUrlParamKeyMap.date] || ''
     value = date
     if (!list.length || date == '' || (date && list.some((s) => s.id == date))) return
-    void replaceRoute('/online', { ...$query, [topSongsUrlParamKeyMap.date]: list[0].id })
+    replaceRoute('/online', { ...$query, [topSongsUrlParamKeyMap.date]: list[0].id })
   })
 
   $effect(() => {

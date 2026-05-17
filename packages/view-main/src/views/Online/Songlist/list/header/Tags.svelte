@@ -30,7 +30,7 @@
   })
 
   const handleToggleTag = (id: string) => {
-    void replaceRoute('/online', { ...$query, [songlistUrlParamKeyMap.tag]: id })
+    replaceRoute('/online', { ...$query, [songlistUrlParamKeyMap.tag]: id })
     popupVisible = false
   }
 
@@ -111,7 +111,7 @@
     const tag = $query[songlistUrlParamKeyMap.tag] || ''
     value = tag
     if (!list.length || tag == '' || listSourceId != source.sId || (tag && list.some((s) => s.id == tag))) return
-    void replaceRoute('/online', { ...$query, [songlistUrlParamKeyMap.tag]: list[0].id })
+    replaceRoute('/online', { ...$query, [songlistUrlParamKeyMap.tag]: list[0].id })
   })
 
   onMount(() => {

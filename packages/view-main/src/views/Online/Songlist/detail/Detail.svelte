@@ -62,7 +62,7 @@
             if (idx != -1) {
               musicList?.setScrollIndex(idx, false)
             }
-            void replaceRoute(location, q)
+            replaceRoute(location, q)
           })
         }
         // console.log(_list)
@@ -139,7 +139,7 @@
           limit={listInfo.limit}
           onclick={(page) => {
             const loc = getLocation()
-            void pushRoute(loc.location, {
+            pushRoute(loc.location, {
               ...loc.query,
               [urlParamKeyMap.page]: page,
             })

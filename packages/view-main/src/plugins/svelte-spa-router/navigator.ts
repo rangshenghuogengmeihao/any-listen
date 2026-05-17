@@ -3,9 +3,13 @@ import { tick } from 'svelte'
 import { derived, readable } from 'svelte/store'
 
 export interface Location {
+  /** Raw location from the hash, for example `#/book?id=1` */
+  rawLocation: string
   /** Location (page/view), for example `/book` */
   location: string
   /** Querystring from the hash, as a string not parsed */
+  querystring: string
+  /** Parsed query parameters */
   query: Record<string, string>
 }
 // 解析URL参数为对象
@@ -29,17 +33,17 @@ const parseUrlParams = (str: string): Record<string, string> => {
  */
 export const getLocation = (): Location => {
   const hashPosition = window.location.href.indexOf('#/')
-  let location = hashPosition > -1 ? window.location.href.substring(hashPosition + 1) : '/'
-
+  let rawLocation = hashPosition > -1 ? window.location.href.substring(hashPosition + 1) : '/'
+  let location = rawLocation
   // Check if there's a querystring
-  const qsPosition = location.indexOf('?')
+  const qsPosition = rawLocation.indexOf('?')
   let querystring = ''
   if (qsPosition > -1) {
     querystring = location.substring(qsPosition + 1)
     location = location.substring(0, qsPosition)
   }
 
-  return { location, query: parseUrlParams(querystring) }
+  return { rawLocation, location, querystring, query: parseUrlParams(querystring) }
 }
 
 export type Params = Record<string, string | number | null | undefined>

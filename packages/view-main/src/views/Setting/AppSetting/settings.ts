@@ -318,7 +318,7 @@ export const settings: SettingListSection[] = [
     id: 'other',
     name: 'settings.other',
     list: [
-      import.meta.env.VITE_IS_DESKTOP && import.meta.env.VITE_IS_MAC
+      (import.meta.env.VITE_IS_DESKTOP && import.meta.env.VITE_IS_MAC) || import.meta.env.VITE_IS_WEB
         ? null
         : {
             field: 'common.transparentWindow',

@@ -273,3 +273,23 @@ export const request = async <T = unknown>(url: string, options: Options = {}): 
     } satisfies Omit<Response<T>, 'raw'> as Response<T>
   })
 }
+
+export const verifyResource = async (url: string, opts: Options = {}) => {
+  const resp = await request(url, {
+    ...opts,
+    headers: {
+      ...(opts.headers ?? {}),
+      Range: 'bytes=0-1',
+    },
+  })
+  console.log('resp', url, resp.statusCode)
+  if (!resp.statusCode || resp.statusCode < 200 || resp.statusCode >= 300) {
+    throw new Error(`verify proxy request failed: [${url}] ${resp.statusCode}`)
+  }
+}
+
+export const verifyResourceBoolean = async (url: string, opts: Options = {}) => {
+  return verifyResource(url, opts)
+    .then(() => true)
+    .catch(() => false)
+}

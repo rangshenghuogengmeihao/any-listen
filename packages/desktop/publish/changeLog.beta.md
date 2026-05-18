@@ -1,23 +1,13 @@
 <!--- @lang: en-us -->
 
-### Improved
-
-- Improved the stability of the search box dropdown display.
-- Added support for jumping to the corresponding song position in the search results list.
-
 ### Fixed
 
-- Fixed an issue where the highest audio quality label in song lists was displayed incorrectly.
+- Fixed an issue where local song covers were not re-read from local storage first when the cache was cleared.
 
 ---
 
 <!--- @lang: zh-cn -->
 
-### 优化
-
-- 优化搜索框下拉列表显示稳定性。
-- 支持跳转到歌曲搜索列表的歌曲位置。
-
 ### 修复
 
-- 修复歌曲列表最高音质显示问题。
+- 修复缓存被清空时，本地歌曲封面未优先再次从本地读取的问题。

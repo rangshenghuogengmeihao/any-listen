@@ -89,6 +89,7 @@
     <Image
       src={picUrl}
       onerror={() => {
+        picUrl = null
         if (retryedLoadPic) return
         retryedLoadPic = true
         loadPic()

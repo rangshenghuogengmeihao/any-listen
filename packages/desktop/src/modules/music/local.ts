@@ -1,5 +1,6 @@
 import { getLocalFilePath } from '@any-listen/app/modules/music/utils'
 import { writeProxyCache } from '@any-listen/app/modules/proxyServer'
+import { verifyResourceBoolean } from '@any-listen/nodejs/request'
 
 import { appState } from '@/app'
 import { encodePath } from '@/shared/electron'
@@ -40,6 +41,9 @@ export const getMusicPicUrl = async ({
   listId?: string | null
   isRefresh?: boolean
 }): Promise<AnyListen.IPCMusic.MusicPicInfo | null> => {
+  if (isRefresh && (!musicInfo.meta.picUrl || !(await verifyResourceBoolean(musicInfo.meta.picUrl)))) {
+    isRefresh = false
+  }
   if (!isRefresh) {
     let pic = await workers.utilService.getMusicFilePic(musicInfo.meta.filePath)
     if (pic) {

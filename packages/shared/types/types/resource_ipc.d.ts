@@ -13,7 +13,7 @@ declare namespace AnyListen {
       page: number
     }
     interface MusicCommentResult {
-      list: IPCExtension.MusicComment[]
+      list: Resource.MusicCommentItem[]
       total: number
       limit: number
       page: number

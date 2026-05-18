@@ -370,6 +370,7 @@ declare namespace AnyListen {
       headers: Record<string, string | string[] | undefined>
       raw: Uint8Array
       body: Resp
+      history: string[]
     }
     interface RespCallback<Resp> {
       (error: null, response: Response<Resp>): void

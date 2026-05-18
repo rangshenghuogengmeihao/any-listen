@@ -168,6 +168,7 @@ export interface Response<Res> {
   raw: Uint8Array
   statusCode?: number
   statusMessage?: string
+  history: string[]
 }
 
 const buildRequestBody = (options: Options) => {
@@ -245,11 +246,13 @@ export const request = async <T = unknown>(url: string, options: Options = {}): 
     signal: options.signal,
     dispatcher: buildRequestDispatcher(options),
   }).then(async (response) => {
+    const history: string[] = (response.context as { history?: URL[] } | null)?.history?.map((h) => h.href) ?? [url]
     if (options.needBody) {
       return {
         headers: response.headers,
         statusCode: response.statusCode,
         body: response.body as unknown as T,
+        history,
       } satisfies Omit<Response<T>, 'raw'> as Response<T>
     }
     if (options.needRaw) {
@@ -257,6 +260,7 @@ export const request = async <T = unknown>(url: string, options: Options = {}): 
         headers: response.headers,
         statusCode: response.statusCode,
         raw: await response.body.bytes(),
+        history,
       } satisfies Omit<Response<T>, 'body'> as Response<T>
     }
     // console.log(response)
@@ -270,6 +274,7 @@ export const request = async <T = unknown>(url: string, options: Options = {}): 
       body,
       headers: response.headers,
       statusCode: response.statusCode,
+      history,
     } satisfies Omit<Response<T>, 'raw'> as Response<T>
   })
 }
@@ -282,7 +287,7 @@ export const verifyResource = async (url: string, opts: Options = {}) => {
       Range: 'bytes=0-1',
     },
   })
-  console.log('resp', url, resp.statusCode)
+  // console.log('resp', url, resp.statusCode)
   if (!resp.statusCode || resp.statusCode < 200 || resp.statusCode >= 300) {
     throw new Error(`verify proxy request failed: [${url}] ${resp.statusCode}`)
   }

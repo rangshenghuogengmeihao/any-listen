@@ -36,6 +36,7 @@ const request = async <Resp = unknown>(url: string, options: RequestOptions = {}
         headers: resp.headers,
         raw: resp.raw,
         statusCode: resp.statusCode,
+        history: resp.history,
       }
     })
     .finally(() => {

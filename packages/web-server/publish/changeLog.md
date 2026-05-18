@@ -17,7 +17,7 @@
 - Fixed an issue where the currently playing **Play Later** track was unexpectedly removed from the playlist when the player was reloaded.
 - Fixed an issue where proxy service validation failed for URLs with query parameters.
 - Fixed an issue where extension translations were displayed incorrectly.
-- Fixed an issue where local song covers were not re-read from local storage first when the cache was cleared.
+- Fixed an issue where local song covers were not re-read from local storage with priority after clearing the cache.
 
 ---
 
@@ -40,4 +40,4 @@
 - 修复正在播放的 **「稍后播放」** 歌曲在重新加载播放器时被意外从播放列表移除的问题。
 - 修复代理服务校验带参数 URL 异常的问题。
 - 修复扩展翻译显示问题。
-- 修复缓存被清空时，本地歌曲封面未优先再次从本地读取的问题。
+- 修复缓存被清空后，本地歌曲封面未优先从本地重新读取的问题。

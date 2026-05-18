@@ -71,23 +71,50 @@ const labelMap: Record<AnyListen.Music.Quality, string> = {
 }
 const QUALITYS_REV = [...QUALITYS].reverse()
 
-export const buildSourceLabel = (musicinfo: AnyListen.Music.MusicInfo): string[] => {
-  if (musicinfo.isLocal) {
-    switch (musicinfo.meta.ext) {
-      case 'flac':
-      case 'wav':
-        return [
-          musicinfo.meta.bitrateLabel == '16bit'
-            ? musicinfo.meta.ext.toUpperCase()
-            : `${musicinfo.meta.ext.toUpperCase()} ${musicinfo.meta.bitrateLabel}`,
-        ]
-      default:
-        return [musicinfo.meta.bitrateLabel?.toUpperCase() ?? ''].filter((s) => s)
+const getFileLabel = (ext?: string, bitrateLabel?: string | null) => {
+  let label: string | undefined
+  switch (ext) {
+    case 'flac':
+    case 'wav': {
+      switch (bitrateLabel) {
+        case '16bit':
+          label = labelMap[ext]
+          break
+        case '24bit':
+          label = labelMap.flac24bit
+          break
+        default:
+          if (bitrateLabel) label = labelMap.flac24bit
+          else label = labelMap[ext]
+          break
+      }
+      break
+    }
+    default: {
+      if (bitrateLabel) {
+        label = labelMap[bitrateLabel.toLowerCase() as AnyListen.Music.Quality]
+        label ||= bitrateLabel.toUpperCase()
+      }
+      break
     }
   }
+  return label
+}
+export const buildSourceLabel = (musicinfo: AnyListen.Music.MusicInfo): string[] => {
+  if (musicinfo.isLocal) {
+    const labels = ['local']
+    const label = getFileLabel(musicinfo.meta.ext, musicinfo.meta.bitrateLabel)
+    if (label) labels.push(label)
+    return labels
+  }
   const quality = QUALITYS_REV.find((q) => !!musicinfo.meta.qualitys?.[q])
-  const label = quality ? labelMap[quality] : ''
-  return [musicinfo.meta.source, label].filter((s) => s)
+  let label: string | undefined
+  if (quality) label = labelMap[quality]
+  if (!label && (musicinfo.meta.ext || musicinfo.meta.bitrateLabel)) {
+    console.log(musicinfo)
+    label = getFileLabel(musicinfo.meta.ext, musicinfo.meta.bitrateLabel)
+  }
+  return [musicinfo.meta.source, label ?? ''].filter((s) => s)
 }
 
 export const logFormat = (log: AnyListen.LogInfo) => {

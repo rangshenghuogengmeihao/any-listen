@@ -1,6 +1,7 @@
 import path from 'node:path'
 
 import { DB_NAME, LIST_IDS } from '@any-listen/common/constants'
+import { removeDB } from '@any-listen/nodejs/tools'
 import Database from 'better-sqlite3'
 
 import migrateData from './migrate'
@@ -23,6 +24,15 @@ const initTables = (db: Database.Database) => {
       ('${LIST_IDS.LOVE}', 'love', '${LIST_IDS.DEFAULT}', null, '${defaultMetadata}', 0),
       ('${LIST_IDS.LAST_PLAYED}', 'last_played', '${LIST_IDS.DEFAULT}', null, '${defaultMetadata}', 0);
   `)
+}
+
+export const backupDB = async (dataPath: string, nativeBindingPath: string, backupPath: string) => {
+  const databasePath = path.join(dataPath, DB_NAME)
+  const nativeBinding = path.join(__dirname, nativeBindingPath)
+  const db = new Database(databasePath, { nativeBinding })
+  await db.backup(backupPath)
+  db.close()
+  await removeDB(dataPath)
 }
 
 // 打开、初始化数据库

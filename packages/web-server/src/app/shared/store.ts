@@ -28,12 +28,12 @@ export default (name: string, isIgnoredError = true, isShowErrorAlert = true): S
 
     if (!isIgnoredError) throw error
 
-    const backPath = `${storePath}.bak`
-    fs.renameSync(storePath, backPath)
+    const backupPath = `${storePath}.bak`
+    fs.renameSync(storePath, backupPath)
     if (isShowErrorAlert) {
       log.warn(`${name} data load error`)
       log.warn(
-        `We have helped you back up the old ${name} file to: ${backPath}\nYou can try to repair and restore it manually\n\nError detail: ${error.message}`
+        `We have helped you back up the old ${name} file to: ${backupPath}\nYou can try to repair and restore it manually\n\nError detail: ${error.message}`
       )
     }
 

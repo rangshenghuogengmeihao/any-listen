@@ -117,6 +117,7 @@ tables.set(
     "position" INTEGER NOT NULL,
     "played" INTEGER NOT NULL,
     "play_later" INTEGER NOT NULL,
+    "source" INTEGER NOT NULL,
     "id" TEXT NOT NULL,
     "list_id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -212,4 +213,4 @@ tables.set(
 
 export default tables
 
-export const DB_VERSION = '1'
+export const DB_VERSION = '2'

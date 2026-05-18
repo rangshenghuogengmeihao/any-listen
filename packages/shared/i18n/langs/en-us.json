@@ -41,7 +41,7 @@
   "command.space.extension": "Extensions: ",
   "confirm_button_text": "Yes",
   "database_verify_failed": "Database table structure verification failed",
-  "database_verify_failed_detail": "Database table structure verification failed, we will back up the problematic database to: {backPath}\nIf this issue causes you to lose data, you can try to retrieve them from backup files.",
+  "database_verify_failed_detail": "Database table structure verification failed, we will back up the problematic database to: {backupPath}\nIf this issue causes you to lose data, you can try to retrieve them from backup files.",
   "date_format_hour": "{num} hours ago",
   "date_format_minute": "{num} minutes ago",
   "date_format_second": "{num} seconds ago",

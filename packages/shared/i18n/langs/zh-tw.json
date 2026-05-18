@@ -41,7 +41,7 @@
   "command.space.extension": "擴展：",
   "confirm_button_text": "是的",
   "database_verify_failed": "資料庫表格結構校驗失敗",
-  "database_verify_failed_detail": "資料庫表格結構校驗失敗，我們將把有問題的資料庫備份到：{backPath}\n若此問題導致你的資料遺失，你可以嘗試從備份檔案中找回它們。",
+  "database_verify_failed_detail": "資料庫表格結構校驗失敗，我們將把有問題的資料庫備份到：{backupPath}\n若此問題導致你的資料遺失，你可以嘗試從備份檔案中找回它們。",
   "date_format_hour": "{num} 小時前",
   "date_format_minute": "{num} 分鐘前",
   "date_format_second": "{num} 秒前",

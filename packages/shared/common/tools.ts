@@ -111,10 +111,9 @@ export const buildSourceLabel = (musicinfo: AnyListen.Music.MusicInfo): string[]
   let label: string | undefined
   if (quality) label = labelMap[quality]
   if (!label && (musicinfo.meta.ext || musicinfo.meta.bitrateLabel)) {
-    console.log(musicinfo)
     label = getFileLabel(musicinfo.meta.ext, musicinfo.meta.bitrateLabel)
   }
-  return [musicinfo.meta.source, label ?? ''].filter((s) => s)
+  return [musicinfo.meta.source.toLowerCase(), label ?? ''].filter((s) => s)
 }
 
 export const logFormat = (log: AnyListen.LogInfo) => {

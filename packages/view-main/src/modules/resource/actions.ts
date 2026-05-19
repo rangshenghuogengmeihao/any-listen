@@ -27,13 +27,23 @@ export const replaceRoute = (path: string, query: Params) => {
 }
 
 export const back = () => {
-  const last = historys.pop()
-  if (last && historys.length) {
-    const current = historys[historys.length - 1]
-    void replace(current[0], current[1])
-    return
+  const loc = getLocation()
+  if (loc.location.startsWith('/online')) {
+    const last = historys.pop()
+    if (last && historys.length) {
+      const current = historys[historys.length - 1]
+      void replace(current[0], current[1])
+      return
+    }
+    void replace('/online')
+  } else {
+    if (historys.length) {
+      const current = historys[historys.length - 1]
+      void replace(current[0], current[1])
+      return
+    }
+    void replace('/online')
   }
-  void replace('/online')
 }
 
 const buildQueryParams = (params: Params, text?: string) => {

@@ -57,5 +57,8 @@
     // padding: 10px 15px;
     display: flex;
     flex-flow: column nowrap;
+    > :global(div) {
+      min-height: 0;
+    }
   }
 </style>

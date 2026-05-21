@@ -41,17 +41,17 @@
     "@any-listen/theme": "workspace:@shared/theme@*",
     "better-sqlite3": "^12.10.0",
     "electron-log": "5.4.4",
-    "electron-updater": "^6.8.5",
-    "font-list": "^2.0.2",
+    "electron-updater": "^6.8.6",
+    "font-list": "^2.0.4",
     "message2call": "^2.0.3"
   },
   "devDependencies": {
     "@any-listen/eslint": "workspace:@shared/eslint@*",
     "@any-listen/types": "workspace:@shared/types@*",
-    "electron": "40.10.0",
-    "electron-builder": "26.10.0",
+    "electron": "40.10.1",
+    "electron-builder": "26.11.0",
     "electron-debug": "^4.1.0",
-    "electron-to-chromium": "^1.5.358",
+    "electron-to-chromium": "^1.5.360",
     "node-abi": "^4.31.0",
     "tar": "^7.5.15",
     "vite": "^8.0.13"

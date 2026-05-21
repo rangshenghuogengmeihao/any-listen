@@ -12,6 +12,7 @@ import {
   dirname,
   extname,
   extnameRaw,
+  fileSha256,
   getFileStats,
   joinPath,
   removePath,
@@ -69,7 +70,7 @@ export const parseExtension = async (extensionPath: string): Promise<AnyListen.E
     enter: manifest.main,
     enabled: true,
     installedTimestamp: Date.now(),
-    updatedTimestamp: 0,
+    updatedTimestamp: Date.now(),
     loaded: false,
     loadTimestamp: 0,
     removed: false,
@@ -185,7 +186,10 @@ const downloadExtensionFile = async (url: string, bundlePath: string) => {
   })
 }
 
-export const downloadExtension = async (url: string, manifest?: AnyListen.Extension.Manifest) => {
+export const downloadExtension = async (
+  url: string,
+  manifest?: AnyListen.IPCExtension.RemoteOnlineListItem | AnyListen.IPCExtension.RemoteOnlineDetail
+) => {
   if (!isUrl(url)) {
     const stats = await getFileStats(url)
     if (!stats) throw new Error(`Invalid extension path: ${url}`)
@@ -207,6 +211,13 @@ export const downloadExtension = async (url: string, manifest?: AnyListen.Extens
 
   const bundlePath = joinPath(extensionState.tempDir, `${toSha256(manifest?.id ?? generateId())}${FILE_EXT_NAME}`)
   await downloadExtensionFile(url, bundlePath)
+  if (manifest?.sha256) {
+    const fileHash = await fileSha256(bundlePath)
+    if (fileHash !== manifest.sha256) {
+      await removePath(bundlePath)
+      throw new Error('Downloaded file hash does not match the manifest')
+    }
+  }
   return bundlePath
 }
 

@@ -15,70 +15,70 @@ export const createExposeExtension = (client: ClientCall) => {
 export const createClientExtension = (ipcSocket: IPCSocket) => {
   return {
     async getExtensionErrorMessage() {
-      return ipcSocket.remoteQueueExtension.getExtensionErrorMessage()
+      return ipcSocket.remoteExtension.getExtensionErrorMessage()
     },
     async getExtensionList() {
-      return ipcSocket.remoteQueueExtension.getExtensionList()
+      return ipcSocket.remoteExtension.getExtensionList()
     },
     async getOnlineExtensionList(options) {
-      return ipcSocket.remoteQueueExtension.getOnlineExtensionList(options)
+      return ipcSocket.remoteExtension.getOnlineExtensionList(options)
     },
     async getOnlineExtensionDetail(id) {
-      return ipcSocket.remoteQueueExtension.getOnlineExtensionDetail(id)
+      return ipcSocket.remoteExtension.getOnlineExtensionDetail(id)
     },
     async getOnlineCategories() {
-      return ipcSocket.remoteQueueExtension.getOnlineCategories()
+      return ipcSocket.remoteExtension.getOnlineCategories()
     },
     async getOnlineTags() {
-      return ipcSocket.remoteQueueExtension.getOnlineTags()
+      return ipcSocket.remoteExtension.getOnlineTags()
     },
     async downloadAndParseExtension(url, manifest) {
-      return ipcSocket.remoteQueueExtension.downloadAndParseExtension(url, manifest)
+      return ipcSocket.remoteExtension.downloadAndParseExtension(url, manifest)
     },
     async installExtension(tempExtension) {
-      return ipcSocket.remoteQueueExtension.installExtension(tempExtension)
+      return ipcSocket.remoteExtension.installExtension(tempExtension)
     },
     async updateExtension(tempExtension) {
-      return ipcSocket.remoteQueueExtension.updateExtension(tempExtension)
+      return ipcSocket.remoteExtension.updateExtension(tempExtension)
     },
     async startExtension(extension) {
-      return ipcSocket.remoteQueueExtension.startExtension(extension)
+      return ipcSocket.remoteExtension.startExtension(extension)
     },
     async enableExtension(id) {
-      return ipcSocket.remoteQueueExtension.enableExtension(id)
+      return ipcSocket.remoteExtension.enableExtension(id)
     },
     async disableExtension(id) {
-      return ipcSocket.remoteQueueExtension.disableExtension(id)
+      return ipcSocket.remoteExtension.disableExtension(id)
     },
     async restartExtension(id) {
-      return ipcSocket.remoteQueueExtension.restartExtension(id)
+      return ipcSocket.remoteExtension.restartExtension(id)
     },
     async uninstallExtension(id) {
-      return ipcSocket.remoteQueueExtension.uninstallExtension(id)
+      return ipcSocket.remoteExtension.uninstallExtension(id)
     },
     async restartExtensionHost() {
-      return ipcSocket.remoteQueueExtension.restartExtensionHost()
+      return ipcSocket.remoteExtension.restartExtensionHost()
     },
     async getResourceList() {
-      return ipcSocket.remoteQueueExtension.getResourceList()
+      return ipcSocket.remoteExtension.getResourceList()
     },
     async getNewVersionInfo() {
-      return ipcSocket.remoteQueueExtension.getNewVersionInfo()
+      return ipcSocket.remoteExtension.getNewVersionInfo()
     },
     async getExtensionLastLogs(extId) {
-      return ipcSocket.remoteQueueExtension.getExtensionLastLogs(extId)
+      return ipcSocket.remoteExtension.getExtensionLastLogs(extId)
     },
     async clearExtensionLogs(extId) {
-      return ipcSocket.remoteQueueExtension.clearExtensionLogs(extId)
+      return ipcSocket.remoteExtension.clearExtensionLogs(extId)
     },
     async getAllExtensionSettings() {
-      return ipcSocket.remoteQueueExtension.getAllExtensionSettings()
+      return ipcSocket.remoteExtension.getAllExtensionSettings()
     },
     async getExtensionConfigValues(extId, fields) {
-      return ipcSocket.remoteQueueExtension.getExtensionConfigValues(extId, fields)
+      return ipcSocket.remoteExtension.getExtensionConfigValues(extId, fields)
     },
     async updateExtensionSettings(extId, config) {
-      return ipcSocket.remoteQueueExtension.updateExtensionSettings(extId, config)
+      return ipcSocket.remoteExtension.updateExtensionSettings(extId, config)
     },
     async listProviderAction<T extends keyof AnyListen.IPCExtension.ListProviderAction>(
       action: T,

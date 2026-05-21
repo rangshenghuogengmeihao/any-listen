@@ -24,6 +24,7 @@
     finding = $bindable(),
     duplicate = $bindable(),
     listsort = $bindable(),
+    loaded,
     onscroll,
   }: {
     listinfo: ListInfo
@@ -33,6 +34,7 @@
     finding: boolean
     duplicate: boolean
     listsort: boolean
+    loaded: boolean
     onscroll?: (pos: number) => void
   } = $props()
 
@@ -204,7 +206,7 @@
       }}
     />
   </div>
-{:else}
+{:else if loaded}
   <Empty />
 {/if}
 <SearchList

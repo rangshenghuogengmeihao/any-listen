@@ -221,30 +221,22 @@ declare namespace AnyListen {
       author: Extension.Manifest['author']
       grant: Extension.Manifest['grant']
       license: Extension.Manifest['license']
+      categories: Extension.Manifest['categories']
+      tags: Extension.Manifest['tags']
+      homepage: Extension.Manifest['homepage']
+      publicKey: Extension.Manifest['publicKey']
+      icon: Extension.Manifest['icon']
       target_engine: Extension.Manifest['target_engine']
-      categories: Extension.Manifest['categories']
-      tags: Extension.Manifest['tags']
-      // update_time: Extension.Manifest['update_time']
-      homepage: Extension.Manifest['homepage']
-      icon: Extension.Manifest['icon']
-      publicKey: Extension.Manifest['publicKey']
+      sha256: string
       download_url: string
+      create_timestamp: number
+      update_timestamp: number
     }
-    interface RemoteOnlineDetail {
-      id: Extension.Manifest['id']
-      name: Extension.Manifest['name']
-      description: Extension.Manifest['description']
-      icon: Extension.Manifest['icon']
-      version: Extension.Manifest['version']
-      author: Extension.Manifest['author']
-      homepage: Extension.Manifest['homepage']
-      license: Extension.Manifest['license']
-      categories: Extension.Manifest['categories']
-      tags: Extension.Manifest['tags']
-      grant: Extension.Manifest['grant']
-      contributes: Extension.Manifest['contributes']
-      publicKey: Extension.Manifest['publicKey']
+    interface RemoteOnlineDetail extends Extension.Manifest {
+      sha256: string
       download_url: string
+      create_timestamp: number
+      update_timestamp: number
     }
 
     interface OnlineListItem extends RemoteOnlineListItem {
@@ -258,7 +250,7 @@ declare namespace AnyListen {
       limit: number
       page: number
       total: number
-      list: OnlineListItem[]
+      list: RemoteOnlineListItem[]
     }
     type OnlineTagResult = Array<{ id: string; name: string }>
     type OnlineCategorieResult = Array<{ id: string; name: string }>
@@ -274,7 +266,7 @@ declare namespace AnyListen {
       getOnlineExtensionDetail: (id: string) => RemoteOnlineDetail | null
       getOnlineTags: () => OnlineTagResult
       getOnlineCategories: () => OnlineCategorieResult
-      downloadAndParseExtension: (url: string, manifest?: Extension.Manifest) => Extension.Extension
+      downloadAndParseExtension: (url: string, manifest?: RemoteOnlineListItem | RemoteOnlineDetail) => Extension.Extension
       installExtension: (tempExtension: Extension.Extension) => Extension.Extension
       updateExtension: (tempExtension: Extension.Extension) => Extension.Extension
       startExtension: (id: string) => void

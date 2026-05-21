@@ -84,7 +84,10 @@ export const startExtensions = async () => {
   return workers.extensionService.startExtensions()
 }
 
-export const downloadAndParseExtension = async (url: string, manifest?: AnyListen.Extension.Manifest) => {
+export const downloadAndParseExtension = async (
+  url: string,
+  manifest?: AnyListen.IPCExtension.RemoteOnlineListItem | AnyListen.IPCExtension.RemoteOnlineDetail
+) => {
   return workers.extensionService.downloadAndParseExtension(url, manifest)
 }
 

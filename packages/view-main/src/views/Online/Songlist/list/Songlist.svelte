@@ -51,7 +51,7 @@
       />
     </div>
   {/if}
-  {#if !list.length}
+  {#if !list.length && !listInfo.loading && !listInfo.error}
     <Empty />
   {/if}
   <Loading loading={listInfo.loading} error={listInfo.error} {onreload} />

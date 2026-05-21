@@ -7,6 +7,7 @@
 - Added an **Audio Output Device** setting under _Settings > Playback Settings_ ([#161](https://github.com/any-listen/any-listen/issues/161)).
 - Added a **Disable Song Switching** option to the song switching mode ([#161](https://github.com/any-listen/any-listen/issues/161)).
 - Added a **Preferred Playback Quality** option under _Settings > Playback Settings_, defaulting to **128k**.
+- Added an **Extension Detail** page; clicking an extension item in the extension list now displays its full details.
 
 ### Improved
 
@@ -17,6 +18,10 @@
 - Fixed an issue where the currently playing **Play Later** track was unexpectedly removed from the playlist when the player was reloaded.
 - Fixed an issue where proxy service validation failed for URLs with query parameters.
 - Fixed an issue where local song covers were not re-read from local storage with priority after clearing the cache.
+
+### Security
+
+- Added hash verification for extension packages during installation.
 
 ---
 
@@ -29,6 +34,7 @@
 - 新增 **「音频输出设备」** 设置，位于 _设置 > 播放设置_（[#161](https://github.com/any-listen/any-listen/issues/161)）。
 - 歌曲切换模式新增 **「禁用歌曲切换」** 选项（[#161](https://github.com/any-listen/any-listen/issues/161)）。
 - 新增 **「优先播放音质」** 选项，位于 _设置 > 播放设置_，默认 **128k**。
+- 新增 **「扩展程序详情信息」** 界面，点击扩展列表的扩展项将显示该扩展的详细信息。
 
 ### 优化
 
@@ -39,3 +45,7 @@
 - 修复正在播放的 **「稍后播放」** 歌曲在重新加载播放器时被意外从播放列表移除的问题。
 - 修复代理服务校验带参数 URL 异常的问题。
 - 修复缓存被清空后，本地歌曲封面未优先从本地重新读取的问题。
+
+### 安全
+
+- 安装扩展包时新增 hash 值校验。

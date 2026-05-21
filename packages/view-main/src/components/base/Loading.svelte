@@ -19,12 +19,12 @@
 
 {#if loading}
   <div class="loading" in:fade={{ delay: 800, duration: 200 }} out:fade={{ duration: 200 }}>
-    <p>{$t('list_loading')}</p>
+    <p class="content">{$t('list_loading')}</p>
   </div>
 {/if}
 {#if error}
   <div class="error" transition:fade={{ duration: 200 }}>
-    <div class="error-content">
+    <div class="content">
       <p>{errorMessage ? $t('list_error_message', { msg: errorMessage }) : $t('list_error')}</p>
       <p>
         {#if onreload}
@@ -56,15 +56,6 @@
     height: 100%;
     font-size: 18px;
 
-    .error-content {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      align-items: center;
-    }
-
     &::before {
       position: absolute;
       top: 0;
@@ -75,5 +66,13 @@
       background-color: var(--color-content-background);
       opacity: 0.7;
     }
+  }
+  .content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
   }
 </style>

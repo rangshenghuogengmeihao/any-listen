@@ -38,6 +38,7 @@ export {
   restartExtensionHost,
   startExtension,
   uninstallExtension,
+  getOnlineExtensionDetail,
   updateExtension,
   updateExtensionSettings,
 } from './remoteAction'

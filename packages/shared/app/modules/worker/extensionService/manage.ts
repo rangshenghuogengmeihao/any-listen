@@ -131,7 +131,10 @@ export const restartExtension = async (id: string) => {
   await startExtension(id)
 }
 
-export const downloadAndParseExtension = async (url: string, manifest?: AnyListen.Extension.Manifest) => {
+export const downloadAndParseExtension = async (
+  url: string,
+  manifest?: AnyListen.IPCExtension.RemoteOnlineListItem | AnyListen.IPCExtension.RemoteOnlineDetail
+) => {
   const bundlePath = await downloadExtension(url, manifest)
 
   const extensionPath = await unpackExtension(bundlePath).catch((err: Error) => {
@@ -218,6 +221,7 @@ export const installExtension = async (tempExtension: AnyListen.Extension.Extens
   }
 
   extension.installedTimestamp = Date.now()
+  extension.updatedTimestamp = extension.installedTimestamp
   extensionState.extensions.unshift(extension)
   extensionEvent.listAdd(extension)
 

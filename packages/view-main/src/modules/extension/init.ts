@@ -56,7 +56,7 @@ export const initExtension = () => {
       subscriptions.add(
         languageChangeEvent.on(() => {
           if (extensionState.onlineExtensionList.length) {
-            void getOnlineExtensionList(true)
+            void getOnlineExtensionList()
           }
         })
       )

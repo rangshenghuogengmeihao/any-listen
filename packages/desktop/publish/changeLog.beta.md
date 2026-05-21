@@ -1,21 +1,21 @@
 <!--- @lang: en-us -->
 
-### Improved
+### Added
 
-- Improved the behavior of the back button in the search box.
+- Added an **Extension Detail** page. Clicking an extension item in the extension list now opens its full details.
 
-### Fixed
+### Security
 
-- Fixed an overflow issue in the online section layout.
+- Added hash verification for extension packages during installation.
 
 ---
 
 <!--- @lang: zh-cn -->
 
-### 优化
+### 新增
 
-- 优化搜索框返回按钮的行为。
+- 新增 **「扩展程序详情信息」** 界面，点击扩展列表的扩展项将显示该扩展的详细信息。
 
-### 修复
+### 安全
 
-- 修复在线板块界面显示溢出问题。
+- 安装扩展包时新增 hash 值校验。

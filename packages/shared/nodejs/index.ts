@@ -110,6 +110,16 @@ export const toSha1 = (str: string | Buffer | Uint8Array) => crypto.createHash('
 export const toSha256 = (str: string | Buffer | Uint8Array) => crypto.createHash('sha256').update(str).digest('hex')
 export const toSha512 = (str: string | Buffer | Uint8Array) => crypto.createHash('sha512').update(str).digest('hex')
 
+export const fileSha256 = async (filePath: string) => {
+  const hash = crypto.createHash('sha256')
+  const stream = fs.createReadStream(filePath)
+  return new Promise<string>((resolve, reject) => {
+    stream.on('data', (chunk) => hash.update(chunk))
+    stream.on('end', () => resolve(hash.digest('hex')))
+    stream.on('error', (err) => reject(err))
+  })
+}
+
 export const randomUUID = () => crypto.randomUUID()
 
 export const gzipData = async (str: string): Promise<Buffer> => {

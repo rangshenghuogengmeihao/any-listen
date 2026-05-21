@@ -92,7 +92,7 @@ export const setResourceList = (list: AnyListen.Extension.ResourceList) => {
   extensionEvent.resourceListUpdated(list)
 }
 
-export const setOnlineExtension = (list: AnyListen.IPCExtension.OnlineListItem[]) => {
+export const setOnlineExtension = (list: AnyListen.IPCExtension.RemoteOnlineListItem[]) => {
   const extMap = new Map<string, AnyListen.Extension.Extension>()
   for (const ext of extensionState.extensionList) extMap.set(ext.id, ext)
 

@@ -25,6 +25,7 @@ export {
   uninstallExtension,
   updateExtension,
   updateExtensionSettings,
+  getOnlineExtensionDetail,
 } from '@/shared/ipc/extension'
 
 export const registerRemoteExtensionEvent = () => {

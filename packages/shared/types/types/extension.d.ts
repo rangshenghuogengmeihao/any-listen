@@ -199,11 +199,11 @@ declare global {
         internal: boolean
       }
 
-      interface OnlineExtension extends Manifest {
-        installed: boolean
-        enabled: boolean
-        latest: boolean
-      }
+      // interface OnlineExtension extends Manifest {
+      //   installed: boolean
+      //   enabled: boolean
+      //   latest: boolean
+      // }
     }
   }
 }

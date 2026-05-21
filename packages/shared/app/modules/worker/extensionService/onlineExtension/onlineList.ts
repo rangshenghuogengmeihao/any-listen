@@ -13,7 +13,6 @@ let datas = {
   tags: null as AnyListen.IPCExtension.OnlineTagResult | null,
   categories: null as AnyListen.IPCExtension.OnlineCategorieResult | null,
   list: null as AnyListen.IPCExtension.RemoteOnlineListItem[] | null,
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   i18nMessages: {} as Partial<Record<Locale, Record<string, string>>>,
   i18nLocale: '' as Locale | '',
   i18nPromise: null as Promise<void> | null,
@@ -132,31 +131,51 @@ export const getOnlineExtensionList = async (
     total: list.length,
     page: options.page,
     limit: options.limit,
-    list: list
-      .slice((options.page - 1) * options.limit, options.page * options.limit)
-      .map((item) => {
-        if (item.description) return { ...item, description: t(item.description, item.id) }
-        return item
-      })
-      .map((item) => {
-        const target = extMap.get(item.id)
-        if (!target) return { ...item, installed: false, enabled: false, latest: false, currentVersion: '' }
-        return {
-          ...item,
-          enabled: target.enabled,
-          installed: true,
-          latest: compareVersions(target.version, item.version) >= 0,
-          currentVersion: target.version,
-        } satisfies AnyListen.IPCExtension.OnlineListItem
-      }),
+    list: list.slice((options.page - 1) * options.limit, options.page * options.limit).map((item) => {
+      if (item.description) return { ...item, description: t(item.description, item.id) }
+      return item
+    }),
   }
 }
 
-export const getOnlineExtensionDetail = async (id: string) => {
+const buildContributorInfo = (extId: string, contributes: AnyListen.Extension.Manifest['contributes']) => {
+  if (!contributes) return contributes
+  const result: AnyListen.Extension.Manifest['contributes'] = {}
+  if (contributes.commands) {
+    result.commands = contributes.commands.map((cmd) => {
+      return { ...cmd, name: t(cmd.name, extId) }
+    })
+  }
+  if (contributes.settings) {
+    result.settings = contributes.settings.map((setting) => {
+      return { ...setting, name: t(setting.name, extId), description: setting.description ? t(setting.description, extId) : '' }
+    })
+  }
+  if (contributes.resource) {
+    result.resource = contributes.resource.map((res) => {
+      return { ...res, name: t(res.name, extId) }
+    })
+  }
+  if (contributes.listProviders) {
+    result.listProviders = contributes.listProviders.map((provider) => {
+      return {
+        ...provider,
+        name: t(provider.name, extId),
+        description: provider.description ? t(provider.description, extId) : '',
+      }
+    })
+  }
+  return result
+}
+export const getOnlineExtensionDetail = async (id: string): Promise<AnyListen.IPCExtension.RemoteOnlineDetail | null> => {
   const resp = await mirrorRequest<AnyListen.IPCExtension.RemoteOnlineDetail>(`${API_URL}/registry/${id}.json`)
   if (resp.statusCode == 404) return null
   if (resp.statusCode !== 200) throw new Error(`Failed to fetch extension detail for ${id}: ${resp.statusMessage}`)
-  return resp.body
+  return {
+    ...resp.body,
+    description: resp.body.description ? t(resp.body.description, resp.body.id) : '',
+    contributes: buildContributorInfo(resp.body.id, resp.body.contributes),
+  }
 }
 
 // TODO
@@ -175,7 +194,7 @@ export const initOnlineList = async () => {
     // TODO: check update
   } catch {
     if (import.meta.env.DEV) console.error('Failed to fetch online extension list')
-    setTimeout(initOnlineList, 5000)
+    // setTimeout(initOnlineList, 5000)
   }
 
   extensionEvent.on('listChanged', buildNewVersionInfo)

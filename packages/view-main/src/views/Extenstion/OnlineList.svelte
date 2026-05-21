@@ -7,6 +7,7 @@
   import ListItemOnline from './ListItemOnline.svelte'
   import { t } from '@/plugins/i18n'
   import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar.svelte'
+  import { showExtensionDetailModal } from '@/components/apis/extensionDetail'
   let loading = $state(false)
 
   const list = useOnlineExtensionList()
@@ -23,7 +24,12 @@
   {#if list.val.length}
     <ul class="list" {@attach verticalScrollbar({ offset: '0.22rem' })}>
       {#each list.val as ext (ext.id)}
-        <ListItemOnline {ext} />
+        <ListItemOnline
+          {ext}
+          onshowdetail={() => {
+            showExtensionDetailModal(ext)
+          }}
+        />
       {/each}
     </ul>
   {:else}

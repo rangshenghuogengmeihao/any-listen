@@ -156,7 +156,18 @@
       />
     {/if}
   {/if}
-  <List bind:this={musicList} {listinfo} {list} {source} {onscroll} bind:finding bind:multimode bind:duplicate bind:listsort />
+  <List
+    bind:this={musicList}
+    {listinfo}
+    {list}
+    {source}
+    {onscroll}
+    bind:finding
+    bind:multimode
+    bind:duplicate
+    bind:listsort
+    loaded={!loading && !error}
+  />
   <Loading {loading} {error} {onreload} />
 </div>
 

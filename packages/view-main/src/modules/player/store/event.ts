@@ -27,10 +27,6 @@ class Event extends _Event {
     this.emitEvent('setVolume', val)
   }
 
-  setVolumeIsMute(val: boolean) {
-    this.emitEvent('setVolumeIsMute', val)
-  }
-
   setPreservesPitch(val: boolean) {
     this.emitEvent('setPreservesPitch', val)
   }
@@ -122,8 +118,8 @@ class Event extends _Event {
     this.emitEvent('playListMusicRemoved', ids)
   }
 
-  playListChanged(playedList: InitState['playList']) {
-    this.emitEvent('playListChanged', playedList)
+  playListChanged(list: InitState['playList']) {
+    this.emitEvent('playListChanged', list)
   }
 
   playHistoryListChanged(list: InitState['playHistoryList']) {
@@ -202,6 +198,10 @@ class Event extends _Event {
 
   activePlayProgressTransition() {
     this.emitEvent('activePlayProgressTransition')
+  }
+
+  mediaDeviceChanged(id: string) {
+    this.emitEvent('mediaDeviceChanged', id)
   }
 }
 

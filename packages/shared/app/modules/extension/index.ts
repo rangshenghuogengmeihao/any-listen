@@ -1,6 +1,7 @@
 import { workers } from '../worker'
 import { extensionEvent } from './event'
-import { initListProvider } from './listProvider'
+import { initListProvider as initOnlineListProvider } from './onlineListProvider'
+import { initListProvider as initRemoteListProvider } from './remoteListProvider'
 import { extensionState } from './state'
 
 const initState = async () => {
@@ -11,7 +12,8 @@ const initState = async () => {
   })
 }
 export const initExtensionModule = async () => {
-  await initListProvider()
+  await initRemoteListProvider()
+  await initOnlineListProvider()
   await initState()
 }
 
@@ -21,4 +23,5 @@ export {
   parseMusicInfoMetadata as parseRemoteMusicInfoMetadata,
   sortUserList as sortRemoteUserList,
   syncList as syncRemoteUserList,
-} from './listProvider'
+} from './remoteListProvider'
+export { syncList as syncOnlineUserList } from './onlineListProvider'

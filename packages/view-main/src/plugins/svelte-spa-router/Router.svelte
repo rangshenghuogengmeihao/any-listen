@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { Component } from 'svelte'
+  import { onMount, type Component } from 'svelte'
   import { type RouteComponent, RouteItem } from './common'
-  import { type Location, loc, restoreScroll } from './navigator'
+  import { type Location, loc, restoreScroll, setParams } from './navigator'
 
   const {
     routes,
@@ -37,24 +37,26 @@
   } = $props()
 
   // Props for the component to render
-  let Cmp = $state<Component | null>(null)
-  let componentParams = $state<RegExpExecArray | Record<string, unknown> | null>(null)
+  let Cmp = $state.raw<Component | null>(null)
+  let componentParams = $state.raw<RegExpExecArray | Record<string, unknown> | null>(null)
 
   // Set up all routes
-  const routesList = Object.entries(routes).map(([path, cmp]) => {
-    return new RouteItem(path, cmp, prefix)
-  })
+  const routesList = $derived(
+    Object.entries(routes).map(([path, cmp]) => {
+      return new RouteItem(path, cmp, prefix)
+    })
+  )
 
   // If this is set, then that means we have popped into this var the state of our last scroll position
-  let previousScrollState = $state(null)
+  let previousScrollState = $state.raw(null)
 
   // Update history.scrollRestoration depending on restoreScrollState
   $effect(() => {
     history.scrollRestoration = restoreScrollState ? 'manual' : 'auto'
   })
-  let popStateChanged = null
-  if (restoreScrollState) {
-    popStateChanged = (event: PopStateEvent) => {
+  $effect(() => {
+    if (!restoreScrollState) return
+    const popStateChanged = (event: PopStateEvent) => {
       // If this event was from our history.replaceState, event.state will contain
       // our scroll history. Otherwise, event.state will be null (like on forward
       // navigation)
@@ -66,14 +68,14 @@
     }
     // This is removed in the destroy() invocation below
     window.addEventListener('popstate', popStateChanged)
-
-    $effect(() => {
-      restoreScroll(previousScrollState)
-    })
-  }
+    restoreScroll(previousScrollState)
+    return () => {
+      window.removeEventListener('popstate', popStateChanged)
+    }
+  })
 
   // let loadingRouters = new Set<() => Promise<unknown>>()
-  $effect(() => {
+  onMount(() => {
     // Always have the latest value of loc
     let lastLoc: Location | null = null
 
@@ -87,6 +89,7 @@
       for (const route of routesList) {
         const match = route.match(newLoc.location)
         if (!match) continue
+        setParams(match)
         // const detail: RouteDetail = {
         //   route: route.path,
         //   location: newLoc.location,
@@ -131,8 +134,8 @@
           try {
             const resp = await componentObj.component()
             cmp = 'default' in resp ? resp.default : resp
-          } catch {
-            console.error()
+          } catch (e) {
+            console.error(e)
             cmp = null
           }
           if (newLoc != lastLoc) return
@@ -171,7 +174,6 @@
     })
     return () => {
       unsubscribeLoc()
-      popStateChanged && window.removeEventListener('popstate', popStateChanged)
     }
   })
 </script>

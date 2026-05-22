@@ -60,7 +60,7 @@ const getCachedFile = async (id: string, range?: { start?: number; end?: number 
 }
 
 export const proxyRequest = async (name: string, rangeHeader?: string): Promise<Result | null> => {
-  if (name.length > 80 || !/^[\w.]+$/.test(name)) return null
+  if (name.length > 128 || !/^[\w.]+$/.test(name)) return null
 
   const ext = extname(name)
   if (ext && !checkAllowedExt(ext)) return null

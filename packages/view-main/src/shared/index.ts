@@ -67,15 +67,6 @@ export const getFontSizeWithScreen = (screenWidth: number = window.innerWidth): 
   return screenWidth <= 1440 ? 16 : screenWidth <= 1920 ? 18 : screenWidth <= 2560 ? 20 : screenWidth <= 2560 ? 20 : 22
 }
 
-export const deduplicationList = <T extends AnyListen.Music.MusicInfo>(list: T[]): T[] => {
-  const ids = new Set<string>()
-  return list.filter((s) => {
-    if (ids.has(s.id)) return false
-    ids.add(s.id)
-    return true
-  })
-}
-
 export const createUnsubscriptionSet = () => {
   return {
     isClean: true,

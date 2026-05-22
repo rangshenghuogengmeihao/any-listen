@@ -304,6 +304,19 @@ export const filterDuplicateMusic = async (list: AnyListen.Music.MusicInfo[], is
 }
 
 export const searchListMusic = (list: AnyListen.Music.MusicInfo[], text: string) => {
+  const fullMathNameResults = new Set<AnyListen.Music.MusicInfo>()
+  const fullMathSingerResults = new Set<AnyListen.Music.MusicInfo>()
+  const fullMathAlbumResults = new Set<AnyListen.Music.MusicInfo>()
+  const textLower = text.toLowerCase()
+  for (const mInfo of list) {
+    if (mInfo.name?.toLowerCase().includes(textLower)) {
+      fullMathNameResults.add(mInfo)
+    } else if (mInfo.singer?.toLowerCase().includes(textLower)) {
+      fullMathSingerResults.add(mInfo)
+    } else if (mInfo.meta.albumName?.toLowerCase().includes(textLower)) {
+      fullMathAlbumResults.add(mInfo)
+    }
+  }
   let result: AnyListen.Music.MusicInfo[] = []
   let rxp = new RegExp(
     `${text
@@ -313,6 +326,8 @@ export const searchListMusic = (list: AnyListen.Music.MusicInfo[], text: string)
     'i'
   )
   for (const mInfo of list) {
+    if (fullMathNameResults.has(mInfo) || fullMathSingerResults.has(mInfo) || fullMathAlbumResults.has(mInfo)) continue
+
     const str = `${mInfo.name}${mInfo.singer}${mInfo.meta.albumName ? mInfo.meta.albumName : ''}`
     if (rxp.test(str)) result.push(mInfo)
   }
@@ -325,7 +340,63 @@ export const searchListMusic = (list: AnyListen.Music.MusicInfo[], text: string)
       data: mInfo,
     })
   }
-  return sortedList.map((item) => item.data).reverse()
+  return [
+    ...fullMathNameResults.values(),
+    ...fullMathSingerResults.values(),
+    ...fullMathAlbumResults.values(),
+    ...sortedList.map((item) => item.data).reverse(),
+  ]
+}
+
+/**
+ * 搜索命令
+ * @param list 命令列表
+ * @param text 搜索文本
+ * @returns 搜索结果
+ */
+export const searchCommand = (list: AnyListen.Extension.Command[], text: string) => {
+  const fullMathCommandResults = new Set<AnyListen.Extension.Command>()
+  const fullMathNameResults = new Set<AnyListen.Extension.Command>()
+  const fullMathDescResults = new Set<AnyListen.Extension.Command>()
+  const textLower = text.toLowerCase()
+  for (const c of list) {
+    if (c.command?.toLowerCase().includes(textLower)) {
+      fullMathCommandResults.add(c)
+    } else if (c.name?.toLowerCase().includes(textLower)) {
+      fullMathNameResults.add(c)
+    } else if (c.description?.toLowerCase().includes(textLower)) {
+      fullMathDescResults.add(c)
+    }
+  }
+  let result: AnyListen.Extension.Command[] = []
+  let rxp = new RegExp(
+    `${text
+      .split('')
+      .map((s) => escapeRegExp(s))
+      .join('.*')}.*`,
+    'i'
+  )
+  for (const c of list) {
+    if (fullMathCommandResults.has(c) || fullMathNameResults.has(c) || fullMathDescResults.has(c)) continue
+
+    const str = `${c.command}${c.name}${c.description ? c.description : ''}`
+    if (rxp.test(str)) result.push(c)
+  }
+
+  const sortedList: Array<{ num: number; data: AnyListen.Extension.Command }> = []
+
+  for (const c of result) {
+    sortInsert(sortedList, {
+      num: similar(text, `${c.command}${c.name}${c.description ? c.description : ''}`),
+      data: c,
+    })
+  }
+  return [
+    ...fullMathCommandResults.values(),
+    ...fullMathNameResults.values(),
+    ...fullMathDescResults.values(),
+    ...sortedList.map((item) => item.data).reverse(),
+  ]
 }
 
 /**

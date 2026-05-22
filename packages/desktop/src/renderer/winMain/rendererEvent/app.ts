@@ -1,6 +1,7 @@
 import { clearCache, getCacheSize } from '@any-listen/app/cache'
 
 import { appState, updateSetting } from '@/app'
+import { quit } from '@/app/actions'
 import { clipboardReadText, clipboardWriteText, exitApp, openDirInExplorer, openUrl } from '@/shared/electron'
 import { getFonts } from '@/shared/fontManage'
 
@@ -42,6 +43,9 @@ export const createExposeApp = () => {
         return
       }
       closeWindow()
+    },
+    async exitApp(event) {
+      quit()
     },
     async fullscreenWindow(event, isFull) {
       setFullScreen(isFull)

@@ -19,10 +19,11 @@ import {
   updateListMusics as updateListMusicsFromRemote,
   updateUserList as updateUserListFromRemote,
   updateUserListPosition as updateUserListPositionFromRemote,
+  getListCover as getListCoverRemote,
 } from './listRemoteActions'
 import { musicLibraryState } from './state'
 
-export { getSubUserLists, setFetchingListStatus, setUserListInited, userListExist } from './commit'
+export { getSubUserLists, setFetchingListStatus, setUserListInited, userListExist, clearListCover, setListCover } from './commit'
 export { parseMusicMetadata, removeUserList, sortListMusics, syncUserList, updateListMusicsPosition } from './listRemoteActions'
 
 /**
@@ -48,30 +49,31 @@ export const getUserLists = async () => {
   return commit.getAllList()
 }
 
-// TODO create other list
 export const createUserList = async (position: number, info: AnyListen.List.UserListInfo) => {
   switch (info.type) {
-    case 'general':
+    case 'general': {
+      const listInfo: AnyListen.List.GeneralListInfo = {
+        id: generateIdSimple(),
+        type: info.type,
+        name: info.name,
+        // TODO
+        parentId: null,
+        meta: {
+          createTime: Date.now(),
+          desc: '',
+          playCount: 0,
+          songCount: 0,
+          pic: '',
+          posTime: Date.now(),
+          updateTime: Date.now(),
+        },
+      }
       await createUserListFromRemote({
         position,
-        listInfos: [
-          {
-            id: generateIdSimple(),
-            type: info.type,
-            name: info.name,
-            // TODO
-            parentId: null,
-            meta: {
-              createTime: Date.now(),
-              desc: '',
-              playCount: 0,
-              posTime: Date.now(),
-              updateTime: Date.now(),
-            },
-          },
-        ],
+        listInfos: [listInfo],
       })
-      break
+      return listInfo.id
+    }
     case 'local': {
       const listInfo: AnyListen.List.LocalListInfo = {
         id: generateIdSimple(),
@@ -83,6 +85,8 @@ export const createUserList = async (position: number, info: AnyListen.List.User
           createTime: Date.now(),
           desc: '',
           playCount: 0,
+          songCount: 0,
+          pic: '',
           posTime: Date.now(),
           updateTime: Date.now(),
         },
@@ -91,7 +95,7 @@ export const createUserList = async (position: number, info: AnyListen.List.User
         position,
         listInfos: [listInfo],
       })
-      break
+      return listInfo.id
     }
     case 'remote': {
       const listInfo = {
@@ -104,6 +108,8 @@ export const createUserList = async (position: number, info: AnyListen.List.User
           createTime: Date.now(),
           desc: '',
           playCount: 0,
+          songCount: 0,
+          pic: '',
           posTime: Date.now(),
           updateTime: Date.now(),
         },
@@ -112,29 +118,49 @@ export const createUserList = async (position: number, info: AnyListen.List.User
         position,
         listInfos: [listInfo],
       })
-      break
+      return listInfo.id
     }
-    default:
-      break
+    case 'online': {
+      const listInfo = {
+        id: generateIdSimple(),
+        type: info.type,
+        name: info.name,
+        parentId: null,
+        meta: {
+          ...info.meta,
+          createTime: Date.now(),
+          playCount: 0,
+          songCount: 0,
+          posTime: Date.now(),
+          updateTime: Date.now(),
+        },
+      }
+      await createUserListFromRemote({
+        position,
+        listInfos: [listInfo],
+      })
+      return listInfo.id
+    }
   }
 }
 
-// TODO update other list
 export const updateUserList = async (info: AnyListen.List.UserListInfo) => {
   const targetList = musicLibraryState.userLists.find((l) => l.id === info.id)
   if (!targetList) return
   switch (targetList.type) {
     case 'general':
-      await updateUserListFromRemote([
-        {
-          ...targetList,
-          name: info.name,
-          meta: {
-            ...targetList.meta,
-            updateTime: Date.now(),
+      await updateUserListFromRemote({
+        lists: [
+          {
+            ...targetList,
+            name: info.name,
+            meta: {
+              ...targetList.meta,
+              updateTime: Date.now(),
+            },
           },
-        },
-      ])
+        ],
+      })
       break
     case 'local': {
       const listInfo = {
@@ -146,7 +172,7 @@ export const updateUserList = async (info: AnyListen.List.UserListInfo) => {
           updateTime: Date.now(),
         },
       }
-      await updateUserListFromRemote([listInfo])
+      await updateUserListFromRemote({ lists: [listInfo] })
       break
     }
     case 'remote': {
@@ -159,11 +185,21 @@ export const updateUserList = async (info: AnyListen.List.UserListInfo) => {
           updateTime: Date.now(),
         },
       }
-      await updateUserListFromRemote([listInfo])
+      await updateUserListFromRemote({ lists: [listInfo] })
       break
     }
-    default:
+    case 'online': {
+      const listInfo = {
+        ...targetList,
+        name: info.name,
+        meta: {
+          ...targetList.meta,
+          updateTime: Date.now(),
+        },
+      }
+      await updateUserListFromRemote({ lists: [listInfo] })
       break
+    }
   }
 }
 
@@ -266,4 +302,18 @@ export const saveListScrollPosition = async (listId: string, pos: number) => {
   listPositionInfo[listId] = pos
   waitSavePosInfo[listId] = pos
   saveListPositionThrottle()
+}
+
+const listCoverPromiseMap = new Map<string, Promise<void>>()
+export const initListCover = async (id: string) => {
+  if (listCoverPromiseMap.has(id)) return
+  const promise = getListCoverRemote(id)
+    .then((url) => {
+      commit.setListCover(id, url)
+      listCoverPromiseMap.delete(id)
+    })
+    .catch(() => {
+      listCoverPromiseMap.delete(id)
+    })
+  listCoverPromiseMap.set(id, promise)
 }

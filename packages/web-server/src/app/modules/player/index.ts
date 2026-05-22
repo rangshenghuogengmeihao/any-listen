@@ -93,7 +93,7 @@ export const initPlayer = async () => {
       // await musicListEvent.list_update_play_count(targetMusic.listId, targetMusic.musicInfo.name, targetMusic.musicInfo.singer)
       // workers.dbService.updateMetadataPlayCount()
     }
-    if (prevMusic?.playLater) {
+    if (prevMusic && prevMusic.itemId != targetMusic?.itemId && prevMusic.playLater) {
       void playerEvent.playListAction({ action: 'remove', data: [prevMusic.itemId] })
     }
   })
@@ -142,6 +142,24 @@ export const initPlayer = async () => {
         if (ids.includes(item.id)) idxs.push(idx)
       })
       if (idxs.length) void playerEvent.playHistoryListAction({ action: 'removeIdx', data: idxs })
+    } else if (action.action == 'update') {
+      const data = action.data
+      const playerMusic = getPlayMusicInfo()
+      if (playerMusic) {
+        const targetMusic = data.find((m) => m.listId == playerMusic.listId && m.musicInfo.id == playerMusic.musicInfo.id)
+        if (targetMusic) {
+          setPlayMusicInfo({
+            ...playerMusic,
+            musicInfo: targetMusic.musicInfo,
+          })
+        }
+      }
+
+      const updatedInfo = await workers.dbService.musicsUpdateLastPlayedList(
+        data.map((m) => ({ id: m.listId, musicInfo: m.musicInfo }))
+      )
+      if (!updatedInfo.length) return
+      void sendMusicListAction({ action: 'list_music_update', data: updatedInfo })
     }
   })
 
@@ -174,7 +192,7 @@ export const initPlayer = async () => {
 
 export const getPlayInfo = async (): Promise<AnyListen.IPCPlayer.PlayInfo> => {
   const playInfo = await getPlayInfoRaw()
-  const [[list, isCollect], { listId, isOnline }, historyList] = await Promise.all([
+  const [[list, isCollect], { listId, source }, historyList] = await Promise.all([
     workers.dbService.getPlayList().then(async (list) => {
       const minfo = list[playInfo.index]
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -188,7 +206,7 @@ export const getPlayInfo = async (): Promise<AnyListen.IPCPlayer.PlayInfo> => {
     info: playInfo,
     list,
     listId,
-    isOnline,
+    source,
     historyList,
     isCollect,
   }

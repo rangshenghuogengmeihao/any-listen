@@ -12,6 +12,7 @@ import DislikedList from './DislikedList.svelte'
 import ExtensionGHMirrorHosts from './ExtensionGHMirrorHosts.svelte'
 import Font from './Font.svelte'
 import LoginDevices from './LoginDevices.svelte'
+import MediaDevice from './MediaDevice.svelte'
 import MusicCache from './MusicCache.svelte'
 import Network from './Network.svelte'
 import ResourceCache from './ResourceCache.svelte'
@@ -128,6 +129,8 @@ export const settings: SettingListSection[] = [
         type: 'radio',
         enum: langList.map((l) => ({ value: l.locale, name: l.name as keyof Message })),
       },
+      // t('settings.basic.play_bar_style_center_control_btn')
+      // t('settings.basic.play_bar_style_center_control_middle_btn')
       // t('settings.basic.play_bar_style_center_control_full_btn')
       {
         field: 'common.playBarProgressStyle',
@@ -175,7 +178,6 @@ export const settings: SettingListSection[] = [
         name: 'settings.player.lyric_trans_roma_swap',
         type: 'boolean',
       },
-      // t('settings.player.media_device_changed_pause_play')
       {
         field: 'player.isPlayAwlrc',
         name: 'settings.player.play_awlrc',
@@ -191,13 +193,16 @@ export const settings: SettingListSection[] = [
         name: 'settings.player.media_session_lyric',
         type: 'boolean',
       },
-      import.meta.env.VITE_IS_DESKTOP
-        ? {
-            field: 'player.isMediaDeviceChangedPausePlay',
-            name: 'settings.player.media_device_changed_pause_play',
-            type: 'boolean',
-          }
-        : null,
+      {
+        field: 'player.ignoreLocalLyrics',
+        name: 'settings.player.ignore_local_lyrics',
+        type: 'boolean',
+      },
+      {
+        field: 'player.isMediaDeviceChangedPausePlay',
+        name: 'settings.player.media_device_changed_pause_play',
+        type: 'boolean',
+      },
       import.meta.env.VITE_IS_MAC
         ? {
             field: 'player.isShowStatusBarLyric',
@@ -205,6 +210,25 @@ export const settings: SettingListSection[] = [
             type: 'boolean',
           }
         : null,
+      // t('settings.player.music_quality_128k')
+      {
+        field: 'player.playQuality',
+        name: 'settings.player.music_quality',
+        type: 'radio',
+        enum: (
+          ['128k', '320k', 'flac', 'flac24bit', 'dolby', 'master'] satisfies Array<
+            Exclude<AnyListen.Music.Quality, 'wav' | '192k'>
+          >
+        ).map((l) => ({
+          value: l,
+          name: `settings.player.music_quality_${l}`,
+        })),
+      },
+      {
+        name: 'settings.player.media_device',
+        type: 'component',
+        component: MediaDevice,
+      },
     ],
   },
   {
@@ -266,6 +290,19 @@ export const settings: SettingListSection[] = [
     ],
   },
   {
+    id: 'onlineResource',
+    // t('settings.online_resource.enable_desc')
+    name: 'settings.online_resource',
+    list: [
+      {
+        field: 'onlineResource.enable',
+        name: 'settings.online_resource.enable',
+        description: 'settings.online_resource.enable_desc',
+        type: 'boolean',
+      },
+    ],
+  },
+  {
     id: 'network',
     // t('settings.network.proxy')
     name: 'settings.network',
@@ -281,7 +318,7 @@ export const settings: SettingListSection[] = [
     id: 'other',
     name: 'settings.other',
     list: [
-      import.meta.env.VITE_IS_DESKTOP && import.meta.env.VITE_IS_MAC
+      (import.meta.env.VITE_IS_DESKTOP && import.meta.env.VITE_IS_MAC) || import.meta.env.VITE_IS_WEB
         ? null
         : {
             field: 'common.transparentWindow',

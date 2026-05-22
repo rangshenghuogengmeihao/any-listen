@@ -35,6 +35,7 @@
   let sourceLabel = $derived(buildSourceLabel(info.musicInfo))
   let picUrl = $state<null | string>(null)
   // let isPlaying = $derived(isplaylist && $playInfo.index === index)
+  const badgeTypes = ['primary', 'secondary', 'tertiary'] as const
 
   const handleClick = (event: KeyboardEvent | Event) => {
     if ('key' in event) {
@@ -86,6 +87,7 @@
     <Image
       src={picUrl}
       onerror={() => {
+        picUrl = null
         if (retryedLoadPic) return
         retryedLoadPic = true
         loadPic()
@@ -95,8 +97,10 @@
   <div class="name-info">
     <div class="name" aria-label={info.musicInfo.name}>
       <h4>{info.musicInfo.name}</h4>
-      {#if sourceLabel}
-        <Badge label={sourceLabel} opacity={0.7} />
+      {#if sourceLabel.length}
+        {#each sourceLabel as label, index (index)}
+          <Badge {label} opacity={0.7} type={badgeTypes[index % badgeTypes.length]} />
+        {/each}
       {/if}
     </div>
     <div class="singer">
@@ -118,7 +122,7 @@
       outline
       icon
       onclick={() => {
-        scrollListTo(info.listId, info.isOnline, info.musicInfo.id)
+        scrollListTo(info.listId, info.source, info.musicInfo)
       }}
     >
       <SvgIcon name="visit" />

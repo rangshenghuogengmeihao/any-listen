@@ -63,7 +63,7 @@ const throttleListChangeSync = throttle(async () => {
     const newInfo = createPlayMusicInfo({
       musicInfo: m,
       listId: targetListId,
-      isOnline: playerState.playInfo.isOnline,
+      source: playerState.playInfo.source,
       playLater: false,
       linked: true,
     })
@@ -74,7 +74,7 @@ const throttleListChangeSync = throttle(async () => {
   arrPush(newList, newTargetList)
   // TODO diff update
   console.log('throttleListSync setPlayListMusic')
-  await setPlayListMusic({ list: newList, listId: targetListId, isOnline: playerState.playInfo.isOnline, isSync: true })
+  await setPlayListMusic({ list: newList, listId: targetListId, source: playerState.playInfo.source, isSync: true })
   if (curSyncId == syncId) syncId = ''
 }, 500)
 const handleListChangeSync = (listIds: string[]) => {

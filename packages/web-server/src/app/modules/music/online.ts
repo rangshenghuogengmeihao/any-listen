@@ -1,9 +1,4 @@
 import { updateMusicPic } from '@any-listen/app/modules/musicList'
-import { buildMusicCacheId, getFileType } from '@any-listen/common/tools'
-
-import { appState } from '@/app/app'
-import { workers } from '@/app/worker'
-
 import {
   getMusicLyricByExtensionSource,
   getMusicLyric as getMusicLyricResource,
@@ -11,7 +6,12 @@ import {
   getMusicPic as getMusicPicResource,
   getMusicUrlByExtensionSource,
   getMusicUrl as getMusicUrlResource,
-} from '../resources'
+} from '@any-listen/app/modules/resources'
+import { buildMusicCacheId, getFileType } from '@any-listen/common/tools'
+
+import { appState } from '@/app/app'
+import { workers } from '@/app/worker'
+
 import { buildLyricInfo, getCachedLyricInfo, saveLyricInfo } from './shared'
 
 export const getMusicUrlByExtSource = async ({

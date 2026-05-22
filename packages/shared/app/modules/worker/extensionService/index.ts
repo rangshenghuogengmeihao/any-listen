@@ -4,6 +4,7 @@ import { setProxyByHost } from '@any-listen/nodejs/request'
 import { exposeWorker } from '../utils/worker'
 import { registerErrorHandler } from './errorHandler'
 import { extensionEvent } from './event'
+import { executeCommand } from './extensionApis/command'
 import { initI18n } from './i18n'
 import { internalExtensionContextState } from './internalExtension/state'
 import {
@@ -25,12 +26,12 @@ import {
   getOnlineExtensionList,
   getOnlineTags,
   initOnlineList,
-  resetOnlineData,
 } from './onlineExtension'
 import { resetI18n } from './onlineExtension/i18n'
 import {
   buildExtensionSettings,
   clearExtensionLogs,
+  getExtensionConfigValues,
   getExtensionLastLogs,
   updateExtensionSettings,
   updateResourceListThrottle,
@@ -111,9 +112,6 @@ const extension = {
   async getOnlineExtensionDetail(id: string) {
     return getOnlineExtensionDetail(id)
   },
-  async resetOnlineData() {
-    resetOnlineData()
-  },
   getLocalExtensionList() {
     return extensionState.extensions
   },
@@ -132,6 +130,9 @@ const extension = {
   getResourceList() {
     return extensionState.resourceList
   },
+  getNewVersionInfo() {
+    return extensionState.newExtensionVersions
+  },
   async getExtensionLastLogs(extId?: string) {
     return getExtensionLastLogs(extId)
   },
@@ -140,6 +141,9 @@ const extension = {
   },
   async getAllExtensionSettings() {
     return buildExtensionSettings()
+  },
+  async getExtensionConfigValues(extId: string, fields: string[]) {
+    return getExtensionConfigValues(extId, fields)
   },
   async updateExtensionSettings(extId: string, config: Record<string, unknown>) {
     await updateExtensionSettings(extId, config)
@@ -162,6 +166,9 @@ const extension = {
     const context = internalExtensionContextState.contexts.get(params.extensionId)
     if (context) return context.context.listProviderAction!(action, params)
     return listProviderAction(action, params)
+  },
+  async executeCommand(commandName: string, args: any[]) {
+    return executeCommand(commandName, args)
   },
   // clientConnected(id: string) {
   //   extensionEvent.clientConnected(id)

@@ -2,6 +2,7 @@ import { sendPlayListAction } from '@/shared/ipc/player'
 import { playListActionEvent } from '@/shared/ipc/player/event'
 
 import * as commit from './commit'
+import { playerState } from './state'
 
 /**
  * 覆盖列表
@@ -73,13 +74,22 @@ export const updatePlayListMusicPos = async (data: AnyListen.IPCPlayer.PlayerAct
 export const registerRemoteListAction = () => {
   const set = (info: AnyListen.IPCPlayer.PlayerActionSet) => {
     commit.setPlayListMusic(info.list)
-    commit.setPlayListId(info.listId, info.isOnline)
+    commit.setPlayListId(info.listId, info.source)
   }
   const add = (data: AnyListen.IPCPlayer.PlayerActionAdd) => {
     commit.addPlayListMusic(data.pos, data.musics)
   }
   const update = (data: AnyListen.IPCPlayer.PlayerActionUpdate) => {
     commit.updatePlayListMusic(data)
+    const playerMusic = playerState.playMusicInfo
+    if (!playerMusic) return
+    const targetMusic = data.find((m) => m.listId == playerMusic.listId && m.musicInfo.id == playerMusic.musicInfo.id)
+    if (targetMusic) {
+      commit.setPlayMusicInfo({
+        ...playerMusic,
+        musicInfo: targetMusic.musicInfo,
+      })
+    }
   }
   const remove = (data: AnyListen.IPCPlayer.PlayerActionRemove) => {
     commit.removePlayListMusic(data)

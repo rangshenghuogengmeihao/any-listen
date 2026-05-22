@@ -2,9 +2,6 @@
   import Header from './Header.svelte'
   import { query } from '@/plugins/routes'
   import { viewTypes } from './shared'
-  import AppSetting from './AppSetting/AppSetting.svelte'
-  import ExtensionSetting from './ExtensionSetting/ExtensionSetting.svelte'
-  import Logs from './Logs/Logs.svelte'
 
   const activeView = $derived<(typeof viewTypes)[number]>(viewTypes.find((t) => t == $query.type) ?? 'app')
 </script>
@@ -12,11 +9,17 @@
 <div class="view-container container">
   <Header activeview={activeView} />
   {#if activeView == 'app'}
-    <AppSetting />
+    {#await import('./AppSetting/AppSetting.svelte') then { default: AppSetting }}
+      <AppSetting />
+    {/await}
   {:else if activeView == 'extension'}
-    <ExtensionSetting />
+    {#await import('./ExtensionSetting/ExtensionSetting.svelte') then { default: ExtensionSetting }}
+      <ExtensionSetting />
+    {/await}
   {:else if activeView == 'logs'}
-    <Logs />
+    {#await import('./Logs/Logs.svelte') then { default: Logs }}
+      <Logs />
+    {/await}
   {/if}
 </div>
 

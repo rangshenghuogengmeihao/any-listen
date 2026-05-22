@@ -1,3 +1,5 @@
+import { cloneData } from '@any-listen/common/utils'
+
 import { updateExtensionSettings } from '../shared'
 import { getConfig } from '../shared/configStore'
 
@@ -8,10 +10,10 @@ export const createConfigurationStore = (extension: AnyListen.Extension.Extensio
   return {
     async getConfigs<T extends unknown[] = []>(keys: string[]) {
       const store = await getConfig(extension)
-      return keys.map((k) => store[k]) as WithUndefined<T>
+      return cloneData(keys.map((k) => store[k])) as WithUndefined<T>
     },
     async setConfigs(datas: Record<string, unknown>) {
-      await updateExtensionSettings(extension.id, datas)
+      await updateExtensionSettings(extension.id, cloneData(datas))
     },
   }
 }

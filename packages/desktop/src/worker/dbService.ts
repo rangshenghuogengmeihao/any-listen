@@ -2,7 +2,6 @@ import path from 'node:path'
 
 import { startDBServiceWorker as _startDBServiceWorker, workers } from '@any-listen/app/modules/worker'
 import { DB_NAME } from '@any-listen/common/constants'
-import { backupDB } from '@any-listen/nodejs/tools'
 import { dialog } from 'electron'
 
 // import { log } from '@/shared/log'
@@ -23,7 +22,7 @@ const initServices = async (dataPath: string) => {
       message: i18n.t('database_verify_failed'),
       detail: i18n.t('database_verify_failed_detail', { backupPath }),
     })
-    backupDB(dataPath, backupPath)
+    await workers.dbService.backupDB(dataPath, nativeBindingPath, backupPath)
     openDirInExplorer(backupPath)
     await workers.dbService.init(dataPath, nativeBindingPath)
   }

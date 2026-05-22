@@ -4,7 +4,7 @@
   import ListItem from './ListItem.svelte'
   import type { viewTypes } from './shared'
   import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar.svelte'
-  import ListItemEnpty from './ListItemEnpty.svelte'
+  import { showExtensionDetailModal } from '@/components/apis/extensionDetail'
   let { type }: { type: Omit<(typeof viewTypes)[number], 'online'> } = $props()
   let list = $derived(
     type == 'installed'
@@ -19,14 +19,13 @@
   {#if list.length}
     <ul class="list" {@attach verticalScrollbar({ offset: '0.22rem' })}>
       {#each list as ext (ext.id)}
-        <ListItem {ext} />
+        <ListItem
+          {ext}
+          onshowdetail={() => {
+            showExtensionDetailModal(ext)
+          }}
+        />
       {/each}
-      <ListItemEnpty />
-      <ListItemEnpty />
-      <ListItemEnpty />
-      <ListItemEnpty />
-      <ListItemEnpty />
-      <ListItemEnpty />
     </ul>
   {:else}
     <Empty />
@@ -43,8 +42,8 @@
     margin-top: 15px;
   }
   .list {
-    display: flex;
-    flex-flow: row wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 16px;
     min-height: 0;
     padding: 0 16px 16px;

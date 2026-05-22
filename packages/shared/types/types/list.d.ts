@@ -1,6 +1,8 @@
 declare namespace AnyListen {
   namespace List {
     interface UserListInfoBaseMeta {
+      songCount: number
+      pic: string
       playCount: number
       createTime: number
       updateTime: number
@@ -17,12 +19,14 @@ declare namespace AnyListen {
       enabledRemove?: boolean
       usePolling?: boolean
     }
+    type SourceType = 'songlist' | 'topSongs' | 'search' | 'album'
     interface UserListInfoByOnlineMeta extends UserListInfoBaseMeta {
       extensionId: string
       source: string
       syncId: string
       syncTime: number
-      picUrl: string | null
+      sourceType: SourceType
+      [key: string]: unknown
     }
     interface UserListInfoByRemoteMeta extends UserListInfoBaseMeta {
       extensionId: string
@@ -56,19 +60,19 @@ declare namespace AnyListen {
 
     interface MyDefaultListInfo extends Omit<GeneralListInfo, 'type'> {
       id: 'default'
-      name: 'default'
+      name: string
       type: 'default'
     }
 
     interface MyLoveListInfo extends Omit<GeneralListInfo, 'type'> {
       id: 'love'
-      name: 'love'
+      name: string
       type: 'default'
     }
 
     interface MyLastPlayListInfo extends Omit<GeneralListInfo, 'type'> {
       id: 'last_played'
-      name: 'last_played'
+      name: string
       type: 'default'
     }
 

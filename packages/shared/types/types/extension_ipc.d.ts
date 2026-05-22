@@ -21,6 +21,7 @@ declare namespace AnyListen {
       keys: string[]
       setting: Record<string, unknown>
     }
+    type EventVersionInfoUpdated = Record<string, string>
     type EventExtension =
       | IPCAction<'loadListStart'>
       | IPCAction<'loadListEnd'>
@@ -38,6 +39,7 @@ declare namespace AnyListen {
       | IPCAction<'listRemove', string>
       | IPCAction<'listUpdate', Extension.Extension>
       | IPCAction<'listSet', Extension.Extension[]>
+      | IPCAction<'newVersionInfoUpdated', EventVersionInfoUpdated>
       | IPCAction<'logOutput', LogInfo>
       | IPCAction<'resourceUpdated', Extension.ResourceList>
       | IPCAction<'extenstionSettingUpdated', EventExtensionSettingUpdated>
@@ -48,7 +50,13 @@ declare namespace AnyListen {
     }
     interface CommonListParams extends CommonParams {
       page: number
-      limit: number
+      limit?: number
+    }
+    interface CommonSearchParams extends CommonListParams {
+      keyword: string
+    }
+    interface TipSearchParams extends CommonParams {
+      keyword: string
     }
     interface LyricSearchParams extends CommonParams {
       name: string
@@ -60,7 +68,7 @@ declare namespace AnyListen {
       name: string
       artist?: string
       interval?: number
-      lyric?: string
+      lyric?: Music.LyricInfo
     }
     interface LyricDetailParams extends CommonParams {
       id: string
@@ -69,16 +77,39 @@ declare namespace AnyListen {
       name: string
       artist?: string
     }
-    interface SearchParams extends CommonListParams {
+    interface MusicSearchParams extends CommonListParams {
       name: string
       artist?: string
+      albumName?: string
     }
     interface ListDetailParams extends CommonListParams {
       id: string
     }
+    interface SonglistTagResult {
+      tags: Resource.TagGroupItem[]
+      hotTags: Resource.TagItem[]
+    }
     interface SonglistListParams extends CommonListParams {
       sort: string
       tag: string
+    }
+    interface SonglistDetailResult extends ListCommonResult<Music.MusicInfoOnline> {
+      info: Resource.SongListDetailInfo
+    }
+    interface TopSongsDateParams extends CommonParams {
+      id: string
+    }
+    interface TopSongsDetailParams extends CommonListParams {
+      id: string
+      date: string
+    }
+    interface TopSongsDetailResult extends ListCommonResult<Music.MusicInfoOnline> {
+      info: Resource.TopSongsDetailInfo
+    }
+    interface MusicCommentParams extends CommonListParams {
+      musicInfo: Music.MusicInfoOnline
+      id?: string
+      type: 'hot' | 'new' | 'reply'
     }
     interface ListCommonResult<T> {
       list: T[]
@@ -139,23 +170,24 @@ declare namespace AnyListen {
       ) => Promise<Music.MusicInfoOnline>
     }
     interface ResourceAction {
-      // tipSearch: (params: CommonParams) => Promise<string[]>
-      // hotSearch: (params: CommonParams) => Promise<string[]>
-      musicSearch: (params: SearchParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
+      tipSearch: (params: TipSearchParams) => Promise<string[]>
+      hotSearch: (params: CommonParams) => Promise<string[]>
+      musicSearch: (params: MusicSearchParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
       musicPic: (params: MusicCommonParams) => Promise<string>
       musicUrl: (params: MusicUrlParams) => Promise<MusicUrlInfo>
       musicLyric: (params: MusicCommonParams) => Promise<Music.LyricInfo>
       musicPicSearch: (params: PicSearchParams) => Promise<string[]>
       lyricSearch: (params: LyricSearchParams) => Promise<LyricSearchResult[]>
       lyricDetail: (params: LyricDetailParams) => Promise<Music.LyricInfo>
-      // songlistSearch: (params: SearchParams) => Promise<ListCommonResult<Resource.SongListItem>>
-      // songlistSorts: (params: CommonParams) => Promise<Resource.TagItem[]>
-      // songlistTags: (params: CommonParams) => Promise<Resource.TagGroupItem[]>
-      // songlist: (params: SonglistListParams) => Promise<ListCommonResult<Resource.SongListItem>>
-      // songlistDetail: (params: ListDetailParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
-      // leaderboard: (params: CommonParams) => Promise<Resource.TagGroupItem[]>
-      // leaderboardDate: (params: SonglistListParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
-      // leaderboardDetail: (params: SonglistListParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
+      songlistSearch: (params: CommonSearchParams) => Promise<ListCommonResult<Resource.SongListItem>>
+      songlistSorts: (params: CommonParams) => Promise<Resource.TagItem[]>
+      songlistTags: (params: CommonParams) => Promise<SonglistTagResult>
+      songlist: (params: SonglistListParams) => Promise<ListCommonResult<Resource.SongListItem>>
+      songlistDetail: (params: ListDetailParams) => Promise<SonglistDetailResult>
+      topSongs: (params: CommonParams) => Promise<Resource.TopSongsItem[]>
+      topSongsDate: (params: TopSongsDateParams) => Promise<Resource.TagItem[]>
+      topSongsDetail: (params: TopSongsDetailParams) => Promise<TopSongsDetailResult>
+      musicComment: (params: MusicCommentParams) => Promise<ListCommonResult<Resource.MusicCommentItem>>
     }
     // type ResourceAction = IPCActionFunc<'tipSearch', string, string[]>
     // | IPCActionFunc<'hotSearch', string, string[]>
@@ -169,9 +201,9 @@ declare namespace AnyListen {
     // | IPCActionFunc<'songListTags', string, AnyListen.Resource.TagGroupItem[]>
     // | IPCActionFunc<'songList', SonglistListParams, ListCommonResult<AnyListen.Resource.SongListItem>>
     // | IPCActionFunc<'songListDetail', ListDetailParams, ListCommonResult<AnyListen.Music.MusicInfoOnline>>
-    // | IPCActionFunc<'leaderboard', string, AnyListen.Resource.TagGroupItem[]>
-    // | IPCActionFunc<'leaderboardDate', SonglistListParams, ListCommonResult<AnyListen.Music.MusicInfoOnline>>
-    // | IPCActionFunc<'leaderboardDetail', SonglistListParams, ListCommonResult<AnyListen.Music.MusicInfoOnline>>
+    // | IPCActionFunc<'topSongs', string, AnyListen.Resource.TagGroupItem[]>
+    // | IPCActionFunc<'topSongsDate', SonglistListParams, ListCommonResult<AnyListen.Music.MusicInfoOnline>>
+    // | IPCActionFunc<'topSongsDetail', SonglistListParams, ListCommonResult<AnyListen.Music.MusicInfoOnline>>
     // | IPCActionFunc<'albumSearch', SearchParams, ListCommonResult<AnyListen.Resource.SongListItem>>
     // | IPCActionFunc<'albumSinger', SonglistListParams, ListCommonResult<AnyListen.Resource.SongListItem>>
     // | IPCActionFunc<'albumDetail', ListDetailParams, ListCommonResult<AnyListen.Music.MusicInfoOnline>>
@@ -179,8 +211,9 @@ declare namespace AnyListen {
     interface OnlineListFilterOptions {
       page: number
       limit: number
+      skipCache?: boolean
     }
-    interface OnlineListItem {
+    interface RemoteOnlineListItem {
       id: Extension.Manifest['id']
       name: Extension.Manifest['name']
       description: Extension.Manifest['description']
@@ -188,37 +221,36 @@ declare namespace AnyListen {
       author: Extension.Manifest['author']
       grant: Extension.Manifest['grant']
       license: Extension.Manifest['license']
+      categories: Extension.Manifest['categories']
+      tags: Extension.Manifest['tags']
+      homepage: Extension.Manifest['homepage']
+      publicKey: Extension.Manifest['publicKey']
+      icon: Extension.Manifest['icon']
       target_engine: Extension.Manifest['target_engine']
-      categories: Extension.Manifest['categories']
-      tags: Extension.Manifest['tags']
-      // update_time: Extension.Manifest['update_time']
-      homepage: Extension.Manifest['homepage']
-      icon: Extension.Manifest['icon']
-      publicKey: Extension.Manifest['publicKey']
+      sha256: string
       download_url: string
+      create_timestamp: number
+      update_timestamp: number
     }
-    interface OnlineDetail {
-      id: Extension.Manifest['id']
-      name: Extension.Manifest['name']
-      description: Extension.Manifest['description']
-      icon: Extension.Manifest['icon']
-      version: Extension.Manifest['version']
-      author: Extension.Manifest['author']
-      homepage: Extension.Manifest['homepage']
-      license: Extension.Manifest['license']
-      categories: Extension.Manifest['categories']
-      tags: Extension.Manifest['tags']
-      grant: Extension.Manifest['grant']
-      contributes: Extension.Manifest['contributes']
-      publicKey: Extension.Manifest['publicKey']
+    interface RemoteOnlineDetail extends Extension.Manifest {
+      sha256: string
       download_url: string
+      create_timestamp: number
+      update_timestamp: number
+    }
+
+    interface OnlineListItem extends RemoteOnlineListItem {
+      installed: boolean
+      enabled: boolean
+      latest: boolean
+      currentVersion: string
     }
 
     interface OnlineListResult {
       limit: number
       page: number
       total: number
-      list: OnlineListItem[]
+      list: RemoteOnlineListItem[]
     }
     type OnlineTagResult = Array<{ id: string; name: string }>
     type OnlineCategorieResult = Array<{ id: string; name: string }>
@@ -231,11 +263,10 @@ declare namespace AnyListen {
       getExtensionErrorMessage: () => string | null
       getExtensionList: () => Extension.Extension[]
       getOnlineExtensionList: (options: OnlineListFilterOptions) => OnlineListResult
-      getOnlineExtensionDetail: (id: string) => OnlineDetail | null
+      getOnlineExtensionDetail: (id: string) => RemoteOnlineDetail | null
       getOnlineTags: () => OnlineTagResult
       getOnlineCategories: () => OnlineCategorieResult
-      resetOnlineData: () => void
-      downloadAndParseExtension: (url: string, manifest?: Extension.Manifest) => Extension.Extension
+      downloadAndParseExtension: (url: string, manifest?: RemoteOnlineListItem | RemoteOnlineDetail) => Extension.Extension
       installExtension: (tempExtension: Extension.Extension) => Extension.Extension
       updateExtension: (tempExtension: Extension.Extension) => Extension.Extension
       startExtension: (id: string) => void
@@ -245,18 +276,17 @@ declare namespace AnyListen {
       uninstallExtension: (id: string) => void
       restartExtensionHost: () => void
       getResourceList: () => Extension.ResourceList
+      getNewVersionInfo: () => EventVersionInfoUpdated
       getExtensionLastLogs: (id?: string) => LastLog[]
       clearExtensionLogs: (id?: string) => void
       getAllExtensionSettings: () => Promise<Extension.ExtensionSetting[]>
+      getExtensionConfigValues: (extId: string, fields: string[]) => Promise<Record<string, unknown>>
       updateExtensionSettings: (extId: string, config: Record<string, any>) => Promise<void>
-      resourceAction: <T extends keyof ResourceAction>(
-        action: T,
-        params: Parameters<ResourceAction[T]>[0]
-      ) => Promise<Awaited<ReturnType<ResourceAction[T]>>>
       listProviderAction: <T extends keyof ListProviderAction>(
         action: T,
         params: Parameters<ListProviderAction[T]>[0]
       ) => Promise<Awaited<ReturnType<ListProviderAction[T]>>>
+      executeCommand: (commandName: string, args: any[]) => Promise<unknown>
     }>
     type ServerIPCActions<Socket = undefined> = IPC.WarpIPCHandlerActions<Socket, ServerActions>
 
@@ -270,14 +300,14 @@ declare namespace AnyListen {
       onExtensionEvent: (action: EventExtension) => Promise<void>
       // getConnectedClients: () => Promise<string[]>
       // showMessage: (message: string) => Promise<string[]>
-      createProxyUrl: (url: string, reqOptions: unknown, enabledCache?: boolean) => Promise<string>
+      createProxyUrl: (url: string, reqOptions?: unknown, enabledCache?: boolean) => Promise<string>
       checkProxyCache: (url: string) => Promise<boolean>
       writeProxyCache: (fileName: string, data: Uint8Array) => Promise<string>
 
       getAllUserLists: () => Promise<List.MyAllList>
       getListMusics: (listId: string) => Promise<Music.MusicInfo[]>
       musicListAction: (action: IPCList.ActionList) => Promise<void>
-      createExtensionIconPublicPath: (filePath: string) => Promise<string>
+      createExtensionIconPublicPath: (extDir: string, filePath: string) => Promise<string>
       removeExtensionIconPublicPath: (filePath: string) => Promise<void>
 
       getPlayInfo: () => Promise<IPCPlayer.PlayInfo>
@@ -293,8 +323,8 @@ declare namespace AnyListen {
         options: Omit<IPCCommon.InputDialogOptions, 'validateInput'>,
         validateInput: IPCCommon.InputDialogOptions['validateInput']
       ) => Promise<string>
-      showOpenBox: (key: string, extensionId: string, options: IPCCommon.OpenDialogOptions) => Promise<unknown>
-      showSaveBox: (key: string, extensionId: string, options: IPCCommon.SaveDialogOptions) => Promise<unknown>
+      showOpenBox: (key: string, extensionId: string, options: IPCCommon.OpenDialogOptions) => Promise<string[]>
+      showSaveBox: (key: string, extensionId: string, options: IPCCommon.SaveDialogOptions) => Promise<string>
       closeMessageBox: (key: string) => Promise<void>
     }
 
@@ -318,7 +348,7 @@ declare namespace AnyListen {
       timeout?: number
       maxRedirect?: number
       signal?: AbortController['signal']
-      json?: Record<string, unknown>
+      json?: Record<string, unknown> | unknown[]
       form?: Record<string, string | number | null | undefined | boolean>
       binary?: Uint8Array
       text?: string
@@ -332,27 +362,52 @@ declare namespace AnyListen {
       headers: Record<string, string | string[] | undefined>
       raw: Uint8Array
       body: Resp
+      history: string[]
     }
     interface RespCallback<Resp> {
       (error: null, response: Response<Resp>): void
       (error: Error, response: null): void
     }
 
+    type IsolateContextMessageEvent = [id: string, message: string]
+
     // extension worker funcs, exposed to extension vm
     interface PreloadIPCActions {
       showMessageBox: (key: string, options: IPCCommon.MessageDialogOptions) => Promise<number>
-      showInputBox: (key: string, options: IPCCommon.InputDialogOptions) => Promise<string | undefined>
-      showOpenBox: (key: string, options: IPCCommon.OpenDialogOptions) => Promise<unknown>
-      showSaveBox: (key: string, options: IPCCommon.SaveDialogOptions) => Promise<unknown>
+      showInputBox: (key: string, options: IPCCommon.InputDialogOptions) => Promise<string>
+      showOpenBox: (key: string, options: IPCCommon.OpenDialogOptions) => Promise<string[]>
+      showSaveBox: (key: string, options: IPCCommon.SaveDialogOptions) => Promise<string>
+      readOpenBoxFile: <T extends 'utf-8' | 'binary' = 'binary'>(
+        path: string,
+        format?: T
+      ) => Promise<T extends 'utf-8' ? string : Uint8Array>
+      writeSaveBoxFile: (dir: string, name: string, content: string | Uint8Array) => Promise<string>
       closeMessageBox: (key: string) => void
 
-      request: <Resp = unknown>(url: string, options?: RequestOptions) => Promise<Response<Resp>>
-      getItems: (keys: string[]) => Promise<string[]>
-      setItems: <T extends Array<[string, string]>>(datas: T) => Promise<void>
-      removeItems: (keys: string[]) => Promise<void>
-      clearItems: () => Promise<void>
+      request: <Resp = unknown>(
+        url: string,
+        options?: Omit<RequestOptions, 'signal'> & { requestKey?: string }
+      ) => Promise<Response<Resp>>
+      cancelRequest: (requestKey: string) => void
+
+      createIsolateContext: () => Promise<string>
+      sendMessageToIsolateContext: (contextId: string, message: string) => Promise<void>
+      runInIsolateContext: (contextId: string, code: string) => Promise<void>
+      runFileInIsolateContext: (contextId: string, filePath: string) => Promise<void>
+      destroyIsolateContext: (contextId: string) => Promise<void>
+
+      writeFile: (path: string, content: string | Uint8Array) => Promise<void>
+      readFile: <T extends 'utf-8' | 'binary' = 'utf-8'>(
+        path: string,
+        encoding?: T
+      ) => Promise<T extends 'utf-8' ? string : Uint8Array>
+      removeFile: (path: string) => Promise<void>
+      fileExists: (path: string) => Promise<boolean>
+      listFiles: (path?: string) => Promise<string[]>
+      statFile: (path: string) => Promise<{ isFile: boolean; size: number; createTime: number; updateTime: number }>
+
       getConfigs: <T extends unknown[] = []>(keys: string[]) => Promise<WithUndefined<T>>
-      setConfigs: (datas: Array<[string, string]>) => Promise<void>
+      setConfigs: (datas: Record<string, unknown>) => Promise<void>
       // getConnectedClients: () => Promise<string[]>
 
       getPlayInfo: () => Promise<IPCPlayer.PlayInfo>
@@ -364,8 +419,55 @@ declare namespace AnyListen {
       getListMusics: (listId: string) => Promise<Music.MusicInfo[]>
       listAction: (action: IPCList.ActionList) => Promise<void>
 
-      createProxyUrl: (url: string, options: RequestOptions, enabledCache?: boolean) => Promise<string>
+      createProxyUrl: (url: string, options?: RequestOptions, enabledCache?: boolean) => Promise<string>
       writeProxyCache: (fileName: string, data: Uint8Array) => Promise<string>
+
+      executeCommand: (commandName: string, args: any[]) => Promise<unknown>
+      getCommands: (filterInternal?: boolean) => Promise<string[]>
+
+      deflate: <T extends 'base64' | 'binary' = 'binary'>(
+        data: Uint8Array | string,
+        encoding?: T
+      ) => Promise<T extends 'base64' ? string : Uint8Array>
+      inflate: <T extends 'utf-8' | 'binary' = 'binary'>(
+        data: Uint8Array | string,
+        encoding?: T
+      ) => Promise<T extends 'utf-8' ? string : Uint8Array>
+      aesEncrypt: (
+        mode: ExtensionVM.AES_MODE,
+        data: Uint8Array | string,
+        key: Uint8Array | string,
+        iv: Uint8Array | string
+      ) => Promise<string>
+      aesDecrypt: <T extends ExtensionVM.EncryptEncoding = 'binary'>(
+        mode: ExtensionVM.AES_MODE,
+        data: Uint8Array | string,
+        key: Uint8Array | string,
+        iv: Uint8Array | string,
+        encoding?: T
+      ) => Promise<T extends 'binary' ? Uint8Array : string>
+      rsaEncrypt: (mode: ExtensionVM.RSA_PADDING, data: Uint8Array, key: Uint8Array) => Promise<string>
+      rsaDecrypt: <T extends ExtensionVM.EncryptEncoding = 'binary'>(
+        mode: ExtensionVM.RSA_PADDING,
+        data: Uint8Array,
+        key: Uint8Array,
+        encoding?: T
+      ) => Promise<T extends 'binary' ? Uint8Array : string>
+      md5: (text: string | Uint8Array) => Promise<string>
+      sha1: (text: string | Uint8Array) => Promise<string>
+      sha256: (text: string | Uint8Array) => Promise<string>
+      sha512: (text: string | Uint8Array) => Promise<string>
+      dataConverterBinary: <R extends ExtensionVM.ConverterBinaryFormatTo = 'utf-8'>(
+        input: Uint8Array,
+        toEncoding: R
+      ) => Promise<R extends 'binary' ? Uint8Array : string>
+      dataConverterString: <R extends ExtensionVM.ConverterFormatTo = 'binary'>(
+        input: string,
+        fromEncoding: ExtensionVM.ConverterFormatFrom,
+        toEncoding: R
+      ) => Promise<R extends 'binary' ? Uint8Array : string>
+      iconvDecode: (data: Uint8Array | Uint16Array, encoding: string) => Promise<string>
+      iconvEncode: (data: string, encoding: string) => Promise<Uint8Array>
     }
 
     // extension vm funcs, exposed to extension worker
@@ -373,6 +475,9 @@ declare namespace AnyListen {
       updateLocale: (locale: Locale) => void
       updateI18nMessage: (message: Record<string, string>) => void
       musicListAction: (action: IPCList.ActionList) => void
+
+      isolateContextMessage: (contextId: string, message: string) => void
+
       playerEvent: (event: IPCPlayer.PlayerEvent) => void
       playListAction: (action: IPCPlayer.PlayListAction) => void
       playHistoryListAction: (action: IPCPlayer.PlayHistoryListAction) => void
@@ -386,6 +491,8 @@ declare namespace AnyListen {
         action: T,
         params: Parameters<ListProviderAction[T]>[0]
       ) => Promise<Awaited<ReturnType<ListProviderAction[T]>>>
+
+      executeCommand: (commandName: string, args: any[]) => Promise<unknown>
     }
   }
 }

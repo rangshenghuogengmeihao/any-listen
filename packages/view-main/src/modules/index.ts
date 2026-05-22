@@ -9,6 +9,7 @@ import { initHotkey } from './hotkey/init'
 import { initLyric } from './lyric/init'
 import { initMusicLibrary } from './musicLibrary/init'
 import { initPlayer } from './player/init'
+import { initResource } from './resource/init'
 import { initSetting } from './setting/init'
 import { initTheme } from './theme/init'
 import { initVersion } from './version/init'
@@ -25,6 +26,7 @@ export const registerModules = () => {
   initExtension()
   initHotkey()
   initVersion()
+  initResource()
 }
 
 export const connectIPC = (pwd?: string) => {

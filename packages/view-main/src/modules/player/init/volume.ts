@@ -1,5 +1,5 @@
 import { onRelease } from '@/modules/app/shared'
-import { hotkeyEvent } from '@/modules/hotkey/store/event'
+import { appEvent } from '@/modules/app/store/event'
 import { onSettingChanged } from '@/modules/setting/shared'
 import { updateSetting } from '@/modules/setting/store/action'
 import { settingState } from '@/modules/setting/store/state'
@@ -66,28 +66,26 @@ export const initVolume = () => {
         })
       )
       unregistered.add(
-        hotkeyEvent.on('player_volume_up', () => {
-          handleSetVolume(volume + 0.04)
-        })
-      )
-      unregistered.add(
-        hotkeyEvent.on('player_volume_down', () => {
-          handleSetVolume(volume - 0.04)
-        })
-      )
-      unregistered.add(
-        hotkeyEvent.on('player_volume_mute', () => {
-          handleToggleVolumeMute()
-        })
-      )
-      unregistered.add(
         playerEvent.on('setVolume', (val) => {
           handleSetVolume(val)
         })
       )
+
       unregistered.add(
-        playerEvent.on('setVolumeIsMute', (val) => {
-          handleToggleVolumeMute(val)
+        appEvent.on('executeCommand', (cmd, ...args) => {
+          switch (cmd) {
+            case 'volumeUp':
+              handleSetVolume(volume + 0.04)
+              break
+            case 'volumeDown':
+              handleSetVolume(volume - 0.04)
+              break
+            case 'muteToggle':
+              handleToggleVolumeMute(args[0] as boolean | undefined)
+              break
+            default:
+              break
+          }
         })
       )
     })

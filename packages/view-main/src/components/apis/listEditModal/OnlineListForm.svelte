@@ -2,6 +2,9 @@
   import { t } from '@/plugins/i18n'
   import { createUserList, editUserList } from './shared'
   import Input from '@/components/base/Input.svelte'
+  import FormItem from './FormItem.svelte'
+  import { resourceList } from '@/modules/extension/reactive.svelte'
+  import { extT } from '@/modules/extension/i18n'
 
   let {
     item,
@@ -25,13 +28,22 @@
       extensionId: '',
       source: '',
       syncId: '',
-      picUrl: null,
       syncTime: 0,
+      pic: '',
+      songCount: 0,
+      sourceType: 'songlist',
     },
   }
   let listInfo = $state<AnyListen.List.OnlineListInfo>({
     ...initData,
     meta: { ...initData.meta },
+  })
+
+  let sourceName = $derived.by(() => {
+    if (!listInfo.meta.source || !listInfo.meta.extensionId) return ''
+    const ext = $resourceList.resources.songlist?.find((e) => e.id == listInfo.meta.source)
+    if (!ext) return listInfo.meta.source
+    return $extT(ext.extensionId, ext.name)
   })
 
   export const verify = () => {
@@ -67,6 +79,15 @@
 
 <main class="main">
   <Input autofocus placeholder={$t('edit_list_modal__form_list_name')} bind:value={listInfo.name} />
+  <FormItem label={$t('edit_list_modal.online_list_form.source_type')}>
+    <p>{$t(`edit_list_modal.online_list_form.source_type_${listInfo.meta.sourceType}`)}</p>
+  </FormItem>
+  <FormItem label={$t('edit_list_modal.online_list_form.source')}>
+    <p>{sourceName}</p>
+  </FormItem>
+  <FormItem label={$t('edit_list_modal.online_list_form.sync_id')}>
+    <p class="path code select">{listInfo.meta.syncId}</p>
+  </FormItem>
 </main>
 
 <style lang="less">
@@ -79,5 +100,16 @@
     // min-height: 0;
     // max-height: 100%;
     // overflow: hidden;
+    p {
+      font-size: 14px;
+    }
+    :global(.list-form-item:first-of-type) {
+      margin-top: 8px;
+    }
+  }
+  .path {
+    padding-right: 8px;
+    font-size: 13px;
+    // color: var(--color-primary);
   }
 </style>

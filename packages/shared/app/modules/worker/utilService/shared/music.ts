@@ -1,3 +1,4 @@
+import { PIC_FILE_TYPES } from '@any-listen/common/constants'
 import { isLikelyGarbage } from '@any-listen/common/utils'
 import {
   checkFile,
@@ -147,7 +148,7 @@ export const parseLocalMusicInfoMetadata = async (path: string) => {
   }
 }
 
-const tryPicExt = ['.jpg', '.jpeg', '.png'] as const
+const tryPicExt = PIC_FILE_TYPES.map((t) => `.${t}`)
 /**
  * 获取歌曲文件封面图片
  * @param path 路径

@@ -17,22 +17,24 @@
   import { appEvent } from '@/modules/app/store/event'
 
   let {
-    local,
+    source,
     listinfo,
     list,
     multimode = $bindable(),
     finding = $bindable(),
     duplicate = $bindable(),
     listsort = $bindable(),
+    loaded,
     onscroll,
   }: {
     listinfo: ListInfo
     list: AnyListen.Music.MusicInfo[]
-    local: boolean
+    source: AnyListen.Player.SourceType
     multimode: boolean
     finding: boolean
     duplicate: boolean
     listsort: boolean
+    loaded: boolean
     onscroll?: (pos: number) => void
   } = $props()
 
@@ -60,11 +62,12 @@
       clearIntv()
       activeIndex = idx
       let count = 0
-      let curItv = (itv = setInterval(() => {
+      let curItv = setInterval(() => {
         if (curItv != itv) return
         activeIndex = ++count % 2 ? -1 : idx
         if (count > 2) clearIntv()
-      }, 400))
+      }, 400)
+      itv = curItv
     })
   }
   let select = useSelect({
@@ -177,8 +180,14 @@
               select.handleSelect(index)
             } else {
               select.setSelectIndex(index)
-              void musicClick(listinfo.id, item)
-              if (isKey) void musicClick(listinfo.id, item)
+              void musicClick(list, listinfo.id, item, source, {
+                ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
+              })
+              if (isKey) {
+                void musicClick(list, listinfo.id, item, source, {
+                  ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
+                })
+              }
             }
           }}
         />
@@ -186,13 +195,18 @@
     </VirtualizedList>
     <Menu
       bind:this={menu}
-      {local}
+      {source}
+      onplay={async (musicInfo) => {
+        void playMusic(listinfo.id, list, musicInfo, source, {
+          ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
+        })
+      }}
       onhide={() => {
         activeIndex = -1
       }}
     />
   </div>
-{:else}
+{:else if loaded}
   <Empty />
 {/if}
 <SearchList
@@ -200,7 +214,9 @@
   {list}
   onselect={(idx, isPlay) => {
     if (isPlay) {
-      void playMusic(listinfo.id, list[idx])
+      void playMusic(listinfo.id, list, list[idx], source, {
+        ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
+      })
     } else {
       scrollToIndex(idx)
     }

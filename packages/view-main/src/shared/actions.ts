@@ -20,6 +20,7 @@ const actionsRaw = new Action() as ActionType
 
 for (const [mod, modActions] of Object.entries(ACTIONS)) {
   for (const [action, handle] of Object.entries(modActions)) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     actionsRaw.register(`${mod}.${action}`, handle)
   }
 }

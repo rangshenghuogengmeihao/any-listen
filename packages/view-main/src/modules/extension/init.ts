@@ -1,5 +1,4 @@
-import { onRelease } from '@/modules/app/shared'
-import { settingEvent } from '@/modules/setting/store/event'
+import { onConnected, onRelease } from '@/modules/app/shared'
 import { languageChangeEvent } from '@/plugins/i18n'
 import { createUnsubscriptionSet } from '@/shared'
 
@@ -9,10 +8,12 @@ import {
   getExtensionList,
   getOnlineExtensionList,
   getResourceList,
+  getNewVersionInfo,
   registerRemoteExtensionEvent,
   setCrash,
   setList,
   setResourceList,
+  setNewVersionInfo,
 } from './store/actions'
 import { setOnlineExtension } from './store/commit'
 import { extensionEvent } from './store/event'
@@ -32,6 +33,9 @@ const init = async () => {
         console.log(list)
         setResourceList(list)
       }),
+      getNewVersionInfo().then((info) => {
+        setNewVersionInfo(info)
+      }),
     ])
   } else console.error('[ExtensionHost]', message)
 }
@@ -39,7 +43,7 @@ const init = async () => {
 let unregistereds = createUnsubscriptionSet()
 export const initExtension = () => {
   onRelease(unregistereds.clear.bind(unregistereds))
-  settingEvent.on('inited', () => {
+  onConnected(() => {
     unregistereds.register((subscriptions) => {
       subscriptions.add(registerRemoteExtensionEvent())
       subscriptions.add(
@@ -52,7 +56,7 @@ export const initExtension = () => {
       subscriptions.add(
         languageChangeEvent.on(() => {
           if (extensionState.onlineExtensionList.length) {
-            void getOnlineExtensionList(true)
+            void getOnlineExtensionList()
           }
         })
       )

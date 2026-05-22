@@ -18,7 +18,7 @@ export class Event extends _Event {
       case 'set':
         await Promise.all([
           dbService.playListOverride(action.data.list),
-          dbService.saveMetadataPlayListInfo(action.data.listId, action.data.isOnline),
+          dbService.saveMetadataPlayListInfo(action.data.listId, action.data.source),
         ])
         break
       case 'add':

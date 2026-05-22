@@ -10,6 +10,7 @@ export interface ExtensionContext {
     action: T,
     params: Parameters<AnyListen.IPCExtension.ListProviderAction[T]>[0]
   ) => Promise<Awaited<ReturnType<AnyListen.IPCExtension.ListProviderAction[T]>>>
+  executeCommand?: (commandName: string, args: any[]) => Promise<unknown>
 }
 
 export type Logcat = Awaited<ReturnType<typeof createLogTools>>
@@ -23,5 +24,15 @@ export type ExtensionHostContext = {
   Configs &
   Pick<
     AnyListen.IPCExtension.PreloadIPCActions,
-    'getItems' | 'setItems' | 'removeItems' | 'clearItems' | 'getConfigs' | 'createProxyUrl' | 'writeProxyCache'
+    | 'writeFile'
+    | 'readFile'
+    | 'removeFile'
+    | 'fileExists'
+    | 'listFiles'
+    | 'statFile'
+    | 'getConfigs'
+    | 'createProxyUrl'
+    | 'writeProxyCache'
+    | 'executeCommand'
+    | 'getCommands'
   >

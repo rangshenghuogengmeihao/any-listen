@@ -17,6 +17,3 @@
   <ControlBtns />
   <PlayBtns />
 </Container>
-
-<style lang="less">
-</style>

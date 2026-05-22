@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import fs from 'node:fs'
-import path from 'node:path'
 
-import { EXTENSION } from '@any-listen/common/constants'
-import { generateId, isUrl, throttle } from '@any-listen/common/utils'
+import { EXTENSION, EXTENSION_ENGINE } from '@any-listen/common/constants'
+import { compareVersions, generateId, isUrl, throttle } from '@any-listen/common/utils'
 import {
   basename,
   checkFile,
@@ -13,8 +12,8 @@ import {
   dirname,
   extname,
   extnameRaw,
+  fileSha256,
   getFileStats,
-  isAbsolute,
   joinPath,
   removePath,
   renamePath,
@@ -26,203 +25,17 @@ import { eachMirror } from '@any-listen/nodejs/mirrorReuqest'
 import { verifySignature } from '@any-listen/nodejs/sign'
 
 import { extensionEvent } from '../event'
+import { i18n } from '../i18n'
 import { loadExtension as loadExtensionByInternalExtension } from '../internalExtension'
 import { extensionState } from '../state'
 import { createVmConetxt, destroyContext, runExtension, setupVmContext } from '../vm'
+import { handlePreloadCall } from '../vm/hostContext/hostFuncs'
 import { sendConfigUpdatedEvent } from '../vm/hostContext/preloadFuncs'
 import { getConfig, saveConfig, unloadConfig } from './configStore'
+import { verifyManifest } from './manifest'
 
 const FILE_EXT_NAME = `.${EXTENSION.pkgExtName}`
 const FILE_EXT_NAME_EXP = new RegExp(`\\.${EXTENSION.pkgExtName}$`, 'i')
-const GRANTS: AnyListen.Extension.Grant[] = ['music_list', 'player', 'internet']
-const RESOURCE: AnyListen.Extension.ResourceAction[] = [
-  'tipSearch',
-  'hotSearch',
-  'musicSearch',
-  'musicPic',
-  'musicLyric',
-  'musicUrl',
-  'musicPicSearch',
-  'songlistSearch',
-  'songlist',
-  'leaderboard',
-  'albumSearch',
-  'album',
-  'singerSearch',
-  'singer',
-  'lyricSearch',
-  'lyricDetail',
-]
-const availableIcons = ['.png', '.jpg', '.jpeg', '.webp', '.svg']
-
-const buildPath = async (extensionPath: string, _path: string) => {
-  if (isAbsolute(_path)) throw new Error(`path not a relative path: ${_path}`)
-  const enterFilePath = joinPath(extensionPath, _path)
-  if (!enterFilePath.startsWith(extensionPath + path.sep)) throw new Error('main path illegal')
-  if (!(await checkFile(enterFilePath))) return ''
-  return enterFilePath
-}
-
-export const formatManifest = (manifest: AnyListen.Extension.Manifest) => {
-  if (manifest.id != null) manifest.id = String(manifest.id)
-  if (!manifest.id) throw new Error('Manifest id not defined')
-  if (/[^\w-_.]/.test(manifest.id)) throw new Error('Manifest ID Invalid')
-
-  if (manifest.name != null) manifest.name = String(manifest.name)
-  if (!manifest.name) throw new Error('Manifest name not defined')
-
-  if (manifest.description != null) manifest.description = String(manifest.description)
-  if (manifest.icon != null) manifest.icon = String(manifest.icon)
-  if (manifest.main != null) manifest.main = String(manifest.main)
-
-  if (manifest.version != null) manifest.version = String(manifest.version)
-  if (manifest.target_engine != null) manifest.target_engine = String(manifest.target_engine)
-  if (manifest.author != null) manifest.author = String(manifest.author)
-  if (manifest.homepage != null) manifest.homepage = String(manifest.homepage)
-  if (manifest.license != null) manifest.license = String(manifest.license)
-  if (Array.isArray(manifest.categories)) {
-    manifest.categories = manifest.categories.map((categorie) => String(categorie))
-  } else manifest.categories = []
-  if (Array.isArray(manifest.tags)) {
-    manifest.tags = manifest.tags.map((tag) => String(tag))
-  } else manifest.tags = []
-  if (Array.isArray(manifest.grant)) {
-    manifest.grant = manifest.grant.filter((grant) => GRANTS.includes(grant))
-  } else manifest.grant = []
-  if (typeof manifest.contributes == 'object') {
-    const contributes: AnyListen.Extension.Manifest['contributes'] = {}
-    if (Array.isArray(manifest.contributes.resource)) {
-      contributes.resource = manifest.contributes.resource.map((resource) => {
-        return {
-          id: String(resource.id),
-          name: String(resource.name),
-          resource: resource.resource.filter((r) => RESOURCE.includes(r)),
-        }
-      })
-    }
-    if (Array.isArray(manifest.contributes.settings)) {
-      contributes.settings = manifest.contributes.settings
-        .map((s) => {
-          switch (s.type) {
-            case 'input':
-              return {
-                type: s.type,
-                field: String(s.field),
-                name: String(s.name),
-                description: String(s.description),
-                textarea: Boolean(s.textarea),
-                default: String(s.default),
-              }
-            case 'boolean':
-              return {
-                type: s.type,
-                field: String(s.field),
-                name: String(s.name),
-                description: String(s.description),
-                default: Boolean(s.default),
-              }
-            case 'selection':
-              return {
-                type: s.type,
-                field: String(s.field),
-                name: String(s.name),
-                description: String(s.description),
-                default: String(s.default),
-                enum: s.enum.map((e) => String(e)),
-                enumName: s.enumName.map((e) => String(e)),
-              }
-            // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
-            default:
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-case-declarations
-              let neverValue: never = s
-              // throw new Error(`Unknown setting type: ${s.type}`)
-              // @ts-expect-error
-              console.log(`Unknown setting type: ${s.type}`)
-              return null
-          }
-        })
-        .filter((s) => s != null)
-    }
-    if (Array.isArray(manifest.contributes.listProviders)) {
-      contributes.listProviders = manifest.contributes.listProviders.map((p) => {
-        p.id = String(p.id)
-        p.name = String(p.name)
-        p.description = String(p.description)
-        if (p.fileSortable != null) p.fileSortable = Boolean(p.fileSortable)
-        p.form = p.form
-          .map((s) => {
-            switch (s.type) {
-              case 'input':
-                return {
-                  type: s.type,
-                  field: String(s.field),
-                  name: String(s.name),
-                  description: String(s.description),
-                  textarea: Boolean(s.textarea),
-                  default: String(s.default),
-                }
-              case 'boolean':
-                return {
-                  type: s.type,
-                  field: String(s.field),
-                  name: String(s.name),
-                  description: String(s.description),
-                  default: Boolean(s.default),
-                }
-              case 'selection':
-                return {
-                  type: s.type,
-                  field: String(s.field),
-                  name: String(s.name),
-                  description: String(s.description),
-                  default: String(s.default),
-                  enum: s.enum.map((e) => String(e)),
-                  enumName: s.enumName.map((e) => String(e)),
-                }
-              case 'lazzyParseMeta':
-                return {
-                  type: s.type,
-                  default: Boolean(s.default),
-                }
-              // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
-              default:
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-case-declarations
-                let neverValue: never = s
-                // throw new Error(`Unknown setting type: ${s.type}`)
-                // @ts-expect-error
-                console.log(`Unknown setting type: ${s.type}`)
-                return null
-            }
-          })
-          .filter((s) => s != null)
-
-        return {
-          id: p.id,
-          name: p.name,
-          description: p.description,
-          fileSortable: p.fileSortable,
-          form: p.form,
-        }
-      })
-    }
-    manifest.contributes = contributes
-  } else manifest.contributes = {}
-}
-
-const verifyManifest = async (extensionPath: string, manifest: AnyListen.Extension.Manifest) => {
-  formatManifest(manifest)
-  manifest.icon = manifest.icon ? await buildPath(extensionPath, manifest.icon).catch(() => '') : ''
-  if (manifest.icon) {
-    if (availableIcons.includes(extname(manifest.icon))) {
-      manifest.icon = await extensionState.remoteFuncs.createExtensionIconPublicPath(manifest.icon)
-    } else {
-      manifest.icon = ''
-    }
-  }
-  manifest.main = await buildPath(extensionPath, manifest.main)
-  if (!manifest.main) throw new Error('Main enter not defined')
-  return manifest
-}
 
 export const parseExtension = async (extensionPath: string): Promise<AnyListen.Extension.Extension | null> => {
   const manifest = await fs.promises
@@ -257,12 +70,30 @@ export const parseExtension = async (extensionPath: string): Promise<AnyListen.E
     enter: manifest.main,
     enabled: true,
     installedTimestamp: Date.now(),
-    updatedTimestamp: 0,
+    updatedTimestamp: Date.now(),
     loaded: false,
     loadTimestamp: 0,
     removed: false,
     publicKey: manifest.publicKey ?? '',
     internal: false,
+  }
+}
+
+const getCompareVersion = (target: string) => {
+  if (compareVersions(EXTENSION_ENGINE, target) < 0) return -1
+  const targetParts = parseInt(target.split('.')[0])
+  const currentParts = parseInt(EXTENSION_ENGINE.split('.')[0])
+  if (Number.isNaN(targetParts) || Number.isNaN(currentParts)) return 0
+  return currentParts > targetParts ? 1 : 0
+}
+export const getCompareVersionMessage = (target: string) => {
+  switch (getCompareVersion(target)) {
+    case 1:
+      return i18n.t('extension.incompatible_new_engine')
+    case -1:
+      return i18n.t('extension.incompatible_old_engine')
+    default:
+      return ''
   }
 }
 
@@ -280,7 +111,7 @@ export const saveExtensionsSetting = async (extensions: AnyListen.Extension.Exte
             updatedTimestamp: ext.updatedTimestamp,
             removed: ext.removed,
           }) satisfies AnyListen.Extension.Setting
-      ) as AnyListen.Extension.Setting[]
+      )
     )
   )
 }
@@ -302,9 +133,28 @@ export const loadExtension = async (extension: AnyListen.Extension.Extension) =>
     if (extension.internal) {
       runTotalTime = await loadExtensionByInternalExtension(extension)
     } else {
+      if (extension.target_engine) {
+        const msg = getCompareVersionMessage(extension.target_engine)
+        if (msg) throw new Error(msg)
+      }
       const vmState = await createVmConetxt(extension, extensionState.preloadScript)
       await setupVmContext(vmState)
-      runTotalTime = await runExtension(vmState.vmContext, vmState.extension)
+      try {
+        runTotalTime = await runExtension(vmState.vmContext, vmState.extension)
+      } catch (err) {
+        handlePreloadCall(
+          'logcat',
+          {
+            id: extension.id,
+            type: 'error',
+            timestamp: Date.now(),
+            message: `${(err as Error).message}\n${(err as Error).stack ?? ''}`,
+            name: extension.name,
+          },
+          vmState.logcat
+        )
+        throw err
+      }
     }
   } catch (err) {
     console.error('load extension error: ', err)
@@ -336,7 +186,10 @@ const downloadExtensionFile = async (url: string, bundlePath: string) => {
   })
 }
 
-export const downloadExtension = async (url: string, manifest?: AnyListen.Extension.Manifest) => {
+export const downloadExtension = async (
+  url: string,
+  manifest?: AnyListen.IPCExtension.RemoteOnlineListItem | AnyListen.IPCExtension.RemoteOnlineDetail
+) => {
   if (!isUrl(url)) {
     const stats = await getFileStats(url)
     if (!stats) throw new Error(`Invalid extension path: ${url}`)
@@ -358,6 +211,13 @@ export const downloadExtension = async (url: string, manifest?: AnyListen.Extens
 
   const bundlePath = joinPath(extensionState.tempDir, `${toSha256(manifest?.id ?? generateId())}${FILE_EXT_NAME}`)
   await downloadExtensionFile(url, bundlePath)
+  if (manifest?.sha256) {
+    const fileHash = await fileSha256(bundlePath)
+    if (fileHash !== manifest.sha256) {
+      await removePath(bundlePath)
+      throw new Error('Downloaded file hash does not match the manifest')
+    }
+  }
   return bundlePath
 }
 
@@ -479,6 +339,7 @@ export const updateResourceList = () => {
   const resourceList: AnyListen.Extension.ResourceList = {
     resources: {},
     listProvider: [],
+    commands: [],
   }
   for (const ext of extensionState.extensions) {
     if (!ext.loaded) continue
@@ -510,6 +371,19 @@ export const updateResourceList = () => {
         })
       }
     }
+    if (ext.contributes.commands) {
+      for (const command of ext.contributes.commands) {
+        resourceList.commands.push({
+          extensionId: ext.id,
+          extensionName: ext.name,
+          fullCommand: `${ext.id}.${command.command}`,
+          command: command.command,
+          name: command.name,
+          description: command.description,
+          hidden: command.hidden,
+        })
+      }
+    }
   }
   extensionState.resourceList = resourceList
   extensionEvent.resourceUpdated(resourceList)
@@ -530,16 +404,52 @@ export const buildExtensionSettings = async () => {
     }
     const configs = await getConfig(ext)
     for (const item of ext.contributes.settings) {
-      extSetting.settingItems.push({
+      const s: AnyListen.Extension.FormValueItem = {
         ...item,
         // @ts-expect-error
         value: configs[item.field] ?? item.default,
-      })
+      }
+      switch (item.type) {
+        case 'configCheckbox':
+        case 'configCheckboxMultiple': {
+          const enumConfig = configs[item.enumConfigFiled] ?? []
+          const enums: AnyListen.Extension.ConfigEnum[] = Array.isArray(enumConfig)
+            ? enumConfig.map((v: Record<string, any>) => {
+                return {
+                  name: v[item.enumNameFiled],
+                  value: v[item.enumFiled],
+                  description: item.enumDescriptionFiled ? v[item.enumDescriptionFiled] : undefined,
+                  raw: v,
+                }
+              })
+            : []
+          ;(
+            s as AnyListen.Extension.FormConfigValue<
+              AnyListen.Extension.FormConfigCheckbox | AnyListen.Extension.FormConfigCheckboxMultiple
+            >
+          ).enum = enums
+          break
+        }
+        default:
+          break
+      }
+      extSetting.settingItems.push(s)
     }
     list.push(extSetting)
   }
   extensionState.extensionSettings = list
   return list
+}
+
+export const getExtensionConfigValues = async (id: string, fields: string[]) => {
+  const targetExt = extensionState.extensions.find((ext) => ext.id == id)
+  if (!targetExt) throw new Error('extension not found')
+  const configs = await getConfig(targetExt)
+  const result: Record<string, unknown> = {}
+  for (const field of fields) {
+    result[field] = configs[field]
+  }
+  return result
 }
 
 export const updateExtensionSettings = async (id: string, config: Record<string, any>) => {
@@ -549,15 +459,42 @@ export const updateExtensionSettings = async (id: string, config: Record<string,
   const configs = await getConfig(targetExt)
   const newConfig = { ...configs, ...config }
   await saveConfig(targetExt, newConfig)
+  extensionEvent.extenstionSettingUpdated(id, Object.keys(config), config)
+  if (targetExt.loaded && !targetExt.internal) sendConfigUpdatedEvent(id, Object.keys(config), config)
+
   const targetSetting = extensionState.extensionSettings?.find((s) => s.id == targetExt.id)
   if (targetSetting) {
-    for (const [key, value] of Object.entries(config)) {
-      targetSetting.settingItems.find((item) => item.field == key)!.value = value
+    const keys = Object.keys(config)
+    for (const item of targetSetting.settingItems) {
+      if (keys.includes(item.field)) item.value = config[item.field]
+      if (item.type == 'configCheckbox' || item.type == 'configCheckboxMultiple') {
+        if (keys.includes(item.enumConfigFiled)) {
+          const enumConfig = newConfig[item.enumConfigFiled] ?? []
+          const enums: AnyListen.Extension.ConfigEnum[] = Array.isArray(enumConfig)
+            ? enumConfig.map((v: Record<string, any>) => {
+                return {
+                  ...item,
+                  name: v[item.enumNameFiled],
+                  value: v[item.enumFiled],
+                  description: item.enumDescriptionFiled ? v[item.enumDescriptionFiled] : undefined,
+                  raw: v,
+                }
+              })
+            : []
+          item.enum = enums
+          if (item.type == 'configCheckbox') {
+            if (item.value !== undefined && !item.enum.some((v) => v.value === item.value)) {
+              item.value = item.default
+            }
+          } else if (item.type == 'configCheckboxMultiple') {
+            if (item.value !== undefined) {
+              const enumValues = item.enum.map((e) => e.value)
+              item.value = item.value.filter((v) => enumValues.includes(v))
+            }
+          }
+        }
+      }
     }
-  }
-  extensionEvent.extenstionSettingUpdated(id, Object.keys(config), config)
-  if (targetExt.loaded && !targetExt.internal) {
-    sendConfigUpdatedEvent(id, Object.keys(config), config)
   }
 }
 
@@ -611,3 +548,5 @@ export const clearExtensionLogs = async (extId?: string) => {
     await fs.promises.writeFile(logPath, '')
   }
 }
+
+export { formatManifest } from './manifest'

@@ -29,15 +29,15 @@ export default (name: string, isIgnoredError = true, isShowErrorAlert = true): S
 
     if (!isIgnoredError) throw error
 
-    const backPath = `${storePath}.bak`
-    fs.renameSync(storePath, backPath)
+    const backupPath = `${storePath}.bak`
+    fs.renameSync(storePath, backupPath)
     if (isShowErrorAlert) {
       dialog.showMessageBoxSync({
         type: 'error',
         message: `${name} data load error`,
-        detail: `We have helped you back up the old ${name} file to: ${backPath}\nYou can try to repair and restore it manually\n\nError detail: ${error.message}`,
+        detail: `We have helped you back up the old ${name} file to: ${backupPath}\nYou can try to repair and restore it manually\n\nError detail: ${error.message}`,
       })
-      shell.showItemInFolder(backPath)
+      shell.showItemInFolder(backupPath)
     }
 
     store = new Store(storePath, true)

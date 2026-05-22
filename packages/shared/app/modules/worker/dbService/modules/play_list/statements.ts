@@ -7,12 +7,12 @@ export interface ListMusicInfo {
   play_later: number
   id: string
   list_id: string
-  is_online: number
   name: string
   singer: string
   interval: string | null
   is_local: number
   meta: string
+  source: number
 }
 
 export interface MusicInfo {
@@ -41,7 +41,7 @@ export interface PositionInfo {
  */
 export const createQueryStatement = () => {
   return dbPrepare<[], ListMusicInfo>(`
-    SELECT "item_id", "position", "played", "play_later", "id", "list_id", "name", "singer", "interval", "is_local", "meta"
+    SELECT "item_id", "position", "played", "play_later", "id", "list_id", "name", "singer", "interval", "is_local", "source", "meta"
     FROM "main"."play_list_music_info"
     ORDER BY position ASC
     `)
@@ -53,8 +53,8 @@ export const createQueryStatement = () => {
  */
 export const createInsertStatement = () => {
   return dbPrepare<ListMusicInfo>(`
-    INSERT INTO "main"."play_list_music_info" ("item_id", "position", "played", "play_later", "id", "list_id", "name", "singer", "is_local", "interval", "meta")
-    VALUES (@item_id, @position, @played, @play_later, @id, @list_id, @name, @singer, @is_local, @interval, @meta)`)
+    INSERT INTO "main"."play_list_music_info" ("item_id", "position", "played", "play_later", "id", "list_id", "name", "singer", "is_local", "source", "interval", "meta")
+    VALUES (@item_id, @position, @played, @play_later, @id, @list_id, @name, @singer, @is_local, @source, @interval, @meta)`)
 }
 
 /**

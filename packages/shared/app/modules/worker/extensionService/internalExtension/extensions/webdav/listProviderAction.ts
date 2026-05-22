@@ -270,13 +270,15 @@ export const listProviderActions: AnyListen.IPCExtension.ListProviderAction = {
         .map((id) => {
           const item = musicCache.get(id)
           if (!item) return null
+          const lastDotIndex = item.name.lastIndexOf('.')
           return {
             id,
-            name: item.name.substring(0, item.name.lastIndexOf('.')) || item.name,
+            name: item.name.substring(0, lastDotIndex) || item.name,
             singer: '',
             isLocal: false,
             interval: null,
             meta: {
+              ext: item.name.substring(lastDotIndex + 1).toLowerCase(),
               unparsed: true,
               createTime: 0,
               musicId: id,

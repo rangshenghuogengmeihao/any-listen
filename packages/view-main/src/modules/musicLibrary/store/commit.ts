@@ -101,9 +101,10 @@ const updateDefaultListInfo = (
   list.meta.playCount = meta.playCount
   list.meta.updateTime = meta.updateTime
   list.meta.desc = meta.desc
+  list.meta.songCount = meta.songCount
+  list.meta.pic = meta.pic
 }
-const updateList = ({ name, id, type, meta }: AnyListen.List.UserListInfo) => {
-  let targetList
+const updateList = ({ name, id, meta }: AnyListen.List.MyListInfo) => {
   switch (id) {
     case musicLibraryState.defaultList.id:
       updateDefaultListInfo(musicLibraryState.defaultList, meta)
@@ -114,13 +115,13 @@ const updateList = ({ name, id, type, meta }: AnyListen.List.UserListInfo) => {
     case musicLibraryState.lastPlayList.id:
       updateDefaultListInfo(musicLibraryState.lastPlayList, meta)
       break
-    default:
-      targetList = musicLibraryState.userLists.find((l) => l.id == id)
+    default: {
+      let targetList = musicLibraryState.userLists.find((l) => l.id == id)
       if (!targetList) return
       targetList.name = name
-      targetList.type = type
       targetList.meta = meta
       break
+    }
   }
 }
 const getAllSubListIds = (id: NonNullable<AnyListen.List.UserListInfo['parentId']>) => {
@@ -196,7 +197,7 @@ export const userListsRemove = (ids: string[]) => {
   musicLibraryEvent.listMusicChanged(changedListIds)
 }
 
-export const userListsUpdate = (listInfos: AnyListen.List.UserListInfo[]) => {
+export const userListsUpdate = (listInfos: AnyListen.List.MyListInfo[], sync?: boolean) => {
   if (!listInfos.length) return
   const changedIds: string[] = []
   const changedSubListIds = new Set<AnyListen.List.ParentId>()
@@ -266,13 +267,13 @@ export const userListsUpdatePosition = (position: number, ids: string[]) => {
 //   else targetList.meta.playCount = count
 // }
 
-export const listMusicOverwrite = (listId: string, musicInfos: AnyListen.Music.MusicInfo[]): string[] => {
+export const listMusicOverwrite = (listId: string, musicInfos: AnyListen.Music.MusicInfo[]) => {
   const isExist = musicLibraryState.allMusicList.has(listId)
   setMusicList(listId, musicInfos)
-  return isExist || listId == musicLibraryState.loveList.id ? [listId] : []
+  if (isExist) musicLibraryEvent.listMusicChanged([listId])
 }
 
-export const listMusicClear = (ids: string[]): string[] => {
+export const listMusicClear = (ids: string[]) => {
   const changedIds: string[] = []
   for (const id of ids) {
     const list = musicLibraryState.allMusicList.get(id)
@@ -280,7 +281,7 @@ export const listMusicClear = (ids: string[]): string[] => {
     setMusicList(id, [])
     changedIds.push(id)
   }
-  return changedIds
+  if (changedIds.length) musicLibraryEvent.listMusicChanged(changedIds)
 }
 
 export const listMusicAdd = (
@@ -394,4 +395,16 @@ export const initFetchingListStatus = (ids: string[]) => {
 export const setFetchingListStatus = (id: string, status: boolean) => {
   musicLibraryState.fetchingListStatus[id] = status
   musicLibraryEvent.fetchingListStatusUpdated(id, status)
+}
+
+export const setListCover = (listId: string, cover?: string | null) => {
+  musicLibraryState.listCoverMap.set(listId, cover)
+  musicLibraryEvent.listCoverUpdated(listId, cover)
+}
+export const clearListCover = (id?: string) => {
+  if (id) {
+    musicLibraryState.listCoverMap.delete(id)
+  } else {
+    musicLibraryState.listCoverMap.clear()
+  }
 }

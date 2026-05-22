@@ -1,14 +1,9 @@
 {
-  "extends": "./node_modules/@any-listen/eslint/tsconfig.node.json",
+  "extends": "@any-listen/eslint/tsconfig.node.json",
   "compilerOptions": {
-    // "typeRoots": [
-    //   "./types"
-    // ],
-    "baseUrl": "./",
-    // "paths": {
-    //   "@/*": ["./modules/*"],
-    // },
+    "moduleResolution": "Bundler",
     "declaration": false,
+    "rootDir": "./",
     "types": ["@any-listen/types", "../scripts/node_modules/vite/client"]
   }
 }

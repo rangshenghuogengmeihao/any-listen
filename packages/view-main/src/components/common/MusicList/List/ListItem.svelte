@@ -35,6 +35,7 @@
   let sourceLabel = $derived(buildSourceLabel(musicinfo))
   let picUrl = $state<null | string>(null)
   // let isPlaying = $derived(isplaylist && $playInfo.index === index)
+  const badgeTypes = ['primary', 'secondary', 'tertiary'] as const
 
   const handleClick = (event: KeyboardEvent | Event) => {
     if ('key' in event) {
@@ -88,6 +89,7 @@
     <Image
       src={picUrl}
       onerror={() => {
+        picUrl = null
         if (retryedLoadPic) return
         retryedLoadPic = true
         loadPic()
@@ -96,9 +98,11 @@
   </div>
   <div class="list-item-cell auto name">
     <div class="select name" aria-label={musicinfo.name}>{musicinfo.name}</div>
-    {#if sourceLabel}
-      <Badge label={sourceLabel} opacity={0.7} />
-    {/if}
+    <div class="label">
+      {#each sourceLabel as label, index (index)}
+        <Badge {label} opacity={0.7} type={badgeTypes[index % badgeTypes.length]} />
+      {/each}
+    </div>
   </div>
   <div class="list-item-cell" style="flex: 0 0 22%;">
     <span class="select" aria-label={musicinfo.singer}>{musicinfo.singer}</span>
@@ -234,14 +238,26 @@
 
     &.name {
       display: flex;
-      flex-flow: row nowrap;
-      align-items: center;
+      flex-flow: column nowrap;
+      // gap: 4px;
+      justify-content: center;
       overflow: hidden;
       text-overflow: initial;
       white-space: initial;
 
       > .name {
         .mixin-ellipsis-1();
+
+        padding: 2px 0;
+      }
+    }
+    .label {
+      display: flex;
+      flex-flow: row nowrap;
+      gap: 8px;
+      padding: 2px 0;
+      :global(.badge) {
+        padding: 0;
       }
     }
     // .badge {

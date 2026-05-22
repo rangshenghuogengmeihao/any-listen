@@ -20,9 +20,6 @@ export const getOnlineCategories: AnyListen.IPC.ServerIPC['getOnlineCategories']
 export const getOnlineTags: AnyListen.IPC.ServerIPC['getOnlineTags'] = async () => {
   return ipc.getOnlineTags()
 }
-export const resetOnlineData: AnyListen.IPC.ServerIPC['resetOnlineData'] = async () => {
-  return ipc.resetOnlineData()
-}
 
 export const downloadAndParseExtension: AnyListen.IPC.ServerIPC['downloadAndParseExtension'] = async (url, manifest) => {
   return ipc.downloadAndParseExtension(url, manifest)
@@ -64,20 +61,20 @@ export const getResourceList: AnyListen.IPC.ServerIPC['getResourceList'] = async
   return ipc.getResourceList()
 }
 
+export const getNewVersionInfo: AnyListen.IPC.ServerIPC['getNewVersionInfo'] = async () => {
+  return ipc.getNewVersionInfo()
+}
+
 export const getAllExtensionSettings: AnyListen.IPC.ServerIPC['getAllExtensionSettings'] = async () => {
   return ipc.getAllExtensionSettings()
 }
 
-export const updateExtensionSettings: AnyListen.IPC.ServerIPC['updateExtensionSettings'] = async (extId, config) => {
-  return ipc.updateExtensionSettings(extId, config)
+export const getExtensionConfigValues: AnyListen.IPC.ServerIPC['getExtensionConfigValues'] = async (extId, fields) => {
+  return ipc.getExtensionConfigValues(extId, fields)
 }
 
-type RA = AnyListen.IPCExtension.ResourceAction
-export const resourceAction = async <T extends keyof RA>(
-  action: T,
-  params: Parameters<RA[T]>[0]
-): Promise<Awaited<ReturnType<RA[T]>>> => {
-  return ipc.resourceAction(action, params)
+export const updateExtensionSettings: AnyListen.IPC.ServerIPC['updateExtensionSettings'] = async (extId, config) => {
+  return ipc.updateExtensionSettings(extId, config)
 }
 
 type LPA = AnyListen.IPCExtension.ListProviderAction
@@ -93,4 +90,8 @@ export const getExtensionLastLogs: AnyListen.IPC.ServerIPC['getExtensionLastLogs
 }
 export const clearExtensionLogs: AnyListen.IPC.ServerIPC['clearExtensionLogs'] = async (extId) => {
   return ipc.clearExtensionLogs(extId)
+}
+
+export const executeCommand = async (cmd: string, ...args: any[]) => {
+  return ipc.executeCommand(cmd, args)
 }

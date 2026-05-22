@@ -1,6 +1,8 @@
 export const URL_SCHEME_RXP = /^anylisten:\/\//
 
-export const NATIVE_VERSION = 7
+export const NATIVE_VERSION = 10
+
+export const EXTENSION_ENGINE = '1.2.1'
 
 export const DEV_SERVER_PORTS = {
   'view-main': 9200,
@@ -58,7 +60,7 @@ export const DATA_KEYS = {
   listUpdateInfo: 'listUpdateInfo',
   ignoreVersion: 'ignoreVersion',
 
-  leaderboardSetting: 'leaderboardSetting',
+  topSongsSetting: 'topSongsSetting',
   songlistSetting: 'songlistSetting',
   searchSetting: 'searchSetting',
 
@@ -66,7 +68,7 @@ export const DATA_KEYS = {
 } as const
 
 export const DEFAULT_SETTING = {
-  leaderboard: {
+  topSongs: {
     source: 'kw',
     boardId: 'kw__16',
   },
@@ -97,10 +99,10 @@ export const DOWNLOAD_STATUS = {
   COMPLETED: 'completed',
 } as const
 
-export const QUALITYS = ['flac24bit', 'flac', 'wav', 'ape', '320k', '192k', '128k'] as const
+export const QUALITYS = ['128k', '192k', '320k', 'wav', 'flac', 'flac24bit', 'dolby', 'master'] as const
 
 export const MEDIA_FILE_TYPES = ['mp3', 'flac', 'ogg', 'oga', 'wav', 'm4a'] as const
-export const PIC_FILE_TYPES = ['jpg', 'jpeg', 'gif', 'png'] as const
+export const PIC_FILE_TYPES = ['jpg', 'jpeg', 'gif', 'png', 'webp'] as const
 
 // https://developer.mozilla.org/zh-CN/docs/Web/API/CloseEvent#status_codes
 export const IPC_CLOSE_CODE = {
@@ -132,6 +134,8 @@ export const EXTENSION_VM_IPC_FUNC_NAMES = [
   '__ext_host_call__clear_timeout',
   '__ext_host_call__set_interval',
   '__ext_host_call__clear_interval',
+  '__ext_host_call__utils_buf2str',
+  '__ext_host_call__utils_str2buf',
   '__ext_host_call__utils_str2b64',
   '__ext_host_call__utils_b642buf',
   '__ext_host_call__utils_str2md5',
@@ -146,6 +150,10 @@ export const EXTENSION = {
   extDirName: 'ext',
   tempDirName: 'temp',
   dataDirName: 'datas',
+  storageDirName: 'storage',
+  resourceDirName: 'resources',
+  storageDirPrefix: '@storage',
+  extensionDirPrefix: '@root',
   configFileName: 'extensions.json',
   mainifestName: 'manifest.json',
   logFileName: 'output.log',

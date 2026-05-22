@@ -12,16 +12,17 @@ import {
   getOnlineExtensionList,
   getOnlineTags,
   getResourceList,
+  getNewVersionInfo,
   installExtension,
   listProviderAction,
-  resetOnlineData,
-  resourceAction,
   restartExtension,
   restartExtensionHost,
   startExtension,
   uninstallExtension,
   updateExtension,
+  executeCommand,
   updateExtensionSettings,
+  getExtensionConfigValues,
 } from '@/app/modules/extension'
 import { broadcast } from '@/modules/ipc/websocket'
 
@@ -47,9 +48,6 @@ export const createExposeExtension = () => {
     },
     async getOnlineTags(event) {
       return getOnlineTags()
-    },
-    async resetOnlineData(event) {
-      return resetOnlineData()
     },
     async downloadAndParseExtension(event, url, manifest) {
       return downloadAndParseExtension(url, manifest)
@@ -81,6 +79,9 @@ export const createExposeExtension = () => {
     async getResourceList() {
       return getResourceList()
     },
+    async getNewVersionInfo() {
+      return getNewVersionInfo()
+    },
     async getExtensionLastLogs(event, extId) {
       return getExtensionLastLogs(extId)
     },
@@ -90,14 +91,17 @@ export const createExposeExtension = () => {
     async getAllExtensionSettings() {
       return getAllExtensionSettings()
     },
+    async getExtensionConfigValues(event, extId, fields) {
+      return getExtensionConfigValues(extId, fields)
+    },
     async updateExtensionSettings(event, extId, config) {
       return updateExtensionSettings(extId, config)
     },
-    async resourceAction(event, action, params) {
-      return resourceAction(action, params)
-    },
     async listProviderAction(event, action, params) {
       return listProviderAction(action, params)
+    },
+    async executeCommand(event, commandName, args) {
+      return executeCommand(commandName, args)
     },
   } satisfies Partial<ExposeClientFunctions>
 }

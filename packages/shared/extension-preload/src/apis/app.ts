@@ -37,7 +37,7 @@ export const app: AnyListen_API.App = {
       signal as AbortSignal | undefined
     )
   },
-  async showInputBox({ signal, validateInput, ...options }) {
+  async showInputDialog({ signal, validateInput, ...options }) {
     return buildKey(
       async (key) => {
         return hostContext.hostFuncs.showInputBox(key, {
@@ -56,21 +56,17 @@ export const app: AnyListen_API.App = {
       signal as AbortSignal | undefined
     )
   },
-  async showOpenDialog({ signal, ...options }) {
-    return buildKey(
-      async (key) => {
-        return hostContext.hostFuncs.showOpenBox(key, options) as Promise<string | string[] | undefined>
-      },
-      signal as AbortSignal | undefined
-    )
+  async showOpenDialog(options) {
+    return buildKey(async (key) => hostContext.hostFuncs.showOpenBox(key, options))
   },
-  async showSaveDialog({ signal, ...options }) {
-    return buildKey(
-      async (key) => {
-        return hostContext.hostFuncs.showSaveBox(key, options) as Promise<string | undefined>
-      },
-      signal as AbortSignal | undefined
-    )
+  async showSaveDialog(options) {
+    return buildKey(async (key) => hostContext.hostFuncs.showSaveBox(key, options))
+  },
+  async readOpenDialogFile(path, format) {
+    return hostContext.hostFuncs.readOpenBoxFile(path, format)
+  },
+  async writeSaveDialogFile(dir, name, content) {
+    return hostContext.hostFuncs.writeSaveBoxFile(dir, name, content)
   },
   // async getConnectedClient() {
   //   return hostContext.hostFuncs.getConnectedClients()

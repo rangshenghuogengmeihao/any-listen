@@ -5,27 +5,31 @@
   import type { ListInfo } from './type'
   import Image from '@/components/base/Image.svelte'
   let {
-    local,
+    source,
     disabled,
     listinfo,
     musiccount,
     multimode,
     finding,
+    saveable,
     onplay,
     onplayrandom,
+    onsave,
     onmulti,
     onfind,
     onduplicate,
     onsort,
   }: {
-    local: boolean
+    source: AnyListen.Player.SourceType
     disabled: boolean
     listinfo: ListInfo
     musiccount: number
     multimode: boolean
     finding: boolean
+    saveable?: boolean
     onplay: () => void
     onplayrandom: () => void
+    onsave: () => void
     onmulti: () => void
     onfind: () => void
     onduplicate: () => void
@@ -62,6 +66,12 @@
           <SvgIcon name="list-random" />
           {$t('play_random')}
         </Btn>
+        {#if source !== 'local' && saveable}
+          <Btn {disabled} icontext onclick={onsave}>
+            <SvgIcon name="favorite_folder" />
+            {$t('save_list')}
+          </Btn>
+        {/if}
       </div>
       <div class="btns">
         <Btn outline={!multimode} icon onclick={onmulti} aria-label={multimode ? $t('batch_select_exit') : $t('batch_select')}>
@@ -70,7 +80,7 @@
         <Btn outline={!finding} icon onclick={onfind} aria-label={finding ? $t('find_music_exit') : $t('find_music')}>
           <SvgIcon name="search" />
         </Btn>
-        {#if local}
+        {#if source === 'local'}
           <Btn disabled={!musiccount} outline icon onclick={onduplicate} aria-label={$t('duplicate_music')}>
             <SvgIcon name="duplicate" />
           </Btn>
@@ -112,8 +122,8 @@
     font-size: 24px;
   }
 
-  .info {
-  }
+  // .info {
+  // }
 
   .info-item {
     display: flex;

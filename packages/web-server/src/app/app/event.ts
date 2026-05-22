@@ -32,7 +32,7 @@ export class Event extends _Event {
   }
 
   proxy_changed(host: string, port: string) {
-    this.emitEvent('locale_change', host, port)
+    this.emitEvent('proxy_changed', host, port)
   }
 
   clientConnected(socket: ServerSocket) {

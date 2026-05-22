@@ -22,7 +22,7 @@ import {
   updateMusicInfos,
   updateUserLists as updateUserListsFromDB,
 } from './dbHelper'
-import type { MusicInfo, MusicInfoOrder, UserListInfo } from './statements'
+import type { MusicInfo, MusicInfoOrder, QueryUserListInfo, UserListInfo } from './statements'
 
 let defaultList: AnyListen.List.MyDefaultListInfo | undefined
 let loveList: AnyListen.List.MyLoveListInfo
@@ -58,14 +58,17 @@ const toDBMusicInfo = (musicInfos: AnyListen.Music.MusicInfo[], listId: string, 
   })
 }
 
-const parseList = <T extends AnyListen.List.UserListInfo>(list: UserListInfo) => {
+let rawPoss = new Map<string, number>()
+const parseList = <T extends AnyListen.List.UserListInfo>(list: QueryUserListInfo) => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { position, parent_id, ...newList } = list
+  const { position, parent_id, song_count, ...newList } = list
+  rawPoss.set(list.id, position)
   const listInfo = {
     ...newList,
     parentId: parent_id,
     meta: JSON.parse(newList.meta),
   }
+  ;(listInfo as T).meta.songCount = song_count
   return listInfo as T
 }
 /**
@@ -129,6 +132,7 @@ const initListInfo = (force = false) => {
     }
   }
 
+  rawPoss.clear()
   userLists = queryAllUserList().map(parseList<AnyListen.List.UserListInfo>)
 
   // const lists = queryAllList()
@@ -173,6 +177,11 @@ const overwriteUserList = (parentId: UserListInfo['parent_id'], lists: AnyListen
   userLists = [...newList, ...lists]
 }
 
+const getAllListInfo = () => {
+  initListInfo()
+  return [defaultList!, loveList!, lastPlayList!, ...userLists]
+}
+
 /**
  * 获取所有用户列表
  * @returns
@@ -213,7 +222,9 @@ export const createUserLists = (position: number, lists: AnyListen.List.UserList
   const parentId = lists[0].parentId
   const userLists = filterUserLists(parentId)
   if (position < 0 || position >= userLists.length) {
-    const newLists: UserListInfo[] = toDBListInfo(lists, userLists.length)
+    // 如果是最末尾，那么取最后一个列表的原始位置 + 1 作为新列表的原始位置，否则新列表的原始位置为 position
+    // 因为原始 pos 可能比 userLists.length 大，所以不能直接用 userLists.length 作为新列表的原始位置
+    const newLists: UserListInfo[] = toDBListInfo(lists, (userLists.length && (rawPoss.get(userLists.at(-1)!.id) ?? -1) + 1) || 0)
     inertUserLists(parentId, newLists)
   } else {
     const newUserLists = toDBListInfo(userLists)
@@ -356,6 +367,12 @@ export const getListMusics = (listId: string): AnyListen.Music.MusicInfo[] => {
   return targetList
 }
 
+const updateSongCount = (listId: string, count: number) => {
+  initUserList()
+  const targetListInfo = getAllListInfo().find((l) => l.id == listId)
+  if (targetListInfo) targetListInfo.meta.songCount = count
+}
+
 export const getListMusicsByIds = (listId: string, ids: string[]) => {
   const list = musicLists.get(listId)
   if (!list) return []
@@ -375,6 +392,7 @@ export const musicOverwrite = (listId: string, musicInfos: AnyListen.Music.Music
   if (targetList) {
     targetList.splice(0, targetList.length)
     arrPush(targetList, musicInfos)
+    updateSongCount(listId, musicInfos.length)
   }
 }
 
@@ -418,6 +436,7 @@ export const musicsAdd = (
       arrPush(targetList, musicInfos)
       break
   }
+  updateSongCount(listId, targetList.length)
 }
 
 /**
@@ -430,10 +449,9 @@ export const musicsRemove = (listId: string, ids: string[]) => {
   if (!targetList.length) return
   removeMusicInfos(listId, ids)
   const idsSet = new Set<string>(ids)
-  musicLists.set(
-    listId,
-    targetList.filter((mInfo) => !idsSet.has(mInfo.id))
-  )
+  const newList = targetList.filter((mInfo) => !idsSet.has(mInfo.id))
+  musicLists.set(listId, newList)
+  updateSongCount(listId, newList.length)
 }
 
 /**
@@ -482,10 +500,10 @@ export const musicsMove = (
   }
 
   listSet = new Set<string>(ids)
-  musicLists.set(
-    fromId,
-    fromList.filter((mInfo) => !listSet.has(mInfo.id))
-  )
+  const newFromList = fromList.filter((mInfo) => !listSet.has(mInfo.id))
+  musicLists.set(fromId, newFromList)
+  updateSongCount(fromId, newFromList.length)
+  updateSongCount(toId, toList.length)
 }
 
 /**
@@ -521,11 +539,15 @@ export const musicsUpdate = (musicInfos: AnyListen.IPCList.ListActionMusicUpdate
 }
 export const musicsUpdateLastPlayedList = (musicInfos: AnyListen.IPCList.ListActionMusicUpdate) => {
   const notLastPlayedListInfos: AnyListen.IPCList.ListActionMusicUpdate = []
-  const lastPlayedListMusicIds = new Set<string>()
+  const lastPlayedListMusicIds = new Map<string, boolean | undefined>()
   const list = getListMusics(LIST_IDS.LAST_PLAYED)
-  for (const musicInfo of list) lastPlayedListMusicIds.add(musicInfo.id)
+  for (const musicInfo of list) lastPlayedListMusicIds.set(musicInfo.id, musicInfo.meta.unparsed)
   for (const info of musicInfos) {
-    if (info.id !== LIST_IDS.LAST_PLAYED && lastPlayedListMusicIds.has(info.musicInfo.id)) {
+    if (
+      info.id !== LIST_IDS.LAST_PLAYED &&
+      lastPlayedListMusicIds.has(info.musicInfo.id) &&
+      lastPlayedListMusicIds.get(info.musicInfo.id)
+    ) {
       notLastPlayedListInfos.push({
         musicInfo: info.musicInfo,
         id: LIST_IDS.LAST_PLAYED,
@@ -538,7 +560,9 @@ export const musicsUpdateLastPlayedList = (musicInfos: AnyListen.IPCList.ListAct
 
 /**
  * 更新歌曲图片
- * @param musicInfos 歌曲&列表信息
+ * @param listId 列表Id
+ * @param musicId 歌曲Id
+ * @param picUrl 图片Url
  */
 export const musicPicUpdate = (listId: string, musicId: string, picUrl: string) => {
   let targetList = musicLists.get(listId)
@@ -587,6 +611,7 @@ export const musicsClear = (ids: string[]) => {
     const targetList = musicLists.get(id)
     if (!targetList) continue
     targetList.splice(0, targetList.length)
+    updateSongCount(id, 0)
   }
 }
 
@@ -698,4 +723,15 @@ export const checkListExistMusic = (listId: string, musicInfoId: string): boolea
 export const getMusicExistListIds = (musicInfoId: string): string[] => {
   const musicInfos = queryMusicInfoByMusicInfoId(musicInfoId)
   return musicInfos.map((m) => m.list_id)
+}
+
+export const getListInfos = (ids: string[]): Array<AnyListen.List.MyListInfo | undefined> => {
+  return ids.map((id) => getAllListInfo().find((l) => l.id == id))
+}
+
+export const getListsFirstMusics = (ids: string[]) => {
+  return ids.map((id) => {
+    const list = getListMusics(id)
+    return list.slice(0, 4)
+  })
 }

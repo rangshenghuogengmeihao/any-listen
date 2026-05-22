@@ -10,20 +10,22 @@ export {
   downloadAndParseExtension,
   enableExtension,
   getAllExtensionSettings,
+  getExtensionConfigValues,
   getExtensionErrorMessage,
+  executeCommand,
   getExtensionList,
   getOnlineExtensionList,
   getResourceList,
+  getNewVersionInfo,
   installExtension,
   listProviderAction,
-  resetOnlineData,
-  resourceAction,
   restartExtension,
   restartExtensionHost,
   startExtension,
   uninstallExtension,
   updateExtension,
   updateExtensionSettings,
+  getOnlineExtensionDetail,
 } from '@/shared/ipc/extension'
 
 export const registerRemoteExtensionEvent = () => {
@@ -99,6 +101,9 @@ export const registerRemoteExtensionEvent = () => {
         // commit.setResourceList(action.data)
         // console.log('[ExtensionHost]', action.data)
         extensionEvent.extenstionSettingUpdated(action.data)
+        break
+      case 'newVersionInfoUpdated':
+        commit.setNewVersionInfo(action.data)
         break
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       default:

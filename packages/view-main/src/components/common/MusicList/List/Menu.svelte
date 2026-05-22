@@ -2,15 +2,17 @@
   import { tick } from 'svelte'
   import { t } from '@/plugins/i18n'
   import Menu, { type MenuList } from '@/components/base/Menu.svelte'
-  import { copyName, dislikeMusic, locateMusic, playMusic, playMusicLater, removeMusic } from './action'
+  import { copyName, dislikeMusic, locateMusic, playMusicLater, removeMusic } from './action'
   import { hasDislike } from '@/modules/dislikeList/store/actions'
   import type { MenuSelectInfo } from '../type'
   import { showMusicAddModal } from '@/components/apis/musicAddModal'
   let {
-    local,
+    source,
+    onplay,
     onhide,
   }: {
-    local: boolean
+    source: AnyListen.Player.SourceType
+    onplay: (musicInfo: AnyListen.Music.MusicInfo) => Promise<void>
     onhide?: () => void
   } = $props()
 
@@ -38,6 +40,7 @@
     // let sourceDetail = !!musicSdk[musicInfo.source]?.getMusicDetailPageUrl
     // let download = assertApiSupport(musicInfo.source) && musicInfo.source != 'local'
     let dislike = hasDislike(selectInfo.musicInfo)
+    const local = source === 'local'
     const newMenu: Array<MenuList<MenuType>[number] | false> = [
       { action: 'play', label: $t('user_list_music_menu__play') },
       { action: 'playLater', label: $t('user_list_music_menu__play_later') },
@@ -71,10 +74,16 @@
   const handleClick = (menu: NonNullable<(typeof menus)[number]>) => {
     switch (menu.action) {
       case 'play':
-        void playMusic(selectInfo.listId, selectInfo.musicInfo)
+        void onplay?.(selectInfo.musicInfo)
         break
       case 'playLater':
-        void playMusicLater(selectInfo.listId, selectInfo.musicInfo, selectInfo.selectedList, selectInfo.onRemoveAllSelected)
+        void playMusicLater(
+          selectInfo.listId,
+          selectInfo.musicInfo,
+          selectInfo.selectedList,
+          source,
+          selectInfo.onRemoveAllSelected
+        )
         break
       case 'addTo':
         void showMusicAddModal(

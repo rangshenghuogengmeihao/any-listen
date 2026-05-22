@@ -4,47 +4,30 @@
   import SvgIcon from '@/components/base/SvgIcon.svelte'
   import { i18n, t } from '@/plugins/i18n'
   import ActionBtnOnline from './ActionBtnOnline.svelte'
-  import type { OnlineListItem } from '@/modules/extension/store/state'
   import { extT } from '@/modules/extension/i18n'
-  import { downloadAndParseExtension, updateExtension, installExtension } from '@/modules/extension/store/actions'
-  import { showNotify } from '@/components/apis/notify'
   import { tooltip } from '@/components/apis/tooltips/attach.svelte'
+  import { installOrUpdate } from './shared'
 
-  let { ext }: { ext: OnlineListItem } = $props()
+  let { ext, onshowdetail }: { ext: AnyListen.IPCExtension.OnlineListItem; onshowdetail: () => void } = $props()
   let version = $derived(
     !ext.installed || ext.currentVersion == ext.version ? `v${ext.version}` : `v${ext.currentVersion} → v${ext.version}`
   )
   let grants = $derived(ext.grant?.map((g) => ({ id: g, icon: `ext_grant_${g}`, label: i18n.t(`extension__grant_${g}`) })) ?? [])
-  const handleInstall = async (ext: OnlineListItem, install?: boolean) => {
-    // TODO
-    try {
-      const tempExt = await downloadAndParseExtension(ext.download_url)
-      if (install) {
-        await updateExtension(tempExt)
-      } else {
-        await installExtension(tempExt)
-      }
-    } catch (error) {
-      console.error('Failed to install extension:', error)
-      // Show an error message to the user
-      showNotify(i18n.t('extension.install_failed', { name: ext.name, err: (error as Error).message }))
-      return
-    }
-    showNotify(i18n.t('extension.install_success', { name: ext.name }))
-  }
 </script>
 
 <li class="list-item" class:disabled={ext.installed && !ext.enabled}>
   <div class="top">
-    <div class="left">
-      <Image src={ext.icon} />
-    </div>
-    <div class="right">
-      <h3>{ext.name}</h3>
-      {#if ext.description}
-        <p class="label">{$extT(ext.id, ext.description)}</p>
-      {/if}
-    </div>
+    <Btn link onclick={onshowdetail}>
+      <div class="left">
+        <Image src={ext.icon} />
+      </div>
+      <div class="right">
+        <h3>{ext.name}</h3>
+        {#if ext.description}
+          <p class="label">{$extT(ext.id, ext.description)}</p>
+        {/if}
+      </div>
+    </Btn>
   </div>
   <div class="footer">
     <div class="left">
@@ -68,7 +51,7 @@
           <Btn
             min
             onclick={async () => {
-              await handleInstall(ext, true)
+              await installOrUpdate(ext)
             }}
           >
             {ext.latest ? $t('extension__action_downgrade') : $t('extension__action_update')}
@@ -79,7 +62,7 @@
         <Btn
           min
           onclick={async () => {
-            await handleInstall(ext)
+            await installOrUpdate(ext)
           }}
         >
           {$t('extension__action_install')}
@@ -114,10 +97,17 @@
   .top {
     display: flex;
     flex: auto;
-    flex-flow: row nowrap;
-    gap: 10px;
-    align-items: center;
     min-height: 0;
+
+    :global(.btn) {
+      display: flex;
+      flex-flow: row nowrap;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      color: inherit;
+      text-align: left;
+    }
 
     .left {
       flex: none;

@@ -2,12 +2,15 @@
 // import { checkMusicFileAvailable } from '@renderer/utils/music'
 
 import { LIST_IDS } from '@any-listen/common/constants'
-import { createPlayMusicInfoList } from '@any-listen/common/tools'
+import { createPlayMusicInfo, createPlayMusicInfoList } from '@any-listen/common/tools'
 import { getRandom } from '@any-listen/common/utils'
 import { checkPicUrl } from '@any-listen/web'
 
+import { executeLocalCommand } from '@/modules/app/store/action'
 import { addInfo } from '@/modules/dislikeList/actions'
 import { addListMusics, parseMusicMetadata, removeListMusics, updateListMusic } from '@/modules/musicLibrary/store/actions'
+import { songlistDetailAll } from '@/modules/resource/songlist/detail/actions'
+import { topSongsDetailAll } from '@/modules/resource/topSongs/detail/actions'
 import { settingState } from '@/modules/setting/store/state'
 import { i18n } from '@/plugins/i18n'
 import { getSrc, isEmpty, releasePlayer, setPause, setPlay, setResource, setStop } from '@/plugins/player'
@@ -297,7 +300,7 @@ const handlePlay = () => {
 
 const handlePlayList = async (
   listId: string,
-  isOnline: boolean,
+  source: AnyListen.Player.SourceType,
   targetList: AnyListen.Music.MusicInfo[],
   index: number,
   isClianHistory = false
@@ -312,16 +315,16 @@ const handlePlayList = async (
       setPlayMusicInfo(targetPlayMusicInfo!, index)
     }
   } else {
-    commit.setPlayListId(listId, isOnline)
+    commit.setPlayListId(listId, source)
   }
   if (targetPlayMusicInfo == null) {
     const newList = createPlayMusicInfoList({
       musicInfos: targetList,
       listId,
-      isOnline,
+      source,
       playLater: false,
     })
-    await setPlayListMusic({ list: newList, listId, isOnline })
+    await setPlayListMusic({ list: newList, listId, source })
     targetPlayMusicInfo = newList.find((m) => m.musicInfo.id == targetMusicInfo.id)
     setPlayMusicInfo(targetPlayMusicInfo!, index)
   }
@@ -342,20 +345,69 @@ export const playList = async (
   index: number,
   isClianHistory = false
 ) => {
-  return handlePlayList(listId, false, targetList, index, isClianHistory)
+  return handlePlayList(listId, 'local', targetList, index, isClianHistory)
+}
+
+export interface OnlineListMetaInfo {
+  extensionId: string
+  source: string
+  [key: string]: unknown
+}
+const getOnlineListAll = async (listId: string, source: AnyListen.Player.SourceType, metaInfo: OnlineListMetaInfo) => {
+  switch (source) {
+    case 'songlist':
+      return songlistDetailAll(metaInfo.extensionId, metaInfo.source, listId)
+    case 'topSongs':
+      return topSongsDetailAll(metaInfo.extensionId, metaInfo.source, listId, (metaInfo.date as string | undefined) ?? '')
+    default:
+      throw new Error('unsupported source')
+  }
+}
+const fetchOnlineListDetailAll = async (
+  listId: string,
+  source: AnyListen.Player.SourceType,
+  metaInfo: OnlineListMetaInfo,
+  targetList: AnyListen.Music.MusicInfo[]
+) => {
+  const list = await getOnlineListAll(listId, source, metaInfo)
+  if (playerState.playInfo.listId != listId || playerState.playInfo.source != source) return
+  if (list.length == targetList.length && list.every((m, idx) => m.id == targetList[idx].id)) return
+  const musicMap = new Map<string, AnyListen.Player.PlayMusicInfo>()
+  const newList = playerState.playList.filter((m) => {
+    musicMap.set(m.itemId, m)
+    return m.playLater
+  })
+  const newTargetList = list.map((m) => {
+    const newInfo = createPlayMusicInfo({
+      musicInfo: m,
+      listId,
+      source: playerState.playInfo.source,
+      playLater: false,
+      linked: true,
+    })
+    const info = musicMap.get(newInfo.itemId)
+    if (info) newInfo.played = info.played
+    return newInfo
+  })
+  await setPlayListMusic({ list: [...newList, ...newTargetList], listId, source: playerState.playInfo.source, isSync: true })
 }
 /**
  * 播放在线列表内歌曲
  * @param listId 列表id
  * @param index 播放的歌曲位置
+ * @param source 在线来源
+ * @param isClianHistory 是否清理历史记录
  */
 export const playOnlineList = async (
   listId: string,
   targetList: AnyListen.Music.MusicInfo[],
   index: number,
+  source: AnyListen.Player.SourceType,
+  metaInfo: OnlineListMetaInfo,
   isClianHistory = false
 ) => {
-  return handlePlayList(listId, true, targetList, index, isClianHistory)
+  await handlePlayList(listId, source, targetList, index, isClianHistory)
+  void fetchOnlineListDetailAll(listId, source, metaInfo, targetList)
 }
 
 const handleToggleStop = () => {
@@ -457,7 +509,8 @@ export const getNextPlayMusicInfo = async (): Promise<AnyListen.Player.PlayMusic
     case 'singleLoop':
       break
     default:
-      return null
+      nextIndex = -1
+      break
   }
   if (nextIndex < 0) return null
   return playList[nextIndex]
@@ -566,7 +619,8 @@ export const skipNext = async (isAutoSktp = false): Promise<void> => {
     case 'singleLoop':
       break
     default:
-      return
+      nextIndex = -1
+      break
   }
   if (nextIndex < 0) {
     if (!playerState.playerPlaying) commit.setPlaying(false)
@@ -656,7 +710,8 @@ export const skipPrev = async (isAutoSktp = false): Promise<void> => {
     case 'singleLoop':
       break
     default:
-      return
+      nextIndex = -1
+      break
   }
   if (nextIndex < 0) return
 
@@ -746,7 +801,7 @@ export const setVolume = (value: number) => {
 }
 
 export const setVolumeMute = (value: boolean) => {
-  playerEvent.setVolumeIsMute(value)
+  executeLocalCommand('muteToggle', value)
 }
 
 export const setCollectStatus = (status: boolean) => {

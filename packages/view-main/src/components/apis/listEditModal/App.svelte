@@ -9,6 +9,7 @@
   import RemoteListForm from './remoteListForm/RemoteListForm.svelte'
   import { showNotify } from '../notify'
   import LocalListForm from './LocalListForm.svelte'
+  import OnlineListForm from './OnlineListForm.svelte'
 
   let {
     onafterleave,
@@ -73,6 +74,8 @@
         <LocalListForm bind:this={form} {targetId} item={targetInfo as AnyListen.List.LocalListInfo | null} />
       {:else if listType == 'remote'}
         <RemoteListForm bind:this={form} {targetId} item={targetInfo as AnyListen.List.RemoteListInfo | null} />
+      {:else if listType == 'online'}
+        <OnlineListForm bind:this={form} {targetId} item={targetInfo as AnyListen.List.OnlineListInfo | null} />
       {/if}
     </div>
     <div class="footer">

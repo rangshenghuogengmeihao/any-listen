@@ -9,6 +9,7 @@ import { createClientHotkey, createExposeHotkey } from './hotkey'
 import { createClientList, createExposeList } from './list'
 import { createClientMusic } from './music'
 import { createClientPlayer, createExposePlayer } from './player'
+import { createClientResource } from './resource'
 import { createClientSoundEffect } from './soundEffect'
 import { createClientTheme, createExposeTheme } from './theme'
 
@@ -57,6 +58,7 @@ const connectIPCService: AnyListen.IPC.ConnectIPCSrivice = ({
         ...createClientHotkey(ipcSocket),
         ...createClientList(ipcSocket),
         ...createClientMusic(ipcSocket),
+        ...createClientResource(ipcSocket),
         ...createClientDislike(ipcSocket),
         ...createClientTheme(ipcSocket),
         ...createClientExtension(ipcSocket),

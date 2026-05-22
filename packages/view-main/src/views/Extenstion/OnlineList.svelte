@@ -5,8 +5,9 @@
 
   // import { extensionList } from '@/modules/extension/reactive'
   import ListItemOnline from './ListItemOnline.svelte'
-  import ListItemEnpty from './ListItemEnpty.svelte'
   import { t } from '@/plugins/i18n'
+  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar.svelte'
+  import { showExtensionDetailModal } from '@/components/apis/extensionDetail'
   let loading = $state(false)
 
   const list = useOnlineExtensionList()
@@ -21,16 +22,15 @@
 
 <div class="container">
   {#if list.val.length}
-    <ul class="list">
+    <ul class="list" {@attach verticalScrollbar({ offset: '0.22rem' })}>
       {#each list.val as ext (ext.id)}
-        <ListItemOnline {ext} />
+        <ListItemOnline
+          {ext}
+          onshowdetail={() => {
+            showExtensionDetailModal(ext)
+          }}
+        />
       {/each}
-      <ListItemEnpty />
-      <ListItemEnpty />
-      <ListItemEnpty />
-      <ListItemEnpty />
-      <ListItemEnpty />
-      <ListItemEnpty />
     </ul>
   {:else}
     <Empty label={loading ? $t('loading') : ''} />
@@ -47,8 +47,8 @@
     margin-top: 15px;
   }
   .list {
-    display: flex;
-    flex-flow: row wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 16px;
     min-height: 0;
     padding: 0 16px 16px;

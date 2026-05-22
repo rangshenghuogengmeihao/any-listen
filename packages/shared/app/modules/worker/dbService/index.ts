@@ -1,5 +1,5 @@
 import { exposeWorker } from '../utils/worker'
-import { init } from './db'
+import { init, backupDB } from './db'
 import {
   dislike_list,
   download,
@@ -14,6 +14,7 @@ import {
 
 const common = {
   init,
+  backupDB,
 }
 
 void exposeWorker<{

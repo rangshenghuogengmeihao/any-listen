@@ -12,11 +12,12 @@ export const nodeProcess = process
 
 export const joinPath = (...paths: string[]): string => path.join(...paths)
 
-export const extname = (p: string): string => path.extname(p).toLowerCase()
+export const extname = (p: string): string => path.extname(p.split('?')[0]).toLowerCase()
 export const extnameRaw = (p: string): string => path.extname(p)
 export const basename = (p: string, ext?: string): string => path.basename(p, ext)
 export const dirname = (p: string): string => path.dirname(p)
 export const isAbsolute = (p: string) => path.isAbsolute(p)
+export const sep = path.sep
 
 export const tmpdir = () => os.tmpdir()
 
@@ -96,15 +97,28 @@ export const removeFileIgnoreError = async (path: string) => {
 //   })
 // })
 
-export const readFile = async (path: string) => fs.promises.readFile(path)
+export const readFile = async (path: string, format?: BufferEncoding) => fs.promises.readFile(path, format)
+
+export const writeFile = async (path: string, content: string | Buffer | Uint8Array) => fs.promises.writeFile(path, content)
 
 /**
  * 创建 MD5 hash
  * @param {*} str
  */
 export const toMD5 = (str: string | Buffer | Uint8Array) => crypto.createHash('md5').update(str).digest('hex')
+export const toSha1 = (str: string | Buffer | Uint8Array) => crypto.createHash('sha1').update(str).digest('hex')
 export const toSha256 = (str: string | Buffer | Uint8Array) => crypto.createHash('sha256').update(str).digest('hex')
 export const toSha512 = (str: string | Buffer | Uint8Array) => crypto.createHash('sha512').update(str).digest('hex')
+
+export const fileSha256 = async (filePath: string) => {
+  const hash = crypto.createHash('sha256')
+  const stream = fs.createReadStream(filePath)
+  return new Promise<string>((resolve, reject) => {
+    stream.on('data', (chunk) => hash.update(chunk))
+    stream.on('end', () => resolve(hash.digest('hex')))
+    stream.on('error', (err) => reject(err))
+  })
+}
 
 export const randomUUID = () => crypto.randomUUID()
 

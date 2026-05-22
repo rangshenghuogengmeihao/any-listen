@@ -1,11 +1,12 @@
-import { DEFAULT_LANG } from '@any-listen/common/constants'
+import { DEFAULT_LANG, EXTENSION_ENGINE } from '@any-listen/common/constants'
 
 const empty = {}
 export const extensionState = {
-  version: '1.0.0',
+  version: EXTENSION_ENGINE,
   clientType: '' as AnyListen.ClientType,
   locale: DEFAULT_LANG as AnyListen.Locale,
   onlineExtensionHost: '',
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   extensionI18nMessage: empty as Record<string, string>,
   proxy: {
     host: '',
@@ -23,9 +24,15 @@ export const extensionState = {
   //   vmContext: AnyListen.ExtensionVM.VMContext
   // }>(),
   preloadScript: '',
-  resourceList: empty as AnyListen.Extension.ResourceList,
+  resourceList: {
+    commands: [],
+    resources: {},
+    listProvider: [],
+  } as AnyListen.Extension.ResourceList,
   extensionSettings: null as AnyListen.Extension.ExtensionSetting[] | null,
   remoteFuncs: empty as AnyListen.IPCExtension.MainIPCActions & {
     inited: () => void
   },
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+  newExtensionVersions: empty as Record<string, string>,
 }

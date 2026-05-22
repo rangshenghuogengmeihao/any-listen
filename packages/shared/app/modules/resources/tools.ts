@@ -1,4 +1,4 @@
-import { findMusic as findMusicByExt } from './search/music/actions'
+import { findMusic as findMusicByExt } from './search/music'
 import { buildExtSourceId, getExtSource } from './utils'
 
 const handleFindMusic = async <T>(

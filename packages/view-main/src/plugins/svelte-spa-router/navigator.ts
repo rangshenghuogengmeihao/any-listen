@@ -1,10 +1,15 @@
+import SimpleSingleEvent from '@any-listen/web/SimpleSingleEvent'
 import { tick } from 'svelte'
 import { derived, readable } from 'svelte/store'
 
 export interface Location {
+  /** Raw location from the hash, for example `#/book?id=1` */
+  rawLocation: string
   /** Location (page/view), for example `/book` */
   location: string
   /** Querystring from the hash, as a string not parsed */
+  querystring: string
+  /** Parsed query parameters */
   query: Record<string, string>
 }
 // 解析URL参数为对象
@@ -12,6 +17,7 @@ const parseUrlParams = (str: string): Record<string, string> => {
   const params: Record<string, string> = {}
   if (typeof str !== 'string') return params
   const paramsArr = str.split('&')
+  if (paramsArr.length === 1 && paramsArr[0] === '') return params
   for (const param of paramsArr) {
     const [key, value] = param.split('=')
     params[key] = value ? decodeURIComponent(value) : value
@@ -27,24 +33,23 @@ const parseUrlParams = (str: string): Record<string, string> => {
  */
 export const getLocation = (): Location => {
   const hashPosition = window.location.href.indexOf('#/')
-  let location = hashPosition > -1 ? window.location.href.substring(hashPosition + 1) : '/'
-
+  let rawLocation = hashPosition > -1 ? window.location.href.substring(hashPosition + 1) : '/'
+  let location = rawLocation
   // Check if there's a querystring
-  const qsPosition = location.indexOf('?')
+  const qsPosition = rawLocation.indexOf('?')
   let querystring = ''
   if (qsPosition > -1) {
     querystring = location.substring(qsPosition + 1)
     location = location.substring(0, qsPosition)
   }
 
-  return { location, query: parseUrlParams(querystring) }
+  return { rawLocation, location, querystring, query: parseUrlParams(querystring) }
 }
 
-type Params = Record<string, string | number | null | undefined>
+export type Params = Record<string, string | number | null | undefined>
 const buildParams = (params: Record<string, Params[keyof Params]>) => {
-  return Object.entries(params)
-    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v ?? ''))}`)
-    .join('&')
+  const p = new URLSearchParams(params as Record<string, string>)
+  return p.toString()
 }
 const buildQueryString = (url: string, params?: Params) => {
   if (!params) return ''
@@ -80,6 +85,24 @@ export const location = derived(loc, (loc) => loc.location)
  * Readable store that returns the current querystring
  */
 export const query = derived(loc, (loc) => loc.query)
+
+let _params: RegExpExecArray | Record<string, unknown> = {}
+const paramsEvent = new SimpleSingleEvent<[RegExpExecArray | Record<string, unknown>]>()
+export const setParams = (params: RegExpExecArray | Record<string, unknown>) => {
+  _params = params
+  paramsEvent.emit(params)
+}
+
+export const params = readable<RegExpExecArray | Record<string, unknown>>(
+  _params,
+  // eslint-disable-next-line prefer-arrow-callback
+  function start(set) {
+    set(_params)
+    return paramsEvent.on(() => {
+      set(_params)
+    })
+  }
+)
 
 /**
  * Store that returns the currently-matched params.
@@ -149,7 +172,9 @@ export const replace = async (location: string, params?: Params) => {
     const newState = {
       ...history.state,
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     delete newState.__svelte_spa_router_scrollX
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     delete newState.__svelte_spa_router_scrollY
     window.history.replaceState(newState, '', dest)
   } catch (e) {
@@ -222,6 +247,7 @@ const linkOpts = (val?: string | LinkActionOpts): LinkActionOpts => {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   return (val as LinkActionOpts) || {}
 }
 
@@ -242,7 +268,8 @@ export const link = (opts?: string | LinkActionOpts) => {
     opts = linkOpts(opts)
 
     // Only apply to <a> tags
-    if (!node.tagName || node.tagName.toLowerCase() != 'a') {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (node.tagName?.toLowerCase() != 'a') {
       throw Error('Action "link" can only be used with <a> tags')
     }
 

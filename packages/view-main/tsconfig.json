@@ -1,5 +1,5 @@
 {
-  "extends": "./node_modules/@any-listen/eslint/tsconfig.json",
+  "extends": "@any-listen/eslint/tsconfig.json",
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "target": "ESNext",
@@ -20,10 +20,10 @@
     "allowJs": true,
     "checkJs": true,
     "isolatedModules": true,
+    "rootDir": "./",
     "outDir": "../../dist",
-    "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]
     },
     "types": ["@any-listen/types"]
   },

@@ -12,6 +12,8 @@ declare namespace AnyListen {
   type AddMusicLocationType = 'top' | 'bottom'
 
   namespace Player {
+    type SourceType = 'local' | 'songlist' | 'topSongs' | 'search' | 'album'
+
     interface MusicInfo {
       id: string | null
       pic: string | null | undefined
@@ -41,9 +43,9 @@ declare namespace AnyListen {
        */
       listId: string
       /**
-       * 是否在线列表
+       * 列表类型
        */
-      isOnline: boolean
+      source: SourceType
       /**
        * 是否属于 “稍后播放”
        */
@@ -58,7 +60,7 @@ declare namespace AnyListen {
       duration: number
       index: number
       listId: string | null
-      isOnline: boolean
+      source: SourceType
       historyIndex: number
     }
 
@@ -87,7 +89,7 @@ declare namespace AnyListen {
 
   namespace Music {
     type Source = string
-    type Quality = '128k' | '320k' | 'flac' | 'flac24bit' | '192k' | 'wav' | 'dobly' | 'master'
+    type Quality = '128k' | '320k' | 'flac' | 'flac24bit' | '192k' | 'wav' | 'dolby' | 'master'
     type FileType = 'mp3' | 'flac' | 'wav' | 'm4a'
 
     type MusicQualityType = Partial<
@@ -173,6 +175,8 @@ declare namespace AnyListen {
   }
   namespace List {
     interface UserListInfoBaseMeta {
+      songCount: number
+      pic: string
       playCount: number
       createTime: number
       updateTime: number
@@ -188,12 +192,15 @@ declare namespace AnyListen {
       enabledRemove?: boolean
       usePolling?: boolean
     }
+    type SourceType = 'songlist' | 'topSongs' | 'search' | 'album'
     interface UserListInfoByOnlineMeta extends UserListInfoBaseMeta {
       extensionId: string
       source: string
       syncId: string
       syncTime: number
       picUrl: string | null
+      sourceType: SourceType
+      [key: string]: unknown
     }
     interface UserListInfoByRemoteMeta extends UserListInfoBaseMeta {
       extensionId: string
@@ -226,19 +233,19 @@ declare namespace AnyListen {
 
     interface MyDefaultListInfo extends Omit<GeneralListInfo, 'type'> {
       id: 'default'
-      name: 'default'
+      name: string
       type: 'default'
     }
 
     interface MyLoveListInfo extends Omit<GeneralListInfo, 'type'> {
       id: 'love'
-      name: 'love'
+      name: string
       type: 'default'
     }
 
     interface MyLastPlayListInfo extends Omit<GeneralListInfo, 'type'> {
       id: 'last_played'
-      name: 'last_played'
+      name: string
       type: 'default'
     }
 
@@ -361,7 +368,10 @@ declare namespace AnyListen {
       listInfos: List.UserListInfo[]
     }
     type ListActionRemove = string[]
-    type ListActionUpdate = List.UserListInfo[]
+    interface ListActionUpdate {
+      lists: List.MyListInfo[]
+      sync?: boolean
+    }
     interface ListActionMove {
       /**
        * 目标列表id
@@ -486,7 +496,7 @@ declare namespace AnyListen {
     interface PlayerActionSet {
       listId: string | null
       list: Player.PlayMusicInfo[]
-      isOnline: boolean
+      source: List.SourceType
       isSync?: boolean
     }
     interface PlayerActionAdd {
@@ -558,26 +568,95 @@ declare namespace AnyListen {
       info: SavedPlayInfo
       list: Player.PlayMusicInfo[]
       listId: string | null
-      isOnline: boolean
+      source: List.SourceType
       historyList: PlayHistoryListItem[]
       isCollect: boolean
     }
   }
+
+  namespace Resource {
+    interface SongListItem {
+      id: string
+      name: string
+      play_count?: string
+      author?: string
+      time?: string
+      img?: string
+      // grade: basic.favorcnt / 10,
+      desc?: string | null
+      total?: number
+    }
+    interface SongListDetailInfo {
+      name: string
+      img?: string
+      desc?: string
+      author?: string
+      play_count?: string
+      date?: string
+    }
+
+    interface CommonItem {
+      id: string
+      name: string
+    }
+    type TagItem = CommonItem
+    interface TagGroupItem {
+      name: string
+      list: CommonItem[]
+    }
+
+    interface TopSongsItem extends CommonItem {
+      pic?: string
+    }
+    interface TopSongsDetailInfo {
+      name: string
+      pic?: string
+      desc?: string
+      date?: string
+    }
+
+    interface MusicCommentItem {
+      id: string
+      userId?: string
+      userName: string
+      text: string
+      time?: number
+      images?: string[]
+      location?: string
+      avatar?: string
+      likedCount?: number
+      skipPage?: boolean
+      replyTotal?: number
+      reply?: MusicCommentItem[]
+      replySkipPage?: boolean
+    }
+  }
 }
 
-interface IPCActionBase<A> {
-  action: A
-}
-interface IPCActionData<A, D> extends IPCActionBase<A> {
-  data: D
-}
+// interface IPCActionBase<A> {
+//   action: A
+// }
+// interface IPCActionData<A, D> extends IPCActionBase<A> {
+//   data: D
+// }
 interface CommonParams {
   extensionId: string
   source: string
 }
 interface CommonListParams extends CommonParams {
   page: number
-  limit: number
+  limit?: number
+}
+interface CommonSearchParams extends CommonListParams {
+  keyword: string
+}
+interface TipSearchParams extends CommonParams {
+  keyword: string
+}
+interface MusicSearchParams extends CommonListParams {
+  name: string
+  artist?: string
+  albumName?: string
 }
 interface LyricSearchParams extends CommonParams {
   name: string
@@ -589,7 +668,7 @@ interface LyricSearchResult {
   name: string
   artist?: string
   interval?: number
-  lyric?: string
+  lyric?: AnyListen.Music.LyricInfo
 }
 interface LyricDetailParams extends CommonParams {
   id: string
@@ -597,17 +676,36 @@ interface LyricDetailParams extends CommonParams {
 interface PicSearchParams extends CommonParams {
   name: string
   artist?: string
-}
-interface SearchParams extends CommonListParams {
-  name: string
-  artist?: string
+  interval?: number
 }
 interface ListDetailParams extends CommonListParams {
   id: string
 }
+interface SonglistTagResult {
+  tags: AnyListen.Resource.TagGroupItem[]
+  hotTags: AnyListen.Resource.TagItem[]
+}
 interface SonglistListParams extends CommonListParams {
   sort: string
   tag: string
+}
+interface SonglistDetailResult extends ListCommonResult<AnyListen.Music.MusicInfoOnline> {
+  info: AnyListen.Resource.SongListDetailInfo
+}
+interface TopSongsDateParams extends CommonParams {
+  id: string
+}
+interface TopSongsDetailParams extends CommonListParams {
+  id: string
+  date: string
+}
+interface TopSongsDetailResult extends ListCommonResult<AnyListen.Music.MusicInfoOnline> {
+  info: AnyListen.Resource.TopSongsDetailInfo
+}
+interface MusicCommentParams extends CommonListParams {
+  musicInfo: AnyListen.Music.MusicInfoOnline
+  id?: string
+  type: 'hot' | 'new' | 'reply'
 }
 export interface ListCommonResult<T> {
   list: T[]
@@ -623,34 +721,6 @@ interface MusicUrlParams extends MusicCommonParams {
   quality?: string
   type?: AnyListen.Music.FileType
 }
-interface MusicUrlInfo {
-  url: string
-  quality: string
-}
-
-interface SongListItem {
-  play_count: string
-  id: string
-  author: string
-  name: string
-  time?: string
-  img: string
-  // grade: basic.favorcnt / 10,
-  desc: string | null
-  total?: string
-}
-
-interface CommonItem {
-  id: string
-  name: string
-}
-type TagItem = CommonItem
-interface TagGroupItem {
-  name: string
-  list: CommonItem[]
-}
-
-type BoardItem = CommonItem
 
 declare global {
   namespace AnyListen_API {
@@ -696,7 +766,17 @@ declare global {
     type Platform = 'mac' | 'linux' | 'windows' | 'android' | 'ios'
     type Architecture = 'arm' | 'arm64' | 'x86' | 'x64'
     type ClientType = 'desktop' | 'web' | 'mobile'
-    type Quality = '128k' | '320k' | 'flac' | 'flac24bit' | '192k' | 'wav' | 'dobly' | 'master'
+    type Quality = AnyListen.Music.Quality
+    type MusicInfo = AnyListen.Music.MusicInfo
+    type MusicInfoOnline = AnyListen.Music.MusicInfoOnline
+    type SongListItem = AnyListen.Resource.SongListItem
+    type SongListDetailInfo = AnyListen.Resource.SongListDetailInfo
+    type CommonItem = AnyListen.Resource.CommonItem
+    type TagItem = AnyListen.Resource.TagItem
+    type TagGroupItem = AnyListen.Resource.TagGroupItem
+    type TopSongsItem = AnyListen.Resource.TopSongsItem
+    type TopSongsDetailInfo = AnyListen.Resource.TopSongsDetailInfo
+    type MusicCommentItem = AnyListen.Resource.MusicCommentItem
 
     type ParamsData = Record<string, string | number | null | undefined | boolean>
     interface RequestOptions {
@@ -705,8 +785,9 @@ declare global {
       headers?: Record<string, string | string[]>
       timeout?: number
       maxRedirect?: number
-      signal?: AbortController['signal']
-      json?: Record<string, unknown>
+      // signal?: AbortController['signal']
+      signal?: unknown
+      json?: Record<string, unknown> | unknown[]
       form?: Record<string, string | number | null | undefined | boolean>
       binary?: Uint8Array
       text?: string
@@ -720,9 +801,12 @@ declare global {
       headers: Record<string, string | string[] | undefined>
       raw: Uint8Array
       body: Resp
+      history: string[]
     }
 
-    type BufferFormat = 'binary' | 'base64' | 'hex' | 'utf-8' | 'utf8'
+    type ConverterFormatFrom = 'base64' | 'hex' | 'utf-8'
+    type ConverterFormatTo = 'binary' | 'base64' | 'hex' | 'utf-8'
+    type ConverterBinaryFormatTo = 'base64' | 'hex' | 'utf-8'
     interface BufferToStringTypes {
       binary: number[] | Uint8Array
       base64: string
@@ -808,9 +892,8 @@ declare global {
     }
 
     interface OpenDialogOptions {
-      signal?: unknown
       /** The resource the dialog shows when opened. */
-      defaultPath?: string
+      // defaultPath?: string
       /** A human-readable string for the open button. */
       openLabel?: string
       /** Allow to select files, defaults to `true`. */
@@ -836,13 +919,12 @@ declare global {
        * This parameter might be ignored, as not all operating systems display a title on open dialogs
        * (for example, macOS).
        */
-      title?: string
+      title: string
     }
 
     interface SaveDialogOptions {
-      signal?: unknown
       /** The resource the dialog shows when opened. */
-      defaultPath?: string
+      // defaultPath?: string
       /** A human-readable string for the save button. */
       saveLabel?: string
       /**
@@ -862,7 +944,7 @@ declare global {
        * This parameter might be ignored, as not all operating systems display a title on save dialogs
        * (for example, macOS).
        */
-      title?: string
+      title: string
     }
 
     /** 环境相关 */
@@ -884,15 +966,24 @@ declare global {
 
       readonly onLocaleChanged: (callback: (locale: Locale) => void) => () => void
     }
+    interface Constants {
+      readonly storageDir: string
+      readonly extensionDir: string
+    }
     /** 应用相关 */
     interface App {
       showMessage: (message: string, options?: MessageDialogOptions) => Promise<number>
       // TODO
       // showFormDialog: (options: FormDialogOptions) => Promise<string | undefined>
-      showInputBox: (options: InputDialogOptions) => Promise<string | undefined>
+      showInputDialog: (options: InputDialogOptions) => Promise<string>
       // showInput: (options: InputDialogOptions) => Promise<string | undefined>
-      showOpenDialog: (options: OpenDialogOptions) => Promise<string | string[] | undefined>
-      showSaveDialog: (options: SaveDialogOptions) => Promise<string | undefined>
+      showOpenDialog: (options: OpenDialogOptions) => Promise<string[]>
+      showSaveDialog: (options: SaveDialogOptions) => Promise<string>
+      readOpenDialogFile: <T extends 'utf-8' | 'binary' = 'binary'>(
+        path: string,
+        format?: T
+      ) => Promise<T extends 'utf-8' ? string : Uint8Array>
+      writeSaveDialogFile: (dir: string, name: string, content: string | Uint8Array) => Promise<string>
       // getConnectedClient: () => Promise<string[]>
     }
     interface MusicList {
@@ -922,9 +1013,9 @@ declare global {
          */
         listId: string
         /**
-         * 是否在线列表
+         * 列表类型
          */
-        isOnline: boolean
+        source: AnyListen.List.SourceType
         /**
          * 是否属于 “稍后播放”
          */
@@ -977,24 +1068,27 @@ declare global {
         params: BuildListProviderActionCommonParams<AnyListen.Music.MusicInfoOnline>
       ) => Promise<AnyListen.Music.MusicInfoOnline>
     }
+    type MusicSearchResult = ListCommonResult<AnyListen.Music.MusicInfoOnline>
 
     interface ResourceAction {
-      // ('tipSearch' | 'hotSearch', CommonParams) => Promise<string[]>
-      musicSearch: (params: SearchParams) => Promise<ListCommonResult<AnyListen.Music.MusicInfoOnline>>
+      tipSearch: (params: TipSearchParams) => Promise<string[]>
+      hotSearch: (params: CommonParams) => Promise<string[]>
+      musicSearch: (params: MusicSearchParams) => Promise<ListCommonResult<AnyListen.Music.MusicInfoOnline>>
       musicPic: (params: MusicCommonParams) => Promise<string>
       musicUrl: (params: MusicUrlParams) => Promise<MusicUrlInfo>
       musicLyric: (params: MusicCommonParams) => Promise<AnyListen.Music.LyricInfo>
       musicPicSearch: (params: PicSearchParams) => Promise<string[]>
       lyricSearch: (params: LyricSearchParams) => Promise<LyricSearchResult[]>
       lyricDetail: (params: LyricDetailParams) => Promise<AnyListen.Music.LyricInfo>
-      // songlistSearch: (params: SearchParams) => Promise<ListCommonResult<AnyListen.Resource.SongListItem>>
-      // songlistSorts: (params: CommonParams) => Promise<AnyListen.Resource.TagItem[]>
-      // songlistTags: (params: CommonParams) => Promise<AnyListen.Resource.TagGroupItem[]>
-      // songlist: (params: SonglistListParams) => Promise<ListCommonResult<AnyListen.Resource.SongListItem>>
-      // songlistDetail: (params: ListDetailParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
-      // leaderboard: (params: CommonParams) => Promise<AnyListen.Resource.TagGroupItem[]>
-      // leaderboardDate: (params: SonglistListParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
-      // leaderboardDetail: (params: SonglistListParams) => Promise<ListCommonResult<Music.MusicInfoOnline>>
+      songlistSearch: (params: CommonSearchParams) => Promise<ListCommonResult<AnyListen.Resource.SongListItem>>
+      songlistSorts: (params: CommonParams) => Promise<AnyListen.Resource.TagItem[]>
+      songlistTags: (params: CommonParams) => Promise<SonglistTagResult>
+      songlist: (params: SonglistListParams) => Promise<ListCommonResult<AnyListen.Resource.SongListItem>>
+      songlistDetail: (params: ListDetailParams) => Promise<SonglistDetailResult>
+      topSongs: (params: CommonParams) => Promise<AnyListen.Resource.TopSongsItem[]>
+      topSongsDate: (params: TopSongsDateParams) => Promise<AnyListen.Resource.TagItem[]>
+      topSongsDetail: (params: TopSongsDetailParams) => Promise<TopSongsDetailResult>
+      musicComment: (params: MusicCommentParams) => Promise<ListCommonResult<AnyListen.Resource.MusicCommentItem>>
     }
 
     interface BackupDataAction {
@@ -1012,60 +1106,114 @@ declare global {
       error: (...args: unknown[]) => void
     }
     interface Storage {
-      getItem: <T>(key: string) => Promise<T>
-      getItems: <T extends unknown[]>(keys: string[]) => Promise<T>
-      setItem: (key: string, value: unknown) => Promise<void>
-      setItems: <T extends Array<[string, unknown]>>(datas: T) => Promise<void>
-      removeItem: (key: string) => Promise<void>
-      removeItems: (keys: string[]) => Promise<void>
-      clearItems: () => Promise<void>
-    }
-    interface Buffer {
-      from: (input: string | number[], encoding?: BufferFormat) => Uint8Array
-      bufToString: <T extends BufferFormat>(buf: number[] | Uint8Array, format: T) => BufferToStringTypes[T]
+      writeFile: (path: string, data: Uint8Array | string) => Promise<void>
+      readFile: <T extends 'utf-8' | 'binary' = 'utf-8'>(
+        path: string,
+        encoding?: T
+      ) => Promise<T extends 'utf-8' ? string : Uint8Array>
+      removeFile: (path: string) => Promise<void>
+      fileExists: (path: string) => Promise<boolean>
+      listFiles: (path?: string) => Promise<string[]>
+      statFile: (path: string) => Promise<{ isFile: boolean; size: number; createTime: number; updateTime: number }>
     }
     interface Crypto {
-      aesEncrypt: (mode: AES_MODE, data: Uint8Array | string, key: Uint8Array | string, iv: Uint8Array | string) => string
-      rsaEncrypt: (mode: RSA_PADDING, data: Uint8Array, key: Uint8Array) => string
-      randomBytes: (size: number) => Uint8Array
-      md5: (b64Data: string) => string
+      aesEncrypt: (
+        mode: AES_MODE,
+        data: Uint8Array | string,
+        key: Uint8Array | string,
+        iv: Uint8Array | string
+      ) => Promise<string>
+      aesDecrypt: <T extends 'base64' | 'binary' | 'utf-8' = 'binary'>(
+        mode: AES_MODE,
+        data: Uint8Array | string,
+        key: Uint8Array | string,
+        iv: Uint8Array | string,
+        encoding?: T
+      ) => Promise<T extends 'binary' ? Uint8Array : string>
+      rsaEncrypt: (mode: RSA_PADDING, data: Uint8Array, key: Uint8Array) => Promise<string>
+      rsaDecrypt: <T extends 'base64' | 'binary' | 'utf-8' = 'binary'>(
+        mode: RSA_PADDING,
+        data: Uint8Array,
+        key: Uint8Array,
+        encoding?: T
+      ) => Promise<T extends 'binary' ? Uint8Array : string>
+      randomBytes: (size: number) => Promise<Uint8Array>
+      md5: (text: string | Uint8Array) => Promise<string>
+      sha1: (text: string | Uint8Array) => Promise<string>
+      sha256: (text: string | Uint8Array) => Promise<string>
+      sha512: (text: string | Uint8Array) => Promise<string>
     }
     interface Iconv {
-      decode: (data: Uint8Array | Uint16Array, encoding: string) => string
-      encode: (data: string, encoding: string) => Uint8Array
+      decode: (data: Uint8Array | Uint16Array, encoding: string) => Promise<string>
+      encode: (data: string, encoding: string) => Promise<Uint8Array>
+    }
+    interface Zlib {
+      deflate: <T extends 'base64' | 'binary' = 'binary'>(
+        data: Uint8Array | string,
+        encoding?: T
+      ) => Promise<T extends 'base64' ? string : Uint8Array>
+      inflate: <T extends 'utf-8' | 'binary' = 'binary'>(
+        data: Uint8Array | string,
+        encoding?: T
+      ) => Promise<T extends 'utf-8' ? string : Uint8Array>
     }
     interface Configuration {
       getConfigs: <T extends unknown[] = []>(keys: string[]) => Promise<WithUndefined<T>>
-      setConfigs: (datas: Array<[string, string]>) => Promise<void>
+      setConfigs: (datas: Record<string, unknown>) => Promise<void>
       onConfigChanged: (callback: (keys: string[], configuration: Record<string, unknown>) => void) => () => void
     }
     interface MusicUtils {
-      createProxyUrl: (url: string, options: RequestOptions, enabledCache?: boolean) => Promise<string>
+      createProxyUrl: (url: string, options?: RequestOptions, enabledCache?: boolean) => Promise<string>
       writeProxyCache: (fileName: string, data: Uint8Array) => Promise<string>
+    }
+    interface IsolateContext {
+      sendMessage: (message: unknown) => Promise<void>
+      run: (code: string) => Promise<void>
+      runFile: (filePath: string) => Promise<void>
+      destroy: () => Promise<void>
+    }
+    interface Command {
+      registerCommand: (command: string, callback: (...args: unknown[]) => Promise<unknown>) => Promise<() => void>
+      executeCommand: (command: string, ...args: unknown[]) => Promise<unknown>
+      getCommands: (filterInternal?: boolean) => Promise<string[]>
     }
     interface API {
       env: Env
       app: App
-      musicList: MusicList
-      player: Player
+      musicList?: MusicList
+      player?: Player
       musicUtils: MusicUtils
       /** http 请求 */
-      request: <Resp = unknown>(url: string, options?: RequestOptions) => Promise<Response<Resp>>
+      request?: <Resp = unknown>(url: string, options?: RequestOptions) => Promise<Response<Resp>>
       t: (key: string, data?: Record<string, string | number | null | undefined>) => string
       logcat: Logcat
       storage: Storage
       configuration: Configuration
       registerResourceAction: (actions: Partial<ResourceAction>) => void
       // TODO
-      backup: {
-        runBackup: (opts: { backupData?: Array<'list' | 'dislike'> }) => Promise<void>
-        registerDataAction: (actions: BackupDataAction) => void
-      }
+      // backup: {
+      //   runBackup: (opts: { backupData?: Array<'list' | 'dislike'> }) => Promise<void>
+      //   registerDataAction: (actions: BackupDataAction) => void
+      // }
       utils: {
-        buffer: Buffer
         crypto: Crypto
         iconv: Iconv
+        zlib: Zlib
+        createIsolateContext?: (onMessage: (message: unknown) => void) => Promise<IsolateContext>
+        dataConverter: {
+          <R extends ConverterFormatTo = 'binary'>(
+            input: string,
+            fromEncoding?: ConverterFormatFrom,
+            toEncoding?: R
+          ): Promise<R extends 'binary' ? Uint8Array : string>
+          <R extends ConverterBinaryFormatTo = 'utf-8'>(
+            input: Uint8Array,
+            toEncoding?: R
+          ): Promise<R extends 'binary' ? Uint8Array : string>
+        }
       }
+      command: Command
+      constants: Constants
     }
   }
 }

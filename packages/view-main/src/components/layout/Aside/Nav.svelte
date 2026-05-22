@@ -3,8 +3,16 @@
   import { link, location, query } from '@/plugins/routes'
   import { t } from '@/plugins/i18n'
   import { LIST_IDS } from '@any-listen/common/constants'
+  import { useExtensionError, useExtensionNewVersionNum } from '@/modules/extension/reactive.svelte'
+  import { useOnlineResourceAvailable } from '@/views/Online/shared.svelte'
+  import { toOnlineSearch } from '@/modules/resource/actions'
 
   const lastPlayedUrl = `/library?id=${LIST_IDS.LAST_PLAYED}`
+
+  const newExtVerNum = useExtensionNewVersionNum()
+  const extensionError = useExtensionError()
+
+  let onlineResourceAvailable = useOnlineResourceAvailable()
 
   let menus = $derived(
     [
@@ -22,13 +30,18 @@
       //   iconSize: '0 0 425.2 425.2',
       //   enable: true,
       // },
-      // {
-      //   to: '/online',
-      //   name: $t('online_resources'),
-      //   icon: '#icon-leaderboard',
-      //   iconSize: '0 0 425.22 425.2',
-      //   enable: true,
-      // },
+      {
+        to: '/online',
+        name: $t('online_resources'),
+        icon: '#icon-sound_cloud',
+        iconSize: '0 0 24 24',
+        enable: onlineResourceAvailable.val,
+        onclick: (e: MouseEvent) => {
+          e.preventDefault()
+          e.stopPropagation()
+          void toOnlineSearch()
+        },
+      },
       // {
       //   to: '/online',
       //   name: $t('list_name__love'),
@@ -47,7 +60,7 @@
         to: lastPlayedUrl,
         name: $t('list_name__last_play'),
         icon: '#icon-memories',
-        iconSize: '0 0 444.87 391.18',
+        iconSize: '0 0 24 24',
         enable: true,
       },
       // {
@@ -62,54 +75,96 @@
         to: '/settings',
         name: $t('setting'),
         icon: '#icon-settings',
-        iconSize: '0 0 493.23 436.47',
+        iconSize: '0 0 24 24',
         enable: true,
       },
       {
         to: '/extenstion',
         name: $t('extenstion'),
         icon: '#icon-puzzle',
-        iconSize: '0 0 493.23 436.47',
+        iconSize: '0 0 24 24',
         enable: true,
+        hidden: true,
       },
     ].filter((m) => m.enable)
   )
 
-  let activePath = $derived(
-    $location == '/library' && $query.id == LIST_IDS.LAST_PLAYED
-      ? lastPlayedUrl
-      : menus.some((m) => m.to == $location)
-        ? $location
-        : $location == '/'
-          ? menus[0].to
-          : ''
-  )
+  let activePath = $derived.by(() => {
+    if ($location == '/library' && $query.id == LIST_IDS.LAST_PLAYED) {
+      return lastPlayedUrl
+    } else if ($location.startsWith('/online/')) {
+      return '/online'
+    }
+    return menus.some((m) => m.to == $location) ? $location : $location == '/' ? menus[0].to : ''
+  })
   // let activePath = ''
 </script>
 
-<ul class="aside-nav" role="menu">
-  {#each menus as item (item.to)}
-    <li class="nav-item" role="presentation">
-      <a
-        class="link"
-        class:active={activePath == item.to}
-        role="tab"
-        data-ignore-tip
-        aria-selected={activePath == item.to}
-        href={item.to}
-        aria-label={item.name}
-        {@attach link()}
-      >
-        <!-- <a class="link" class:active={activePath == item.to} role="tab" href={item.to} aria-label={item.name}> -->
+{#snippet listItem(item: {
+  to: string
+  name: string
+  icon: string
+  iconSize: string
+  enable: boolean
+  badgeNum?: number
+  waringBadge?: boolean
+  onclick?: (e: MouseEvent) => void
+})}
+  <li class="nav-item" role="presentation">
+    <a
+      class="link"
+      class:active={activePath == item.to}
+      role="tab"
+      data-ignore-tip
+      aria-selected={activePath == item.to}
+      href={item.to}
+      onclick={item.onclick}
+      aria-label={item.name}
+      {@attach link({ disabled: !!item.onclick })}
+    >
+      <!-- <a class="link" class:active={activePath == item.to} role="tab" href={item.to} aria-label={item.name}> -->
+      <div class="left">
         <div class="icon">
           <svg viewBox={item.iconSize}>
             <use xlink:href={item.icon} />
           </svg>
         </div>
         <span class="nav-name">{item.name}</span>
-      </a>
-    </li>
+      </div>
+      <div class="right">
+        {#if item.waringBadge}
+          <div class="icon" style="color: var(--color-font-error);">
+            <svg viewBox={item.iconSize}>
+              <use xlink:href="#icon-error" />
+            </svg>
+          </div>
+        {/if}
+        {#if item.badgeNum}
+          <span class="badge" aria-hidden="true">{item.badgeNum}</span>
+        {/if}
+      </div>
+    </a>
+  </li>
+{/snippet}
+{#snippet extensonItem()}
+  {@render listItem({
+    to: '/extenstion',
+    name: $t('extenstion'),
+    icon: '#icon-puzzle',
+    iconSize: '0 0 24 24',
+    enable: true,
+    waringBadge: extensionError.val,
+    badgeNum: newExtVerNum.val > 0 ? newExtVerNum.val : undefined,
+  })}
+{/snippet}
+
+<ul class="aside-nav" role="menu">
+  {#each menus as item (item.to)}
+    {#if !item.hidden}
+      {@render listItem(item)}
+    {/if}
   {/each}
+  {@render extensonItem()}
 </ul>
 
 <style lang="less">
@@ -125,7 +180,8 @@
   .link {
     display: flex;
     align-items: center;
-    padding: 8px 15px 8px 5px;
+    justify-content: space-between;
+    padding: 8px;
     color: var(--color-primary-font);
     text-decoration: none;
     cursor: pointer;
@@ -156,13 +212,37 @@
     }
   }
 
+  .left {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .right {
+    display: flex;
+    flex: none;
+    gap: 3px;
+    align-items: center;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    font-size: 10px;
+    color: var(--color-primary-font);
+    background-color: var(--color-primary-background);
+    border-radius: 8px;
+  }
+
   .icon {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 20px;
     // margin-bottom: 5px;
-    margin-right: 6px;
+    // margin-right: 6px;
     & > svg {
       height: 20px;
     }

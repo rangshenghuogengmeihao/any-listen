@@ -62,12 +62,14 @@
     align-items: center;
     height: 100%;
     margin-left: 12px;
-    :global(.search-input) {
-      // background-color: transparent;
-      // border-bottom: 2px solid var(--color-primary-background);
-      &::placeholder {
-        font-size: 0.98em;
-        color: var(--color-button-font);
+    :global {
+      .search-input {
+        // background-color: transparent;
+        // border-bottom: 2px solid var(--color-primary-background);
+        &::placeholder {
+          font-size: 0.98em;
+          color: var(--color-button-font);
+        }
       }
     }
   }

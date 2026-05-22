@@ -12,6 +12,7 @@ import { createExposeHotkey, createServerHotkey } from './hotkey'
 import { createExposeList, createServerList } from './list'
 import { createExposeMusic } from './music'
 import { createExposePlayer, createServerPlayer } from './player'
+import { createExposeResource } from './resource'
 import { createExposeSoundEffect } from './soundEffect'
 import { createExposeTheme, createServerTheme } from './theme'
 
@@ -23,6 +24,7 @@ export type ExposeServerFunctions = Omit<
 export type ExposeClientFunctions = Omit<
   AnyListen.IPC.ServerIPCActions<ServerSocketWinMain>,
   | 'closeWindow'
+  | 'exitApp'
   | 'minWindow'
   | 'fullscreenWindow'
   | 'getHotkeyStatus'
@@ -50,6 +52,7 @@ export const init = () => {
     ...createExposeHotkey(),
     ...createExposeList(),
     ...createExposeMusic(),
+    ...createExposeResource(),
     ...createExposeDislike(),
     ...createExposeTheme(),
     ...createExposeExtension(),
@@ -85,7 +88,7 @@ export const init = () => {
     socket.remoteQueueList = msg2call.createRemoteGroup('list', { queue: true, timeout: 0 })
     socket.remoteQueueList = msg2call.createRemoteGroup('list', { queue: true, timeout: 0 })
     socket.remoteQueueDislike = msg2call.createRemoteGroup('dislike', { queue: true, timeout: 0 })
-    socket.remoteQueueExtension = msg2call.createRemoteGroup('extension', { queue: true, timeout: 0 })
+    socket.remoteQueueExtension = msg2call.createRemoteGroup('extension_q', { queue: true, timeout: 0 })
     socket.remoteExtension = msg2call.createRemoteGroup('extension', { timeout: 60_000 })
     socket.onMessage = (message) => {
       msg2call.message(message)

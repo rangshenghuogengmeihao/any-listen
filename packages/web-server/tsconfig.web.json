@@ -1,5 +1,5 @@
 {
-  "extends": "./node_modules/@any-listen/eslint/tsconfig.json",
+  "extends": "@any-listen/eslint/tsconfig.json",
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "composite": true,
@@ -16,10 +16,10 @@
     "allowJs": true,
     "checkJs": true,
     "isolatedModules": true,
+    "rootDir": "./",
     "outDir": "../../dist",
-    "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]
     },
     "types": ["vite/client", "@any-listen/types"]
   },

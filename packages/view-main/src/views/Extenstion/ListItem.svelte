@@ -1,27 +1,33 @@
 <script lang="ts">
   import Image from '@/components/base/Image.svelte'
   import SvgIcon from '@/components/base/SvgIcon.svelte'
-  import { i18n } from '@/plugins/i18n'
+  import { i18n, t } from '@/plugins/i18n'
   import { extT } from '@/modules/extension/i18n'
   import ActionBtn from './ActionBtn.svelte'
   import { tooltip } from '@/components/apis/tooltips/attach.svelte'
+  import { useExtensionLatestVersion } from '@/modules/extension/reactive.svelte'
+  import Btn from '@/components/base/Btn.svelte'
+  import { installOrUpdate } from './shared'
 
-  let { ext }: { ext: AnyListen.Extension.Extension } = $props()
+  let { ext, onshowdetail }: { ext: AnyListen.Extension.Extension; onshowdetail: () => void } = $props()
+  let latest = $derived(useExtensionLatestVersion(ext.id))
   let version = $derived(/^\d/.test(ext.version) ? `v${ext.version}` : ext.version)
   let grants = $derived(ext.grant.map((g) => ({ id: g, icon: `ext_grant_${g}`, label: i18n.t(`extension__grant_${g}`) })))
 </script>
 
 <li class="list-item" class:disabled={!ext.enabled}>
   <div class="top">
-    <div class="left">
-      <Image src={ext.icon} />
-    </div>
-    <div class="right">
-      <h3>{ext.name}</h3>
-      {#if ext.description}
-        <p class="label">{$extT(ext.id, ext.description)}</p>
-      {/if}
-    </div>
+    <Btn link onclick={onshowdetail}>
+      <div class="left">
+        <Image src={ext.icon} />
+      </div>
+      <div class="right">
+        <h3>{ext.name}</h3>
+        {#if ext.description}
+          <p class="label">{$extT(ext.id, ext.description)}</p>
+        {/if}
+      </div>
+    </Btn>
   </div>
   <div class="footer">
     <div class="left">
@@ -40,9 +46,29 @@
         <p class="load-time">
           {ext.loadTimestamp}ms
         </p>
+      {:else if ext.errorMessage}
+        <p
+          class="load-error"
+          aria-label={$t('extension.load_error', { msg: ext.errorMessage })}
+          data-ignore-tip
+          {@attach tooltip()}
+        >
+          <SvgIcon name="warning" />
+          <span>{ext.errorMessage}</span>
+        </p>
       {/if}
     </div>
     <div class="right">
+      {#if !latest.val}
+        <Btn
+          min
+          onclick={async () => {
+            await installOrUpdate(ext)
+          }}
+        >
+          {$t('extension__action_update')}
+        </Btn>
+      {/if}
       <ActionBtn {ext} />
     </div>
   </div>
@@ -55,7 +81,7 @@
     flex-flow: column nowrap;
     gap: 6px;
     min-width: 300px;
-    max-width: 440px;
+    // max-width: 440px;
     height: 100px;
     padding: 10px;
     background-color: var(--color-primary-light-200-alpha-900);
@@ -73,10 +99,17 @@
   .top {
     display: flex;
     flex: auto;
-    flex-flow: row nowrap;
-    gap: 10px;
-    align-items: center;
     min-height: 0;
+
+    :global(.btn) {
+      display: flex;
+      flex-flow: row nowrap;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      color: inherit;
+      text-align: left;
+    }
 
     .left {
       flex: none;
@@ -121,6 +154,7 @@
     justify-content: space-between;
     .left {
       display: flex;
+      flex: auto;
       flex-flow: row nowrap;
       gap: 10px;
       align-items: center;
@@ -149,11 +183,21 @@
         font-size: 12px;
         color: var(--color-font-label);
       }
+      .load-error {
+        flex-grow: 0;
+        flex-shrink: 1;
+        color: var(--color-font-error);
+        .mixin-ellipsis-1();
+        span {
+          font-size: 12px;
+        }
+      }
     }
     .right {
       display: flex;
       flex: none;
       flex-flow: row nowrap;
+      gap: 10px;
       font-size: 16px;
     }
   }

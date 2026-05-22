@@ -3,7 +3,6 @@ import path from 'node:path'
 import { startDBServiceWorker as _startDBServiceWorker, workers } from '@any-listen/app/modules/worker'
 import { DB_NAME } from '@any-listen/common/constants'
 import { getNativeName } from '@any-listen/nodejs'
-import { backupDB } from '@any-listen/nodejs/tools'
 
 // import { log } from '@/shared/log'
 import { i18n } from '@/app/i18n'
@@ -18,7 +17,7 @@ const initServices = async (dataPath: string) => {
     const backupPath = path.join(dataPath, `${DB_NAME}.${Date.now()}.bak`)
     appLog.warn(i18n.t('database_verify_failed'))
     appLog.warn(i18n.t('database_verify_failed_detail', { backupPath }))
-    backupDB(dataPath, backupPath)
+    await workers.dbService.backupDB(dataPath, nativeBindingPath, backupPath)
     await workers.dbService.init(dataPath, nativeBindingPath)
   }
 }

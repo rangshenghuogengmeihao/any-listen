@@ -8,24 +8,29 @@
   import { getRandom } from '@/shared'
   import type { ComponentExports } from 'svelte'
   import MiniHeader from './MiniHeader.svelte'
+  import Loading from '@/components/base/Loading.svelte'
   let {
     loading = false,
     error = false,
-    local = false,
+    source = 'local',
     showheader = true,
     miniheader = false,
     list,
     listinfo,
     onscroll,
+    onsave,
+    onreload,
   }: {
     loading?: boolean
     error?: boolean
-    local?: boolean
+    source?: AnyListen.Player.SourceType
     showheader?: boolean
     miniheader?: boolean
     list: AnyListen.Music.MusicInfo[]
     listinfo: ListInfo
     onscroll?: (pos: number) => void
+    onsave?: () => Promise<void>
+    onreload?: () => void
   } = $props()
   let multimode = $state(false)
   let finding = $state(false)
@@ -44,13 +49,14 @@
   }
 </script>
 
-<div class="view-container container">
+<div class="view-container container" class:loading>
   {#if showheader}
     {#if miniheader}
       <MiniHeader
         disabled={loading || error}
         musiccount={list.length}
-        {local}
+        {source}
+        saveable={listinfo.saveable}
         {multimode}
         {finding}
         onfind={() => {
@@ -63,16 +69,37 @@
           multimode = !multimode
         }}
         onplay={() => {
-          void playMusic(listinfo.id, list[0], true)
+          void playMusic(
+            listinfo.id,
+            list,
+            list[0],
+            source,
+            {
+              ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
+            },
+            true
+          )
         }}
         onplayrandom={async () => {
           if (settingState.setting['player.togglePlayMethod'] != 'random') {
             await updateSetting({ 'player.togglePlayMethod': 'random' })
           }
-          void playMusic(listinfo.id, list[getRandom(0, list.length)], true)
+          void playMusic(
+            listinfo.id,
+            list,
+            list[getRandom(0, list.length)],
+            source,
+            {
+              ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
+            },
+            true
+          )
         }}
         onsort={() => {
           listsort = true
+        }}
+        onsave={async () => {
+          await onsave?.()
         }}
       />
     {:else}
@@ -80,7 +107,8 @@
         disabled={loading || error}
         {listinfo}
         musiccount={list.length}
-        {local}
+        {source}
+        saveable={listinfo.saveable}
         {multimode}
         {finding}
         onfind={() => {
@@ -93,21 +121,54 @@
           multimode = !multimode
         }}
         onplay={() => {
-          void playMusic(listinfo.id, list[0], true)
+          void playMusic(
+            listinfo.id,
+            list,
+            list[0],
+            source,
+            {
+              ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
+            },
+            true
+          )
         }}
         onplayrandom={async () => {
           if (settingState.setting['player.togglePlayMethod'] != 'random') {
             await updateSetting({ 'player.togglePlayMethod': 'random' })
           }
-          void playMusic(listinfo.id, list[getRandom(0, list.length)], true)
+          void playMusic(
+            listinfo.id,
+            list,
+            list[getRandom(0, list.length)],
+            source,
+            {
+              ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
+            },
+            true
+          )
         }}
         onsort={() => {
           listsort = true
         }}
+        onsave={async () => {
+          await onsave?.()
+        }}
       />
     {/if}
   {/if}
-  <List bind:this={musicList} {listinfo} {list} {local} {onscroll} bind:finding bind:multimode bind:duplicate bind:listsort />
+  <List
+    bind:this={musicList}
+    {listinfo}
+    {list}
+    {source}
+    {onscroll}
+    bind:finding
+    bind:multimode
+    bind:duplicate
+    bind:listsort
+    loaded={!loading && !error}
+  />
+  <Loading {loading} {error} {onreload} />
 </div>
 
 <style lang="less">

@@ -4,48 +4,48 @@ packages:
   - packages/extensions/*
   - '!**/test/**'
 
-onlyBuiltDependencies:
+allowBuilds:
+  better-sqlite3: true
+  electron: true
+  electron-winstaller: false
+  esbuild: false
+  svelte-preprocess: true
+
+minimumReleaseAge: 480
+minimumReleaseAgeExclude:
+  - typescript
+  - undici
+  - message2call
   - better-sqlite3
-  - electron
-  - esbuild
+  - '@types/node'
+  - svelte
+  - svelte-check
+  - svelte-eslint-parser
   - svelte-preprocess
+  - '@sveltejs/vite-plugin-svelte'
+  - eslint-plugin-svelte
+  - electron
+  - electron-builder
+  - electron-updater
+  - electron-to-chromium
+  - npm-check-updates
+  - vite
+  - rolldown
+  - oxfmt
 
 overrides:
-  '@isaacs/brace-expansion@<=5.0.0': '>=5.0.1'
   '@types/ws': 8.5.4
-  ajv@>=7.0.0-alpha.0 <8.18.0: '>=8.18.0'
   braces@<3.0.3: '>=3.0.3'
-  depd: latest
-  diff@<4.0.4: '>=4.0.4'
-  js-yaml@>=4.0.0 <4.1.1: '>=4.1.1'
-  json5: latest
-  mdast-util-to-hast@>=13.0.0 <13.2.1: '>=13.2.1'
+  depd@<2.0.0: '>=2.0.0'
   micromatch@<4.0.8: '>=4.0.8'
-  node-abi: latest
-  postcss: latest
-  semver: latest
-  tmp@<=0.2.3: '>=0.2.4'
+  postcss@<7.0.36: '>=7.0.36'
+  postcss@<8.4.31: '>=8.4.31'
   ws>bufferutil: '-'
   ws>utf-8-validate: '-'
 
+peerDependencyRules:
+  allowedVersions:
+    svelte-preprocess>typescript: '6'
+
 publicHoistPattern:
   - '*eslint*'
-# minimumReleaseAge: 480
-# minimumReleaseAgeExclude:
-#   - typescript
-#   - undici
-#   - message2call
-#   - better-sqlite3
-#   - '@types/node'
-#   - svelte
-#   - svelte-check
-#   - svelte-eslint-parser
-#   - svelte-preprocess
-#   - '@sveltejs/vite-plugin-svelte'
-#   - eslint-plugin-svelte
-#   - electron
-#   - electron-builder
-#   - electron-updater
-#   - electron-to-chromium
-#   - prettier-plugin-organize-imports
-#   - npm-check-updates

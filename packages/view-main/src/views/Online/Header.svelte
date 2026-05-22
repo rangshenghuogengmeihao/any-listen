@@ -1,8 +1,9 @@
 <script lang="ts">
   import Tab from '@/components/base/Tab.svelte'
   import { i18n } from '@/plugins/i18n'
-  import { viewResourceMap, viewTypes } from './shared'
+  import { tabIcons, viewResourceMap, viewTypes, urlParamKeyMap } from './shared.svelte'
   import { resourceList } from '@/modules/extension/reactive.svelte'
+  import { pushRoute } from '@/modules/resource/actions'
 
   let { activeview }: { activeview: (typeof viewTypes)[number] } = $props()
   const typeList = $derived.by(() => {
@@ -12,13 +13,23 @@
         return viewResourceMap[t].some((r) => res.includes(r))
       })
       .map((t) => {
-        return { id: t, href: `/online?type=${t}`, label: i18n.t(`online__type_${t}`) }
+        return { id: t, icon: tabIcons[t], label: i18n.t(`online__type_${t}`) }
       })
   })
 </script>
 
 <header class="header">
-  <Tab list={typeList} itemkey="id" itemlabel="label" value={activeview} tagname="a" href="href" />
+  <Tab
+    list={typeList}
+    itemkey="id"
+    itemlabel="label"
+    itemicon="icon"
+    value={activeview}
+    min
+    onchange={(item) => {
+      pushRoute('/online', { [urlParamKeyMap.type]: item.id })
+    }}
+  />
   <div id="online-header-right"></div>
 </header>
 

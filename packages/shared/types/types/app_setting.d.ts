@@ -279,6 +279,11 @@ declare global {
       'player.isShowMediaSessionLyric': boolean
 
       /**
+       * 忽略本地歌曲的歌词（同名LRC及歌曲内嵌的歌词）
+       */
+      'player.ignoreLocalLyrics': boolean
+
+      /**
        * 播放详情页-是否缩放当前播放的歌词行
        */
       'playDetail.isZoomActiveLrc': boolean
@@ -337,6 +342,16 @@ declare global {
        * 文件命名方式
        */
       'download.fileName': '%name% - %singer%' | '%singer% - %name%' | '%name%'
+
+      /**
+       * 是否启用在线资源板块
+       */
+      'onlineResource.enable': boolean
+
+      /**
+       * 搜索提示词列表来源
+       */
+      'onlineResource.tipSearchSource': string
 
       /**
        * 主题id

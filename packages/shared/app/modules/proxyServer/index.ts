@@ -2,26 +2,13 @@ import fs from 'node:fs/promises'
 
 import { buildPublicPath } from '@any-listen/common/tools'
 import { checkAndCreateDir, checkFile, extname, joinPath, toSha256 } from '@any-listen/nodejs'
-import { request, type Options } from '@any-listen/nodejs/request'
+import { verifyResource, type Options } from '@any-listen/nodejs/request'
 
 import { checkAllowedExt } from './shared'
 import { proxyServerState } from './state'
 
-const verifyOptions = async (url: string, opts: Options) => {
-  const resp = await request(url, {
-    ...opts,
-    headers: {
-      ...(opts.headers ?? {}),
-      Range: 'bytes=0-1',
-    },
-  })
-  if (!resp.statusCode || resp.statusCode < 200 || resp.statusCode >= 300) {
-    throw new Error(`verify proxy request failed: [${url}] ${resp.statusCode}`)
-  }
-}
-
 export const generateName = (url: string) => {
-  if (url.length > 1024) throw new Error('URL too long')
+  if (url.length > 2048) throw new Error('URL too long')
 
   const ext = extname(url)
   if (ext && !checkAllowedExt(ext)) throw new Error('Not allowed file type')
@@ -29,8 +16,8 @@ export const generateName = (url: string) => {
   return (toSha256(url) + ext).toLowerCase()
 }
 
-export const createProxy = async (url: string, reqOptions: Options, enabledCache?: boolean) => {
-  await verifyOptions(url, reqOptions)
+export const createProxy = async (url: string, reqOptions: Options = {}, enabledCache?: boolean) => {
+  await verifyResource(url, reqOptions)
 
   const name = generateName(url)
   proxyServerState.proxyMap.set(name, {

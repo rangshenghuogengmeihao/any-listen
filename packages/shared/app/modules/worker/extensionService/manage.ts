@@ -13,6 +13,7 @@ import {
   backupExtension,
   buildExtensionI18nMessage,
   downloadExtension,
+  getCompareVersionMessage,
   loadExtension,
   mvExtension,
   parseExtension,
@@ -110,6 +111,8 @@ export const disableExtension = async (id: string) => {
   if (!targetExtension) throw new Error(`extension not found: ${id}`)
   if (targetExtension.internal) throw new Error(`Internal extensions cannot be disabled: ${id}`)
   targetExtension.enabled = false
+  targetExtension.loadTimestamp = 0
+  if (targetExtension.errorMessage) delete targetExtension.errorMessage
   void saveExtensionsSetting(extensionState.extensions)
   extensionEvent.enabled(id, false)
   if (!targetExtension.loaded) return
@@ -128,7 +131,10 @@ export const restartExtension = async (id: string) => {
   await startExtension(id)
 }
 
-export const downloadAndParseExtension = async (url: string, manifest?: AnyListen.Extension.Manifest) => {
+export const downloadAndParseExtension = async (
+  url: string,
+  manifest?: AnyListen.IPCExtension.RemoteOnlineListItem | AnyListen.IPCExtension.RemoteOnlineDetail
+) => {
   const bundlePath = await downloadExtension(url, manifest)
 
   const extensionPath = await unpackExtension(bundlePath).catch((err: Error) => {
@@ -156,7 +162,13 @@ export const updateExtension = async (tempExtension: AnyListen.Extension.Extensi
     void removePath(tempExtension.directory)
     throw new Error(`Will update extension does not exist: ${tempExtension.id}`)
   }
-
+  if (tempExtension.target_engine) {
+    const message = getCompareVersionMessage(tempExtension.target_engine)
+    if (message) {
+      void removePath(tempExtension.directory)
+      throw new Error(message)
+    }
+  }
   const targetExtension = extensionState.extensions[targetExtensionIndex]
   if (targetExtension.internal) throw new Error(`Will update extension does not exist: ${tempExtension.id}`)
   // if (targetExtension.loaded) throw new Error(`Will update extension does running: ${tempExtension.id}`)
@@ -191,8 +203,16 @@ export const installExtension = async (tempExtension: AnyListen.Extension.Extens
     void removePath(tempExtension.directory)
     throw new Error(`Repeated expansion: ${tempExtension.id}`)
   }
-
+  if (tempExtension.target_engine) {
+    const message = getCompareVersionMessage(tempExtension.target_engine)
+    if (message) {
+      void removePath(tempExtension.directory)
+      throw new Error(message)
+    }
+  }
   const extensionPath = await mvExtension(tempExtension)
+  if (tempExtension.icon) void extensionState.remoteFuncs.removeExtensionIconPublicPath(tempExtension.icon)
+
   const extension = await parseExtension(extensionPath)
   if (!extension) {
     void removePath(extensionPath)
@@ -201,6 +221,7 @@ export const installExtension = async (tempExtension: AnyListen.Extension.Extens
   }
 
   extension.installedTimestamp = Date.now()
+  extension.updatedTimestamp = extension.installedTimestamp
   extensionState.extensions.unshift(extension)
   extensionEvent.listAdd(extension)
 
@@ -220,7 +241,7 @@ export const uninstallExtension = async (id: string) => {
     await removeExtensions([targetExtension])
     extensionState.extensions.splice(targetExtensionIndex, 1)
     await saveExtensionsSetting(extensionState.extensions)
-    if (targetExtension.icon) await extensionState.remoteFuncs.createExtensionIconPublicPath(targetExtension.icon)
+    if (targetExtension.icon) await extensionState.remoteFuncs.removeExtensionIconPublicPath(targetExtension.icon)
     extensionEvent.listRemove(id)
   }
 }

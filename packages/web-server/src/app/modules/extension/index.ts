@@ -123,7 +123,10 @@ export const startExtensions = async () => {
   return workers.extensionService.startExtensions()
 }
 
-export const downloadAndParseExtension = async (url: string, manifest?: AnyListen.Extension.Manifest) => {
+export const downloadAndParseExtension = async (
+  url: string,
+  manifest?: AnyListen.IPCExtension.RemoteOnlineListItem | AnyListen.IPCExtension.RemoteOnlineDetail
+) => {
   return workers.extensionService.downloadAndParseExtension(url, manifest)
 }
 
@@ -167,9 +170,6 @@ export const getOnlineCategories = async () => {
 export const getOnlineTags = async () => {
   return workers.extensionService.getOnlineTags()
 }
-export const resetOnlineData = async () => {
-  return workers.extensionService.resetOnlineData()
-}
 
 export const getLocalExtensionList = async () => {
   return workers.extensionService.getLocalExtensionList()
@@ -184,8 +184,16 @@ export const getExtensionErrorMessage = async () => {
   return extensionState.crashMessage
 }
 
+export const executeCommand = async (cmd: string, args: any[]): Promise<unknown> => {
+  return workers.extensionService.executeCommand(cmd, args)
+}
+
 export const getResourceList = async () => {
   return workers.extensionService.getResourceList()
+}
+
+export const getNewVersionInfo = async () => {
+  return workers.extensionService.getNewVersionInfo()
 }
 
 export const getExtensionLastLogs = async (id?: string) => {
@@ -200,16 +208,12 @@ export const getAllExtensionSettings = async () => {
   return workers.extensionService.getAllExtensionSettings()
 }
 
-export const updateExtensionSettings = async (extId: string, config: Record<string, unknown>) => {
-  return workers.extensionService.updateExtensionSettings(extId, config)
+export const getExtensionConfigValues = async (extId: string, fields: string[]) => {
+  return workers.extensionService.getExtensionConfigValues(extId, fields)
 }
 
-type RA = AnyListen.IPCExtension.ResourceAction
-export const resourceAction = async <T extends keyof RA>(
-  action: T,
-  params: Parameters<RA[T]>[0]
-): Promise<Awaited<ReturnType<RA[T]>>> => {
-  return workers.extensionService.resourceAction(action, params)
+export const updateExtensionSettings = async (extId: string, config: Record<string, unknown>) => {
+  return workers.extensionService.updateExtensionSettings(extId, config)
 }
 
 type LPA = AnyListen.IPCExtension.ListProviderAction

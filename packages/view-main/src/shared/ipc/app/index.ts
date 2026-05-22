@@ -29,6 +29,9 @@ export const closeWindow = async () => {
 export const closeWindowForce = async () => {
   return ipc.closeWindow(true)
 }
+export const exitApp = async () => {
+  return ipc.exitApp()
+}
 export const fullscreenWindow = async (isFull: boolean) => {
   return ipc.fullscreenWindow(isFull)
 }

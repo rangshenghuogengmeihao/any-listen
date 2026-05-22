@@ -1,49 +1,44 @@
 import type Database from 'better-sqlite3'
-// import tables, { DB_VERSION } from './tables'
 
-// const migrateV1 = (db: Database.Database) => {
-//   const sql = `
-//     DROP TABLE "main"."download_list";
+import tables, { DB_VERSION } from './tables'
 
-//     CREATE TABLE "download_list" (
-//       "id" TEXT NOT NULL,
-//       "isComplate" INTEGER NOT NULL,
-//       "status" TEXT NOT NULL,
-//       "statusText" TEXT NOT NULL,
-//       "progress_downloaded" INTEGER NOT NULL,
-//       "progress_total" INTEGER NOT NULL,
-//       "url" TEXT,
-//       "quality" TEXT NOT NULL,
-//       "ext" TEXT NOT NULL,
-//       "fileName" TEXT NOT NULL,
-//       "filePath" TEXT NOT NULL,
-//       "musicInfo" TEXT NOT NULL,
-//       "position" INTEGER NOT NULL,
-//       PRIMARY KEY("id")
-//     );
-//   `
-//   db.exec(sql)
-//   db.prepare('UPDATE "main"."db_info" SET "field_value"=@value WHERE "field_name"=@name').run({ name: 'db_version', value: '2' })
-// }
+const migrateV1 = (db: Database.Database) => {
+  const sql = `
+    BEGIN TRANSACTION;
+    -- 1. rename old table
+    ALTER TABLE play_list_music_info RENAME TO play_list_music_info_old;
 
-// const migrateV1 = (db: Database.Database) => {
-//   // 修复 v2.4.0 的默认数据库版本号不对的问题
-//   const existsTable = db.prepare('SELECT name FROM "main".sqlite_master WHERE type=\'table\' AND name=\'dislike_list\';').get()
-//   if (!existsTable) {
-//     const sql = tables.get('dislike_list') as string
-//     db.exec(sql)
-//   }
-// }
+    -- 2. create new table
+    ${tables.get('play_list_music_info')}
+
+    -- 3. data migration
+    INSERT INTO play_list_music_info (item_id, position, played, play_later, id, list_id, name, singer, interval, is_local, meta, source)
+    SELECT item_id, position, played, play_later, id, list_id, name, singer, interval, is_local, meta, 0 AS source
+    FROM play_list_music_info_old;
+
+    -- 4. drop old table
+    DROP TABLE play_list_music_info_old;
+    COMMIT;
+  `
+  db.exec(sql)
+  db.prepare('UPDATE "main"."metadata" SET "field_value"=@value WHERE "field_name"=@name').run({
+    name: 'db_version',
+    value: DB_VERSION,
+  })
+}
 
 export default (db: Database.Database) => {
   // PRAGMA user_version = x
   // console.log(db.prepare('PRAGMA user_version').get().user_version)
   // https://github.com/WiseLibs/better-sqlite3/issues/668#issuecomment-1145285728
-  // const db_version = (db.prepare<[string]>('SELECT "field_value" FROM "main"."db_info" WHERE "field_name" = ?').get('db_version') as { field_value: string }).field_value
-  // switch (db_version) {
-  //   case '1':
-  //     migrateV1(db)
-  //     db.prepare('UPDATE "main"."db_info" SET "field_value"=@value WHERE "field_name"=@name').run({ name: 'db_version', value: DB_VERSION })
-  //     break
-  // }
+  const dbVersion = (
+    db.prepare<[string]>('SELECT "field_value" FROM "main"."metadata" WHERE "field_name" = ?').get('db_version') as {
+      field_value: string
+    }
+  ).field_value
+  switch (dbVersion) {
+    case '1':
+      migrateV1(db)
+      break
+  }
 }

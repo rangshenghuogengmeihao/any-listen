@@ -30,9 +30,6 @@ export const createClientExtension = (main: MainCall) => {
     async getOnlineTags() {
       return main.getOnlineTags()
     },
-    async resetOnlineData() {
-      return main.resetOnlineData()
-    },
     async downloadAndParseExtension(url, manifest) {
       return main.downloadAndParseExtension(url, manifest)
     },
@@ -63,6 +60,9 @@ export const createClientExtension = (main: MainCall) => {
     async getResourceList() {
       return main.getResourceList()
     },
+    async getNewVersionInfo() {
+      return main.getNewVersionInfo()
+    },
     async getExtensionLastLogs(extId) {
       return main.getExtensionLastLogs(extId)
     },
@@ -72,20 +72,20 @@ export const createClientExtension = (main: MainCall) => {
     async getAllExtensionSettings() {
       return main.getAllExtensionSettings()
     },
+    async getExtensionConfigValues(extId, fields) {
+      return main.getExtensionConfigValues(extId, fields)
+    },
     async updateExtensionSettings(extId, config) {
       return main.updateExtensionSettings(extId, config)
-    },
-    async resourceAction<T extends keyof AnyListen.IPCExtension.ResourceAction>(
-      action: T,
-      params: Parameters<AnyListen.IPCExtension.ResourceAction[T]>[0]
-    ): Promise<Awaited<ReturnType<AnyListen.IPCExtension.ResourceAction[T]>>> {
-      return main.resourceAction(action, params)
     },
     async listProviderAction<T extends keyof AnyListen.IPCExtension.ListProviderAction>(
       action: T,
       params: Parameters<AnyListen.IPCExtension.ListProviderAction[T]>[0]
     ): Promise<Awaited<ReturnType<AnyListen.IPCExtension.ListProviderAction[T]>>> {
       return main.listProviderAction(action, params)
+    },
+    async executeCommand(commandName: string, args: any[]) {
+      return main.executeCommand(commandName, args)
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

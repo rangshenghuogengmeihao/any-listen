@@ -49,7 +49,7 @@ export const exposedFuncs: AnyListen.IPCExtension.MainIPCActions = {
     await sendMusicListAction(action)
   },
 
-  async createExtensionIconPublicPath(filePath) {
+  async createExtensionIconPublicPath(extDir, filePath) {
     return filePath
   },
   async removeExtensionIconPublicPath(filePath) {},
@@ -74,15 +74,15 @@ export const exposedFuncs: AnyListen.IPCExtension.MainIPCActions = {
   },
   async showOpenBox(key, extId, options) {
     // TODO
-    // return boxTools.showBox(key,extId, async () => {
-    //   return rendererIPC.showOpenBox(key, extId, options)
-    // })
+    return boxTools.showBox(key, extId, async () => {
+      return rendererIPC.showOpenBox(key, extId, options)
+    })
   },
   async showSaveBox(key, extId, options) {
     // TODO
-    // return boxTools.showBox(key,extId, async () => {
-    //   return rendererIPC.showSaveBox(key, extId, options)
-    // })
+    return boxTools.showBox(key, extId, async () => {
+      return rendererIPC.showSaveBox(key, extId, options)
+    })
   },
   async closeMessageBox(key) {
     boxTools.closeBox(key)

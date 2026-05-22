@@ -1,7 +1,7 @@
 import { LIST_IDS } from '@any-listen/common/constants'
 import _Event, { type EventType } from '@any-listen/nodejs/Event'
 
-import { verifyListCreate, verifyListDelete, verifyListUpdate, verifyMusicRemove } from '../extension/listProvider'
+import { verifyListCreate, verifyListDelete, verifyListUpdate, verifyMusicRemove } from '../extension/remoteListProvider'
 import type { DBSeriveTypes } from '../worker/utils'
 import {
   verifyLocalListCreate,
@@ -105,23 +105,26 @@ export class Event extends _Event {
   /**
    * 批量更新列表信息
    * @param lists 列表信息
+   * @param isSync 是否为同步操作
    * @param isRemote 是否属于远程操作
    */
-  async list_update(lists: AnyListen.List.UserListInfo[], isRemote = false) {
-    for (const list of lists) {
-      switch (list.type) {
-        case 'local':
-          await verifyLocalListUpdate(list)
-          break
-        case 'remote':
-          await verifyListUpdate(list)
-          break
-        default:
-          break
+  async list_update(lists: AnyListen.List.MyListInfo[], isSync = false, isRemote = false) {
+    if (!isSync && !isRemote) {
+      for (const list of lists) {
+        switch (list.type) {
+          case 'local':
+            await verifyLocalListUpdate(list)
+            break
+          case 'remote':
+            await verifyListUpdate(list)
+            break
+          default:
+            break
+        }
       }
+      await dbService.updateUserLists(lists)
     }
-    await dbService.updateUserLists(lists)
-    this.emitEvent('list_update', lists, isRemote)
+    this.emitEvent('list_update', lists, isSync, isRemote)
     this.list_changed()
   }
 
@@ -275,7 +278,7 @@ export class Event extends _Event {
       }
     }
     await dbService.musicsRemove(listId, ids)
-    this.emitEvent('list_music_remove', listId, ids, isRemote)
+    this.emitEvent('list_music_remove', listId, ids, isSync, isRemote)
     this.list_music_changed([listId])
     this.list_changed()
   }
@@ -288,10 +291,6 @@ export class Event extends _Event {
   async list_music_update(musicInfos: AnyListen.IPCList.ListActionMusicUpdate, isRemote = false) {
     await dbService.musicsUpdate(musicInfos)
     this.emitEvent('list_music_update', musicInfos, isRemote)
-    this.list_changed()
-    const updatedInfo = await dbService.musicsUpdateLastPlayedList(musicInfos)
-    if (!updatedInfo.length) return
-    this.emitEvent('list_music_update', updatedInfo, isRemote)
     this.list_changed()
   }
 
@@ -366,7 +365,7 @@ export class Event extends _Event {
         await this.list_move(action.data.id, action.data.position, action.data.ids)
         break
       case 'list_update':
-        await this.list_update(action.data)
+        await this.list_update(action.data.lists, action.data.sync)
         break
       case 'list_update_position':
         await this.list_update_position(action.data.position, action.data.ids)

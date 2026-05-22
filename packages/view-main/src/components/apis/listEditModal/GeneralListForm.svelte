@@ -22,6 +22,8 @@
       desc: '',
       playCount: 0,
       posTime: 0,
+      pic: '',
+      songCount: 0,
     },
   }
   let listInfo = $state<AnyListen.List.GeneralListInfo>({

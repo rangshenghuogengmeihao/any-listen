@@ -1,13 +1,23 @@
 import * as commit from './commit'
-import { getOnlineExtensionList as getOnlineExtensionListRemote, resetOnlineData as resetOnlineDataRemote } from './remoteAction'
+import { getOnlineExtensionList as getOnlineExtensionListRemote } from './remoteAction'
 import { extensionState } from './state'
 
 export const getOnlineExtensionList = async (force = false) => {
   if (!force && extensionState.onlineExtensionList.length) return
   // TODO
-  await resetOnlineDataRemote()
-  const { list } = await getOnlineExtensionListRemote({ page: 1, limit: 1000 })
+  const t = performance.now()
+  let { list } = await getOnlineExtensionListRemote({ page: 1, limit: 1000 })
   commit.setOnlineExtension(list)
+  const cost = performance.now() - t
+  console.log(`get online extension list cost: ${cost}ms`)
+  if (cost < 1000) {
+    list = await getOnlineExtensionListRemote({ page: 1, limit: 1000, skipCache: true }).then((res) => res.list)
+    commit.setOnlineExtension(list)
+  }
+}
+
+export const setNewVersionInfo = (info: AnyListen.IPCExtension.EventVersionInfoUpdated) => {
+  commit.setNewVersionInfo(info)
 }
 
 export {
@@ -15,17 +25,20 @@ export {
   downloadAndParseExtension,
   enableExtension,
   getAllExtensionSettings,
+  getExtensionConfigValues,
   getExtensionErrorMessage,
   getExtensionList,
+  executeCommand,
   getResourceList,
+  getNewVersionInfo,
   installExtension,
   listProviderAction,
   registerRemoteExtensionEvent,
-  resourceAction,
   restartExtension,
   restartExtensionHost,
   startExtension,
   uninstallExtension,
+  getOnlineExtensionDetail,
   updateExtension,
   updateExtensionSettings,
 } from './remoteAction'

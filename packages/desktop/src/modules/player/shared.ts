@@ -1,4 +1,4 @@
-import { musicListEvent } from '@any-listen/app/modules/musicList'
+import { sendMusicListAction } from '@any-listen/app/modules/musicList'
 import { getPlayInfo as getPlayInfoRaw } from '@any-listen/app/modules/player'
 import { LIST_IDS } from '@any-listen/common/constants'
 
@@ -16,7 +16,7 @@ export const checkCollect = async (minfo: AnyListen.Player.PlayMusicInfo) => {
 
 export const getPlayInfo = async (): Promise<AnyListen.IPCPlayer.PlayInfo> => {
   const playInfo = await getPlayInfoRaw()
-  const [[list, isCollect], { listId, isOnline }, historyList] = await Promise.all([
+  const [[list, isCollect], { listId, source }, historyList] = await Promise.all([
     workers.dbService.getPlayList().then(async (list) => {
       const minfo = list[playInfo.index]
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -30,7 +30,7 @@ export const getPlayInfo = async (): Promise<AnyListen.IPCPlayer.PlayInfo> => {
     info: playInfo,
     list,
     listId,
-    isOnline,
+    source,
     historyList,
     isCollect,
   }
@@ -45,7 +45,7 @@ export const getPlayerMusic = async (): Promise<AnyListen.Player.PlayMusicInfo |
 export const collectMusic = async () => {
   const music = await getPlayerMusic()
   if (!music) return
-  await musicListEvent.listAction({
+  await sendMusicListAction({
     action: 'list_music_add',
     data: {
       id: LIST_IDS.LOVE,
@@ -58,7 +58,7 @@ export const collectMusic = async () => {
 export const uncollectMusic = async () => {
   const music = await getPlayerMusic()
   if (!music) return
-  await musicListEvent.listAction({
+  await sendMusicListAction({
     action: 'list_music_remove',
     data: {
       listId: LIST_IDS.LOVE,

@@ -1,6 +1,6 @@
 import qs from 'node:querystring'
 
-import { FormData, getGlobalDispatcher, request as nodeRrequest, ProxyAgent, setGlobalDispatcher, type Dispatcher } from 'undici'
+import { FormData, getGlobalDispatcher, request as nodeRrequest, ProxyAgent, setGlobalDispatcher } from 'undici'
 
 const defaultOptions: Options = {
   timeout: 15000,
@@ -55,7 +55,7 @@ export interface Options {
   timeout?: number
   maxRedirect?: number
   signal?: AbortController['signal']
-  json?: Record<string, unknown>
+  json?: Record<string, unknown> | unknown[]
   form?: ParamsData
   binary?: Buffer | Uint8Array
   text?: string
@@ -135,6 +135,7 @@ export interface Response<Res> {
   raw: Uint8Array
   statusCode?: number
   statusMessage?: string
+  history: string[]
 }
 
 const buildRequestBody = (options: Options) => {
@@ -178,7 +179,7 @@ const buildRequestDispatcher = (options: Options) => {
 }
 
 export const request = async <T = unknown>(url: string, options: Options = {}): Promise<Response<T>> => {
-  const method = (options.method?.toUpperCase() ?? 'GET') as Dispatcher.RequestOptions['method']
+  const method = options.method?.toUpperCase() ?? 'GET'
   const timeout = options.timeout ?? defaultOptions.timeout
   const [headers, body] = buildRequestBody(options)
   // console.log(url, {
@@ -200,12 +201,16 @@ export const request = async <T = unknown>(url: string, options: Options = {}): 
     body,
     signal: options.signal,
     dispatcher: buildRequestDispatcher(options),
+    // @ts-expect-error
+    maxRedirections: options.maxRedirect ?? defaultOptions.maxRedirect,
   }).then(async (response) => {
+    const history: string[] = (response.context as { history?: URL[] } | null)?.history?.map((h) => h.href) ?? [url]
     if (options.needBody) {
       return {
         headers: response.headers,
         statusCode: response.statusCode,
         body: response.body as unknown as T,
+        history,
       } satisfies Omit<Response<T>, 'raw'> as Response<T>
     }
     if (options.needRaw) {
@@ -213,6 +218,7 @@ export const request = async <T = unknown>(url: string, options: Options = {}): 
         headers: response.headers,
         statusCode: response.statusCode,
         raw: new Uint8Array(await response.body.arrayBuffer()),
+        history,
       } satisfies Omit<Response<T>, 'body'> as unknown as Response<T>
     }
     // console.log(response)
@@ -226,6 +232,27 @@ export const request = async <T = unknown>(url: string, options: Options = {}): 
       body,
       headers: response.headers,
       statusCode: response.statusCode,
+      history,
     } satisfies Omit<Response<T>, 'raw'> as Response<T>
   })
+}
+
+export const verifyResource = async (url: string, opts: Options = {}) => {
+  const resp = await request(url, {
+    ...opts,
+    headers: {
+      ...(opts.headers ?? {}),
+      Range: 'bytes=0-1',
+    },
+  })
+  // console.log('resp', url, resp.statusCode)
+  if (!resp.statusCode || resp.statusCode < 200 || resp.statusCode >= 300) {
+    throw new Error(`verify proxy request failed: [${url}] ${resp.statusCode}`)
+  }
+}
+
+export const verifyResourceBoolean = async (url: string, opts: Options = {}) => {
+  return verifyResource(url, opts)
+    .then(() => true)
+    .catch(() => false)
 }

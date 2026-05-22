@@ -89,8 +89,28 @@ export const handleConfigChange = (keys: Array<keyof AnyListen.AppSetting>, sett
   }
 }
 
+// 是否忽略事件（表单元素等默认忽略）
+const assertIgnoreEl = (element: HTMLElement) => {
+  // stop for input, select, and textarea
+  switch (element.tagName) {
+    case 'INPUT':
+    case 'SELECT':
+    case 'BUTTON':
+    case 'TEXTAREA':
+      return true
+    default:
+      return !!element.isContentEditable
+  }
+}
+const checkIgnoreEl = (element: HTMLElement | null): boolean => {
+  if (!element) return false
+  if (assertIgnoreEl(element)) return true
+  return checkIgnoreEl(element.parentElement)
+}
+
 const windowMaximize = (dom: HTMLElement) => {
-  const handleDblClick = () => {
+  const handleDblClick = (evt: MouseEvent) => {
+    if (checkIgnoreEl(evt.target as HTMLElement)) return
     setMaximized(!appState.isFullscreen)
   }
   dom.addEventListener('dblclick', handleDblClick)
@@ -136,11 +156,13 @@ export const windowDarg = (dom: HTMLElement) => {
   }
 
   const handleMouseDown = (event: MouseEvent) => {
+    if (checkIgnoreEl(event.target as HTMLElement)) return
     handleDown(event.clientX, event.clientY)
   }
   const handleTouchDown = (event: TouchEvent) => {
     if (event.changedTouches.length) {
       const touch = event.changedTouches[0]
+      if (checkIgnoreEl(touch.target as HTMLElement)) return
       handleDown(touch.clientX, touch.clientY)
     }
   }

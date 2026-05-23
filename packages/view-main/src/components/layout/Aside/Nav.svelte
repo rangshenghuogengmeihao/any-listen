@@ -112,7 +112,7 @@
 })}
   <li class="nav-item" role="presentation">
     <a
-      class="link"
+      class="link no-drag"
       class:active={activePath == item.to}
       role="tab"
       data-ignore-tip

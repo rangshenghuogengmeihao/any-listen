@@ -34,7 +34,7 @@
 </script>
 
 <div
-  class="container"
+  class="container no-drag"
   class:active={$query.id == listInfo.id || active}
   class:fetching={fetching.val}
   role="button"

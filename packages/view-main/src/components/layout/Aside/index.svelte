@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import Logo from './Logo.svelte'
   import Nav from './Nav.svelte'
   import MyList from './MyList/index.svelte'
@@ -8,7 +8,7 @@
   // console.log(params)
 </script>
 
-<div class="aside">
+<div class="aside" class:drag={import.meta.env.VITE_IS_DESKTOP}>
   {#if !import.meta.env.VITE_IS_MAC}
     <Logo />
   {/if}

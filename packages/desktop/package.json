@@ -1,6 +1,6 @@
 {
   "name": "desktop",
-  "version": "0.7.0-beta.13",
+  "version": "0.7.0-beta.14",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/any-listen/any-listen-desktop.git"
@@ -49,7 +49,7 @@
     "@any-listen/eslint": "workspace:@shared/eslint@*",
     "@any-listen/types": "workspace:@shared/types@*",
     "electron": "40.10.1",
-    "electron-builder": "26.11.1",
+    "electron-builder": "26.11.0",
     "electron-debug": "^4.1.0",
     "electron-to-chromium": "^1.5.361",
     "node-abi": "^4.31.0",

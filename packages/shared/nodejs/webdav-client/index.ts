@@ -93,10 +93,19 @@ export class WebDAVClient {
       const { XMLParser } = await import('fast-xml-parser')
       this.xmlParser = new XMLParser({
         ignoreAttributes: true,
-        attributeNamePrefix: '',
-        parseTagValue: false,
+        ignoreDeclaration: true,
+        ignorePiTags: true,
+        // processEntities: false,
+        maxNestedTags: 20,
         removeNSPrefix: true,
         trimValues: false,
+        parseTagValue: false,
+        alwaysCreateTextNode: false,
+        // attributeNamePrefix: '',
+        isArray: (name, jpath, isLeafNode, isAttribute) => {
+          if (jpath === 'multistatus.response') return true
+          return false
+        },
       })
     }
     return this.xmlParser.parse(xml) as T
@@ -179,9 +188,9 @@ export class WebDAVClient {
     const res = await this.request<Ls>('PROPFIND', { headers: { Depth: '1' }, path })
     // console.log(JSON.stringify(res.multistatus.response))
     const currentFullPath = this.getFullUrl(path)
-    let responses = Array.isArray(res.multistatus.response) ? res.multistatus.response.slice() : [res.multistatus.response]
+    // console.log('res.multistatus.response', res.multistatus.response)
     // filter out the current directory itself from the list
-    responses = responses.filter((item) => {
+    const responses = res.multistatus.response.filter((item) => {
       const isDir = item.propstat.prop.resourcetype?.collection === ''
       if (!isDir) return true
       const href = item.href.endsWith('/') ? item.href.slice(0, -1) : item.href

@@ -449,8 +449,8 @@ importers:
         specifier: ^1.6.1
         version: 1.6.1(svelte@5.55.9(@typescript-eslint/types@8.59.4))
       svelte-preprocess:
-        specifier: ^6.0.4
-        version: 6.0.4(less@4.6.4)(postcss-load-config@3.1.4(postcss@8.5.15)(ts-node@10.9.2(@types/node@24.12.2)(typescript@6.0.3)))(postcss@8.5.15)(svelte@5.55.9(@typescript-eslint/types@8.59.4))(typescript@6.0.3)
+        specifier: 6.0.3
+        version: 6.0.3(less@4.6.4)(postcss-load-config@3.1.4(postcss@8.5.15)(ts-node@10.9.2(@types/node@24.12.2)(typescript@6.0.3)))(postcss@8.5.15)(svelte@5.55.9(@typescript-eslint/types@8.59.4))(typescript@6.0.3)
       vite:
         specifier: ^8.0.14
         version: 8.0.14(@types/node@24.12.2)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)
@@ -4429,8 +4429,8 @@ packages:
       svelte:
         optional: true
 
-  svelte-preprocess@6.0.4:
-    resolution: {integrity: sha512-tevT2/vapolduA23Gp3pFr6qkKakh6TYtXKvWXNaZK67ho9sfV9OSRYb4xsZJsXX7QwtEdpiR63Vbae60rS1qg==}
+  svelte-preprocess@6.0.3:
+    resolution: {integrity: sha512-PLG2k05qHdhmRG7zR/dyo5qKvakhm8IJ+hD2eFRQmMLHp7X3eJnjeupUtvuRpbNiF31RjVw45W+abDwHEmP5OA==}
     engines: {node: '>= 18.0.0'}
     peerDependencies:
       '@babel/core': ^7.10.2
@@ -4443,7 +4443,7 @@ packages:
       stylus: '>=0.55'
       sugarss: ^2.0.0 || ^3.0.0 || ^4.0.0
       svelte: ^4.0.0 || ^5.0.0-next.100 || ^5.0.0
-      typescript: ^5.0.0 || ^6.0.0
+      typescript: ^5.0.0
     peerDependenciesMeta:
       '@babel/core':
         optional: true
@@ -9158,7 +9158,7 @@ snapshots:
     optionalDependencies:
       svelte: 5.55.9(@typescript-eslint/types@8.59.4)
 
-  svelte-preprocess@6.0.4(less@4.6.4)(postcss-load-config@3.1.4(postcss@8.5.15)(ts-node@10.9.2(@types/node@24.12.2)(typescript@6.0.3)))(postcss@8.5.15)(svelte@5.55.9(@typescript-eslint/types@8.59.4))(typescript@6.0.3):
+  svelte-preprocess@6.0.3(less@4.6.4)(postcss-load-config@3.1.4(postcss@8.5.15)(ts-node@10.9.2(@types/node@24.12.2)(typescript@6.0.3)))(postcss@8.5.15)(svelte@5.55.9(@typescript-eslint/types@8.59.4))(typescript@6.0.3):
     dependencies:
       svelte: 5.55.9(@typescript-eslint/types@8.59.4)
     optionalDependencies:

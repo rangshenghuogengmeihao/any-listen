@@ -177,6 +177,7 @@ export const buildConfig = (target, port = 9200, ipcScript) => {
               'bottom',
               'right',
               'border-radius',
+              'grid-template-columns',
               'gap',
             ],
             selectorBlackList: ['html', 'ignore-to-rem'],

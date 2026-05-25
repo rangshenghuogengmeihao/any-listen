@@ -1,13 +1,13 @@
 <!--- @lang: en-us -->
 
-### Fixed
+### Improved
 
-- Fixed the build.
+- Adjusted the cover size in the ranking list to display better across different window sizes.
 
 ---
 
 <!--- @lang: zh-cn -->
 
-### 修复
+### 优化
 
-- 修复构建。
+- 调整排行榜列表封面大小，使其在不同窗口下显示更合适。

@@ -1,13 +1,13 @@
 <!--- @lang: en-us -->
 
-### Fixed
+### Improved
 
-- Fixed an issue where the first item could be missing when reading data from certain WebDAV services ([#180](https://github.com/any-listen/any-listen/issues/180)).
+- Adjusted the cover size in the ranking list to display better across different window sizes.
 
 ---
 
 <!--- @lang: zh-cn -->
 
-### 修复
+### 优化
 
-- 修复读取某些 WebDAV 服务时，丢失第一项内容的问题（[#180](https://github.com/any-listen/any-listen/issues/180)）。
+- 调整排行榜列表封面大小，使其在不同窗口下显示更合适。

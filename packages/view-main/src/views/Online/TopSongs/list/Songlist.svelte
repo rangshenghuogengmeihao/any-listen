@@ -52,7 +52,7 @@
     ul {
       display: grid;
       flex: 1;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
       gap: 24px;
       align-content: flex-start;
       min-height: 0;

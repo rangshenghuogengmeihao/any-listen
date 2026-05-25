@@ -18,6 +18,7 @@
 - Fixed an issue where the currently playing **Play Later** track was unexpectedly removed from the playlist when the player was reloaded.
 - Fixed an issue where proxy service validation failed for URLs with query parameters.
 - Fixed an issue where local song covers were not re-read from local storage with priority after clearing the cache.
+- Fixed an issue where the first item could be missing when reading data from certain WebDAV services ([#180](https://github.com/any-listen/any-listen/issues/180)).
 
 ### Security
 
@@ -45,6 +46,7 @@
 - 修复正在播放的 **「稍后播放」** 歌曲在重新加载播放器时被意外从播放列表移除的问题。
 - 修复代理服务校验带参数 URL 异常的问题。
 - 修复缓存被清空后，本地歌曲封面未优先从本地重新读取的问题。
+- 修复读取某些 WebDAV 服务时，丢失第一项内容的问题（[#180](https://github.com/any-listen/any-listen/issues/180)）。
 
 ### 安全
 

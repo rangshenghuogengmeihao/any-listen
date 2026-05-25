@@ -21,6 +21,9 @@ export const createMainWorker = (): WorkerMainTypes => {
   worker.onmessage = (event) => {
     msg2call.message(event.data)
   }
+  worker.addEventListener('error', (event) => {
+    console.error('Worker error:', event)
+  })
   return msg2call.remote
 }
 

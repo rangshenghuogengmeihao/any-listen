@@ -101,7 +101,11 @@ export const createContext = async (extension: AnyListen.Extension.Extension) =>
     key,
     vmContext,
     preloadFuncs: msg2call.remote,
-    unsubscribeEvents: [],
+    unsubscribeEvents: [
+      () => {
+        msg2call.destroy()
+      },
+    ],
     logcat,
   }
   contextState.vmContexts.set(id, vmContextInfo)

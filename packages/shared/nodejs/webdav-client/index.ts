@@ -93,10 +93,19 @@ export class WebDAVClient {
       const { XMLParser } = await import('fast-xml-parser')
       this.xmlParser = new XMLParser({
         ignoreAttributes: true,
-        attributeNamePrefix: '',
-        parseTagValue: false,
+        ignoreDeclaration: true,
+        ignorePiTags: true,
+        // processEntities: false,
+        maxNestedTags: 20,
         removeNSPrefix: true,
         trimValues: false,
+        parseTagValue: false,
+        alwaysCreateTextNode: false,
+        // attributeNamePrefix: '',
+        isArray: (name, jpath, isLeafNode, isAttribute) => {
+          if (jpath === 'multistatus.response') return true
+          return false
+        },
       })
     }
     return this.xmlParser.parse(xml) as T
@@ -112,13 +121,17 @@ export class WebDAVClient {
     return error
   }
 
+  private getFullUrl(path?: string) {
+    return path ? `${this.baseUrl}${path}` : this.baseUrl
+  }
+
   private async request<T = unknown>(
     method: Options['method'],
     { path, ...options }: Omit<Options, 'method'> & { path?: string } = {}
   ) {
     const headers = options.headers || {}
     if (this.authHeader) headers.Authorization = this.authHeader
-    const url = path ? `${this.baseUrl}${path}` : this.baseUrl
+    const url = this.getFullUrl(path)
     this.options.onDebugLog?.(`request: [${method} ${url}]`)
     const res = await request<string>(url, {
       method,
@@ -157,7 +170,7 @@ export class WebDAVClient {
 
   getRequestOptions(path: string, method: Options['method'] = 'GET'): [string, Options] {
     this.options.onDebugLog?.(`getRequestOptions: [${path}]`)
-    const url = path ? `${this.baseUrl}${path}` : this.baseUrl
+    const url = this.getFullUrl(path)
     return [
       url,
       {
@@ -174,10 +187,16 @@ export class WebDAVClient {
     if (!path.startsWith('/')) path = `/${path}`
     const res = await this.request<Ls>('PROPFIND', { headers: { Depth: '1' }, path })
     // console.log(JSON.stringify(res.multistatus.response))
-    const responses = Array.isArray(res.multistatus.response) ? res.multistatus.response.slice() : [res.multistatus.response]
-    responses.shift()
-    if (path == '/') return buildFileItems(responses, '')
-    return buildFileItems(responses, path)
+    const currentFullPath = this.getFullUrl(path)
+    // console.log('res.multistatus.response', res.multistatus.response)
+    // filter out the current directory itself from the list
+    const responses = res.multistatus.response.filter((item) => {
+      const isDir = item.propstat.prop.resourcetype?.collection === ''
+      if (!isDir) return true
+      const href = item.href.endsWith('/') ? item.href.slice(0, -1) : item.href
+      return !currentFullPath.endsWith(href)
+    })
+    return buildFileItems(responses, path == '/' ? '' : path)
   }
 
   async rm(path: string) {

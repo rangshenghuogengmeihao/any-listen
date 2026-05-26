@@ -12,3 +12,6 @@ export const setText = (text: string, line: number) => {
   lyricState.line = line
   lyricEvent.lineChanged(text, line)
 }
+export const setOffset = (offset: number) => {
+  lyricState.offset = offset
+}

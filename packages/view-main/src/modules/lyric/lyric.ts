@@ -4,7 +4,7 @@ import Lyric from '@any-listen/web/lyric-font-player'
 import { clearTimeoutBg, setTimeoutBg } from '@/shared/tools'
 
 import { settingState } from '../setting/store/state'
-import { setLines, setText } from './store/action'
+import { setLines, setOffset as setStoreOffset, setText } from './store/action'
 import type { Line } from './store/state'
 
 let lrc: Lyric | null
@@ -81,6 +81,7 @@ export const initLyric = () => {
       // console.log(lines) // lines is array of all lyric text
       setLines([...lines])
       setText('', -1)
+      setStoreOffset(offset)
     },
     onUpdateLyric(lines: Line[]) {
       setLines([...lines])

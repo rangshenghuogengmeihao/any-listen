@@ -66,7 +66,7 @@ export const useLyric = (options: {
     if ((dom as HTMLElement & { time?: number }).time == null) {
       if (lyricState.lines.length) {
         time = dom.classList.contains('pre') ? 0 : (lyricState.lines.at(-1)?.time ?? 0)
-        time = Math.max(time - lyricState.offset - lyricState.tempOffset, 0)
+        time = Math.max(time - lyricState.offset, 0)
         time /= 1000
         if (time > playerState.progress.maxPlayTime) time = playerState.progress.maxPlayTime
         options.onSetTimeStr(formatPlayTime2(time))
@@ -76,7 +76,7 @@ export const useLyric = (options: {
       }
     } else {
       time = (dom as HTMLElement & { time: number }).time
-      time = Math.max(time - lyricState.offset - lyricState.tempOffset, 0)
+      time = Math.max(time - lyricState.offset, 0)
       time /= 1000
       if (time > playerState.progress.maxPlayTime) time = playerState.progress.maxPlayTime
       options.onSetTimeStr(formatPlayTime2(time))

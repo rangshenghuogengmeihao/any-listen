@@ -21,8 +21,8 @@
       {#each list as ext (ext.id)}
         <ListItem
           {ext}
-          onshowdetail={() => {
-            showExtensionDetailModal(ext)
+          onshowdetail={async () => {
+            await showExtensionDetailModal(ext)
           }}
         />
       {/each}

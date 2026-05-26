@@ -1,1 +1,2 @@
-export { setLines, setOffset, setTempOffset, setText } from './commit'
+export { setLines, setText } from './commit'
+export { setMusicLyric, removeMusicLyric, clearMusicLyric } from '@/shared/ipc/music'

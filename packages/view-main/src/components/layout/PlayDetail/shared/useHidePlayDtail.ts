@@ -2,20 +2,16 @@ import { createClickHandle } from '@any-listen/web'
 
 import { setShowPlayDetail } from '@/modules/playDetail/store/commit'
 
-export const hidePlayDtail = (dom: HTMLElement) => {
+export const useHidePlayDtail = () => {
   const handleClick = createClickHandle(
     () => {},
     () => {
       setShowPlayDetail(false)
     }
   )
-  const handleCtxMenu = () => {
+  const handleCtxMenu = (evt: MouseEvent) => {
     handleClick()
   }
 
-  dom.addEventListener('contextmenu', handleCtxMenu)
-
-  return () => {
-    dom.removeEventListener('contextmenu', handleCtxMenu)
-  }
+  return handleCtxMenu
 }

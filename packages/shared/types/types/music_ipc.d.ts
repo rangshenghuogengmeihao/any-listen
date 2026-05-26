@@ -69,7 +69,9 @@ declare namespace AnyListen {
       /** 获取歌词 */
       getMusicLyric: (info: GetMusicPicInfo) => MusicLyricInfo
       /** 保存歌词 */
-      setMusicLyric: (id: string, name: string, singer: string, info: Music.LyricInfo) => void
+      setMusicLyric: (id: string, info: Music.LyricInfo) => void
+      /** 删除歌词 */
+      removeMusicLyric: (id: string) => void
       /** 获取歌词缓存数量 */
       getMusicLyricCount: () => number
       /** 清理歌词缓存 */

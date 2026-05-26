@@ -3,8 +3,9 @@
   import { useLyric } from './useLyric.svelte'
   import Btn from '@/components/base/Btn.svelte'
   import { fade } from 'svelte/transition'
-  import { onMount } from 'svelte'
+  import { onMount, type ComponentExports } from 'svelte'
   import { onDomSizeChanged } from '@any-listen/web'
+  import LyricMenu from './LyricMenu.svelte'
 
   let domLyric = $state<HTMLElement>()
   let domLyricText = $state<HTMLElement>()
@@ -19,6 +20,7 @@
   const fontSize = useSettingValue('playDetail.style.fontSize')
   const fontWeight = useSettingValue('playDetail.style.fontWeight')
   const styles = $derived(`--play-detail-lrc-font-size:${(fontSize.val / 100 + 0.8) * winRadio}rem; text-align:${textAlign.val};`)
+  let lyricMenu = $state<ComponentExports<typeof LyricMenu>>()
 
   const {
     handleLyricMouseDown,
@@ -75,7 +77,7 @@
   ontouchstart={handleLyricTouchStart}
   oncontextmenu={(event) => {
     event.stopPropagation()
-    // handleShowLyricMenu(event)
+    lyricMenu?.show(event.pageX, event.pageY)
   }}
 >
   <div class="pre lyric-space"></div>
@@ -93,6 +95,7 @@
     </Btn>
   </div>
 {/if}
+<LyricMenu bind:this={lyricMenu} />
 
 <style lang="less">
   @unplay-color: var(--color-300);

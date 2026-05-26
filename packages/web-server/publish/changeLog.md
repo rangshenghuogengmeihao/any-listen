@@ -8,6 +8,7 @@
 - Added a **Disable Song Switching** option to the song switching mode ([#161](https://github.com/any-listen/any-listen/issues/161)).
 - Added a **Preferred Playback Quality** option under _Settings > Playback Settings_, defaulting to **128k**.
 - Added an **Extension Detail** page; clicking an extension item in the extension list now displays its full details.
+- Added a **Lyrics Context Menu** on the Now Playing page to adjust lyrics size and lyrics offset.
 
 ### Improved
 
@@ -37,6 +38,7 @@
 - 歌曲切换模式新增 **「禁用歌曲切换」** 选项（[#161](https://github.com/any-listen/any-listen/issues/161)）。
 - 新增 **「优先播放音质」** 选项，位于 _设置 > 播放设置_，默认 **128k**。
 - 新增 **「扩展程序详情信息」** 界面，点击扩展列表的扩展项将显示该扩展的详细信息。
+- 新增 **「歌词右键菜单」**，可用于调整歌词大小与歌词偏移。
 
 ### 优化
 

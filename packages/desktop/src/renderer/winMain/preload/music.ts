@@ -20,8 +20,11 @@ export const createClientMusic = (main: MainCall) => {
     async getMusicLyric(id) {
       return main.getMusicLyric(id)
     },
-    async setMusicLyric(id, name, singer, info) {
-      return main.setMusicLyric(id, name, singer, info)
+    async setMusicLyric(id, info) {
+      return main.setMusicLyric(id, info)
+    },
+    async removeMusicLyric(id) {
+      return main.removeMusicLyric(id)
     },
     async getMusicLyricCount() {
       return main.getMusicLyricCount()

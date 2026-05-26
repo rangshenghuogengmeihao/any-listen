@@ -9,7 +9,6 @@ import { createUnsubscriptionSet } from '@/shared'
 import * as desktopLyric from './desktopLyric'
 import * as lyric from './lyric'
 import { initMacStatusBarLyric } from './macStatusBarLyric'
-import { lyricState } from './store/state'
 import { initTitleLyric } from './titleLyric'
 
 const getCurrentTime = () => {
@@ -33,11 +32,10 @@ const stop = () => {
 }
 
 const setLyricOffset = (offset: number) => {
-  const tempOffset = offset - lyricState.offset
-  lyric.setOffset(tempOffset)
-  desktopLyric.setOffset(tempOffset)
+  lyric.setOffset(offset)
+  desktopLyric.setOffset(offset)
   playerEvent.lyricOffsetUpdated(offset)
-
+  // console.log('setLyricOffset', offset)
   if (playerState.playerPlaying) setTimeout(play)
 }
 

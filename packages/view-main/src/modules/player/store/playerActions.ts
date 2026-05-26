@@ -236,6 +236,7 @@ const setMetadata = async (info: AnyListen.Player.PlayMusicInfo) => {
         tlrc: lyricInfo.info.tlyric,
         awlrc: lyricInfo.info.awlyric,
         rlrc: lyricInfo.info.rlyric,
+        rawlrc: lyricInfo.info.rawlrcInfo?.lyric ?? lyricInfo.info.lyric,
       })
       playerEvent.lyricUpdated(lyricInfo.info)
     })

@@ -20,8 +20,11 @@ export const createClientMusic = (ipcSocket: IPCSocket) => {
     async getMusicLyric(id) {
       return ipcSocket.remote.getMusicLyric(id)
     },
-    async setMusicLyric(id, name, singer, info) {
-      return ipcSocket.remote.setMusicLyric(id, name, singer, info)
+    async setMusicLyric(id, info) {
+      return ipcSocket.remote.setMusicLyric(id, info)
+    },
+    async removeMusicLyric(id) {
+      return ipcSocket.remote.removeMusicLyric(id)
     },
     async getMusicLyricCount() {
       return ipcSocket.remote.getMusicLyricCount()

@@ -22,6 +22,7 @@ export {
   setVolumeMute as setStateVolumeMute,
   setStatusText,
   updatePlayHistoryIndex,
+  setMusicInfo,
   updatePlayIndex,
 } from './commit'
 

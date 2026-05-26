@@ -23,9 +23,11 @@ export const createExposeMusic = () => {
     async getMusicLyric(event, info) {
       return getLyricInfo(info)
     },
-    async setMusicLyric(event, id, name, singer, info) {
-      // TODO
-      // return workers.dbService.rawLyricSave(id, info)
+    async setMusicLyric(event, id, info) {
+      return workers.dbService.editedLyricSave(id, info)
+    },
+    async removeMusicLyric(event, id) {
+      return workers.dbService.editedLyricRemove([id])
     },
     async getMusicLyricCount(event) {
       return workers.dbService.rawLyricCount()

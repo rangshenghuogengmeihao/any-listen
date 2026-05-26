@@ -10,7 +10,9 @@ import {
   inertEditedLyric,
   inertRawLyric,
   queryEditedLyric,
+  queryLyric,
   queryRawLyric,
+  updateEditedLyric,
 } from './dbHelper'
 import type { Lyricnfo } from './statements'
 
@@ -62,36 +64,44 @@ const toLyricInfo = (id: string, type: Lyricnfo['type'], info: Lyricnfo | undefi
  * @param id 歌曲id
  * @returns 歌词信息
  */
-// export const getPlayerLyric = (id: string): AnyListen.Music.LyricInfo => {
-//   const lyrics = queryLyric(id)
+export const getPlayerLyric = (id: string): AnyListen.Music.LyricInfo => {
+  const lyrics = queryLyric(id)
 
-//   let lyricInfo: AnyListen.Music.LyricInfo = {
-//     lyric: '',
-//   }
-//   let rawLyricInfo: AnyListen.Music.LyricInfo = {
-//     lyric: '',
-//   }
-//   for (const lyric of lyrics) {
-//     switch (lyric.source) {
-//       case 'edited':
-//         if (lyric.type == 'lyric') lyricInfo.lyric = Buffer.from(lyric.text, 'base64').toString()
-//         else if (lyric.text != null) lyricInfo[lyric.type] = Buffer.from(lyric.text, 'base64').toString()
-//         break
-//       default:
-//         if (lyric.type == 'lyric') rawLyricInfo.lyric = Buffer.from(lyric.text, 'base64').toString()
-//         else if (lyric.text != null) rawLyricInfo[lyric.type] = Buffer.from(lyric.text, 'base64').toString()
-//         break
-//     }
-//   }
+  let lyricInfo: AnyListen.Music.LyricInfo = {
+    name: '',
+    singer: '',
+    interval: '',
+    lyric: '',
+  }
+  let rawLyricInfo: AnyListen.Music.LyricInfo = {
+    name: '',
+    singer: '',
+    interval: '',
+    lyric: '',
+  }
+  for (const lyric of lyrics) {
+    switch (lyric.type) {
+      case 'edited':
+        lyricInfo = toLyricInfo(id, 'edited', lyric)
+        break
+      default:
+        rawLyricInfo = toLyricInfo(id, 'raw', lyric)
+        break
+    }
+  }
 
-//   return lyricInfo.lyric ? {
-//     ...lyricInfo,
-//     rawlrcInfo: rawLyricInfo,
-//   } : {
-//     ...rawLyricInfo,
-//     rawlrcInfo: rawLyricInfo,
-//   }
-// }
+  return lyricInfo.lyric
+    ? {
+        ...lyricInfo,
+        rawlrcInfo: {
+          lyric: rawLyricInfo.lyric,
+          tlyric: rawLyricInfo.tlyric,
+          rlyric: rawLyricInfo.rlyric,
+          awlyric: rawLyricInfo.awlyric,
+        },
+      }
+    : rawLyricInfo
+}
 
 /**
  * 获取原始歌词
@@ -175,9 +185,9 @@ export const editedLyricRemove = (ids: string[]) => {
  * @param id 歌曲id
  * @param lyricInfo 歌词信息
  */
-// export const editedLyricUpdate = (id: string, lyricInfo: AnyListen.Music.LyricInfo) => {
-//   updateEditedLyric(toDBLyric(id, 'edited', lyricInfo))
-// }
+export const editedLyricUpdate = (id: string, lyricInfo: AnyListen.Music.LyricInfo) => {
+  updateEditedLyric(toDBLyric(id, 'edited', lyricInfo))
+}
 
 /**
  * 清空已编辑歌词信息
@@ -191,11 +201,11 @@ export const editedLyricClear = () => {
  * @param id 歌曲id
  * @param lyricInfo 歌词信息
  */
-// export const editedLyricUpdateAddAndUpdate = (id: string, lyricInfo: AnyListen.Music.LyricInfo) => {
-//   const lyrics = queryEditedLyric(id)
-//   if (lyrics.length) updateEditedLyric(toDBLyric(id, 'edited', lyricInfo))
-//   else inertEditedLyric(toDBLyric(id, 'edited', lyricInfo))
-// }
+export const editedLyricUpdateAddAndUpdate = (id: string, lyricInfo: AnyListen.Music.LyricInfo) => {
+  const info = queryEditedLyric(id)
+  if (info) updateEditedLyric(toDBLyric(id, 'edited', lyricInfo))
+  else inertEditedLyric(toDBLyric(id, 'edited', lyricInfo))
+}
 
 /**
  * 统计已编辑歌词数量

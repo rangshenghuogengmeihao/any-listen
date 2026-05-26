@@ -70,7 +70,7 @@ export const menuLocaltion = ({
       timeout = setTimeout(() => {
         timeout = null
         if (show) onHide()
-      }, 200)
+      }, 50)
     }
     const handleTransitionEnd = () => {
       if (!show) return
@@ -117,7 +117,7 @@ export const menuLocaltion = ({
     })
 
     return () => {
-      document.removeEventListener('click', handleDocumentClick)
+      document.removeEventListener('click', handleDocumentClick, true)
       dom.removeEventListener('blur', handleBlur)
       dom.removeEventListener('transitionend', handleTransitionEnd)
     }

@@ -3,7 +3,7 @@
   import { fly } from 'svelte/transition'
   import Header from './Header.svelte'
   import Main from './Main.svelte'
-  import { hidePlayDtail } from './shared/hidePlayDtail.svelte'
+  import { useHidePlayDtail } from './shared/useHidePlayDtail'
   import Footer from './Footer/index.svelte'
   import { playDetailState } from '@/modules/playDetail/store/state'
   import { playerEvent } from '@/modules/player/store/event'
@@ -12,6 +12,7 @@
   let introend = $state(playDetailState.isShowPlayDetail)
   let bgSrc = $state<string>()
   const isDynamicBackground = useSettingValue('playDetail.isDynamicBackground')
+  const hidePlayDtail = useHidePlayDtail()
 
   $effect(() => {
     if (!isDynamicBackground.val) {
@@ -43,7 +44,8 @@
     out:fly={{ y: '100%', opacity: 1, delay: 10 }}
     class="play-detail"
     class:dybg={bgSrc}
-    {@attach hidePlayDtail}
+    role="alert"
+    oncontextmenu={hidePlayDtail}
     onintroend={() => {
       introend = true
     }}

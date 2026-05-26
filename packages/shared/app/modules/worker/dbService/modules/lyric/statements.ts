@@ -20,7 +20,7 @@ const EDITED_LYRIC: Lyricnfo['type'] = 'edited'
  */
 export const createLyricQueryStatement = () => {
   return dbPrepare<string, Lyricnfo>(`
-    SELECT "name", "singer", "interval", "lyric"
+    SELECT "name", "singer", "interval", "lyric", "type"
     FROM "main"."lyric"
     WHERE "id"=?
     `)
@@ -77,8 +77,8 @@ export const createRawLyricDeleteStatement = () => {
 export const createRawLyricUpdateStatement = () => {
   return dbPrepare<Lyricnfo>(`
     UPDATE "main"."lyric"
-    SET "lyric"=@lyric
-    WHERE "id"=@id AND "type"='${RAW_LYRIC}' AND "type"=@type`)
+    SET "text"=@text, "name"=@name, "singer"=@singer, "interval"=@interval
+    WHERE "id"=@id AND "type"='${RAW_LYRIC}'`)
 }
 
 /**
@@ -95,7 +95,7 @@ export const createRawLyricCountStatement = () => {
  */
 export const createEditedLyricQueryStatement = () => {
   return dbPrepare<string, Lyricnfo>(`
-    SELECT "type", "text"
+    SELECT "name", "singer", "interval", "lyric"
     FROM "main"."lyric"
     WHERE "id"=? AND "type"='${EDITED_LYRIC}'
     `)
@@ -108,7 +108,7 @@ export const createEditedLyricQueryStatement = () => {
 export const createEditedLyricInsertStatement = () => {
   return dbPrepare<Lyricnfo>(`
     INSERT INTO "main"."lyric" ("id", "name", "singer", "interval", "lyric", "type")
-    VALUES (@id, @type, @text, '${EDITED_LYRIC}')`)
+    VALUES (@id, @name, @singer, @interval, @lyric, '${EDITED_LYRIC}')`)
 }
 
 /**
@@ -140,8 +140,8 @@ export const createEditedLyricDeleteStatement = () => {
 export const createEditedLyricUpdateStatement = () => {
   return dbPrepare<Lyricnfo>(`
     UPDATE "main"."lyric"
-    SET "text"=@text
-    WHERE "id"=@id AND "type"='${EDITED_LYRIC}' AND "type"=@type`)
+    SET "text"=@text, "name"=@name, "singer"=@singer, "interval"=@interval
+    WHERE "id"=@id AND "type"='${EDITED_LYRIC}'`)
 }
 
 /**

@@ -17,8 +17,11 @@ export const getMusicPic: AnyListen.IPC.ServerIPC['getMusicPic'] = async (id) =>
 export const getMusicLyric: AnyListen.IPC.ServerIPC['getMusicLyric'] = async (id) => {
   return ipc.getMusicLyric(id)
 }
-export const setMusicLyric: AnyListen.IPC.ServerIPC['setMusicLyric'] = async (id, name, singer, info) => {
-  await ipc.setMusicLyric(id, name, singer, info)
+export const setMusicLyric: AnyListen.IPC.ServerIPC['setMusicLyric'] = async (id, info) => {
+  await ipc.setMusicLyric(id, info)
+}
+export const removeMusicLyric: AnyListen.IPC.ServerIPC['removeMusicLyric'] = async (id) => {
+  await ipc.removeMusicLyric(id)
 }
 export const getMusicLyricCount: AnyListen.IPC.ServerIPC['getMusicLyricCount'] = async () => {
   return ipc.getMusicLyricCount()

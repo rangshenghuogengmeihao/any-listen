@@ -2,7 +2,7 @@
 
 ### Fixed
 
-- Fixed an issue where the time label display was abnormal when jumping to lyric progress.
+- Fixed an issue where the publish tag was incorrect.
 
 ---
 
@@ -10,4 +10,4 @@
 
 ### 修复
 
-- 修复歌词跳转播放进度的时间标签显示异常的问题。
+- 修复发布标签错误。

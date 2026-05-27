@@ -2,7 +2,7 @@
 
 ### Fixed
 
-- Fixed an issue where the publish tag was incorrect.
+- Fixed an issue where the right-click context menu position was not updated correctly.
 
 ---
 
@@ -10,4 +10,4 @@
 
 ### 修复
 
-- 修复发布标签错误。
+- 修复右键菜单显示位置未正确更新的问题。

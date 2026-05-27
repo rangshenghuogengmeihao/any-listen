@@ -6,7 +6,7 @@
   import LyricOffset from './components/LyricOffset.svelte'
 
   let visible = $state(false)
-  let location = $state({ x: 0, y: 0 })
+  let location = $state.raw({ x: 0, y: 0 })
   let render = $state(false)
   let anim = $state(false)
 

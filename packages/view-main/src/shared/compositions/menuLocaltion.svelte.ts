@@ -40,6 +40,7 @@ export const menuLocaltion = ({
   return (dom: HTMLElement) => {
     let show = false
     let timeout: number | null = null
+    let transitioning = false
 
     const clearHideTimeout = () => {
       if (timeout) {
@@ -61,6 +62,7 @@ export const menuLocaltion = ({
       dom.style.transform = 'scale(.8, .7) translate(0, 0)'
       dom.style.pointerEvents = 'none'
       show = false
+      transitioning = true
     }
 
     const handleBlur = async (event: FocusEvent) => {
@@ -70,9 +72,10 @@ export const menuLocaltion = ({
       timeout = setTimeout(() => {
         timeout = null
         if (show) onHide()
-      }, 50)
+      }, 150)
     }
     const handleTransitionEnd = () => {
+      transitioning = false
       if (!show) return
       dom.focus()
     }
@@ -101,10 +104,12 @@ export const menuLocaltion = ({
 
     $effect(() => {
       clearHideTimeout()
-      // console.log(visible, show, location)
+      // console.log(reactives.visible, show, reactives.location, transitioning)
       if (reactives.visible == show) {
         dom.style.left = `${reactives.location.x - appState.rootOffsetX + 2}px`
         dom.style.top = `${reactives.location.y - appState.rootOffsetY}px`
+        if (transitioning && dom.style.transitionProperty != transition2) dom.style.transitionProperty = transition2
+        // console.log('move', reactives.visible || show)
         if (show) {
           if (dom.style.transitionProperty != transition2) dom.style.transitionProperty = transition2
           dom.style.transform = `scale(1) translate(${getOffsetXY(dom, reactives.location.x, reactives.location.y)})`

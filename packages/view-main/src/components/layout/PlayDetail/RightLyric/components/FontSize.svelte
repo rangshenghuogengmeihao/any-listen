@@ -38,7 +38,7 @@
     <button
       class="btn"
       aria-label={$t('lyric_menu.size_add')}
-      onclick={async () => fontSizeUp(5)}
+      onclick={async () => fontSizeUp(10)}
       oncontextmenu={async () => fontSizeUp(1)}
     >
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24">
@@ -48,7 +48,7 @@
     <button
       class="btn"
       aria-label={$t('lyric_menu.size_dec')}
-      onclick={async () => fontSizeDown(5)}
+      onclick={async () => fontSizeDown(10)}
       oncontextmenu={async () => fontSizeDown(1)}
     >
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24">

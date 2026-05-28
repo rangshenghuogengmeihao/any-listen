@@ -10,7 +10,8 @@ overrides:
   depd@<2.0.0: '>=2.0.0'
   micromatch@<4.0.8: '>=4.0.8'
   postcss@<7.0.36: '>=7.0.36'
-  tmp@<0.2.6: '>=0.2.6'
+  yauzl@<3: '3'
+  '@types/node': '24'
   ws>bufferutil: '-'
   ws>utf-8-validate: '-'
 
@@ -68,8 +69,8 @@ importers:
         specifier: workspace:@shared/types@*
         version: link:../shared/types
       electron:
-        specifier: 40.10.1
-        version: 40.10.1
+        specifier: 40.10.2
+        version: 40.10.2
       electron-builder:
         specifier: 26.11.1
         version: 26.11.1(electron-builder-squirrel-windows@26.11.1)
@@ -264,7 +265,7 @@ importers:
         specifier: workspace:@shared/types@*
         version: link:../types
       '@types/node':
-        specifier: ^24.12.4
+        specifier: '24'
         version: 24.12.4
       '@types/tunnel':
         specifier: ^0.0.7
@@ -931,8 +932,8 @@ packages:
       '@emnapi/core': ^1.7.1
       '@emnapi/runtime': ^1.7.1
 
-  '@nodable/entities@2.1.0':
-    resolution: {integrity: sha512-nyT7T3nbMyBI/lvr6L5TyWbFJAI9FTgVRakNoBqCD+PmID8DzFrrNdLLtHMwMszOtqZa8PAOV24ZqDnQrhQINA==}
+  '@nodable/entities@2.1.1':
+    resolution: {integrity: sha512-Pig3HxDIoMgjdEH8OCf/dkcTmLFjJRjWuq8jSnklu284/TKOPibSRERmOykiwmyXTtv61mP+44f3GMx0tLAyjg==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2192,8 +2193,8 @@ packages:
     resolution: {integrity: sha512-bO3y10YikuUwUuDUQRM4KfwNkKhnpVO7IPdbsrejwN9/AABJzzTQ4GeHwyzNSrVO+tEH3/Np255a3sVZpZDjvg==}
     engines: {node: '>=8.0.0'}
 
-  electron@40.10.1:
-    resolution: {integrity: sha512-F2Iy16vLBV4NodRVf2dGRESUW03AdFlCmOjaF1fhc3FupmTwEGWmKsYXvORkUYLPBSrKP7r08e8PHiImoe8woQ==}
+  electron@40.10.2:
+    resolution: {integrity: sha512-Xj3Hy0Imbu4g0gDIW55w/jJYz94nMO2JRSGYA3LyAn5SwaERCelgZrA21vfH+Bi//SWAWQXddHsMwCqauyMT8g==}
     engines: {node: '>= 12.20.55'}
     hasBin: true
 
@@ -2483,9 +2484,6 @@ packages:
 
   fastq@1.20.1:
     resolution: {integrity: sha512-GGToxJ/w1x32s/D2EKND7kTil4n8OVk/9mycTc4VDza13lOvpUZTGX3mFSCtV9ksdGBVzvsyAVLM6mHFThxXxw==}
-
-  fd-slicer@1.1.0:
-    resolution: {integrity: sha512-cE1qsB/VwyQozZ+q1dGxR8LBYNZeofhEdUNGSMbQD3Gw2lAzX9Zb3uIU6Ebc/Fmyjo9AWWfnn0AUCHqtevs/8g==}
 
   fdir@6.5.0:
     resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
@@ -4483,7 +4481,7 @@ packages:
     peerDependencies:
       '@swc/core': '>=1.2.50'
       '@swc/wasm': '>=1.2.50'
-      '@types/node': '*'
+      '@types/node': '24'
       typescript: '>=2.7'
     peerDependenciesMeta:
       '@swc/core':
@@ -4645,7 +4643,7 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
-      '@types/node': ^20.19.0 || >=22.12.0
+      '@types/node': '24'
       '@vitejs/devtools': ^0.1.18
       esbuild: ^0.27.0 || ^0.28.0
       jiti: '>=1.21.0'
@@ -4789,8 +4787,9 @@ packages:
     resolution: {integrity: sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==}
     engines: {node: '>=12'}
 
-  yauzl@2.10.0:
-    resolution: {integrity: sha512-p4a9I6X6nu6IhoGmBqAcbJy1mlC4j27vEPZX9F4L4/vZT3Lyq1VkFHw/V/PUcB9Buo+DG3iHkT0x3Qya58zc3g==}
+  yauzl@3.3.1:
+    resolution: {integrity: sha512-RNPCUkiE/ZgO4w8i9U5yDQVHaFDdnzaFANElRvpJteCspvmv2VqrRb9lvS6odVD+jqI/zDsxAHJVsafpcheVQQ==}
+    engines: {node: '>=12'}
 
   yn@3.1.1:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
@@ -4940,7 +4939,7 @@ snapshots:
       node-gyp: 11.5.0
       ora: 5.4.1
       read-binary-file-arch: 1.0.6
-      semver: 7.8.1
+      semver: 7.7.4
       tar: 7.5.15
       yargs: 17.7.2
     transitivePeerDependencies:
@@ -5210,7 +5209,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.2
     optional: true
 
-  '@nodable/entities@2.1.0': {}
+  '@nodable/entities@2.1.1': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -5236,7 +5235,7 @@ snapshots:
 
   '@npmcli/fs@4.0.0':
     dependencies:
-      semver: 7.8.1
+      semver: 7.7.4
 
   '@oxc-project/types@0.132.0': {}
 
@@ -6504,7 +6503,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  electron@40.10.1:
+  electron@40.10.2:
     dependencies:
       '@electron/get': 2.0.3
       '@types/node': 24.12.4
@@ -6876,7 +6875,7 @@ snapshots:
     dependencies:
       debug: 4.4.3
       get-stream: 5.2.0
-      yauzl: 2.10.0
+      yauzl: 3.3.1
     optionalDependencies:
       '@types/yauzl': 2.10.3
     transitivePeerDependencies:
@@ -6908,7 +6907,7 @@ snapshots:
 
   fast-xml-parser@5.8.0:
     dependencies:
-      '@nodable/entities': 2.1.0
+      '@nodable/entities': 2.1.1
       fast-xml-builder: 1.2.0
       path-expression-matcher: 1.5.0
       strnum: 2.3.0
@@ -6919,10 +6918,6 @@ snapshots:
   fastq@1.20.1:
     dependencies:
       reusify: 1.1.0
-
-  fd-slicer@1.1.0:
-    dependencies:
-      pend: 1.2.0
 
   fdir@6.5.0(picomatch@4.0.4):
     optionalDependencies:
@@ -7999,7 +7994,7 @@ snapshots:
 
   node-api-version@0.2.1:
     dependencies:
-      semver: 7.8.1
+      semver: 7.7.4
 
   node-exports-info@1.6.0:
     dependencies:
@@ -8016,7 +8011,7 @@ snapshots:
       make-fetch-happen: 14.0.3
       nopt: 8.1.0
       proc-log: 5.0.0
-      semver: 7.8.1
+      semver: 7.7.4
       tar: 7.5.15
       tinyglobby: 0.2.16
       which: 5.0.0
@@ -9417,10 +9412,10 @@ snapshots:
       y18n: 5.0.8
       yargs-parser: 21.1.1
 
-  yauzl@2.10.0:
+  yauzl@3.3.1:
     dependencies:
       buffer-crc32: 0.2.13
-      fd-slicer: 1.1.0
+      pend: 1.2.0
 
   yn@3.1.1: {}
 

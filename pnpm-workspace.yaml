@@ -39,7 +39,8 @@ overrides:
   depd@<2.0.0: '>=2.0.0'
   micromatch@<4.0.8: '>=4.0.8'
   postcss@<7.0.36: '>=7.0.36'
-  tmp@<0.2.6: '>=0.2.6'
+  yauzl@<3: '3'
+  '@types/node': '24'
   ws>bufferutil: '-'
   ws>utf-8-validate: '-'
 

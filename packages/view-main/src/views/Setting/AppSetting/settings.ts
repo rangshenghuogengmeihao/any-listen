@@ -2,6 +2,8 @@ import { windowSizeList } from '@any-listen/common/constants'
 import type { Component } from 'svelte'
 
 import { showNotify } from '@/components/apis/notify'
+import { appEvent } from '@/modules/app/store/event'
+import { appState } from '@/modules/app/store/state'
 import { updateSetting } from '@/modules/setting/store/action'
 import { settingState } from '@/modules/setting/store/state'
 import { getThemeList } from '@/modules/theme/store/action'
@@ -27,6 +29,7 @@ interface SettingBase<T = unknown> {
 }
 export interface EnumItem {
   name: keyof Message
+  disabled?: boolean
   value: string | number
 }
 export interface SettingListComponentItem {
@@ -46,6 +49,7 @@ interface SettingRadio extends SettingBase<EnumItem['value']> {
   type: 'radio'
   asyncEnum?: () => Promise<EnumItem[]>
   enum?: EnumItem[]
+  enumUpdated?: (updated: (newEnum: EnumItem[]) => void) => undefined | (() => void)
 }
 interface SettingSelection extends SettingBase<EnumItem['value']> {
   type: 'selection'
@@ -108,6 +112,19 @@ export const settings: SettingListSection[] = [
           value: w.id,
           name: `settings__basic_window_size_${w.name}` as keyof Message,
         })),
+        enumUpdated: (updated) => {
+          const handleUpdate = (isFullScreen: boolean) => {
+            updated(
+              (import.meta.env.VITE_IS_WEB ? windowSizeList.slice(0, 4) : windowSizeList).map((w) => ({
+                value: w.id,
+                disabled: isFullScreen,
+                name: `settings__basic_window_size_${w.name}` as keyof Message,
+              }))
+            )
+          }
+          if (appState.isFullscreen) handleUpdate(true)
+          return appEvent.on('fullscreen', handleUpdate)
+        },
         onChnaged: import.meta.env.VITE_IS_WEB
           ? () => {
               if (window.os === 'mac') {

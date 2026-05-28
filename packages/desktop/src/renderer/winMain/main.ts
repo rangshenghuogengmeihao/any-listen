@@ -12,6 +12,7 @@ import { openDevTools as handleOpenDevTools, throttle } from '@/shared/utils'
 
 import { winMainEvent } from './event'
 import { rendererIPC } from './rendererEvent'
+import { winMainState } from './state'
 import { createTaskBarButtons, getWindowSizeInfo } from './utils'
 
 let browserWindow: Electron.BrowserWindow | null = null
@@ -43,6 +44,13 @@ const winEvent = () => {
 
   browserWindow.on('blur', () => {
     winMainEvent.blur()
+  })
+
+  browserWindow.on('enter-full-screen', () => {
+    winMainState.isFullScreen = true
+  })
+  browserWindow.on('leave-full-screen', () => {
+    winMainState.isFullScreen = false
   })
 
   browserWindow.once('ready-to-show', () => {

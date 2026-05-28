@@ -19,6 +19,7 @@
   let list = $state.raw<EnumItem[]>([])
 
   onMount(() => {
+    let unsub: (() => void) | undefined
     if (item.type == 'radio') {
       if (item.asyncEnum) {
         void item.asyncEnum().then((res) => {
@@ -27,6 +28,16 @@
       } else {
         list = item.enum!
       }
+      if (item.enumUpdated) {
+        unsub = item.enumUpdated((res) => {
+          console.log('updatye', res)
+          list = res
+        })
+      }
+    }
+
+    return () => {
+      unsub?.()
     }
   })
 
@@ -72,6 +83,7 @@
         name={$t(radioItem.name)}
         value={radioItem.value}
         checked={(setting.val as string) == radioItem.value}
+        disabled={radioItem.disabled}
         onselect={(val) => {
           if (item.onUpdate) {
             item.onUpdate(val)

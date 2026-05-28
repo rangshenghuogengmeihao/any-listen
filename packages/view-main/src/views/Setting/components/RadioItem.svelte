@@ -6,11 +6,13 @@
     desc,
     value,
     checked,
+    disabled,
     onselect,
   }: {
     id: string
     name: string
     desc?: string
+    disabled?: boolean
     checked: boolean
     value: T
     onselect: (checked: T) => void
@@ -19,7 +21,7 @@
 </script>
 
 <div class="settings-item-radio">
-  <Radio label={name} {value} {id} {checked} {onselect} />
+  <Radio label={name} {value} {id} {checked} {onselect} {disabled} />
   {#if desc}
     <p class="settings-item-desc">{desc}</p>
   {/if}

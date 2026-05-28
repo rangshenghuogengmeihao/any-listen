@@ -11,7 +11,7 @@
 
   onMount(() => {
     let mounted = true
-    getCacheSize().then((size) => {
+    void getCacheSize().then((size) => {
       if (!mounted) return
       resourceCacheSize = sizeFormate(size)
     })

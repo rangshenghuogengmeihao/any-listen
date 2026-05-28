@@ -27,6 +27,7 @@ import {
   toggleMinimize,
 } from './main'
 import { init as initRendererEvent, rendererIPC } from './rendererEvent'
+import { winMainState } from './state'
 import { initTaskProgress } from './taskProgress'
 import { initThumbarButtons } from './thumbarButtons'
 import { getWindowSizeInfo } from './utils'
@@ -44,7 +45,7 @@ export const initWinMain = () => {
   appEvent.on('updated_config', (keys, setting) => {
     void rendererIPC.settingChanged(keys, setting)
 
-    if (keys.includes('common.windowSizeId')) {
+    if (keys.includes('common.windowSizeId') && !winMainState.isFullScreen) {
       const windowSizeInfo = getWindowSizeInfo(setting['common.windowSizeId']!)
       setWindowBounds({ width: windowSizeInfo.width, height: windowSizeInfo.height })
     }

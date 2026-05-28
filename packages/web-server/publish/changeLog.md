@@ -17,6 +17,8 @@
 ### Fixed
 
 - Fixed an issue where the currently playing **Play Later** track was unexpectedly removed from the playlist when the player was reloaded.
+- Fixed an issue where **Window Size Settings** could still be updated while in full-screen mode.
+- Fixed an issue where changes to **Font Settings** did not take effect in full-screen mode ([#189](https://github.com/any-listen/any-listen/issues/189)).
 - Fixed an issue where proxy service validation failed for URLs with query parameters.
 - Fixed an issue where extension translations were displayed incorrectly.
 - Fixed an issue where local song covers were not re-read from local storage with priority after clearing the cache.
@@ -47,6 +49,8 @@
 ### 修复
 
 - 修复正在播放的 **「稍后播放」** 歌曲在重新加载播放器时被意外从播放列表移除的问题。
+- 修复全屏模式下仍可更新 **「窗口大小设置」** 的问题。
+- 修复全屏模式下更新 **「字体设置」** 不生效的问题（[#189](https://github.com/any-listen/any-listen/issues/189)）。
 - 修复代理服务校验带参数 URL 异常的问题。
 - 修复扩展翻译显示问题。
 - 修复缓存被清空后，本地歌曲封面未优先从本地重新读取的问题。

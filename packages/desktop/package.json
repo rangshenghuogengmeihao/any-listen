@@ -48,7 +48,7 @@
   "devDependencies": {
     "@any-listen/eslint": "workspace:@shared/eslint@*",
     "@any-listen/types": "workspace:@shared/types@*",
-    "electron": "40.10.2",
+    "electron": "40.10.1",
     "electron-builder": "26.11.1",
     "electron-debug": "^4.1.0",
     "electron-to-chromium": "^1.5.363",

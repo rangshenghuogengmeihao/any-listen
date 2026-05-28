@@ -9,6 +9,9 @@
 </script>
 
 <div class="aside">
+  {#if import.meta.env.VITE_IS_MAC}
+    <div class="drag" style="padding-top: calc(env(titlebar-area-height, 30px) + 4px)"></div>
+  {/if}
   {#if !import.meta.env.VITE_IS_MAC}
     <Logo />
   {/if}
@@ -42,10 +45,6 @@
     // :global(.aside-logo + .aside-nav) {
     //   padding-top: 20px;
     // }
-  }
-
-  :global(html.desktop.mac .aside) {
-    padding-top: calc(env(titlebar-area-height, 30px) + 4px);
   }
 
   // :global(html.mac .aside-nav) {

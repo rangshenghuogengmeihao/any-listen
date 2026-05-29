@@ -1,15 +1,13 @@
 <!--- @lang: en-us -->
 
-### Fixed
+### Improved
 
-- Fixed an issue where **Window Size Settings** could still be updated while in full-screen mode.
-- Fixed an issue where changes to **Font Settings** did not take effect in full-screen mode ([#189](https://github.com/any-listen/any-listen/issues/189)).
+- No longer treat `_` as a separator for multiple artist names ([#191](https://github.com/any-listen/any-listen/issues/191)).
 
 ---
 
 <!--- @lang: zh-cn -->
 
-### 修复
+### 优化
 
-- 修复全屏模式下仍可更新 **「窗口大小设置」** 的问题。
-- 修复全屏模式下更新 **「字体设置」** 不生效的问题（[#189](https://github.com/any-listen/any-listen/issues/189)）。
+- 不再将 `_` 认为是多个歌手名字的分隔符（[#191](https://github.com/any-listen/any-listen/issues/191)）。

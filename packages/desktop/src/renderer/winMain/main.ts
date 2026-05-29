@@ -237,7 +237,9 @@ export const toggleDevTools = () => {
 
 export const setFullScreen = (isFullscreen: boolean): boolean => {
   if (!browserWindow) return false
-  if (isLinux) {
+  // https://github.com/any-listen/any-listen/issues/190
+  // windows -dt mode need to set resizable to true before setting full screen
+  if (appState.envParams.cmdParams.dt || isLinux) {
     // linux 需要先设置为可调整窗口大小才能全屏
     if (isFullscreen) {
       browserWindow.setResizable(isFullscreen)

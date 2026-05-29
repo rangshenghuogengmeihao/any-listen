@@ -22,6 +22,7 @@
 - Fixed an issue where proxy service validation failed for URLs with query parameters.
 - Fixed an issue where local song covers were not re-read from local storage with priority after clearing the cache.
 - Fixed an issue where the first item could be missing when reading data from certain WebDAV services ([#180](https://github.com/any-listen/any-listen/issues/180)).
+- Fixed an issue where fullscreen mode could not be entered after changing window size settings when using native window style on Windows ([#190](https://github.com/any-listen/any-listen/issues/190)).
 
 ### Security
 
@@ -53,6 +54,7 @@
 - 修复代理服务校验带参数 URL 异常的问题。
 - 修复缓存被清空后，本地歌曲封面未优先从本地重新读取的问题。
 - 修复读取某些 WebDAV 服务时，丢失第一项内容的问题（[#180](https://github.com/any-listen/any-listen/issues/180)）。
+- 修复在 Windows 下使用系统原生窗口样式时，更改窗口大小设置后无法进入全屏的问题（[#190](https://github.com/any-listen/any-listen/issues/190)）。
 
 ### 安全
 

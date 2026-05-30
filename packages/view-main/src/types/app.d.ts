@@ -39,6 +39,7 @@ declare interface Window {
 
   setTheme: (colors: Record<string, string>) => void
   setLang: (lang?: string) => void
+  scrollbarWidth: number
 }
 
 // const ENVIRONMENT: NodeJS.ProcessEnv

@@ -23,6 +23,7 @@
           scrollDiv.style.cssText = `position:absolute;top:-9999px;width:30px;height:30px;overflow:scroll;`
           document.body.appendChild(scrollDiv)
           scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth
+          window.scrollbarWidth = scrollbarWidth
           document.body.removeChild(scrollDiv)
           scrollDiv = null
           document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`)

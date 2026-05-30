@@ -179,7 +179,18 @@ export const stopRunExtension = async (extension: AnyListen.Extension.Extension)
 
 const downloadExtensionFile = async (url: string, bundlePath: string) => {
   return eachMirror(null, url, url, async (url: string) => {
-    await simpleDownload(url, bundlePath).catch(async (err) => {
+    await simpleDownload(url, bundlePath, {
+      proxy: extensionState.proxy.host
+        ? {
+            host: extensionState.proxy.host,
+            port: extensionState.proxy.port
+              ? Number(extensionState.proxy.port)
+              : extensionState.proxy.host.startsWith('https')
+                ? 443
+                : 80,
+          }
+        : undefined,
+    }).catch(async (err) => {
       await removePath(bundlePath)
       throw err
     })

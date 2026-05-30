@@ -75,6 +75,7 @@
     if (!onlineResourceAvailable.val) return
     submitted = true
     text = text.trim()
+    console.log('handleSubmit', isCommandMode)
     if (text && isCommandMode) {
       text = text.slice(1).trim()
       searchInput?.setList([])
@@ -117,6 +118,7 @@
   $effect(() => {
     if (onlineResourceAvailable.val) {
       searchInput?.setList([])
+      isCommandMode &&= false
       return
     }
     untrack(() => {

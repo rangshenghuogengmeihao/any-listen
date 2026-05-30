@@ -8,6 +8,16 @@
   -webkit-user-drag: none;
 }
 
+html.macos {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+html.macos * {
+  scrollbar-width: none;
+}
+
 :root {
   --color-primary: rgb(79 98 208);
   --color-primary-dark-100: rgb(71 88 187);

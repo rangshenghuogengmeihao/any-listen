@@ -8,6 +8,10 @@
     <div id="root" style="display: none"></div>
     <script>
       {
+        const isMacOS = /Macintosh|Mac OS|Mac/.test(navigator.userAgent) && !/iPhone|iPad|iPod/.test(navigator.userAgent)
+          if (isMacOS) {
+            document.documentElement.classList.add('macos')
+          }
         const formatLang = (lang = 'en') => {
           if (lang === 'zh-cn') return 'zh-Hans'
           if (lang === 'zh-tw') return 'zh-Hant'

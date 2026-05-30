@@ -11,9 +11,8 @@
     getOnlineExtensionDetail,
   } from '@/modules/extension/store/actions'
   import Modal from '@/components/material/Modal.svelte'
-  import { install } from './shared'
+  import { installOrUpdate } from './shared'
   import Aside from './Aside.svelte'
-  import { showNotify } from '../notify'
   import { tooltip } from '../tooltips/attach.svelte'
   import Loading from '@/components/base/Loading.svelte'
   import Tab from '@/components/base/Tab.svelte'
@@ -46,13 +45,10 @@
   const closeModal = () => {
     visible = false
   }
+
   const handleInstall = async () => {
     if (!ext) return
-    if (!('download_url' in ext)) {
-      showNotify(i18n.t('extension.install_failed', { name: ext.name, err: i18n.t('extension.not_found_in_online') }))
-      return
-    }
-    await install(ext, !!localExt)
+    await installOrUpdate(ext)
   }
 
   const handleToggleEnable = () => {

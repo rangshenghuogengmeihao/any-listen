@@ -33,3 +33,14 @@ export const install = async (
   }
   showNotify(i18n.t('extension.install_success', { name: ext.name }))
 }
+
+export const installOrUpdate = async (
+  ext: AnyListen.Extension.Extension | AnyListen.IPCExtension.OnlineListItem | AnyListen.IPCExtension.RemoteOnlineDetail
+) => {
+  const targetExt = 'installed' in ext ? ext : await getTargetOnlineExtension(ext.id)
+  if (!targetExt) {
+    showNotify(i18n.t('extension.install_failed', { name: ext.name, err: i18n.t('extension.not_found_in_online') }))
+    return
+  }
+  await install(targetExt, targetExt.installed)
+}

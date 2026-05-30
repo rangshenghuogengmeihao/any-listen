@@ -24,6 +24,13 @@ const parseUrlParams = (str: string): Record<string, string> => {
   }
   return params
 }
+export type Params = Record<string, string | number | null | undefined>
+const buildQueryParams = (params: Params) => {
+  return Object.entries(params)
+    .filter(([_, value]) => value != null)
+    .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+    .join('&')
+}
 
 /**
  * Returns the current location from the hash.
@@ -46,14 +53,9 @@ export const getLocation = (): Location => {
   return { rawLocation, location, querystring, query: parseUrlParams(querystring) }
 }
 
-export type Params = Record<string, string | number | null | undefined>
-const buildParams = (params: Record<string, Params[keyof Params]>) => {
-  const p = new URLSearchParams(params as Record<string, string>)
-  return p.toString()
-}
 const buildQueryString = (url: string, params?: Params) => {
   if (!params) return ''
-  return (url.includes('?') ? (/\?.+/.test(url) ? '&' : '') : '?') + buildParams(params)
+  return (url.includes('?') ? (/\?.+/.test(url) ? '&' : '') : '?') + buildQueryParams(params)
 }
 
 /**

@@ -80,7 +80,7 @@ export const verifyForm = async (
 export const getWebDAVOptionsByListInfo = async (listInfo: AnyListen.List.UserListInfoByRemoteMeta) => {
   const options = await verifyForm(listInfo)
   options.password = await getPassword(options.url, options.username)
-  options.path = (listInfo.directory as string) || '/'
+  options.path = encodeURI((listInfo.directory as string) || '/')
   return options
 }
 

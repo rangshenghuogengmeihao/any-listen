@@ -26,15 +26,17 @@
   let ext: AnyListen.Extension.Extension | AnyListen.IPCExtension.RemoteOnlineDetail | null = $state.raw(null)
   let loadStats = $state({ loading: false, error: false, errorMessage: '' })
 
+  let localExt = $derived($extensionList.find((e) => e.id == ext?.id))
+  let latest = $derived.by(() => {
+    if (!ext) return { val: false }
+    return useExtensionLatestVersion(ext.id)
+  })
   let info = $derived.by(() => {
     if (!ext) return null
-    const latest = useExtensionLatestVersion(ext.id).val
     const version = /^\d/.test(ext.version) ? `v${ext.version}` : ext.version
     const grants = ext.grant?.map((g) => ({ id: g, icon: `ext_grant_${g}`, label: i18n.t(`extension__grant_${g}`) })) ?? []
-    return { latest, version, grants }
+    return { version, grants }
   })
-
-  let localExt = $derived($extensionList.find((e) => e.id == ext?.id))
 
   const tabList = $derived([
     { id: 'readme', label: $t('extension.detail_tab_readme') },
@@ -134,7 +136,7 @@
         </div>
         <div class="header__action">
           {#if localExt}
-            {#if !info!.latest}
+            {#if !latest.val}
               <Btn onclick={handleInstall}>{$t('extension__action_update')}</Btn>
             {/if}
             <Btn onclick={handleToggleEnable}>

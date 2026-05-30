@@ -204,3 +204,12 @@ export const deduplicationList = <T extends AnyListen.Music.MusicInfo>(list: T[]
     return true
   })
 }
+
+export interface ResourceType {
+  id: string
+  name: string
+  extensionId: string
+}
+export const getSourceId = <T extends ResourceType | undefined | null>(source: T) => {
+  return (source ? `${source.extensionId}_${source.id}` : undefined) as T extends ResourceType ? `${string}_${string}` : undefined
+}

@@ -1,7 +1,7 @@
 import { isValidLyric } from '@any-listen/common/tools'
 
 import { services } from './shared'
-import { findMusicByLocal, findMusicByOnline } from './tools'
+import { findMusic } from './tools'
 import { buildExtSourceId, getExtSource } from './utils'
 
 export const lyricSearch = async ({
@@ -97,19 +97,7 @@ const handleGetMusicLyric = async (
 }
 
 export const getMusicLyric = async (data: { musicInfo: AnyListen.Music.MusicInfo }): Promise<AnyListen.Music.LyricInfo> => {
-  if (data.musicInfo.isLocal) {
-    return findMusicByLocal(data.musicInfo, async (info) => {
-      return handleGetMusicLyric({ musicInfo: info })
-    })
-  }
-  try {
-    return await handleGetMusicLyric({
-      musicInfo: data.musicInfo,
-    })
-  } catch {}
-  return findMusicByOnline(data.musicInfo, async (info) => {
-    return handleGetMusicLyric({
-      musicInfo: info,
-    })
+  return findMusic(data.musicInfo, async (musicInfo) => {
+    return handleGetMusicLyric({ musicInfo })
   })
 }

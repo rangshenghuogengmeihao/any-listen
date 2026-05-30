@@ -1,5 +1,7 @@
 import { createPlayMusicInfoList } from '@any-listen/common/tools'
 
+import { showMusicCommentModal } from '@/components/apis/musicCommentModal'
+
 import * as commit from './commit'
 import { playerEvent } from './event'
 import { addPlayListMusic } from './listRemoteAction'
@@ -96,3 +98,11 @@ export {
   setHasMediaDevicePermission,
   getMediaDevices,
 } from './mediaDevice'
+
+export const showMusicComment = async () => {
+  const musicInfo = playerState.playMusicInfo?.musicInfo
+  if (!musicInfo) return
+  await showMusicCommentModal(musicInfo, () => {
+    return playerState.playMusicInfo?.musicInfo || null
+  })
+}

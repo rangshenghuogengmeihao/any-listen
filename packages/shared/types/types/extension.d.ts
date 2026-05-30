@@ -9,6 +9,7 @@ declare global {
         | 'musicPic'
         | 'musicLyric'
         | 'musicUrl'
+        | 'musicComment'
         | 'songlistSearch'
         | 'songlist'
         | 'topSongs'
@@ -159,17 +160,13 @@ declare global {
       interface ListProviderResource extends ListProvider {
         extensionId: string
       }
+      interface ResourceItem {
+        id: string
+        name: string
+        extensionId: string
+      }
       interface ResourceList {
-        resources: Partial<
-          Record<
-            ResourceAction,
-            Array<{
-              id: string
-              name: string
-              extensionId: string
-            }>
-          >
-        >
+        resources: Partial<Record<ResourceAction, ResourceItem[]>>
         listProvider: ListProviderResource[]
         commands: Command[]
       }

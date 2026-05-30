@@ -1,5 +1,9 @@
 <!--- @lang: en-us -->
 
+### Added
+
+- Added a **Song Comments Display** feature, available from the song list context menu and the playback bar.
+
 ### Fixed
 
 - Fixed an issue where extensions could not be updated from the extension detail dialog in the **Installed Extensions** list ([#193](https://github.com/any-listen/any-listen/issues/193)).
@@ -7,6 +11,10 @@
 ---
 
 <!--- @lang: zh-cn -->
+
+### 新增
+
+- 新增 **「歌曲评论显示」** 功能，可在歌曲列表右键菜单与播放栏中使用。
 
 ### 修复
 

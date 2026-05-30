@@ -16,6 +16,7 @@ const commonCommands = [
   'volumeDown',
   'seekForward',
   'seekBackward',
+  'showMusicComment',
 ] as const
 export const hiddenCommonCommands = ['run'] as const
 export const localCommands = [...(import.meta.env.VITE_IS_DESKTOP ? desktopCommands : webCommands), ...commonCommands] as Array<

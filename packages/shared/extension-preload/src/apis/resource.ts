@@ -35,7 +35,7 @@ const qualityFilter = (qualitys: AnyListen.Music.MusicInfoOnline['meta']['qualit
       })
   )
 }
-const substrLength = (str: string, length = 128): string => {
+const substrLength = (str: string, length = 256): string => {
   return str.length > length ? str.substring(0, length) : str
 }
 /**
@@ -89,7 +89,7 @@ const withErrorReason = (message: string, value: unknown, extra?: string): strin
   const reason = `type=${getValueType(value)} value=${formatErrorValue(value)}`
   return extra ? `${message}: ${extra}; ${reason}` : `${message}: ${reason}`
 }
-const toSafeString = (value: unknown, name: string, length = 128): string => {
+const toSafeString = (value: unknown, name: string, length = 256): string => {
   switch (typeof value) {
     case 'string':
       return substrLength(value, length)
@@ -101,17 +101,17 @@ const toSafeString = (value: unknown, name: string, length = 128): string => {
       throw new Error(withErrorReason(`${name} is not a string`, value))
   }
 }
-const getRequiredString = (value: unknown, name: string, length = 128): string => {
+const getRequiredString = (value: unknown, name: string, length = 256): string => {
   if (value == null) throw new Error(withErrorReason(`${name} is null`, value))
   const str = toSafeString(value, name, length)
   if (!str.trim()) throw new Error(withErrorReason(`${name} is empty`, value))
   return str
 }
-const getOptionalString = (value: unknown, length = 128): string | undefined => {
+const getOptionalString = (value: unknown, length = 256): string | undefined => {
   if (value == null) return undefined
   return toSafeString(value, 'value', length)
 }
-const getOptionalStringOrNull = (value: unknown, length = 128): string | null | undefined => {
+const getOptionalStringOrNull = (value: unknown, length = 256): string | null | undefined => {
   if (value === null) return null
   if (value == null) return undefined
   return toSafeString(value, 'value', length)
@@ -464,7 +464,7 @@ const verifyMusicCommentArray = (
     if (!item) throw new Error(withErrorReason(`${name} item is null`, item, `index=${index}`))
     const id = getRequiredString(item.id, `${name} item id`)
     const userId = getOptionalString(item.userId)
-    const userName = getRequiredString(item.userName, `${name} item userName`)
+    const userName = getOptionalString(item.userName) || ''
     const text = getRequiredString(item.text, `${name} item text`, 10 * 1024)
     const location = getOptionalString(item.location, 512)
 

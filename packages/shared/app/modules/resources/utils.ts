@@ -22,6 +22,17 @@ export const TRY_QUALITYS_LIST = ['flac24bit', 'flac', '320k'] as const
 // }
 
 export const buildExtSourceId = (source: string, extensionId: string) => `${extensionId}__${source}`
+/**
+ * @description 获取资源来源的扩展信息
+ * @param action 资源行为，如 musicSearch、lyricSearch 等
+ * @param exclude 排除的来源，格式为 extensionId__source
+ * @param source 指定来源 source 字段
+ * @returns 来源信息，包含 extensionId、source、name 等字段
+ * @example
+ * getExtSource('musicSearch', [], 'netease') // 获取 source 字段为 netease 的音乐搜索资源来源信息
+ * getExtSource('lyricSearch', ['ext1__source1']) // 获取 lyricSearch 资源来源信息，排除 ext1__source1
+ * getExtSource('musicSearch') // 获取任意一个 musicSearch 资源来源信息
+ */
 export const getExtSource = <T extends AnyListen.Extension.ResourceAction>(
   action: T,
   exclude: string[] = [],

@@ -1,7 +1,7 @@
 import { findMusic as findMusicByExt } from './search/music'
 import { buildExtSourceId, getExtSource } from './utils'
 
-const handleFindMusic = async <T>(
+const findSourceMusic = async <T>(
   info: {
     name: string
     singer: string
@@ -22,10 +22,10 @@ const handleFindMusic = async <T>(
     }
   }
   excludeList.push(buildExtSourceId(source.extensionId, source.id))
-  return handleFindMusic(info, handler, excludeList)
+  return findSourceMusic(info, handler, excludeList)
 }
 
-export const findMusic = async <T>(
+const handleFindMusic = async <T>(
   musicInfo: {
     name: string
     singer: string
@@ -38,7 +38,7 @@ export const findMusic = async <T>(
 ) => {
   const excludeList: string[] = musicInfo.source ? [musicInfo.source] : []
   try {
-    return await handleFindMusic<T>(
+    return await findSourceMusic<T>(
       {
         name: musicInfo.name,
         singer: musicInfo.singer,
@@ -52,7 +52,7 @@ export const findMusic = async <T>(
   if (musicInfo.name.includes('-')) {
     const [name, singer] = musicInfo.name.split('-').map((val) => val.trim())
     try {
-      return await handleFindMusic<T>(
+      return await findSourceMusic<T>(
         {
           name,
           singer,
@@ -64,7 +64,7 @@ export const findMusic = async <T>(
       )
     } catch {}
     try {
-      return await handleFindMusic<T>(
+      return await findSourceMusic<T>(
         {
           name: singer,
           singer: name,
@@ -83,7 +83,7 @@ export const findMusic = async <T>(
       if (fileName.includes('-')) {
         const [name, singer] = fileName.split('-').map((val) => val.trim())
         try {
-          return await handleFindMusic<T>(
+          return await findSourceMusic<T>(
             {
               name,
               singer,
@@ -95,7 +95,7 @@ export const findMusic = async <T>(
           )
         } catch {}
         try {
-          return await handleFindMusic<T>(
+          return await findSourceMusic<T>(
             {
               name: singer,
               singer: name,
@@ -108,7 +108,7 @@ export const findMusic = async <T>(
         } catch {}
       } else {
         try {
-          return await handleFindMusic<T>(
+          return await findSourceMusic<T>(
             {
               name: fileName,
               singer: '',
@@ -126,11 +126,11 @@ export const findMusic = async <T>(
   throw new Error('source not found')
 }
 
-export const findMusicByLocal = async <T>(
+const findMusicByLocal = async <T>(
   musicInfo: AnyListen.Music.MusicInfoLocal,
   handler: (info: AnyListen.Music.MusicInfoOnline) => Promise<T>
 ) => {
-  return findMusic(
+  return handleFindMusic(
     {
       name: musicInfo.name,
       singer: musicInfo.singer,
@@ -142,11 +142,11 @@ export const findMusicByLocal = async <T>(
   )
 }
 
-export const findMusicByOnline = async <T>(
+const findMusicByOnline = async <T>(
   musicInfo: AnyListen.Music.MusicInfoOnline,
   handler: (info: AnyListen.Music.MusicInfoOnline) => Promise<T>
 ) => {
-  return findMusic(
+  return handleFindMusic(
     {
       name: musicInfo.name,
       singer: musicInfo.singer,
@@ -157,4 +157,19 @@ export const findMusicByOnline = async <T>(
     },
     handler
   )
+}
+
+export const findMusic = async <T>(
+  musicInfo: AnyListen.Music.MusicInfo,
+  handler: (info: AnyListen.Music.MusicInfoOnline) => Promise<T>
+) => {
+  if (musicInfo.isLocal) {
+    return findMusicByLocal(musicInfo, async (info) => {
+      return handler(info)
+    })
+  }
+  try {
+    return await handler(musicInfo)
+  } catch {}
+  return findMusicByOnline(musicInfo, handler)
 }

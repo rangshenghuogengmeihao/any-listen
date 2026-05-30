@@ -1,3 +1,4 @@
+import { getSourceId } from '@any-listen/common/tools'
 import { fromStore } from 'svelte/store'
 
 import { resourceList } from '@/modules/extension/reactive.svelte'
@@ -27,7 +28,8 @@ export const tabIcons: Record<(typeof viewTypes)[number], string> = {
 }
 
 export type ResourceListType = StoresValues<typeof resourceList>['resources']
-export type ResourceType = NonNullable<ResourceListType[keyof ResourceListType]>[number]
+export type ResourceType = AnyListen.Extension.ResourceItem
+export { getSourceId }
 
 export const urlParamKeyMap = {
   query: 'q',
@@ -59,10 +61,6 @@ export const useOnlineResourceAvailable = () => {
       return enabled.val && available
     },
   }
-}
-
-export const getSourceId = <T extends ResourceType | undefined | null>(source: T) => {
-  return (source ? `${source.extensionId}_${source.id}` : undefined) as T extends ResourceType ? `${string}_${string}` : undefined
 }
 
 export interface SourceType extends ResourceType {

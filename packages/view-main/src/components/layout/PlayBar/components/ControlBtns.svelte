@@ -2,6 +2,7 @@
   import TogglePlayModeBtn from '@/components/common/TogglePlayModeBtn.svelte'
   import VolumeBtn from '@/components/common/VolumeBtn.svelte'
   import PlaylistBtn from '@/components/common/PlaylistBtn/index.svelte'
+  import CommentBtn from '@/components/common/CommentBtn.svelte'
   // import PlaybackRateBtn from '@/components/common/PlaybackRateBtn.svelte'
 
   // import { t } from '@/plugins/i18n'
@@ -22,6 +23,7 @@
     </svg>
   </button> -->
   <PlaylistBtn />
+  <CommentBtn />
   <VolumeBtn />
   <TogglePlayModeBtn />
   <!-- <PlaybackRateBtn /> -->

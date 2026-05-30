@@ -147,3 +147,5 @@ export const search = (
     total: cacheListInfo?.[1] ?? 0,
   }
 }
+
+export { findMusic } from '@/shared/ipc/resource'

@@ -265,7 +265,7 @@ export const request = async <T = unknown>(url: string, options: Options = {}): 
     }
     // console.log(response)
     let body = (await response.body.text()) as T
-    if (!headers['Content-Type'] || headers['Content-Type'].includes(CONTENT_TYPE.json)) {
+    if (!headers['content-type'] || headers['content-type'].includes(CONTENT_TYPE.json)) {
       try {
         body = JSON.parse(body as string) as T
       } catch {}

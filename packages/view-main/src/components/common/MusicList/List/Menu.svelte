@@ -6,6 +6,7 @@
   import { hasDislike } from '@/modules/dislikeList/store/actions'
   import type { MenuSelectInfo } from '../type'
   import { showMusicAddModal } from '@/components/apis/musicAddModal'
+  import { showMusicCommentModal } from '@/components/apis/musicCommentModal'
   let {
     source,
     onplay,
@@ -25,6 +26,7 @@
     | 'detail'
     | 'sort'
     | 'toggleSource'
+    | 'comment'
     | 'copyName'
     | 'sourceDetail'
     | 'search'
@@ -49,6 +51,7 @@
       local && { action: 'moveTo', label: $t('user_list_music_menu__move_to') },
       // { action: 'sort', label: $t('user_list_music_menu__sort') },
       null,
+      { action: 'comment', label: $t('user_list_music_menu__comment') },
       { action: 'copyName', label: $t('user_list_music_menu__copy_name') },
       // { action: 'detail', label: $t('user_list_music_menu__detail') },
       null,
@@ -98,6 +101,9 @@
           selectInfo.listId,
           selectInfo.selectedList.length ? selectInfo.selectedList : [selectInfo.musicInfo]
         )
+        break
+      case 'comment':
+        void showMusicCommentModal(selectInfo.musicInfo)
         break
       case 'copyName':
         copyName(selectInfo.musicInfo)

@@ -1,5 +1,5 @@
 import { services } from './shared'
-import { findMusicByLocal, findMusicByOnline } from './tools'
+import { findMusic } from './tools'
 import { allowedUrl, buildExtSourceId, getExtSource } from './utils'
 
 export const getMusicUrlByExtensionSource = async ({
@@ -63,27 +63,11 @@ export const getMusicUrl = async (data: {
   quality?: string
   type?: AnyListen.Music.FileType
 }): Promise<AnyListen.IPCExtension.MusicUrlInfo> => {
-  if (data.musicInfo.isLocal) {
-    return findMusicByLocal(data.musicInfo, async (info) => {
-      return handleGetMusicUrl({
-        musicInfo: info,
+  return findMusic(data.musicInfo, async (musicInfo) => {
+    return handleGetMusicUrl({
+        musicInfo,
         quality: data.quality,
         type: data.type,
       })
-    })
-  }
-  try {
-    return await handleGetMusicUrl({
-      musicInfo: data.musicInfo,
-      quality: data.quality,
-      type: data.type,
-    })
-  } catch {}
-  return findMusicByOnline(data.musicInfo, async (info) => {
-    return handleGetMusicUrl({
-      musicInfo: info,
-      quality: data.quality,
-      type: data.type,
-    })
   })
 }

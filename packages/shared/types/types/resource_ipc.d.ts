@@ -33,6 +33,10 @@ declare namespace AnyListen {
       info: Resource.TopSongsDetailInfo
     }
 
+    interface SourceItem extends Extension.ResourceItem {
+      sId: string
+    }
+
     interface FindMusicParams extends IPCExtension.CommonParams {
       name: string
       artist?: string

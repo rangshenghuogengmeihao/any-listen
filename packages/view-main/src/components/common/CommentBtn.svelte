@@ -27,23 +27,17 @@
       height: 24px;
       padding: 0;
       color: inherit !important;
-      transition: color @transition-normal;
+      opacity: 0.5;
+      transition-property: opacity @transition-normal;
 
       svg {
-        opacity: 0.5;
         filter: drop-shadow(0 0 1px rgb(0 0 0 / 20%));
-        transition: @transition-fast;
-        transition-property: opacity, color;
       }
       &:hover {
-        svg {
-          opacity: 0.9;
-        }
+        opacity: 0.9;
       }
       &:active {
-        svg {
-          opacity: 1;
-        }
+        opacity: 1;
       }
     }
   }

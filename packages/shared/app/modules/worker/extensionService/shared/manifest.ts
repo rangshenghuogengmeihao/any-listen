@@ -25,6 +25,7 @@ const RESOURCE: AnyListen.Extension.ResourceAction[] = [
   'lyricDetail',
 ]
 const availableIcons = ['.png', '.jpg', '.jpeg', '.webp', '.svg']
+// t('extension.resource_musicComment')
 
 const buildPath = async (extensionPath: string, _path: string) => {
   if (isAbsolute(_path)) throw new Error(`path not a relative path: ${_path}`)

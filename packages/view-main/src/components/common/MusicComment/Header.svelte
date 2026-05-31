@@ -64,9 +64,12 @@
       }
     } else {
       const targetSource = sourceList.val.find((item) => item.id === _musicInfo?.meta.source)
-      if (currentSource?.id !== targetSource?.id && targetSource) {
+      if (targetSource && currentSource?.id !== targetSource.id) {
         selectedSourceId = targetSource.sId
         currentSource = targetSource
+      } else if (!currentSource) {
+        currentSource = sourceList.val[0]
+        selectedSourceId = currentSource.sId
       }
     }
     onsourcechange(currentSource ?? sourceList.val[0])

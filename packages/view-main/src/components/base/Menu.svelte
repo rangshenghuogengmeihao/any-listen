@@ -169,7 +169,8 @@
   }
   .hr {
     // margin: 5px 0;
-    height: 1px;
-    background-color: var(--color-primary-background-active);
+    // height: 1px;
+    border-top: 1px solid var(--color-primary-background-active);
+    // background-color: var(--color-primary-background-active);
   }
 </style>

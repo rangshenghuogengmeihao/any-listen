@@ -15,6 +15,7 @@
 
 - Improved cover loading in the song list to display previously loaded covers faster ([#156](https://github.com/any-listen/any-listen/issues/156)).
 - No longer treat `_` as a separator for multiple artist names ([#191](https://github.com/any-listen/any-listen/issues/191)).
+- Improved the implementation of context menu separators ([#198](https://github.com/any-listen/any-listen/issues/198)).
 
 ### Fixed
 
@@ -51,6 +52,7 @@
 
 - 优化歌曲列表内封面加载机制，加快已加载过封面的显示速度 ([#156](https://github.com/any-listen/any-listen/issues/156))。
 - 不再将 `_` 认为是多个歌手名字的分隔符（[#191](https://github.com/any-listen/any-listen/issues/191)）。
+- 优化上下文菜单分割线实现效果（[#198](https://github.com/any-listen/any-listen/issues/198)）。
 
 ### 修复
 

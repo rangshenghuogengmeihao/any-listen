@@ -177,6 +177,8 @@ export const buildConfig = (target, port = 9200, ipcScript) => {
               'bottom',
               'right',
               'border-radius',
+              'border',
+              'border-*',
               'grid-template-columns',
               'gap',
             ],

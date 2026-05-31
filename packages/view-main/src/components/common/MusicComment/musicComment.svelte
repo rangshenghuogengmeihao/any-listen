@@ -21,7 +21,7 @@
     onrefresh={async () => {
       if (handleRefresh) {
         const info = handleRefresh()
-        if (info) {
+        if (info && info !== currentMusicInfo) {
           await loadComment(info, handleRefresh)
           return
         }

@@ -22,7 +22,7 @@
   }
 </script>
 
-<Modal bind:visible teleport="#root" width="65%" maxwidth="90rem" height="80%" maxheight="80%" {onafterleave}>
+<Modal bind:visible teleport="#root" width="65%" maxwidth="90rem" height="80%" maxheight="80%" bgclose={false} {onafterleave}>
   <main class="main">
     <MusicComment bind:this={musicComment} />
   </main>

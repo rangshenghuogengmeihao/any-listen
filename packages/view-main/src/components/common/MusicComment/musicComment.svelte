@@ -41,6 +41,7 @@
     display: flex;
     flex: auto;
     flex-flow: column nowrap;
+    min-height: 0;
     // overflow: hidden;
     transform-origin: 100%;
     transition: @transition-normal;

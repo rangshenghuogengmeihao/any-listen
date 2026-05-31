@@ -92,7 +92,7 @@
         />
       {/if}
     </div>
-    <Btn aria-label={$t('music_comment.refresh')} onclick={onrefresh} min icon link>
+    <Btn aria-label={$t('music_comment.refresh')} onclick={onrefresh} min icon>
       <svg
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
@@ -132,9 +132,13 @@
     display: flex;
     flex: none;
     flex-flow: row nowrap;
-    gap: 5px;
+    gap: 8px;
     align-items: center;
     color: var(--color-primary);
+
+    :global {
+      --size: 28px;
+    }
   }
 
   .select {

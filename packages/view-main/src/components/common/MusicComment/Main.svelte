@@ -7,6 +7,7 @@
   import { findMusic } from '@/modules/resource/search/music/actions'
   import Loading from '@/components/base/Loading.svelte'
   import { musicComment } from '@/modules/resource/musicComment/action'
+  import { verticalScrollbar } from '@/shared/compositions/verticalScrollbar.svelte'
 
   interface CommentState {
     isLoading: boolean
@@ -89,11 +90,11 @@
       state.list = result.list
       if (type == 'hot') {
         void tick().then(() => {
-          domCommentHot?.scrollTo(0, 0)
+          domCommentHot?.scrollTo({ top: 0, behavior: 'smooth' })
         })
       } else {
         void tick().then(() => {
-          domCommentNew?.scrollTo(0, 0)
+          domCommentNew?.scrollTo({ top: 0, behavior: 'smooth' })
         })
       }
     } catch (error) {
@@ -214,7 +215,7 @@
     <main class="tab-main" bind:this={domTabMain}>
       {#if currentMusicInfo}
         <div class="tab-content">
-          <div class="scroll tab-content-scroll" bind:this={domCommentHot}>
+          <div class="tab-content-scroll" bind:this={domCommentHot} {@attach verticalScrollbar({ offset: '0' })}>
             {#if hotComment.isLoadError}
               <Btn
                 onclick={() => {
@@ -245,7 +246,7 @@
           </div>
         </div>
         <div class="tab-content">
-          <div class="scroll tab-content-scroll" bind:this={domCommentNew}>
+          <div class="tab-content-scroll" bind:this={domCommentNew} {@attach verticalScrollbar({ offset: '0' })}>
             {#if newComment.isLoadError}
               <Btn
                 onclick={() => {
@@ -289,6 +290,7 @@
     display: flex;
     flex: auto;
     flex-direction: column;
+    min-height: 0;
     background-color: var(--color-primary-light-400-alpha-700);
     border-radius: 4px;
   }
@@ -297,8 +299,7 @@
     display: flex;
     flex-flow: row nowrap;
     gap: 15px;
-    padding-right: 10px;
-    padding-left: 15px;
+    padding: 0 15px;
   }
 
   .tab-main {
@@ -306,7 +307,7 @@
     flex: auto;
     flex-flow: row nowrap;
     overflow: hidden;
-    scroll-behavior: smooth;
+    // scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
   }
 
@@ -322,9 +323,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    padding-right: 10px;
-    padding-left: 15px;
-    scroll-behavior: smooth;
+    padding: 0 15px;
   }
 
   .comment-label {

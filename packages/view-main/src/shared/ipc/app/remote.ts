@@ -50,7 +50,8 @@ export default {
     if (options.canSelectFolders) properties.push('openDirectory')
     if (options.canSelectMany) properties.push('multiSelections')
     const filters: AnyListen.OpenDialogOptions['filters'] = options.filters
-      ? Object.entries(options.filters || {}).map(([name, extensions]) => ({
+      ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        Object.entries(options.filters || {}).map(([name, extensions]) => ({
           name,
           extensions,
         }))

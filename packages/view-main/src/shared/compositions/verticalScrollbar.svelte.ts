@@ -6,12 +6,10 @@ export const verticalScrollbar = ({
   autoHide = true,
 }: { scrollbarWidth?: string; offset?: string; autoHide?: boolean } = {}) => {
   return (dom: HTMLElement) => {
+    dom.classList.add('hide-scrollbar')
     dom.style.overflowY = 'scroll'
-
-    if (!window.scrollbarWidth) return
-
     dom.style.position = 'relative'
-    dom.style.marginRight = 'var(--scrollbar-width-negative)'
+    // dom.style.marginRight = 'var(--scrollbar-width-negative)'
 
     const parentNode = dom.parentNode as HTMLElement
     parentNode.style.position = 'relative'
@@ -179,6 +177,7 @@ export const verticalScrollbar = ({
     }
     scrollbar.addEventListener('contextmenu', handleCtxMenu)
     return () => {
+      dom.classList.remove('hide-scrollbar')
       parentNode.removeChild(scrollbar)
       dom.removeEventListener('scroll', updateThumbPosition)
       unsub()

@@ -200,7 +200,7 @@
   </div>
 {/snippet}
 
-<Modal teleport="#root" bind:visible maxwidth="72%" {onafterleave} minheight="0" bgclose={false}>
+<Modal teleport="#root" bind:visible maxwidth="72%" {onafterleave} minheight="0">
   {#if versionInfo.val.isLatest}
     <main class="version-modal-main">
       <h2>{$t('update_modal.latest_title')}</h2>

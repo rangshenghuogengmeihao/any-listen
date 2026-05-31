@@ -4,6 +4,7 @@
   import { t } from '@/plugins/i18n'
   import { type Snippet, onMount, tick } from 'svelte'
   import { MODAL_CLASSNAMES } from '@/shared/constants'
+  import { domClick } from '@/shared/compositions/click.svelte'
   let {
     visible = $bindable(),
     closebtn = true,
@@ -107,9 +108,9 @@
       class="modal"
       transition:fly={{ y: -30 }}
       class:filter
-      onclick={() => {
+      {@attach domClick(() => {
         if (bgclose) void close()
-      }}
+      })}
       onoutroend={handleAfterLeave}
     >
       <div

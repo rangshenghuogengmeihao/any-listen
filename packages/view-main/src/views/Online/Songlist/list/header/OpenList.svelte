@@ -52,7 +52,7 @@
   </Btn>
 {/if}
 
-<Modal bind:visible teleport="#view" width="76%" maxwidth="800px" minheight="0" bgclose={false}>
+<Modal bind:visible teleport="#view" width="76%" maxwidth="800px" minheight="0">
   <main class="main scroll">
     <h2>{$t('online.songlist.open_list.title')}</h2>
     <div class="input-content">

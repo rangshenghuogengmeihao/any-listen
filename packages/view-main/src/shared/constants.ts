@@ -7,3 +7,8 @@ export const LIST_PIC_ICON = {
   [LIST_IDS.DEFAULT]: 'play',
   [LIST_IDS.LAST_PLAYED]: 'time_machine',
 } as const
+
+export const MODAL_CLASSNAMES = {
+  modal: 'show-modal',
+  fullscreenModal: 'show-fullscreen-modal',
+} as const

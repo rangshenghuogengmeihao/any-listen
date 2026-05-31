@@ -9,10 +9,13 @@
   import { playerEvent } from '@/modules/player/store/event'
   import { playerState } from '@/modules/player/store/state'
   import { useSettingValue } from '@/modules/setting/reactive.svelte'
+  import { tick, untrack } from 'svelte'
+  import { MODAL_CLASSNAMES } from '@/shared/constants'
   let introend = $state(playDetailState.isShowPlayDetail)
   let bgSrc = $state<string>()
   const isDynamicBackground = useSettingValue('playDetail.isDynamicBackground')
   const hidePlayDtail = useHidePlayDtail()
+  let domContainer: HTMLElement | null = $state(null)
 
   $effect(() => {
     if (!isDynamicBackground.val) {
@@ -36,6 +39,25 @@
     handlePic(playerState.musicInfo.pic)
     return playerEvent.on('picUpdated', handlePic)
   })
+
+  let parentNode: HTMLElement | null | undefined = null
+  $effect(() => {
+    if (!$isShowPlayDetail) {
+      if (parentNode) {
+        parentNode.classList.remove(MODAL_CLASSNAMES.fullscreenModal)
+        parentNode = null
+      }
+      return
+    }
+
+    untrack(() => {
+      void tick().then(() => {
+        parentNode = domContainer?.parentElement
+        if (!parentNode) return
+        parentNode.classList.add(MODAL_CLASSNAMES.fullscreenModal)
+      })
+    })
+  })
 </script>
 
 {#if $isShowPlayDetail}
@@ -45,6 +67,7 @@
     class="play-detail"
     class:dybg={bgSrc}
     role="alert"
+    bind:this={domContainer}
     oncontextmenu={hidePlayDtail}
     onintroend={() => {
       introend = true

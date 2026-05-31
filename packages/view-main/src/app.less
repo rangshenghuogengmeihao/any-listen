@@ -23,7 +23,9 @@ html {
     &.fullscreen {
       background-color: var(--color-content-background);
 
-      .drag {
+      .drag,
+      .drag-no-modal,
+      .drag-no-any-modal {
         -webkit-app-region: no-drag;
       }
     }
@@ -31,6 +33,20 @@ html {
     .drag {
       -webkit-app-region: drag;
     }
+    .drag-no-modal {
+      -webkit-app-region: drag;
+    }
+    .show-modal .drag-no-modal {
+      -webkit-app-region: no-drag;
+    }
+    .drag-no-any-modal {
+      -webkit-app-region: drag;
+    }
+    .show-modal .drag-no-any-modal,
+    .show-fullscreen-modal .drag-no-any-modal {
+      -webkit-app-region: no-drag;
+    }
+
     .no-drag {
       -webkit-app-region: no-drag;
     }

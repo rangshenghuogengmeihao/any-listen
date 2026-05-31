@@ -9,7 +9,7 @@
 {/snippet}
 
 {#if import.meta.env.VITE_IS_DESKTOP}
-  <div class="aside-logo drag">
+  <div class="aside-logo drag-no-any-modal">
     {@render logo()}
   </div>
 {/if}

@@ -11,8 +11,6 @@
 
   let domBtns = $state<HTMLDivElement>()
 
-  let isFullscreen = false
-
   onMount(() => {
     const getBtnEl = (el: HTMLElement | null): HTMLButtonElement | null => {
       return el ? (el.tagName == 'BUTTON' ? (el as HTMLButtonElement) : getBtnEl(el.parentNode as HTMLElement | null)) : null
@@ -96,12 +94,12 @@
 {/snippet}
 
 {#if import.meta.env.VITE_IS_DESKTOP}
-  <div class="header drag" class:fullscreen={isFullscreen}>
+  <div class="header drag-no-modal">
     {@render content()}
   </div>
 {/if}
 {#if import.meta.env.VITE_IS_WEB}
-  <div class="header" class:fullscreen={isFullscreen} {@attach windowDarg}>
+  <div class="header" {@attach windowDarg}>
     {@render content()}
   </div>
 {/if}

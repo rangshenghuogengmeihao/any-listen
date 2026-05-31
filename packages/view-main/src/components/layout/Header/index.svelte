@@ -3,12 +3,10 @@
   import ControlBtns from './ControlBtns.svelte'
   import SearchInput from './SearchInput.svelte'
   import { windowDarg } from '@/shared/browser/widnow.svelte'
-
-  let isFullscreen = false
 </script>
 
 {#if import.meta.env.VITE_IS_DESKTOP}
-  <div class="toolbar drag" class:fullscreen={isFullscreen}>
+  <div class="toolbar drag-no-any-modal">
     <div class="left">
       <SearchInput />
     </div>
@@ -21,7 +19,7 @@
   </div>
 {/if}
 {#if import.meta.env.VITE_IS_WEB}
-  <div class="toolbar" class:fullscreen={isFullscreen} {@attach windowDarg}>
+  <div class="toolbar" {@attach windowDarg}>
     <div class="left">
       <SearchInput />
     </div>

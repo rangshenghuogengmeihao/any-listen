@@ -3,6 +3,7 @@
   import Portal from '@/components/base/Portal.svelte'
   import { t } from '@/plugins/i18n'
   import { type Snippet, onMount, tick } from 'svelte'
+  import { MODAL_CLASSNAMES } from '@/shared/constants'
   let {
     visible = $bindable(),
     closebtn = true,
@@ -56,7 +57,7 @@
   let prevFocusedNode: HTMLElement | null = null
   const removeClass = () => {
     if (!isAddedClass) return
-    parentNode?.classList.remove('show-modal')
+    parentNode?.classList.remove(MODAL_CLASSNAMES.modal)
   }
   const handleShowChange = async (val: boolean) => {
     // console.log(val)
@@ -65,8 +66,8 @@
       if (!domContainer) return
       modalCount++
       parentNode = domContainer.parentNode as HTMLElement
-      if (!parentNode.classList.contains('show-modal')) {
-        parentNode.classList.add('show-modal')
+      if (!parentNode.classList.contains(MODAL_CLASSNAMES.modal)) {
+        parentNode.classList.add(MODAL_CLASSNAMES.modal)
         isAddedClass = true
       }
       prevFocusedNode = document.activeElement as HTMLElement

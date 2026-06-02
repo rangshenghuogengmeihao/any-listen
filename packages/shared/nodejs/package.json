@@ -7,9 +7,9 @@
     "iconv-lite": "^0.7.2",
     "jschardet": "^3.1.4",
     "music-metadata": "^11.12.3",
-    "tar": "^7.5.15",
+    "tar": "^7.5.16",
     "tunnel": "^0.0.6",
-    "undici": "^7.26.0"
+    "undici": "^7.27.0"
   },
   "devDependencies": {
     "@any-listen/eslint": "workspace:@shared/eslint@*",

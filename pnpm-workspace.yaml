@@ -46,7 +46,6 @@ overrides:
 
 peerDependencyRules:
   allowedVersions:
-    svelte-preprocess>typescript: '6'
     ts-node>@types/node: '24'
     vite>@types/node: '24'
 

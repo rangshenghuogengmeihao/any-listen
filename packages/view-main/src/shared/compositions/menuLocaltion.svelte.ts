@@ -41,6 +41,7 @@ export const menuLocaltion = ({
     let show = false
     let timeout: number | null = null
     let transitioning = false
+    let focusTimeout: number | null = null
 
     const clearHideTimeout = () => {
       if (timeout) {
@@ -74,11 +75,19 @@ export const menuLocaltion = ({
         if (show) onHide()
       }, 150)
     }
+
+    const runFocusTimeout = () => {
+      if (focusTimeout) clearTimeout(focusTimeout)
+      focusTimeout = setTimeout(() => {
+        focusTimeout = null
+        if (!show || dom.getAnimations().length > 0 || transitioning) return
+        dom.focus()
+      }, 200)
+    }
     const handleTransitionEnd = () => {
-      if (dom.getAnimations().length > 0) return
+      if (!show || dom.getAnimations().length > 0) return
       transitioning = false
-      if (!show) return
-      dom.focus()
+      runFocusTimeout()
     }
 
     const handleDocumentClick = (event: MouseEvent) => {
@@ -104,7 +113,6 @@ export const menuLocaltion = ({
     })
 
     $effect(() => {
-      let timeout: number | null = null
       clearHideTimeout()
       // console.log(reactives.visible, show, reactives.location, transitioning)
       if (reactives.visible == show) {
@@ -115,17 +123,10 @@ export const menuLocaltion = ({
         if (show) {
           if (dom.style.transitionProperty != transition2) dom.style.transitionProperty = transition2
           dom.style.transform = `scale(1) translate(${getOffsetXY(dom, reactives.location.x, reactives.location.y)})`
-          timeout = setTimeout(() => {
-            timeout = null
-            dom.focus()
-          }, 300)
+          runFocusTimeout()
         }
       } else if (reactives.visible) handleShow(reactives.location)
       else handleHide()
-
-      return () => {
-        if (timeout) clearTimeout(timeout)
-      }
     })
 
     return () => {

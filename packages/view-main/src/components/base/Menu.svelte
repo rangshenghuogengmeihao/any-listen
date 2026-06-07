@@ -121,7 +121,7 @@
     opacity: 0;
     transform: scale(0);
     transform-origin: 0 0 0;
-    transition: 0.14s ease;
+    transition: 0.14s ease !important;
     transition-property: transform, opacity;
     // padding: 3px 0;
     // will-change: transform;

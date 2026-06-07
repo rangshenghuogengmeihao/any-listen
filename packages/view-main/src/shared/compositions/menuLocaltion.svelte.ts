@@ -75,6 +75,7 @@ export const menuLocaltion = ({
       }, 150)
     }
     const handleTransitionEnd = () => {
+      // if (dom.getAnimations().length > 0) return
       transitioning = false
       if (!show) return
       dom.focus()
@@ -103,6 +104,7 @@ export const menuLocaltion = ({
     })
 
     $effect(() => {
+      let timeout: number | null = null
       clearHideTimeout()
       // console.log(reactives.visible, show, reactives.location, transitioning)
       if (reactives.visible == show) {
@@ -113,12 +115,17 @@ export const menuLocaltion = ({
         if (show) {
           if (dom.style.transitionProperty != transition2) dom.style.transitionProperty = transition2
           dom.style.transform = `scale(1) translate(${getOffsetXY(dom, reactives.location.x, reactives.location.y)})`
-          setTimeout(() => {
+          timeout = setTimeout(() => {
+            timeout = null
             dom.focus()
           }, 300)
         }
       } else if (reactives.visible) handleShow(reactives.location)
       else handleHide()
+
+      return () => {
+        if (timeout) clearTimeout(timeout)
+      }
     })
 
     return () => {

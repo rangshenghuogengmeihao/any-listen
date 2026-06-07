@@ -427,11 +427,13 @@ declare namespace AnyListen {
 
       deflate: <T extends 'base64' | 'binary' = 'binary'>(
         data: Uint8Array | string,
-        encoding?: T
+        encoding?: T,
+        options?: { finishFlush?: 'Z_FINISH' | 'Z_SYNC_FLUSH' }
       ) => Promise<T extends 'base64' ? string : Uint8Array>
       inflate: <T extends 'utf-8' | 'binary' = 'binary'>(
         data: Uint8Array | string,
-        encoding?: T
+        encoding?: T,
+        options?: { finishFlush?: 'Z_FINISH' | 'Z_SYNC_FLUSH' }
       ) => Promise<T extends 'utf-8' ? string : Uint8Array>
       aesEncrypt: (
         mode: ExtensionVM.AES_MODE,

@@ -1,10 +1,10 @@
 import { hostContext } from '@/host/state'
 
 export const zlib: AnyListen_API.Zlib = {
-  deflate(data, encoding) {
-    return hostContext.hostFuncs.deflate(data, encoding)
+  async deflate(data, encoding, options) {
+    return hostContext.hostFuncs.deflate(data, encoding, options)
   },
-  inflate(data, encoding) {
-    return hostContext.hostFuncs.inflate(data, encoding)
+  async inflate(data, encoding, options) {
+    return hostContext.hostFuncs.inflate(data, encoding, options)
   },
 }

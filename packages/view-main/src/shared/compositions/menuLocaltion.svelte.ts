@@ -75,7 +75,7 @@ export const menuLocaltion = ({
       }, 150)
     }
     const handleTransitionEnd = () => {
-      // if (dom.getAnimations().length > 0) return
+      if (dom.getAnimations().length > 0) return
       transitioning = false
       if (!show) return
       dom.focus()

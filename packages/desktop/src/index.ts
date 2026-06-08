@@ -21,7 +21,7 @@ const handleInited = () => {
 const init = async () => {
   console.log('init')
   await initAppEnv()
-  initI18n()
+  await initI18n()
   await startCommonWorkers(appState.dataPath)
   void startExtensionServiceWorker()
   void initModules().finally(handleInited)

@@ -59,3 +59,8 @@ export const buildElectronProxyConfig = (host: string, port: string): Electron.P
 export const trashItem = async (filePath: string) => {
   await shell.trashItem(filePath)
 }
+
+export const getSystemLocale = async () => {
+  await app.whenReady()
+  return app.getSystemLocale().toLowerCase()
+}

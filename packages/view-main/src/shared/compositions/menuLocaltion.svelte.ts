@@ -1,5 +1,3 @@
-import { untrack } from 'svelte'
-
 import { appState } from '@/modules/app/store/state'
 
 const transition1 = 'transform, opacity'
@@ -41,7 +39,6 @@ export const menuLocaltion = ({
     let show = false
     let timeout: number | null = null
     let transitioning = false
-    let focusTimeout: number | null = null
 
     const clearHideTimeout = () => {
       if (timeout) {
@@ -54,6 +51,8 @@ export const menuLocaltion = ({
       // console.log('handleShow')
       show = true
       dom.style.opacity = '1'
+      dom.style.left = `${reactives.location.x - appState.rootOffsetX + 2}px`
+      dom.style.top = `${reactives.location.y - appState.rootOffsetY}px`
       dom.style.transform = `scale(1) translate(${getOffsetXY(dom, location.x, location.y)})`
       dom.style.pointerEvents = 'auto'
     }
@@ -76,18 +75,10 @@ export const menuLocaltion = ({
       }, 150)
     }
 
-    const runFocusTimeout = () => {
-      if (focusTimeout) clearTimeout(focusTimeout)
-      focusTimeout = setTimeout(() => {
-        focusTimeout = null
-        if (!show || dom.getAnimations().length > 0 || transitioning) return
-        dom.focus()
-      }, 200)
-    }
     const handleTransitionEnd = () => {
       if (!show || dom.getAnimations().length > 0) return
       transitioning = false
-      runFocusTimeout()
+      dom.focus()
     }
 
     const handleDocumentClick = (event: MouseEvent) => {
@@ -106,12 +97,6 @@ export const menuLocaltion = ({
     dom.addEventListener('blur', handleBlur)
     dom.addEventListener('transitionend', handleTransitionEnd)
 
-    untrack(() => {
-      dom.style.left = `${reactives.location.x - appState.rootOffsetX + 2}px`
-      dom.style.top = `${reactives.location.y - appState.rootOffsetY}px`
-      if (reactives.visible) handleShow(reactives.location)
-    })
-
     $effect(() => {
       clearHideTimeout()
       // console.log(reactives.visible, show, reactives.location, transitioning)
@@ -123,7 +108,7 @@ export const menuLocaltion = ({
         if (show) {
           if (dom.style.transitionProperty != transition2) dom.style.transitionProperty = transition2
           dom.style.transform = `scale(1) translate(${getOffsetXY(dom, reactives.location.x, reactives.location.y)})`
-          runFocusTimeout()
+          dom.focus()
         }
       } else if (reactives.visible) handleShow(reactives.location)
       else handleHide()

@@ -236,6 +236,7 @@ const listenerAppEvent = () => {
     } catch {}
     handleProxyChange()
     if (process.env.NODE_ENV === 'production') void startCheckUpdateTimeout()
+    if (__BUILD_WIN_LEGACY__) void import('./winLegacy')
   })
   appEvent.on('proxy_changed', (host, port, electronProxy) => {
     setProxyByHost(host, port)

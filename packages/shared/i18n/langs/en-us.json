@@ -660,5 +660,11 @@
   "user_list_music_menu__play": "Play",
   "user_list_music_menu__play_later": "Play later",
   "user_list_music_menu__remove": "Remove",
-  "user_list_music_menu__sort": "Adjust position"
+  "user_list_music_menu__sort": "Adjust position",
+  "winLegacyMessage.button_ok": "Knew",
+  "winLegacyMessage.button_goto": "Jump to new version release page",
+  "winLegacyMessage.message": "You are using Any Listen, which is designed for older versions of Windows. It is only for users who really cannot upgrade to a new version of the system. However, your system seems to be within the support range of the standard version. For the best experience, please switch to the standard version of Any Listen.\n\nNote: The current version lacks security updates and may present security risks, and its functions are untested and may have compatibility issues.",
+  "winLegacyMessage.old_os_message": "You are using Any Listen, which is designed for older versions of Windows and is only intended for users who simply cannot upgrade to a newer version of their system. \nThis version lacks security updates and may present security risks, and its functionality is untested and may have compatibility issues.\n\nIf your device supports Windows 10 or higher, it is highly recommended to upgrade your system and switch to the standard version of Any Listen for better security and performance.",
+  "winLegacyMessage.old_os_title": "Windows Legacy Version Notice",
+  "winLegacyMessage.title": "You Are Using the Legacy Version"
 }

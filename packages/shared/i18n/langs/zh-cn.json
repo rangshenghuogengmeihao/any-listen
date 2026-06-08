@@ -659,5 +659,11 @@
   "user_list_music_menu__play": "播放",
   "user_list_music_menu__play_later": "稍后播放",
   "user_list_music_menu__remove": "移除",
-  "user_list_music_menu__sort": "调整位置"
+  "user_list_music_menu__sort": "调整位置",
+  "winLegacyMessage.button_ok": "知道了",
+  "winLegacyMessage.button_goto": "跳转新版发布页",
+  "winLegacyMessage.message": "您正在使用专为旧版 Windows 准备的 Any Listen，它仅用于实在无法升级到新版系统的用户，但您的系统似乎在标准版的支持范围内，为了获得最佳体验，请切换到 Any Listen 的标准版本。\n\n注意：当前版本缺乏安全更新，可能存在安全风险，并且功能未经测试，可能存在兼容性问题。",
+  "winLegacyMessage.old_os_message": "您正在使用专为旧版 Windows 准备的 Any Listen，它仅用于实在无法升级到新版系统的用户。\n该版本缺乏安全更新，可能存在安全风险，并且功能未经测试，可能存在兼容性问题。\n\n如果您的设备支持 Windows 10 或更高版本，强烈建议升级系统，切换到标准版本的 Any Listen，以获得更好的安全性和性能。",
+  "winLegacyMessage.old_os_title": "Windows 旧版提示",
+  "winLegacyMessage.title": "您正在使用旧版"
 }

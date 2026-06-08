@@ -2,7 +2,7 @@
 
 ### Improved
 
-- Improved the right-click context menu display logic ([#205](https://github.com/any-listen/any-listen/issues/205)).
+- Added a security notice for the Windows Legacy version ([#206](https://github.com/any-listen/any-listen/issues/206)).
 
 ---
 
@@ -10,4 +10,4 @@
 
 ### 优化
 
-- 优化右键菜单弹出逻辑（[#205](https://github.com/any-listen/any-listen/issues/205)）。
+- 为 Windows Legacy 版本添加安全提示（[#206](https://github.com/any-listen/any-listen/issues/206)）。

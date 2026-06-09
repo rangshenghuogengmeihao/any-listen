@@ -22,6 +22,7 @@ import {
   createMusicInfoOrderDeleteByListIdStatement,
   createMusicInfoOrderDeleteStatement,
   createMusicInfoOrderInsertStatement,
+  createMusicInfoOrderStatement,
   createMusicInfoQueryStatement,
   createMusicInfoUpdateStatement,
 } from './statements'
@@ -410,4 +411,15 @@ export const overwriteListData = (lists: UserListInfo[], musicInfos: MusicInfo[]
       })
     }
   })(lists, musicInfos)
+}
+
+/**
+ * 获取列表内音乐的排序
+ * @param listId 列表id
+ * @param musicId 音乐id
+ * @returns 音乐排序信息
+ */
+export const getMusicInfoOrder = (listId: string, musicId: string) => {
+  const musicInfoOrderStatement = createMusicInfoOrderStatement()
+  return musicInfoOrderStatement.get({ list_id: listId, music_id: musicId })
 }

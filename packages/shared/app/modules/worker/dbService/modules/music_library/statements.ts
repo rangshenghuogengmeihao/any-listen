@@ -279,6 +279,16 @@ export const createMusicInfoByMusicInfoIdQueryStatement = () => {
 }
 
 /**
+ * 创建根据列表Id与音乐id查询音乐排序语句
+ * @returns 查询语句
+ */
+export const createMusicInfoOrderStatement = () => {
+  return dbPrepare<ListMusicInfoQuery, MusicInfoOrder>(`SELECT "list_id", "music_id", "order"
+    FROM "main"."my_list_music_info_order"
+    WHERE "list_id"=@list_id AND "music_id"=@music_id`)
+}
+
+/**
  * 创建音乐信息排序插入语句
  * @returns 插入语句
  */

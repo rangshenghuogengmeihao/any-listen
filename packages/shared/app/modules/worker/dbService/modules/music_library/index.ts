@@ -3,6 +3,7 @@ import { arrPush, arrPushByPosition, arrUnshift } from '@any-listen/common/utils
 
 import {
   deleteUserLists,
+  getMusicInfoOrder,
   inertUserLists,
   insertMusicInfoList,
   insertMusicInfoListAndRefreshOrder,
@@ -166,6 +167,8 @@ const initListInfo = (force = false) => {
   // userListMap = new Map(Object.entries(newUserLists))
 }
 const initUserList = (force = false) => {
+  if (!force && userLists.length) return
+  rawPoss.clear()
   userLists = queryAllUserList().map(parseList<AnyListen.List.UserListInfo>)
 }
 
@@ -224,11 +227,12 @@ export const createUserLists = (position: number, lists: AnyListen.List.UserList
   if (position < 0 || position >= userLists.length) {
     // 如果是最末尾，那么取最后一个列表的原始位置 + 1 作为新列表的原始位置，否则新列表的原始位置为 position
     // 因为原始 pos 可能比 userLists.length 大，所以不能直接用 userLists.length 作为新列表的原始位置
-    const newLists: UserListInfo[] = toDBListInfo(lists, (userLists.length && (rawPoss.get(userLists.at(-1)!.id) ?? -1) + 1) || 0)
+    const order = userLists.length ? (rawPoss.get(userLists.at(-1)!.id) ?? userLists.length) + 1 : 0
+    const newLists = toDBListInfo(lists, order)
     inertUserLists(parentId, newLists)
   } else {
     const newUserLists = toDBListInfo(userLists)
-    arrPushByPosition(newUserLists, toDBListInfo(lists, 0), position)
+    arrPushByPosition(newUserLists, toDBListInfo(lists), position)
     newUserLists.forEach((list, index) => {
       list.position = index
     })
@@ -431,10 +435,14 @@ export const musicsAdd = (
       break
     case 'bottom':
     // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check, no-fallthrough
-    default:
-      insertMusicInfoList(toDBMusicInfo(musicInfos, listId, targetList.length))
+    default: {
+      // 如果是添加到最后，那么取最后一个歌曲的原始位置 + 1 作为新歌曲的原始位置，否则新歌曲的原始位置为 position
+      // 因为原始 pos 可能比 targetList.length 大，所以不能直接用 targetList.length 作为新歌曲的原始位置
+      const order = targetList.length ? (getMusicInfoOrder(listId, targetList.at(-1)!.id)?.order ?? targetList.length) + 1 : 0
+      insertMusicInfoList(toDBMusicInfo(musicInfos, listId, order))
       arrPush(targetList, musicInfos)
       break
+    }
   }
   updateSongCount(listId, targetList.length)
 }

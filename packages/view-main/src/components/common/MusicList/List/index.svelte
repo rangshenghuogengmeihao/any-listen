@@ -190,6 +190,11 @@
               }
             }
           }}
+          onplay={() => {
+            void playMusic(listinfo.id, list, item, source, {
+              ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
+            })
+          }}
         />
       {/snippet}
     </VirtualizedList>

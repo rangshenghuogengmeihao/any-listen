@@ -8,10 +8,15 @@
   import { buildSourceLabel } from '@any-listen/common/tools'
   import { onMount, tick } from 'svelte'
   import { getMusicPicDelay } from '@/modules/player/store/actions'
+  import Btn from '@/components/base/Btn.svelte'
+  import SvgIcon from '@/components/base/SvgIcon.svelte'
+  import MusicHeartBtn from './components/MusicHeartBtn.svelte'
+  import { t } from '@/plugins/i18n'
   // console.log(querystring)
   let {
     musicinfo,
     listid,
+    index,
     picStyle,
     selected,
     selectedactive,
@@ -19,6 +24,7 @@
     active,
     oncontextmenu,
     onclick,
+    onplay,
   }: {
     musicinfo: AnyListen.Music.MusicInfo
     listid: string
@@ -30,10 +36,12 @@
     selectedactive?: boolean
     oncontextmenu?: MouseEventHandler<HTMLDivElement>
     onclick: (isKey: boolean) => void
+    onplay?: () => void
   } = $props()
 
   let sourceLabel = $derived(buildSourceLabel(musicinfo))
   let picUrl = $state<null | string>(null)
+  let hovered = $state(false)
   // let isPlaying = $derived(isplaylist && $playInfo.index === index)
   const badgeTypes = ['primary', 'secondary', 'tertiary'] as const
 
@@ -77,6 +85,8 @@
   onkeydown={handleClick}
   onclick={handleClick}
   {oncontextmenu}
+  onmouseenter={() => (hovered = true)}
+  onmouseleave={() => (hovered = false)}
 >
   <div class="pic" style={picStyle}>
     {#if playing}
@@ -95,14 +105,37 @@
         loadPic()
       }}
     />
+    {#if hovered}
+      <div class="num" transition:fade={{ duration: 200 }}>
+        {index + 1}
+      </div>
+    {/if}
   </div>
-  <div class="list-item-cell auto name">
-    <div class="select name" aria-label={musicinfo.name}>{musicinfo.name}</div>
-    <div class="label">
-      {#each sourceLabel as label, index (index)}
-        <Badge {label} opacity={0.7} type={badgeTypes[index % badgeTypes.length]} />
-      {/each}
+  <div class="list-item-cell auto name-cell">
+    <div class="name-left">
+      <div class="select name" aria-label={musicinfo.name}>{musicinfo.name}</div>
+      <div class="label">
+        {#each sourceLabel as label, index (index)}
+          <Badge {label} opacity={0.7} type={badgeTypes[index % badgeTypes.length]} />
+        {/each}
+      </div>
     </div>
+    {#if hovered}
+      <div class="name-right" transition:fade={{ duration: 200 }}>
+        <Btn
+          onclick={(evt) => {
+            evt.stopPropagation()
+            onplay?.()
+          }}
+          min
+          icon
+          aria-label={$t('player__play')}
+        >
+          <SvgIcon name="play" />
+        </Btn>
+        <MusicHeartBtn {musicinfo} />
+      </div>
+    {/if}
   </div>
   <div class="list-item-cell" style="flex: 0 0 22%;">
     <span class="select" aria-label={musicinfo.singer}>{musicinfo.singer}</span>
@@ -132,7 +165,7 @@
     transition-property: color, background-color, opacity, border-color;
     // &:hover {
     //   .num {
-    //     opacity: 0.6;
+    //     opacity: 1;
     //   }
     // }
 
@@ -158,12 +191,12 @@
   .pic {
     position: relative;
     flex: none;
+    overflow: hidden;
     // background-color: var(--color-primary-light-200-alpha-900);
     // display: flex;
     // align-items: center;
     // justify-content: center;
     border-radius: @radius-border;
-    // overflow: hidden;
     // user-select: none;
     // flex: none;
     // > span {
@@ -211,6 +244,20 @@
     }
   }
 
+  .num {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    max-width: 100%;
+    padding: 0 2px;
+    font-size: 11px;
+    line-height: 1.2;
+    color: var(--color-000);
+    user-select: none;
+    background-color: var(--color-primary-dark-800-alpha-200);
+    border-top-left-radius: @radius-border;
+  }
+
   // .right {
   //   flex: auto;
   //   display: flex;
@@ -236,31 +283,6 @@
       flex: auto;
     }
 
-    &.name {
-      display: flex;
-      flex-flow: column nowrap;
-      align-items: flex-start;
-      // gap: 4px;
-      justify-content: center;
-      overflow: hidden;
-      text-overflow: initial;
-      white-space: initial;
-
-      > .name {
-        .mixin-ellipsis-1();
-
-        padding: 2px 0;
-      }
-    }
-    .label {
-      display: flex;
-      flex-flow: row nowrap;
-      gap: 8px;
-      padding: 2px 0;
-      :global(.badge) {
-        padding: 0;
-      }
-    }
     // .badge {
     //   margin-left: 3px;
     //   opacity: 0.85;
@@ -270,5 +292,64 @@
     //   font-size: 12px;
     //   color: var(--color-font-label);
     // }
+  }
+  .name-cell {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .name-left {
+    display: flex;
+    flex: auto;
+    flex-flow: column nowrap;
+    align-items: flex-start;
+    // gap: 4px;
+    justify-content: center;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: initial;
+    white-space: initial;
+
+    > .name {
+      .mixin-ellipsis-1();
+
+      max-width: 100%;
+      padding: 2px 0;
+    }
+
+    .label {
+      display: flex;
+      flex-flow: row nowrap;
+      gap: 8px;
+      padding: 2px 0;
+      :global(.badge) {
+        padding: 0;
+      }
+    }
+  }
+  .name-right {
+    display: flex;
+    flex: none;
+    flex-flow: row nowrap;
+    gap: 4px;
+    align-items: center;
+    margin-left: 8px;
+    color: var(--color-font-label);
+
+    :global {
+      .love-btn {
+        svg {
+          transition: 0.3s ease;
+          transition-property: opacity, filter;
+        }
+      }
+      .unloved {
+        svg {
+          opacity: 0.5;
+          filter: grayscale(1);
+        }
+      }
+    }
   }
 </style>

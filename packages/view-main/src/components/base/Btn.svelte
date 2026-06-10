@@ -15,6 +15,7 @@
     onmouseleave,
     icon = false,
     icontext = false,
+    class: className,
     children,
     rawtype = 'button',
     'aria-label': arialabel,
@@ -26,6 +27,7 @@
     disabled?: boolean
     loading?: boolean
     'aria-label'?: string
+    class?: string[]
     icon?: boolean
     icontext?: boolean
     rawtype?: 'button' | 'submit' | 'reset'
@@ -41,7 +43,7 @@
 
 <button
   type={rawtype}
-  class={['btn', { min, middle, outline, link, icon, icontext, loading: loading || asyncLoading }]}
+  class={['btn', { min, middle, outline, link, icon, icontext, loading: loading || asyncLoading }, ...(className ?? [])]}
   tabindex="0"
   aria-label={arialabel}
   disabled={disabled || loading || asyncLoading}

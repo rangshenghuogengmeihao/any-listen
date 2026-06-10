@@ -17,6 +17,7 @@
 - No longer treat `_` as a separator for multiple artist names ([#191](https://github.com/any-listen/any-listen/issues/191)).
 - Improved the implementation of context menu separators ([#198](https://github.com/any-listen/any-listen/issues/198)).
 - Improved custom scrollbar rendering consistency across platforms.
+- Allowed the window to be dragged via the popup header.
 
 ### Fixed
 
@@ -54,6 +55,7 @@
 - 不再将 `_` 认为是多个歌手名字的分隔符（[#191](https://github.com/any-listen/any-listen/issues/191)）。
 - 优化上下文菜单分割线实现效果（[#198](https://github.com/any-listen/any-listen/issues/198)）。
 - 优化自定义滚动条在各平台上的显示效果。
+- 允许通过弹窗头部拖动窗口。
 
 ### 修复
 

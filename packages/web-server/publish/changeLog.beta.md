@@ -2,7 +2,7 @@
 
 ### Improved
 
-- Improved the right-click context menu display logic ([#205](https://github.com/any-listen/any-listen/issues/205)).
+- Allowed the window to be dragged via the popup header.
 
 ---
 
@@ -10,4 +10,4 @@
 
 ### 优化
 
-- 优化右键菜单弹出逻辑（[#205](https://github.com/any-listen/any-listen/issues/205)）。
+- 允许通过弹窗头部拖动窗口。

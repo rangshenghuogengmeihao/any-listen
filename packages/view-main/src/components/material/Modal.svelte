@@ -5,6 +5,7 @@
   import { type Snippet, onMount, tick } from 'svelte'
   import { MODAL_CLASSNAMES } from '@/shared/constants'
   import { domClick } from '@/shared/compositions/click.svelte'
+  import { windowDarg } from '@/shared/browser/widnow.svelte'
   let {
     visible = $bindable(),
     closebtn = true,
@@ -41,6 +42,7 @@
 
   // let showContent = $state(visible)
   let domContainer: HTMLElement | null = $state(null)
+  let headerEl: HTMLElement | null = $state(null)
 
   let modalCount = $state(0)
   let filter = $derived(teleport == '#root' || modalCount > 1)
@@ -100,6 +102,20 @@
   })
 </script>
 
+{#snippet header()}
+  {#if title}
+    <h3>{title}</h3>
+  {/if}
+  <span class="space"></span>
+  {#if closebtn}
+    <button class="no-drag" type="button" onclick={close} aria-label={$t('btn_close')}>
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="0 0 212.982 212.982">
+        <use xlink:href="#icon-delete" />
+      </svg>
+    </button>
+  {/if}
+{/snippet}
+
 <Portal to={teleport}>
   {#if visible}
     <div
@@ -112,6 +128,16 @@
         if (bgclose) void close()
       })}
       onoutroend={handleAfterLeave}
+      onoutrostart={import.meta.env.VITE_IS_DESKTOP
+        ? () => {
+            headerEl?.classList.remove('drag')
+          }
+        : undefined}
+      onintroend={import.meta.env.VITE_IS_DESKTOP
+        ? () => {
+            headerEl?.classList.add('drag')
+          }
+        : undefined}
     >
       <div
         role="presentation"
@@ -128,19 +154,16 @@
           }
         }}
       >
-        <header class="header">
-          {#if title}
-            <h3>{title}</h3>
-          {/if}
-          <span class="space"></span>
-          {#if closebtn}
-            <button type="button" onclick={close} aria-label={$t('btn_close')}>
-              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="0 0 212.982 212.982">
-                <use xlink:href="#icon-delete" />
-              </svg>
-            </button>
-          {/if}
-        </header>
+        {#if import.meta.env.VITE_IS_DESKTOP}
+          <header class="header" bind:this={headerEl}>
+            {@render header()}
+          </header>
+        {/if}
+        {#if import.meta.env.VITE_IS_WEB}
+          <header class="header" {@attach windowDarg}>
+            {@render header()}
+          </header>
+        {/if}
         {@render children()}
       </div>
     </div>

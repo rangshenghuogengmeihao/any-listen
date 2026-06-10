@@ -239,6 +239,7 @@
     &.name {
       display: flex;
       flex-flow: column nowrap;
+      align-items: flex-start;
       // gap: 4px;
       justify-content: center;
       overflow: hidden;

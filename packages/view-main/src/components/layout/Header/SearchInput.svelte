@@ -75,6 +75,7 @@
     if (!onlineResourceAvailable.val) return
     submitted = true
     text = text.trim()
+    currentText = text
     console.log('handleSubmit', isCommandMode)
     if (text && isCommandMode) {
       text = text.slice(1).trim()
@@ -108,7 +109,13 @@
 
   $effect(() => {
     if ($query[urlParamKeyMap.type] != 'search') return
-    currentText = $query[urlParamKeyMap.query] ?? ''
+    const kwd = $query[urlParamKeyMap.query]
+    if (kwd == null) {
+      if (!currentText) return
+      void toOnlineSearch(currentText)
+      return
+    }
+    currentText = kwd
     untrack(() => {
       searchInput?.setText(currentText)
       if (!currentText) searchInput?.setList([])

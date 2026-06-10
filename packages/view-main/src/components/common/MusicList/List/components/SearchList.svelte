@@ -239,7 +239,7 @@
           bind:this={domInput}
           bind:value={text}
           class="ignore-esc"
-          placeholder="Search for something..."
+          placeholder={$t('search.placeholder')}
           oninput={handleDelaySearch}
           oncontextmenu={handleContextMenu}
         />

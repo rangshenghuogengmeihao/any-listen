@@ -31,7 +31,7 @@
     "publish:linux": "node build-config/build-pack.cjs target=linux arch=x64,arm64,armv7l type=deb,appImage,rpm,pacman publish=always",
     "publish": "node publish",
     "build": "vite build",
-    "rebuild:deps": "node ./build-config/before-install.cjs && electron-builder install-app-deps && node ./build-config/post-install.cjs"
+    "rebuild:deps": "node ./node_modules/electron/install.js && node ./build-config/before-install.cjs && electron-builder install-app-deps && node ./build-config/post-install.cjs"
   },
   "dependencies": {
     "@any-listen/app": "workspace:@shared/app@*",

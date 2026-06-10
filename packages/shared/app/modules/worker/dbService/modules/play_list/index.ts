@@ -14,6 +14,7 @@ import {
 import type { ListMusicInfo, PlayedInfo } from './statements'
 
 let playList: AnyListen.Player.PlayMusicInfo[] | null = null
+let rawPoss = new Map<string, number>()
 
 const sourceMap: Record<number, AnyListen.Player.SourceType> = {
   0: 'local',
@@ -46,12 +47,24 @@ const toDBList = (list: AnyListen.Player.PlayMusicInfo[], offset = 0): ListMusic
   })
 }
 
+const rebuildPosInfo = (
+  list: Array<{
+    item_id: string
+    position: number
+  }>
+) => {
+  rawPoss.clear()
+  for (const info of list) rawPoss.set(info.item_id, info.position)
+}
+
 const initListInfo = (force = false) => {
   if (playList && !force) return
   let list = queryList().sort((a, b) => a.position - b.position)
   playList = []
+  rawPoss.clear()
   for (const info of list) {
     const { item_id, position, list_id, source, play_later, played, is_local, meta, ...mInfo } = info
+    rawPoss.set(item_id, position)
     playList.push({
       musicInfo: {
         ...mInfo,
@@ -84,6 +97,7 @@ export const playListOverride = (newList: AnyListen.Player.PlayMusicInfo[]) => {
   let list = toDBList(newList)
   overrideList(list)
   playList = newList
+  rebuildPosInfo(list)
 }
 
 /**
@@ -94,9 +108,11 @@ export const playListOverride = (newList: AnyListen.Player.PlayMusicInfo[]) => {
 export const playListAdd = (position: number, list: AnyListen.Player.PlayMusicInfo[]) => {
   initListInfo()
   if (position < 0 || position >= playList!.length) {
-    const newLists: ListMusicInfo[] = toDBList(list, playList!.length)
+    const pos = playList!.length ? (rawPoss.get(playList!.at(-1)!.itemId) ?? playList!.length) + 1 : 0
+    const newLists: ListMusicInfo[] = toDBList(list, pos)
     inertInfo(newLists)
     playList = arrPush(playList!, list)
+    for (const info of newLists) rawPoss.set(info.item_id, info.position)
   } else {
     const newUserLists = toDBList([...playList!])
     arrPushByPosition(newUserLists, toDBList(list, 0), position)
@@ -105,6 +121,7 @@ export const playListAdd = (position: number, list: AnyListen.Player.PlayMusicIn
     })
     overrideList(newUserLists)
     arrPushByPosition(playList!, list, position)
+    rebuildPosInfo(newUserLists)
   }
 }
 
@@ -116,6 +133,7 @@ export const playListRemove = (ids: string[]) => {
   initListInfo()
   deleteInfo(ids)
   playList = playList!.filter((l) => !ids.includes(l.itemId))
+  for (const id of ids) rawPoss.delete(id)
 }
 
 /**
@@ -201,8 +219,10 @@ export const playListUpdatePosition = (position: number, ids: string[]) => {
   position = Math.min(newList.length, position)
 
   arrPushByPosition(newList, updateInfos, position)
-  updatePositionInfo(newList.map((l, i) => ({ item_id: l.itemId, position: i })))
+  const posList = newList.map((l, i) => ({ item_id: l.itemId, position: i }))
+  updatePositionInfo(posList)
   playList = newList
+  rebuildPosInfo(posList)
 }
 
 /**
@@ -210,6 +230,7 @@ export const playListUpdatePosition = (position: number, ids: string[]) => {
  */
 export const playListClear = () => {
   if (!playList?.length) return
-  playList = []
   clearList()
+  playList = []
+  rawPoss.clear()
 }

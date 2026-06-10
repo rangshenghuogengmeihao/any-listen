@@ -295,6 +295,22 @@ export const settings: SettingListSection[] = [
     ],
   },
   {
+    id: 'list',
+    name: 'settings.list',
+    // t('settings.list.add_music_location_type_top')
+    list: [
+      {
+        field: 'list.addMusicLocationType',
+        name: 'settings.list.add_music_location_type',
+        type: 'radio',
+        enum: [
+          { value: 'top', name: 'settings.list.add_music_location_type_top' },
+          { value: 'bottom', name: 'settings.list.add_music_location_type_bottom' },
+        ] satisfies Array<{ value: AnyListen.AppSetting['list.addMusicLocationType']; name: keyof Message }>,
+      },
+    ],
+  },
+  {
     id: 'extension',
     // t('settings.extension')
     name: 'settings.extension',

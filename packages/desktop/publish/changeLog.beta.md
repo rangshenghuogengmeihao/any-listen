@@ -1,5 +1,9 @@
 <!--- @lang: en-us -->
 
+### Added
+
+- Added an **Song Insert Position in List** setting under _Settings > List Settings_. The default position is **Top**.
+
 ### Improved
 
 - Added a security notice for the Windows Legacy version ([#206](https://github.com/any-listen/any-listen/issues/206)).
@@ -8,6 +12,10 @@
 ---
 
 <!--- @lang: zh-cn -->
+
+### 新增
+
+- 新增 **「添加歌曲到列表时的位置」** 设置项，位于 _设置 > 列表设置_，默认顶部。
 
 ### 优化
 

@@ -10,6 +10,7 @@
 - Added an **Extension Detail** page; clicking an extension item in the extension list now displays its full details.
 - Added a **Lyrics Context Menu** on the Now Playing page to adjust lyrics size and lyrics offset.
 - Added a **Song Comments Display** feature, available from the song list context menu and the playback bar.
+- Added an **Song Insert Position in List** setting under _Settings > List Settings_. The default position is **Top**.
 
 ### Improved
 
@@ -50,6 +51,7 @@
 - 新增 **「扩展程序详情信息」** 界面，点击扩展列表的扩展项将显示该扩展的详细信息。
 - 新增 **「歌词右键菜单」**，可用于调整歌词大小与歌词偏移。
 - 新增 **「歌曲评论显示」** 功能，可在歌曲列表右键菜单与播放栏中使用。
+- 新增 **「添加歌曲到列表时的位置」** 设置项，位于 _设置 > 列表设置_，默认顶部。
 
 ### 优化
 
